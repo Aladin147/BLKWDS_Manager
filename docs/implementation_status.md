@@ -10,7 +10,7 @@ This document tracks the implementation status of core functionality in the BLKW
 - ✅ Gear search functionality working
 - ✅ Check-out and check-in functionality working
 - ✅ Recent activity display working
-- ⬜ Calendar screen navigation (TODO)
+- ✅ Calendar screen navigation implemented
 - ⬜ Settings screen navigation (TODO)
 
 ### Add Gear Screen
@@ -29,21 +29,29 @@ This document tracks the implementation status of core functionality in the BLKW
 - ✅ Gear assignment to members working
 - ✅ Booking conflict detection working
 
+### Calendar Screen
+- ✅ UI implemented with standardized components
+- ✅ Calendar view with month/week/2-week options
+- ✅ Booking details display
+- ✅ Filtering by project, member, gear, and date range
+- ✅ Navigation to Booking Panel for editing
+- ⬜ Drag-and-drop functionality for rescheduling (TODO)
+
 ## Navigation and Routing
 - ✅ Navigation between Dashboard and Add Gear screens working
 - ✅ Navigation between Dashboard and Booking Panel screens working
 - ✅ Data refresh when returning to previous screens working
-- ⬜ Calendar screen navigation (TODO)
+- ✅ Calendar screen navigation implemented
 - ⬜ Settings screen navigation (TODO)
 
 ## Known Issues
 1. Member dropdown in Dashboard has potential equality comparison issues
 2. Some screens may still have deprecated `withOpacity` calls that should be replaced with `withValues`
-3. Calendar screen not implemented yet
+3. Calendar screen filtering needs optimization
 4. Settings screen not implemented yet
 
 ## Next Steps
-1. Implement Calendar screen
+1. Enhance Calendar screen with drag-and-drop functionality
 2. Implement Settings screen
 3. Fix any remaining UI inconsistencies
 4. Add comprehensive error handling

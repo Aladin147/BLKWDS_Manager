@@ -8,6 +8,7 @@ import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
 import '../add_gear/add_gear_screen.dart';
 import '../booking_panel/booking_panel_screen.dart';
+import '../calendar/calendar_screen.dart';
 import 'dashboard_controller.dart';
 
 /// DashboardScreen
@@ -165,9 +166,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_month),
+            tooltip: 'Calendar',
             onPressed: () {
-              // TODO: Navigate to calendar screen
-              _showSnackBar('Calendar screen not implemented yet');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CalendarScreen(),
+                ),
+              );
             },
           ),
           IconButton(
