@@ -1,7 +1,7 @@
 # BLKWDS Manager – Project README
 
 ## 🎯 Overview
-**BLKWDS Manager** is a sleek, offline-first desktop app designed for managing gear logistics, bookings, and team operations within a creative production studio. Built with usability and aesthetics at its core, it’s crafted to support internal workflows without cloud complexity or admin fatigue.
+**BLKWDS Manager** is a sleek, offline-first desktop app designed for managing gear logistics, bookings, and team operations within a creative production studio. Built with usability and aesthetics at its core, it's crafted to support internal workflows without cloud complexity or admin fatigue.
 
 This README is the **master reference** for the entire project lifecycle — from setup to deployment to iteration.
 
@@ -34,12 +34,15 @@ This README is the **master reference** for the entire project lifecycle — fro
 ```
 /lib
  ├── main.dart
- ├── models/               # Data models (gear, member, etc.)
- ├── screens/              # Dashboard, booking panel, etc.
- ├── services/             # db_service.dart, export helpers
- ├── theme/                # Colors, typography, constants
- ├── widgets/              # Custom buttons, cards, inputs
- └── data/                 # Optional seed/mock content
+ ├── app.dart                # Main application widget
+ ├── models/                 # Data models (gear, member, etc.)
+ ├── screens/                # Dashboard, add gear, booking panel, etc.
+ │   ├── dashboard/          # Dashboard screen and controller
+ │   └── add_gear/           # Add gear screen and controller
+ ├── services/               # Database, image, and export services
+ ├── theme/                  # Colors, typography, constants
+ ├── utils/                  # Utility functions and constants
+ └── widgets/                # Reusable UI components
 ```
 
 ---
@@ -61,18 +64,22 @@ This README is the **master reference** for the entire project lifecycle — fro
 | `ui_ux_spec.md`          | UX behavior and screen logic        |
 | `workflow_and_dev_guidelines.md` | Dev style, folder rules, journal habits |
 | `blkwds_db_models.md`    | Data model and schema references    |
-| `db_service.dart`        | Central DB access logic             |
+| `Journal.md`             | Development journal with daily updates |
 | `roadmap.md`             | Feature evolution plan              |
 | `changelog.md`           | Version history                     |
-| `architecture_and_tech_stack.md` | Stack breakdown and rationale |
 
 ---
 
 ## 🚦 Development Status
 - Basic project structure and architecture implemented
 - Theme system and data models created
-- Dashboard UI with mock data implemented
+- Dashboard UI with real database integration
 - Windows compatibility issues resolved
+- Database service with CRUD operations implemented
+- Gear checkout/checkin functionality working
+- Add Gear screen implemented with form validation
+- Image upload functionality working
+- Database migration system implemented
 
 ---
 
@@ -85,7 +92,14 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## ✅ Version
-Current: **v0.2.0 – Initial Implementation**
+Current: **v0.4.0 – Gear Management**
+
+---
+
+## 🐛 Known Issues
+- Member dropdown in dashboard has equality comparison issues
+- Database migration needs refinement for more complex schema changes
+- See `Journal.md` for detailed issue tracking
 
 ---
 
