@@ -103,7 +103,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## ✅ Version
-Current: **v0.5.0 – Booking Panel**
+Current: **v0.6.0 – Calendar View**
 
 ---
 

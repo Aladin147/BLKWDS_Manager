@@ -13,7 +13,7 @@ Create a beautiful, frictionless desktop tool for internal gear and studio logis
 - ✅ Gear checkout + return flow
 - 🔴 Booking panel for team projects (70% complete)
 - ✅ Project, gear, and member models operational
-- ⏳ Calendar overview with studio/gear scheduling
+- 🔴 Calendar overview with studio/gear scheduling (80% complete)
 - ✅ Local SQLite DB + CSV export
 
 ### 🌟 UI/UX Enhancement Goals

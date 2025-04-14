@@ -1,5 +1,20 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-20
+
+### Calendar View Implementation
+
+- Created implementation plan for Calendar View
+- Added table_calendar package for calendar functionality
+- Implemented CalendarView widget with month/week/2-week view options
+- Created CalendarBookingItem widget for displaying bookings in the calendar
+- Implemented BookingDetailsModal for showing booking details
+- Extended BookingPanelController with calendar-specific methods
+- Added missing typography styles (titleSmall, bodySmall, labelSmall)
+- Integrated Calendar View into the Booking Panel screen
+- Implemented day selection and booking creation from calendar
+- Added booking visualization with status indicators
+
 ## 2025-04-19
 
 ### Booking Panel Implementation
