@@ -1,5 +1,16 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-25
+
+### Dark Mode Implementation and Dropdown Fixes
+
+- Simplified the theme system to use dark mode only for better visibility and consistency
+- Removed theme switching functionality to streamline the codebase
+- Fixed equality comparison issues in model classes (Member, Project, StatusNote, ActivityLog)
+- Implemented robust equality operators and hashCode methods for all model classes
+- Improved Member class equality to prioritize ID comparison for dropdown widgets
+- Updated the app to use a single theme throughout
+
 ## 2025-04-24
 
 ### Booking Filtering and Search Implementation

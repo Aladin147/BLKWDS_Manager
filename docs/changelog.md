@@ -114,6 +114,18 @@
 - Improved error handling in booking controller
 - Enhanced state management during booking operations
 
+## 🟢 v0.9.0 – Dark Mode and Fixes (2025-04-25)
+### ✨ Features
+- Simplified the theme system to use dark mode only for better visibility
+- Removed theme switching functionality to streamline the codebase
+- Improved visual consistency throughout the app
+
+### 🐛 Fixes
+- Fixed equality comparison issues in model classes
+- Implemented robust equality operators and hashCode methods
+- Improved Member class equality to fix dropdown widget issues
+- Fixed potential assertion errors in dropdown widgets
+
 ## 🟢 v0.8.0 – Booking Filtering and Search (2025-04-24)
 ### ✨ Features
 - Implemented comprehensive filtering and search functionality for bookings

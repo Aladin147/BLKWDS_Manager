@@ -73,7 +73,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 
 ## 🚦 Development Status
 - Basic project structure and architecture implemented
-- Theme system and data models created
+- Dark mode theme system and data models created
 - Dashboard UI with real database integration and space-efficient layout
 - Windows compatibility issues resolved
 - Database service with CRUD operations implemented
@@ -83,10 +83,12 @@ This README is the **master reference** for the entire project lifecycle — fro
 - Database migration system implemented
 - Booking Panel with list view and form functionality implemented
 - Improved dashboard layout with functional zones and better visual hierarchy
+- Booking filtering and search functionality implemented
+- Fixed model equality issues for dropdown widgets
 
 ### Upcoming Priorities
-- Calendar View for visualizing bookings
-- Booking filtering and search functionality
+- Enhance Calendar View with drag-and-drop functionality
+- Improve database migration system
 - **UI/UX Enhancement Phase** for professional visual design
   - Professional styling with shadows, gradients, and micro-interactions
   - Animation system for transitions and user actions
@@ -104,14 +106,13 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## ✅ Version
-Current: **v0.6.0 – Dashboard Layout Improvement**
+Current: **v0.9.0 – Dark Mode and Fixes**
 
 ---
 
 ## 🐛 Known Issues
-- Member dropdown in dashboard has equality comparison issues
 - Database migration needs refinement for more complex schema changes
-- Calendar view not yet implemented (planned for v0.6.0)
+- Calendar drag-and-drop functionality not yet implemented
 - See `Journal.md` for detailed issue tracking
 
 ---

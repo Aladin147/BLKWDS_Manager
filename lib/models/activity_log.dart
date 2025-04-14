@@ -64,4 +64,25 @@ class ActivityLog {
   String toString() {
     return 'ActivityLog(id: $id, gearId: $gearId, memberId: $memberId, checkedOut: $checkedOut, timestamp: $timestamp)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ActivityLog &&
+        other.id == id &&
+        other.gearId == gearId &&
+        other.memberId == memberId &&
+        other.checkedOut == checkedOut &&
+        other.timestamp == timestamp &&
+        other.note == note;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      gearId.hashCode ^
+      (memberId?.hashCode ?? 0) ^
+      checkedOut.hashCode ^
+      timestamp.hashCode ^
+      (note?.hashCode ?? 0);
 }

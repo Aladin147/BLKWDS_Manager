@@ -52,4 +52,21 @@ class StatusNote {
   String toString() {
     return 'StatusNote(id: $id, gearId: $gearId, timestamp: $timestamp)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is StatusNote &&
+        other.id == id &&
+        other.gearId == gearId &&
+        other.note == note &&
+        other.timestamp == timestamp;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      gearId.hashCode ^
+      note.hashCode ^
+      timestamp.hashCode;
 }

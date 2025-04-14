@@ -100,9 +100,28 @@ class Project {
         other.title == title &&
         other.client == client &&
         other.notes == notes &&
-        other.description == description;
+        other.description == description &&
+        _listEquals(other.memberIds, memberIds);
+  }
+
+  // Helper method to compare lists
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) return b == null;
+    if (b == null || a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ (client?.hashCode ?? 0) ^ (notes?.hashCode ?? 0) ^ (description?.hashCode ?? 0);
+  int get hashCode =>
+      id.hashCode ^
+      title.hashCode ^
+      (client?.hashCode ?? 0) ^
+      (notes?.hashCode ?? 0) ^
+      (description?.hashCode ?? 0) ^
+      memberIds.fold(0, (hash, id) => hash ^ id.hashCode);
+
+
 }

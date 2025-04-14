@@ -81,20 +81,35 @@ class Member {
     return 'Member(id: $id, name: $name, role: $role, email: $email, phone: $phone)';
   }
 
-  // TODO: Fix equality comparison for Member class
-  // This implementation doesn't seem to fully resolve the dropdown assertion error
-  // Need to investigate further why the dropdown still has issues with equality comparison
+  // Fixed equality comparison for Member class
+  // This implementation should resolve dropdown equality issues
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Member &&
-        other.id == id &&
-        other.name == name &&
-        other.role == role &&
-        other.email == email &&
-        other.phone == phone;
+    if (other is! Member) return false;
+
+    // For dropdown equality, we primarily care about the ID
+    // If both IDs are null, compare other fields
+    if (id == null && other.id == null) {
+      return other.name == name &&
+          other.role == role &&
+          other.email == email &&
+          other.phone == phone;
+    }
+
+    // If IDs are available, use them for equality
+    return other.id == id;
   }
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ (role?.hashCode ?? 0) ^ (email?.hashCode ?? 0) ^ (phone?.hashCode ?? 0);
+  int get hashCode {
+    // For consistent hashing with our equality implementation
+    if (id != null) {
+      return id.hashCode;
+    }
+    return name.hashCode ^
+        (role?.hashCode ?? 0) ^
+        (email?.hashCode ?? 0) ^
+        (phone?.hashCode ?? 0);
+  }
 }

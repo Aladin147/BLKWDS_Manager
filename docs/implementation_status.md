@@ -35,15 +35,15 @@ This document tracks the implementation status of core functionality in the BLKW
 - ✅ Booking details display
 - ✅ Filtering by project, member, gear, and date range
 - ✅ Navigation to Booking Panel for editing
-- ⬜ Drag-and-drop functionality for rescheduling (TODO)
+- ⬜ Drag-and-drop functionality for rescheduling (In Progress)
 
 ### Settings Screen
 - ✅ UI implemented with standardized components
-- ✅ Theme switching (light/dark/system)
+- ❌ Theme switching removed (dark mode only)
 - ✅ Data export functionality (JSON and CSV)
 - ✅ Data import functionality
 - ✅ App information display
-- ⬜ User preferences persistence (TODO)
+- ⬜ User preferences persistence (Planned for v1.0)
 
 ## Navigation and Routing
 - ✅ Navigation between Dashboard and Add Gear screens working
@@ -53,18 +53,17 @@ This document tracks the implementation status of core functionality in the BLKW
 - ✅ Settings screen navigation implemented
 
 ## Known Issues
-1. Member dropdown in Dashboard has potential equality comparison issues
+1. ~~Member dropdown in Dashboard has potential equality comparison issues~~ (FIXED in v0.9.0)
 2. Some screens may still have deprecated `withOpacity` calls that should be replaced with `withValues`
 3. Calendar screen filtering needs optimization
-4. Settings screen theme switching needs testing
+4. ~~Settings screen theme switching needs testing~~ (REMOVED in v0.9.0 - dark mode only)
 
 ## Next Steps
 1. Enhance Calendar screen with drag-and-drop functionality
-2. Enhance Settings screen with additional options
+2. Improve database migration system
 3. Fix any remaining UI inconsistencies
 4. Add comprehensive error handling
-5. Implement data export functionality
-6. Add unit and integration tests
+5. Add unit and integration tests
 
 ## UI Standardization
 - ✅ Standardized button component created and implemented
