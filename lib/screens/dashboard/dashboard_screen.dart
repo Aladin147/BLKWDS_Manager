@@ -9,6 +9,7 @@ import '../../widgets/blkwds_widgets.dart';
 import '../add_gear/add_gear_screen.dart';
 import '../booking_panel/booking_panel_screen.dart';
 import '../calendar/calendar_screen.dart';
+import '../settings/settings_screen.dart';
 import 'dashboard_controller.dart';
 
 /// DashboardScreen
@@ -178,9 +179,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
             onPressed: () {
-              // TODO: Navigate to settings screen
-              _showSnackBar('Settings screen not implemented yet');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
             },
           ),
         ],
