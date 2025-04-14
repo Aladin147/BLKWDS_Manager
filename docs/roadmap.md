@@ -8,20 +8,29 @@ Create a beautiful, frictionless desktop tool for internal gear and studio logis
 ## ✅ Phase 1 – MVP (Minimum Viable Product)
 **Status: IN PROGRESS (70% Complete)**
 
-### 🎯 Goals
-- ✅ Full UI/UX system locked
+### 🎯 Core Functionality Goals
+- ✅ Full UI/UX system foundation
 - ✅ Gear checkout + return flow
 - ⏳ Booking panel for team projects
 - ✅ Project, gear, and member models operational
 - ⏳ Calendar overview with studio/gear scheduling
 - ✅ Local SQLite DB + CSV export
 
+### 🌟 UI/UX Enhancement Goals
+- ⏳ Professional styling with proper shadows, gradients, and micro-interactions
+- ⏳ Animation system for transitions and user actions
+- ⏳ Improved visual hierarchy and layout refinements
+- ⏳ Custom components reflecting BLKWDS brand identity
+- ⏳ Dark mode implementation with brand-appropriate palette
+- ⏳ Custom icons and visual assets integration
+
 ### 📦 Features
 - ✅ Dashboard with live gear status
 - ✅ Quick assignment of gear to member
 - ⏳ Booking creation with optional gear-member linking
 - ✅ Gear inventory with photo upload
-- ✅ Full design system (colors, components, shadows)
+- ✅ Basic design system (colors, typography, constants)
+- ⏳ Enhanced visual design for a cutting-edge production company
 - ✅ Manual notes on actions and logs
 - ✅ All offline, no login or sync required
 

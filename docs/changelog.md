@@ -69,14 +69,31 @@
 - Booking creation modal with full project/member/gear assignment
 - Gear-to-member optional mapping logic
 - Save booking to DB and link gear status
+- Booking filtering and search functionality
+- Booking status indicators and timeline visualization
 
 ---
 
-## 🟡 v0.5.0 – Calendar View
+## 🟡 v0.6.0 – Calendar View
 ### Planned:
 - Render monthly calendar
 - Color-code booking types
 - Show per-day booking details modal
+- Drag-and-drop booking rescheduling
+- Calendar export functionality
+
+---
+
+## 🟡 v0.7.0 – UI/UX Enhancement
+### Planned:
+- Professional styling with shadows, gradients, and micro-interactions
+- Animation system for transitions and user actions
+- Improved visual hierarchy and layout refinements
+- Custom components reflecting BLKWDS brand identity
+- Dark mode implementation with brand-appropriate palette
+- Custom icons and visual assets integration
+- Responsive layouts for different window sizes
+- Elegant loading states and skeleton screens
 
 ---
 
