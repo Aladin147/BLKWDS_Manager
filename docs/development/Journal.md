@@ -1,5 +1,17 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-23
+
+### Booking Rescheduling Implementation
+
+- Implemented drag-and-drop functionality for booking rescheduling in the calendar view
+- Added a new method to the BookingPanelController to handle rescheduling while preserving booking duration
+- Created a confirmation dialog to prevent accidental rescheduling
+- Added visual feedback during the drag-and-drop operation
+- Implemented error handling and success notifications
+- Fixed issues with context usage across async gaps
+- Ensured proper state management during the rescheduling process
+
 ## 2025-04-22
 
 ### Dashboard Layout Improvement

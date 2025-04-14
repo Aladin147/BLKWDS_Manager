@@ -11,12 +11,14 @@ class CalendarBookingItem extends StatelessWidget {
   final Booking booking;
   final Project? project;
   final VoidCallback onTap;
+  final Function(Booking, DateTime)? onReschedule;
 
   const CalendarBookingItem({
     super.key,
     required this.booking,
     required this.project,
     required this.onTap,
+    this.onReschedule,
   });
 
   @override
@@ -53,7 +55,8 @@ class CalendarBookingItem extends StatelessWidget {
         ? Color(project.hashCode).withValues(alpha: 200)
         : BLKWDSColors.slateGrey;
 
-    return Card(
+    // Create a draggable widget if onReschedule is provided
+    Widget bookingCard = Card(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
@@ -164,5 +167,66 @@ class CalendarBookingItem extends StatelessWidget {
         ),
       ),
     );
+
+    // If onReschedule is provided, make the card draggable
+    if (onReschedule != null) {
+      return Draggable<Booking>(
+        // Data is the booking being dragged
+        data: booking,
+        // Feedback is what appears under the pointer during drag
+        feedback: Material(
+          elevation: 4.0,
+          child: Container(
+            width: 300,
+            padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+            decoration: BoxDecoration(
+              color: BLKWDSColors.white,
+              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              border: Border.all(color: projectColor, width: 2),
+            ),
+            child: Row(
+              children: [
+                // Time
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      startTimeStr,
+                      style: BLKWDSTypography.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      endTimeStr,
+                      style: BLKWDSTypography.bodySmall,
+                    ),
+                  ],
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingMedium),
+
+                // Project name
+                Expanded(
+                  child: Text(
+                    project?.title ?? 'Unknown Project',
+                    style: BLKWDSTypography.titleSmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // ChildWhenDragging is what remains in the original location during drag
+        childWhenDragging: Opacity(
+          opacity: 0.5,
+          child: bookingCard,
+        ),
+        // The actual widget that can be dragged
+        child: bookingCard,
+      );
+    }
+
+    return bookingCard;
   }
 }

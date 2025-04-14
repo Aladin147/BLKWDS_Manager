@@ -23,10 +23,11 @@ Create a beautiful, frictionless desktop tool for internal gear and studio logis
   - 🔴 Fix remaining formatting issues, text readability, and button functionality
   - 🔴 Address other UI inconsistencies that make development tedious
 
-- 🔴 Phase 2: Core Functionality Completion
-  - Implement remaining core features (booking rescheduling, filtering)
-  - Fix known issues (dropdown equality, database migration)
-  - Ensure all data flows work correctly
+- 🟡 Phase 2: Core Functionality Completion - 30% Complete
+  - ✅ Implemented booking rescheduling with drag-and-drop functionality
+  - 🔴 Implement booking filtering and search
+  - 🔴 Fix known issues (dropdown equality, database migration)
+  - 🔴 Ensure all data flows work correctly
 
 ### 🌟 UI/UX Enhancement Goals (Phase 3)
 - ⏳ Professional styling with proper shadows, gradients, and micro-interactions

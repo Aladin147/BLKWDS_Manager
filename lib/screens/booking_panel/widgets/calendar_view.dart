@@ -14,12 +14,14 @@ class CalendarView extends StatefulWidget {
   final BookingPanelController controller;
   final Function(DateTime) onDaySelected;
   final Function(Booking) onBookingSelected;
+  final Function(Booking, DateTime)? onBookingRescheduled;
 
   const CalendarView({
     super.key,
     required this.controller,
     required this.onDaySelected,
     required this.onBookingSelected,
+    this.onBookingRescheduled,
   });
 
   @override
@@ -60,7 +62,22 @@ class _CalendarViewState extends State<CalendarView> {
     return widget.controller.getBookingsForDay(day);
   }
 
+  // Handle booking drop for rescheduling
+  void _handleBookingDrop(Booking booking, DateTime newDay) async {
+    // Create a new start date with the same time as the original booking
+    final newStartDate = DateTime(
+      newDay.year,
+      newDay.month,
+      newDay.day,
+      booking.startDate.hour,
+      booking.startDate.minute,
+    );
 
+    // Call the onBookingRescheduled callback if provided
+    if (widget.onBookingRescheduled != null) {
+      widget.onBookingRescheduled!(booking, newStartDate);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,55 +132,64 @@ class _CalendarViewState extends State<CalendarView> {
         ),
         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-        // Calendar
-        TableCalendar<Booking>(
-          firstDay: DateTime.utc(2020, 1, 1),
-          lastDay: DateTime.utc(2030, 12, 31),
-          focusedDay: _focusedDay,
-          calendarFormat: _calendarFormat,
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
+        // Calendar wrapped in a DragTarget for rescheduling
+        DragTarget<Booking>(
+          onAcceptWithDetails: (details) {
+            // Handle the dropped booking
+            _handleBookingDrop(details.data, _selectedDay);
           },
-          eventLoader: _getBookingsForDay,
-          startingDayOfWeek: StartingDayOfWeek.monday,
-          calendarStyle: CalendarStyle(
-            markersMaxCount: 3,
-            markerDecoration: const BoxDecoration(
-              color: BLKWDSColors.electricMint,
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: const BoxDecoration(
-              color: BLKWDSColors.blkwdsGreen,
-              shape: BoxShape.circle,
-            ),
-            selectedDecoration: const BoxDecoration(
-              color: BLKWDSColors.mustardOrange,
-              shape: BoxShape.circle,
-            ),
-          ),
-          headerStyle: HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-            titleTextStyle: BLKWDSTypography.titleMedium,
-            leftChevronIcon: const Icon(
-              Icons.chevron_left,
-              color: BLKWDSColors.slateGrey,
-            ),
-            rightChevronIcon: const Icon(
-              Icons.chevron_right,
-              color: BLKWDSColors.slateGrey,
-            ),
-          ),
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-              _updateSelectedBookings();
-            });
-            widget.onDaySelected(selectedDay);
-          },
-          onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
+          // Show a visual indicator when a booking is being dragged over a day
+          builder: (context, candidateData, rejectedData) {
+            return TableCalendar<Booking>(
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 31),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              eventLoader: _getBookingsForDay,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              calendarStyle: CalendarStyle(
+                markersMaxCount: 3,
+                markerDecoration: const BoxDecoration(
+                  color: BLKWDSColors.electricMint,
+                  shape: BoxShape.circle,
+                ),
+                todayDecoration: const BoxDecoration(
+                  color: BLKWDSColors.blkwdsGreen,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: const BoxDecoration(
+                  color: BLKWDSColors.mustardOrange,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+                titleTextStyle: BLKWDSTypography.titleMedium,
+                leftChevronIcon: const Icon(
+                  Icons.chevron_left,
+                  color: BLKWDSColors.slateGrey,
+                ),
+                rightChevronIcon: const Icon(
+                  Icons.chevron_right,
+                  color: BLKWDSColors.slateGrey,
+                ),
+              ),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  _updateSelectedBookings();
+                });
+                widget.onDaySelected(selectedDay);
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+              },
+            );
           },
         ),
         const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -210,6 +236,7 @@ class _CalendarViewState extends State<CalendarView> {
                     booking: booking,
                     project: project,
                     onTap: () => widget.onBookingSelected(booking),
+                    onReschedule: widget.onBookingRescheduled,
                   );
                 },
               );

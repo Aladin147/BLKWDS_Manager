@@ -133,6 +133,25 @@ class BookingPanelController {
     }
   }
 
+  /// Reschedule a booking to a new date/time
+  /// This moves the booking while preserving its duration
+  Future<bool> rescheduleBooking(Booking booking, DateTime newStartDate) async {
+    // Calculate the duration of the original booking
+    final duration = booking.endDate.difference(booking.startDate);
+
+    // Create a new end date based on the new start date and the original duration
+    final newEndDate = newStartDate.add(duration);
+
+    // Create a new booking with the updated dates
+    final rescheduledBooking = booking.copyWith(
+      startDate: newStartDate,
+      endDate: newEndDate,
+    );
+
+    // Update the booking
+    return await updateBooking(rescheduledBooking);
+  }
+
   // Delete a booking
   Future<bool> deleteBooking(int id) async {
     isLoading.value = true;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
@@ -302,7 +303,81 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         // When a booking is selected, show the booking details modal
         _showBookingDetailsModal(booking);
       },
+      onBookingRescheduled: _handleBookingReschedule,
     );
+  }
+
+  // Handle booking rescheduling
+  void _handleBookingReschedule(Booking booking, DateTime newStartDate) async {
+    // Show a confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reschedule Booking'),
+        content: Text(
+          'Are you sure you want to reschedule "${_controller.getProjectById(booking.projectId)?.title ?? 'Unknown Project'}" to ${DateFormat.yMMMd().format(newStartDate)}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Reschedule'),
+          ),
+        ],
+      ),
+    ) ?? false;
+
+    if (confirmed) {
+      // Show loading indicator
+      setState(() {
+        _controller.isLoading.value = true;
+      });
+
+      try {
+        // Reschedule the booking
+        final success = await _controller.rescheduleBooking(booking, newStartDate);
+
+        // Check if the widget is still mounted before showing snackbar
+        if (!mounted) return;
+
+        if (success) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Booking rescheduled successfully'),
+              backgroundColor: BLKWDSColors.blkwdsGreen,
+            ),
+          );
+        } else {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_controller.errorMessage.value ?? 'Failed to reschedule booking'),
+              backgroundColor: BLKWDSColors.statusOut,
+            ),
+          );
+        }
+      } catch (e) {
+        // Check if the widget is still mounted before showing snackbar
+        if (!mounted) return;
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: BLKWDSColors.statusOut,
+          ),
+        );
+      } finally {
+        // Hide loading indicator
+        setState(() {
+          _controller.isLoading.value = false;
+        });
+      }
+    }
   }
 
   // Show booking details modal

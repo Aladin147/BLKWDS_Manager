@@ -101,12 +101,24 @@
 - Improved component sizing and spacing for better visual balance
 - Fixed deprecated withOpacity calls with withValues for consistent styling
 
-## 🟡 v0.7.0 – Calendar View
+## 🟢 v0.7.0 – Booking Rescheduling (2025-04-23)
+### ✨ Features
+- Implemented drag-and-drop functionality for booking rescheduling in the calendar view
+- Added confirmation dialog to prevent accidental rescheduling
+- Provided visual feedback during drag-and-drop operations
+- Preserved booking duration when rescheduling
+- Added success and error notifications for rescheduling operations
+
+### 🐛 Fixes
+- Fixed context usage across async gaps in booking operations
+- Improved error handling in booking controller
+- Enhanced state management during booking operations
+
+## 🟡 v0.8.0 – Calendar Enhancements
 ### Planned:
-- Render monthly calendar
+- Render monthly calendar with improved visualization
 - Color-code booking types
 - Show per-day booking details modal
-- Drag-and-drop booking rescheduling
 - Calendar export functionality
 
 ---
