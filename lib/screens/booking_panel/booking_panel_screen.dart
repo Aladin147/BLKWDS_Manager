@@ -3,15 +3,17 @@ import '../../models/models.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../utils/constants.dart';
+
 import 'booking_panel_controller.dart';
 import 'widgets/booking_form.dart';
 import 'widgets/booking_list_item.dart';
+import 'widgets/calendar_view.dart';
+import 'widgets/booking_details_modal.dart';
 
 /// BookingPanelScreen
 /// Screen for managing bookings
 class BookingPanelScreen extends StatefulWidget {
-  const BookingPanelScreen({Key? key}) : super(key: key);
+  const BookingPanelScreen({super.key});
 
   @override
   State<BookingPanelScreen> createState() => _BookingPanelScreenState();
@@ -20,13 +22,13 @@ class BookingPanelScreen extends StatefulWidget {
 class _BookingPanelScreenState extends State<BookingPanelScreen> {
   // Controller
   final _controller = BookingPanelController();
-  
+
   // View mode
   bool _isCalendarView = false;
-  
+
   // Selected booking for editing
   Booking? _selectedBooking;
-  
+
   // Show booking form
   bool _showBookingForm = false;
 
@@ -67,7 +69,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   // Save booking
   Future<void> _saveBooking(Booking booking) async {
     bool success;
-    
+
     if (booking.id == null) {
       // Create new booking
       success = await _controller.createBooking(booking);
@@ -75,7 +77,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
       // Update existing booking
       success = await _controller.updateBooking(booking);
     }
-    
+
     if (success) {
       _hideBookingForm();
       _showSnackBar(booking.id == null ? 'Booking created' : 'Booking updated');
@@ -107,10 +109,10 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         ],
       ),
     );
-    
+
     if (confirmed == true) {
       final success = await _controller.deleteBooking(booking.id!);
-      
+
       if (success) {
         _showSnackBar('Booking deleted');
       } else if (_controller.errorMessage.value != null) {
@@ -161,7 +163,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
               child: CircularProgressIndicator(),
             );
           }
-          
+
           return _showBookingForm
               ? _buildBookingForm()
               : _isCalendarView
@@ -237,17 +239,17 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             ),
           );
         }
-        
+
         // Sort bookings by start date (newest first)
         final sortedBookings = List<Booking>.from(bookings)
           ..sort((a, b) => b.startDate.compareTo(a.startDate));
-        
+
         return ListView.builder(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           itemCount: sortedBookings.length,
           itemBuilder: (context, index) {
             final booking = sortedBookings[index];
-            
+
             return BookingListItem(
               booking: booking,
               controller: _controller,
@@ -262,37 +264,65 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Build calendar view
   Widget _buildCalendarView() {
-    // TODO: Implement calendar view
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.calendar_month,
-            size: 64,
-            color: BLKWDSColors.slateGrey,
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingMedium),
-          Text(
-            'Calendar View',
-            style: BLKWDSTypography.titleMedium,
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
-          Text(
-            'Calendar view will be implemented in a future update',
-            style: BLKWDSTypography.bodyMedium,
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingMedium),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.list),
-            label: const Text('Switch to List View'),
-            onPressed: () {
-              setState(() {
-                _isCalendarView = false;
-              });
-            },
-          ),
-        ],
+    return CalendarView(
+      controller: _controller,
+      onDaySelected: (day) {
+        // When a day is selected, show the create booking form
+        // with the selected day as the start date
+        setState(() {
+          _selectedBooking = Booking(
+            projectId: _controller.projectList.value.isNotEmpty
+                ? _controller.projectList.value.first.id!
+                : 0,
+            startDate: DateTime(
+              day.year,
+              day.month,
+              day.day,
+              DateTime.now().hour,
+              0,
+            ),
+            endDate: DateTime(
+              day.year,
+              day.month,
+              day.day,
+              DateTime.now().hour + 2,
+              0,
+            ),
+            isRecordingStudio: false,
+            isProductionStudio: false,
+            gearIds: [],
+          );
+          _showBookingForm = true;
+        });
+      },
+      onBookingSelected: (booking) {
+        // When a booking is selected, show the booking details modal
+        _showBookingDetailsModal(booking);
+      },
+    );
+  }
+
+  // Show booking details modal
+  void _showBookingDetailsModal(Booking booking) {
+    final project = _controller.getProjectById(booking.projectId);
+
+    // Get assigned members
+    final members = _controller.memberList.value;
+
+    // Get gear items
+    final gear = _controller.gearList.value
+        .where((g) => booking.gearIds.contains(g.id))
+        .toList();
+
+    showDialog(
+      context: context,
+      builder: (context) => BookingDetailsModal(
+        booking: booking,
+        project: project,
+        members: members,
+        gear: gear,
+        onEdit: () => _showEditBookingForm(booking),
+        onDelete: () => _deleteBooking(booking),
       ),
     );
   }

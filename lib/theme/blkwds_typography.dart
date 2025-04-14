@@ -9,7 +9,7 @@ class BLKWDSTypography {
   static const String headingFontFamily = 'Sora';
   static const String bodyFontFamily = 'Inter';
   static const String codeFontFamily = 'JetBrainsMono';
-  
+
   // Text Styles
   static TextStyle get displayLarge => const TextStyle(
     fontFamily: headingFontFamily,
@@ -17,67 +17,87 @@ class BLKWDSTypography {
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   static TextStyle get headlineLarge => const TextStyle(
     fontFamily: headingFontFamily,
     fontSize: 28,
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   static TextStyle get headlineMedium => const TextStyle(
     fontFamily: headingFontFamily,
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   static TextStyle get titleLarge => const TextStyle(
     fontFamily: headingFontFamily,
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   static TextStyle get titleMedium => const TextStyle(
     fontFamily: headingFontFamily,
     fontSize: 18,
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   static TextStyle get bodyLarge => const TextStyle(
     fontFamily: bodyFontFamily,
     fontSize: 16,
     color: BLKWDSColors.slateGrey,
   );
-  
+
   static TextStyle get bodyMedium => const TextStyle(
     fontFamily: bodyFontFamily,
     fontSize: 14,
     color: BLKWDSColors.slateGrey,
   );
-  
+
   static TextStyle get labelLarge => const TextStyle(
     fontFamily: bodyFontFamily,
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   static TextStyle get labelMedium => const TextStyle(
     fontFamily: bodyFontFamily,
     fontSize: 12,
     fontWeight: FontWeight.bold,
     color: BLKWDSColors.deepBlack,
   );
-  
+
+  static TextStyle get labelSmall => const TextStyle(
+    fontFamily: bodyFontFamily,
+    fontSize: 10,
+    fontWeight: FontWeight.bold,
+    color: BLKWDSColors.deepBlack,
+  );
+
+  static TextStyle get bodySmall => const TextStyle(
+    fontFamily: bodyFontFamily,
+    fontSize: 12,
+    color: BLKWDSColors.slateGrey,
+  );
+
+  static TextStyle get titleSmall => const TextStyle(
+    fontFamily: headingFontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: BLKWDSColors.deepBlack,
+  );
+
   static TextStyle get codeText => const TextStyle(
     fontFamily: codeFontFamily,
     fontSize: 14,
     color: BLKWDSColors.deepBlack,
   );
-  
+
   // Text Theme
   static TextTheme get textTheme => TextTheme(
     displayLarge: displayLarge,
@@ -85,12 +105,15 @@ class BLKWDSTypography {
     headlineMedium: headlineMedium,
     titleLarge: titleLarge,
     titleMedium: titleMedium,
+    titleSmall: titleSmall,
     bodyLarge: bodyLarge,
     bodyMedium: bodyMedium,
+    bodySmall: bodySmall,
     labelLarge: labelLarge,
     labelMedium: labelMedium,
+    labelSmall: labelSmall,
   );
-  
+
   // Google Fonts Fallback (for development until custom fonts are properly set up)
   static TextTheme get googleFontsTextTheme => TextTheme(
     displayLarge: GoogleFonts.sora(
@@ -118,12 +141,21 @@ class BLKWDSTypography {
       fontWeight: FontWeight.bold,
       color: BLKWDSColors.deepBlack,
     ),
+    titleSmall: GoogleFonts.sora(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: BLKWDSColors.deepBlack,
+    ),
     bodyLarge: GoogleFonts.inter(
       fontSize: 16,
       color: BLKWDSColors.slateGrey,
     ),
     bodyMedium: GoogleFonts.inter(
       fontSize: 14,
+      color: BLKWDSColors.slateGrey,
+    ),
+    bodySmall: GoogleFonts.inter(
+      fontSize: 12,
       color: BLKWDSColors.slateGrey,
     ),
     labelLarge: GoogleFonts.inter(
@@ -133,6 +165,11 @@ class BLKWDSTypography {
     ),
     labelMedium: GoogleFonts.inter(
       fontSize: 12,
+      fontWeight: FontWeight.bold,
+      color: BLKWDSColors.deepBlack,
+    ),
+    labelSmall: GoogleFonts.inter(
+      fontSize: 10,
       fontWeight: FontWeight.bold,
       color: BLKWDSColors.deepBlack,
     ),

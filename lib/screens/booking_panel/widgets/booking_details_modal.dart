@@ -4,31 +4,31 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../booking_panel_controller.dart';
 
-/// BookingListItem
-/// Widget for displaying a booking in a list
-class BookingListItem extends StatelessWidget {
+/// BookingDetailsModal
+/// Widget for displaying booking details in a modal
+class BookingDetailsModal extends StatelessWidget {
   final Booking booking;
-  final BookingPanelController controller;
+  final Project? project;
+  final List<Member> members;
+  final List<Gear> gear;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  const BookingListItem({
-    super.key,
+  const BookingDetailsModal({
+    Key? key,
     required this.booking,
-    required this.controller,
+    required this.project,
+    required this.members,
+    required this.gear,
     required this.onEdit,
     required this.onDelete,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Get project
-    final project = controller.getProjectById(booking.projectId);
-    
-    // Format dates
-    final dateFormat = DateFormat.yMMMd();
+    // Format dates and times
+    final dateFormat = DateFormat.yMMMMd();
     final timeFormat = DateFormat.jm();
     
     final startDateStr = dateFormat.format(booking.startDate);
@@ -40,9 +40,8 @@ class BookingListItem extends StatelessWidget {
     final now = DateTime.now();
     final isPast = booking.endDate.isBefore(now);
     final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
-    final isFuture = booking.startDate.isAfter(now);
     
-    // Determine status color
+    // Determine status color and text
     Color statusColor;
     String statusText;
     
@@ -57,15 +56,15 @@ class BookingListItem extends StatelessWidget {
       statusText = 'Upcoming';
     }
     
-    return Card(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
+    return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
       ),
-      elevation: BLKWDSConstants.cardElevation,
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Container(
+        width: 600,
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingLarge),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header with project name and status
@@ -74,8 +73,7 @@ class BookingListItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     project?.title ?? 'Unknown Project',
-                    style: BLKWDSTypography.titleMedium,
-                    overflow: TextOverflow.ellipsis,
+                    style: BLKWDSTypography.titleLarge,
                   ),
                 ),
                 Container(
@@ -84,7 +82,7 @@ class BookingListItem extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 50),
+                    color: statusColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -96,14 +94,14 @@ class BookingListItem extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: BLKWDSConstants.spacingSmall),
+            const SizedBox(height: BLKWDSConstants.spacingMedium),
             
             // Date and time
             Row(
               children: [
                 const Icon(
                   Icons.calendar_today,
-                  size: 16,
+                  size: 18,
                   color: BLKWDSColors.slateGrey,
                 ),
                 const SizedBox(width: 8),
@@ -115,15 +113,15 @@ class BookingListItem extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: BLKWDSConstants.spacingSmall),
+            const SizedBox(height: BLKWDSConstants.spacingMedium),
             
             // Studio space
-            if (booking.isRecordingStudio || booking.isProductionStudio)
+            if (booking.isRecordingStudio || booking.isProductionStudio) ...[
               Row(
                 children: [
                   const Icon(
                     Icons.business,
-                    size: 16,
+                    size: 18,
                     color: BLKWDSColors.slateGrey,
                   ),
                   const SizedBox(width: 8),
@@ -136,33 +134,67 @@ class BookingListItem extends StatelessWidget {
                   ),
                 ],
               ),
-            const SizedBox(height: BLKWDSConstants.spacingSmall),
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+            ],
             
-            // Gear count
-            Row(
-              children: [
-                const Icon(
-                  Icons.camera_alt,
-                  size: 16,
-                  color: BLKWDSColors.slateGrey,
+            // Gear
+            if (gear.isNotEmpty) ...[
+              Text(
+                'Gear',
+                style: BLKWDSTypography.titleSmall,
+              ),
+              const SizedBox(height: BLKWDSConstants.spacingSmall),
+              Container(
+                height: 150,
+                decoration: BoxDecoration(
+                  border: Border.all(color: BLKWDSColors.slateGrey.withOpacity(0.3)),
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  '${booking.gearIds.length} gear items',
-                  style: BLKWDSTypography.bodyMedium,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+                  itemCount: gear.length,
+                  itemBuilder: (context, index) {
+                    final gearItem = gear[index];
+                    final assignedMemberId = booking.assignedGearToMember?[gearItem.id];
+                    final assignedMember = assignedMemberId != null
+                        ? members.firstWhere(
+                            (m) => m.id == assignedMemberId,
+                            orElse: () => Member(name: 'Unknown', role: 'Unknown'),
+                          )
+                        : null;
+                    
+                    return ListTile(
+                      title: Text(gearItem.name),
+                      subtitle: Text(gearItem.category),
+                      trailing: assignedMember != null
+                          ? Chip(
+                              label: Text(assignedMember.name),
+                              backgroundColor: BLKWDSColors.electricMint.withOpacity(0.2),
+                            )
+                          : null,
+                    );
+                  },
                 ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
+              ),
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+            ],
             
             // Actions
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingSmall),
                 TextButton.icon(
                   icon: const Icon(Icons.edit),
                   label: const Text('Edit'),
-                  onPressed: onEdit,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onEdit();
+                  },
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 TextButton.icon(
@@ -171,7 +203,10 @@ class BookingListItem extends StatelessWidget {
                   style: TextButton.styleFrom(
                     foregroundColor: BLKWDSColors.errorRed,
                   ),
-                  onPressed: onDelete,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onDelete();
+                  },
                 ),
               ],
             ),

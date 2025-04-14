@@ -16,12 +16,12 @@ class BookingForm extends StatefulWidget {
   final VoidCallback onCancel;
 
   const BookingForm({
-    Key? key,
+    super.key,
     required this.controller,
     this.booking,
     required this.onSave,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   State<BookingForm> createState() => _BookingFormState();
@@ -409,7 +409,7 @@ class _BookingFormState extends State<BookingForm> {
                             value: member.id,
                             child: Text(member.name),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (value) {
                         setState(() {
