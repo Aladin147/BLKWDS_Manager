@@ -1,5 +1,19 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-16
+
+### Database Implementation
+
+- Connected dashboard UI to real database service
+- Implemented DashboardController for state management and business logic
+- Added proper error handling and loading states
+- Created DataSeeder for populating database with sample data
+- Implemented gear checkout/checkin with notes functionality
+- Enhanced DateFormatter with relative time formatting
+- Fixed deprecated color opacity methods using withValues()
+- Added ValueListenableBuilder pattern for reactive UI updates
+- Successfully tested database operations with real data
+
 ## 2025-04-15
 
 ### Bug Fixes & Platform Compatibility
@@ -51,8 +65,9 @@
 
 ### Next Steps
 
-- Implement gear checkout and return functionality
-- Create booking panel screen
-- Implement gear inventory screen
-- Add calendar view
-- Connect UI to database service
+- Implement Add Gear screen for adding new equipment
+- Create Booking Panel screen for managing bookings
+- Implement Gear Inventory screen with detailed view
+- Add Calendar View for visualizing bookings
+- Implement CSV export functionality for reports
+- Add unit tests for database service and controllers

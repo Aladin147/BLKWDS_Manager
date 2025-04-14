@@ -34,12 +34,19 @@
 
 ---
 
-## 🟢 v0.3.0 – Dashboard Enhancement *(upcoming)*
-### 🚧 Planned:
-- Implement main dashboard layout with dummy gear
-- Setup full gear status rendering
-- Implement quick checkout + return actions
-- Hook dashboard to DBService for live interaction
+## 🟢 v0.3.0 – Dashboard Enhancement (2025-04-16)
+### ✨ Features
+- Connected dashboard UI to real database service
+- Implemented DashboardController for state management
+- Added gear checkout/checkin with notes functionality
+- Created DataSeeder for sample data population
+- Added loading indicators and error handling
+- Implemented reactive UI with ValueListenableBuilder
+
+### 🐛 Fixes
+- Fixed deprecated color opacity methods
+- Enhanced DateFormatter with relative time formatting
+- Improved error messages and user feedback
 
 ---
 
