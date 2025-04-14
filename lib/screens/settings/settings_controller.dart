@@ -15,18 +15,18 @@ class SettingsController {
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
   final ValueNotifier<String?> successMessage = ValueNotifier<String?>(null);
-  
+
   // Theme settings
   final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
-  
+
   // App information
   final String appVersion = '1.0.0';
   final String appBuildNumber = '1';
   final String appCopyright = '© ${DateTime.now().year} BLKWDS Studios';
-  
+
   // Shared preferences keys
   static const String _themeModeKey = 'theme_mode';
-  
+
   // Initialize controller
   Future<void> initialize() async {
     isLoading.value = true;
@@ -47,7 +47,7 @@ class SettingsController {
   Future<void> _loadPreferences() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Load theme mode
       final themeModeIndex = prefs.getInt(_themeModeKey);
       if (themeModeIndex != null) {
@@ -63,7 +63,7 @@ class SettingsController {
   Future<void> _savePreferences() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Save theme mode
       await prefs.setInt(_themeModeKey, themeMode.value.index);
     } catch (e) {
@@ -131,51 +131,51 @@ class SettingsController {
       // Read file
       final file = File(filePath);
       final jsonData = await file.readAsString();
-      
+
       // Parse JSON
       final importData = jsonDecode(jsonData);
-      
+
       // Validate data
       if (!_validateImportData(importData)) {
         errorMessage.value = 'Invalid import data format';
         return false;
       }
-      
+
       // Clear existing data
       await DBService.clearAllData();
-      
+
       // Import members
       final members = (importData['members'] as List)
           .map((m) => Member.fromJson(m))
           .toList();
       for (final member in members) {
-        await DBService.addMember(member);
+        await DBService.insertMember(member);
       }
-      
+
       // Import projects
       final projects = (importData['projects'] as List)
           .map((p) => Project.fromJson(p))
           .toList();
       for (final project in projects) {
-        await DBService.addProject(project);
+        await DBService.insertProject(project);
       }
-      
+
       // Import gear
       final gear = (importData['gear'] as List)
           .map((g) => Gear.fromJson(g))
           .toList();
       for (final item in gear) {
-        await DBService.addGear(item);
+        await DBService.insertGear(item);
       }
-      
+
       // Import bookings
       final bookings = (importData['bookings'] as List)
           .map((b) => Booking.fromJson(b))
           .toList();
       for (final booking in bookings) {
-        await DBService.addBooking(booking);
+        await DBService.insertBooking(booking);
       }
-      
+
       successMessage.value = 'Data imported successfully';
       return true;
     } catch (e) {
@@ -205,35 +205,35 @@ class SettingsController {
       final directory = await getApplicationDocumentsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final List<String> filePaths = [];
-      
+
       // Export members
       final members = await DBService.getAllMembers();
       final membersFile = File('${directory.path}/blkwds_members_$timestamp.csv');
       final membersData = _convertMembersToCsv(members);
       await membersFile.writeAsString(membersData);
       filePaths.add(membersFile.path);
-      
+
       // Export projects
       final projects = await DBService.getAllProjects();
       final projectsFile = File('${directory.path}/blkwds_projects_$timestamp.csv');
       final projectsData = _convertProjectsToCsv(projects);
       await projectsFile.writeAsString(projectsData);
       filePaths.add(projectsFile.path);
-      
+
       // Export gear
       final gear = await DBService.getAllGear();
       final gearFile = File('${directory.path}/blkwds_gear_$timestamp.csv');
       final gearData = _convertGearToCsv(gear);
       await gearFile.writeAsString(gearData);
       filePaths.add(gearFile.path);
-      
+
       // Export bookings
       final bookings = await DBService.getAllBookings();
       final bookingsFile = File('${directory.path}/blkwds_bookings_$timestamp.csv');
       final bookingsData = _convertBookingsToCsv(bookings);
       await bookingsFile.writeAsString(bookingsData);
       filePaths.add(bookingsFile.path);
-      
+
       successMessage.value = 'Data exported to CSV successfully';
       return filePaths;
     } catch (e) {
@@ -248,66 +248,66 @@ class SettingsController {
   // Convert members to CSV
   String _convertMembersToCsv(List<Member> members) {
     final buffer = StringBuffer();
-    
+
     // Header
     buffer.writeln('ID,Name,Email,Phone');
-    
+
     // Data
     for (final member in members) {
       buffer.writeln('${member.id},${_escapeCsv(member.name)},${_escapeCsv(member.email ?? '')},${_escapeCsv(member.phone ?? '')}');
     }
-    
+
     return buffer.toString();
   }
 
   // Convert projects to CSV
   String _convertProjectsToCsv(List<Project> projects) {
     final buffer = StringBuffer();
-    
+
     // Header
     buffer.writeln('ID,Title,Description,Client');
-    
+
     // Data
     for (final project in projects) {
       buffer.writeln('${project.id},${_escapeCsv(project.title)},${_escapeCsv(project.description ?? '')},${_escapeCsv(project.client ?? '')}');
     }
-    
+
     return buffer.toString();
   }
 
   // Convert gear to CSV
   String _convertGearToCsv(List<Gear> gear) {
     final buffer = StringBuffer();
-    
+
     // Header
     buffer.writeln('ID,Name,Category,Description,Serial Number,Purchase Date,Is Out');
-    
+
     // Data
     for (final item in gear) {
       final purchaseDate = item.purchaseDate != null
           ? item.purchaseDate!.toIso8601String()
           : '';
-      
+
       buffer.writeln('${item.id},${_escapeCsv(item.name)},${_escapeCsv(item.category)},${_escapeCsv(item.description ?? '')},${_escapeCsv(item.serialNumber ?? '')},$purchaseDate,${item.isOut}');
     }
-    
+
     return buffer.toString();
   }
 
   // Convert bookings to CSV
   String _convertBookingsToCsv(List<Booking> bookings) {
     final buffer = StringBuffer();
-    
+
     // Header
     buffer.writeln('ID,Project ID,Start Date,End Date,Recording Studio,Production Studio,Gear IDs');
-    
+
     // Data
     for (final booking in bookings) {
       final gearIds = booking.gearIds.join(';');
-      
+
       buffer.writeln('${booking.id},${booking.projectId},${booking.startDate.toIso8601String()},${booking.endDate.toIso8601String()},${booking.isRecordingStudio},${booking.isProductionStudio},$gearIds');
     }
-    
+
     return buffer.toString();
   }
 
@@ -328,10 +328,10 @@ class SettingsController {
     try {
       // Clear all data
       await DBService.clearAllData();
-      
+
       // Add default data
       await _addDefaultData();
-      
+
       successMessage.value = 'App data reset successfully';
       return true;
     } catch (e) {
@@ -346,23 +346,23 @@ class SettingsController {
   // Add default data
   Future<void> _addDefaultData() async {
     // Add default members
-    await DBService.addMember(Member(
+    await DBService.insertMember(Member(
       id: 1,
       name: 'Alex Johnson',
       email: 'alex@example.com',
       phone: '555-123-4567',
     ));
-    
+
     // Add default projects
-    await DBService.addProject(Project(
+    await DBService.insertProject(Project(
       id: 1,
       title: 'Brand Commercial',
       description: 'Commercial shoot for Brand X',
       client: 'Brand X',
     ));
-    
+
     // Add default gear
-    await DBService.addGear(Gear(
+    await DBService.insertGear(Gear(
       id: 1,
       name: 'Canon R6',
       category: 'Camera',

@@ -40,6 +40,23 @@ class Gear {
     );
   }
 
+  /// Create a Gear object from JSON
+  factory Gear.fromJson(Map<String, dynamic> json) {
+    return Gear(
+      id: json['id'] as int?,
+      name: json['name'] as String,
+      category: json['category'] as String,
+      description: json['description'] as String?,
+      serialNumber: json['serialNumber'] as String?,
+      purchaseDate: json['purchaseDate'] != null
+          ? DateTime.parse(json['purchaseDate'] as String)
+          : null,
+      thumbnailPath: json['thumbnailPath'] as String?,
+      isOut: json['isOut'] as bool,
+      lastNote: json['lastNote'] as String?,
+    );
+  }
+
   /// Convert Gear object to a map (for database operations)
   Map<String, dynamic> toMap() {
     // Create a map with non-null values only
@@ -58,6 +75,21 @@ class Gear {
     if (lastNote != null) map['lastNote'] = lastNote;
 
     return map;
+  }
+
+  /// Convert Gear object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'category': category,
+      'description': description,
+      'serialNumber': serialNumber,
+      'purchaseDate': purchaseDate?.toIso8601String(),
+      'thumbnailPath': thumbnailPath,
+      'isOut': isOut,
+      'lastNote': lastNote,
+    };
   }
 
   /// Create a copy of this Gear with modified fields
@@ -89,4 +121,31 @@ class Gear {
   String toString() {
     return 'Gear(id: $id, name: $name, category: $category, serialNumber: $serialNumber, isOut: $isOut)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Gear &&
+        other.id == id &&
+        other.name == name &&
+        other.category == category &&
+        other.description == description &&
+        other.serialNumber == serialNumber &&
+        other.purchaseDate == purchaseDate &&
+        other.thumbnailPath == thumbnailPath &&
+        other.isOut == isOut &&
+        other.lastNote == lastNote;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      category.hashCode ^
+      (description?.hashCode ?? 0) ^
+      (serialNumber?.hashCode ?? 0) ^
+      (purchaseDate?.hashCode ?? 0) ^
+      (thumbnailPath?.hashCode ?? 0) ^
+      isOut.hashCode ^
+      (lastNote?.hashCode ?? 0);
 }

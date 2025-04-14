@@ -164,11 +164,13 @@ class ExportService {
         extensions: ['csv'],
       );
 
-      // Use the file_selector's getSavePath function
-      final String? outputPath = await file_selector.getSavePath(
+      // Use the file_selector's getSaveLocation function
+      final file_selector.FileSaveLocation? saveLocation = await file_selector.getSaveLocation(
         suggestedName: defaultFileName,
         acceptedTypeGroups: [csvTypeGroup],
       );
+
+      final String? outputPath = saveLocation?.path;
 
       return outputPath;
     } catch (e) {

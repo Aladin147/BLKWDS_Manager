@@ -41,7 +41,6 @@ class BookingListItem extends StatelessWidget {
     final now = DateTime.now();
     final isPast = booking.endDate.isBefore(now);
     final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
-    final isFuture = booking.startDate.isAfter(now);
 
     // Determine status color
     Color statusColor;

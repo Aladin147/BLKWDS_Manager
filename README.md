@@ -74,7 +74,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 ## 🚦 Development Status
 - Basic project structure and architecture implemented
 - Theme system and data models created
-- Dashboard UI with real database integration
+- Dashboard UI with real database integration and space-efficient layout
 - Windows compatibility issues resolved
 - Database service with CRUD operations implemented
 - Gear checkout/checkin functionality working
@@ -82,6 +82,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 - Image upload functionality working
 - Database migration system implemented
 - Booking Panel with list view and form functionality implemented
+- Improved dashboard layout with functional zones and better visual hierarchy
 
 ### Upcoming Priorities
 - Calendar View for visualizing bookings
@@ -103,7 +104,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## ✅ Version
-Current: **v0.6.0 – Calendar View**
+Current: **v0.6.0 – Dashboard Layout Improvement**
 
 ---
 

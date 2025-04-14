@@ -715,4 +715,22 @@ class DBService {
       return true;
     });
   }
+
+  /// Clear all data from the database
+  static Future<void> clearAllData() async {
+    final db = await database;
+    await db.transaction((txn) async {
+      // Delete all data from all tables
+      await txn.delete('gear');
+      await txn.delete('member');
+      await txn.delete('project');
+      await txn.delete('booking');
+      await txn.delete('booking_gear');
+      await txn.delete('booking_gear_member');
+      await txn.delete('project_member');
+      await txn.delete('activity_log');
+      await txn.delete('status_note');
+    });
+    print('All data cleared from database');
+  }
 }

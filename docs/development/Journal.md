@@ -1,5 +1,25 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-22
+
+### Dashboard Layout Improvement
+
+- Implemented a more space-efficient dashboard layout based on design philosophy
+- Created new widget components for better organization and maintainability:
+  - TopBarSummaryWidget: Shows key metrics at a glance (gear out, bookings today, gear returning, studio availability)
+  - QuickActionsPanel: Provides quick access to common actions (Add Gear, Booking Panel, Export Logs)
+  - TodayBookingWidget: Displays bookings scheduled for today
+  - GearPreviewListWidget: Shows a preview of recently used gear with quick actions
+  - RecentActivityWidget: Shows recent activity logs
+- Implemented a zoned layout approach:
+  - Top Zone: Status bar with key metrics
+  - Middle Zone: Split into left (actions) and right (today's bookings)
+  - Bottom Zone: Split into gear preview and recent activity
+- Added "View All Gear" option that opens a modal with search functionality
+- Fixed layout overflow issues using SingleChildScrollView and proper sizing
+- Improved visual hierarchy with clear section titles
+- Enhanced user experience by bringing the most important information to the forefront
+
 ## 2025-04-21
 
 ### Development Approach Update - Hybrid Strategy

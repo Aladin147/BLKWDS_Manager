@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../theme/blkwds_colors.dart';
-import '../../utils/constants.dart';
 
 /// CalendarController
 /// Handles state management and business logic for the Calendar screen
@@ -15,7 +13,7 @@ class CalendarController {
   final ValueNotifier<List<Gear>> gearList = ValueNotifier<List<Gear>>([]);
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
-  
+
   // Filter state
   final ValueNotifier<int?> selectedProjectId = ValueNotifier<int?>(null);
   final ValueNotifier<int?> selectedMemberId = ValueNotifier<int?>(null);
@@ -93,7 +91,7 @@ class CalendarController {
 
     // Filter by project
     if (selectedProjectId.value != null) {
-      filteredBookings = filteredBookings.where((booking) => 
+      filteredBookings = filteredBookings.where((booking) =>
         booking.projectId == selectedProjectId.value
       ).toList();
     }
@@ -111,20 +109,20 @@ class CalendarController {
 
     // Filter by gear
     if (selectedGearId.value != null) {
-      filteredBookings = filteredBookings.where((booking) => 
+      filteredBookings = filteredBookings.where((booking) =>
         booking.gearIds.contains(selectedGearId.value)
       ).toList();
     }
 
     // Filter by date range
     if (filterStartDate.value != null) {
-      filteredBookings = filteredBookings.where((booking) => 
+      filteredBookings = filteredBookings.where((booking) =>
         booking.endDate.isAfter(filterStartDate.value!)
       ).toList();
     }
 
     if (filterEndDate.value != null) {
-      filteredBookings = filteredBookings.where((booking) => 
+      filteredBookings = filteredBookings.where((booking) =>
         booking.startDate.isBefore(filterEndDate.value!)
       ).toList();
     }
@@ -146,12 +144,12 @@ class CalendarController {
     final filteredBookings = getFilteredBookings();
     final startOfDay = DateTime(day.year, day.month, day.day);
     final endOfDay = DateTime(day.year, day.month, day.day, 23, 59, 59);
-    
+
     return filteredBookings.where((booking) {
       // Check if booking overlaps with the day
-      return (booking.startDate.isBefore(endOfDay) || 
-              booking.startDate.isAtSameMomentAs(endOfDay)) && 
-             (booking.endDate.isAfter(startOfDay) || 
+      return (booking.startDate.isBefore(endOfDay) ||
+              booking.startDate.isAtSameMomentAs(endOfDay)) &&
+             (booking.endDate.isAfter(startOfDay) ||
               booking.endDate.isAtSameMomentAs(startOfDay));
     }).toList();
   }
@@ -159,12 +157,12 @@ class CalendarController {
   // Get bookings in a date range
   List<Booking> getBookingsInRange(DateTime start, DateTime end) {
     final filteredBookings = getFilteredBookings();
-    
+
     return filteredBookings.where((booking) {
       // Check if booking overlaps with the range
-      return (booking.startDate.isBefore(end) || 
-              booking.startDate.isAtSameMomentAs(end)) && 
-             (booking.endDate.isAfter(start) || 
+      return (booking.startDate.isBefore(end) ||
+              booking.startDate.isAtSameMomentAs(end)) &&
+             (booking.endDate.isAfter(start) ||
               booking.endDate.isAtSameMomentAs(start));
     }).toList();
   }
@@ -186,7 +184,7 @@ class CalendarController {
         BLKWDSColors.accentTeal,
         BLKWDSColors.blkwdsGreen,
       ];
-      
+
       return projectColors[hash.abs() % projectColors.length];
     }
     return BLKWDSColors.slateGrey;

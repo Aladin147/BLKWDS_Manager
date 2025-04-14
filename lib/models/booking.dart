@@ -36,6 +36,31 @@ class Booking {
     );
   }
 
+  /// Create a Booking object from JSON
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    Map<int, int>? assignments;
+    if (json['assignedGearToMember'] != null) {
+      assignments = {};
+      final Map<String, dynamic> assignMap = json['assignedGearToMember'] as Map<String, dynamic>;
+      assignMap.forEach((key, value) {
+        assignments![int.parse(key)] = value as int;
+      });
+    }
+
+    return Booking(
+      id: json['id'] as int?,
+      projectId: json['projectId'] as int,
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      isRecordingStudio: json['isRecordingStudio'] as bool,
+      isProductionStudio: json['isProductionStudio'] as bool,
+      gearIds: json['gearIds'] != null
+          ? List<int>.from(json['gearIds'] as List)
+          : const [],
+      assignedGearToMember: assignments,
+    );
+  }
+
   /// Convert Booking object to a map (for database operations)
   Map<String, dynamic> toMap() {
     return {
@@ -46,6 +71,28 @@ class Booking {
       'isRecordingStudio': isRecordingStudio ? 1 : 0,
       'isProductionStudio': isProductionStudio ? 1 : 0,
       // Gear IDs and assignments are stored in a separate table, so they're not in the map
+    };
+  }
+
+  /// Convert Booking object to JSON
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic>? assignments;
+    if (assignedGearToMember != null) {
+      assignments = {};
+      assignedGearToMember!.forEach((gearId, memberId) {
+        assignments![gearId.toString()] = memberId;
+      });
+    }
+
+    return {
+      'id': id,
+      'projectId': projectId,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'isRecordingStudio': isRecordingStudio,
+      'isProductionStudio': isProductionStudio,
+      'gearIds': gearIds,
+      'assignedGearToMember': assignments,
     };
   }
 
@@ -76,4 +123,25 @@ class Booking {
   String toString() {
     return 'Booking(id: $id, projectId: $projectId, startDate: $startDate, endDate: $endDate)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Booking &&
+        other.id == id &&
+        other.projectId == projectId &&
+        other.startDate == startDate &&
+        other.endDate == endDate &&
+        other.isRecordingStudio == isRecordingStudio &&
+        other.isProductionStudio == isProductionStudio;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      projectId.hashCode ^
+      startDate.hashCode ^
+      endDate.hashCode ^
+      isRecordingStudio.hashCode ^
+      isProductionStudio.hashCode;
 }

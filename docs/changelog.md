@@ -83,7 +83,25 @@
 
 ---
 
-## 🟡 v0.6.0 – Calendar View
+## 🟢 v0.6.0 – Dashboard Layout Improvement (2025-04-22)
+### ✨ Features
+- Implemented a more space-efficient dashboard layout with functional zones
+- Created new widget components for better organization:
+  - TopBarSummaryWidget: Shows key metrics at a glance
+  - QuickActionsPanel: Provides quick access to common actions
+  - TodayBookingWidget: Displays bookings scheduled for today
+  - GearPreviewListWidget: Shows a preview of recently used gear
+  - RecentActivityWidget: Shows recent activity logs
+- Added "View All Gear" option with modal and search functionality
+- Improved visual hierarchy with clear section titles
+- Enhanced user experience by bringing important information to the forefront
+
+### 🐛 Fixes
+- Fixed layout overflow issues using SingleChildScrollView
+- Improved component sizing and spacing for better visual balance
+- Fixed deprecated withOpacity calls with withValues for consistent styling
+
+## 🟡 v0.7.0 – Calendar View
 ### Planned:
 - Render monthly calendar
 - Color-code booking types

@@ -17,14 +17,14 @@ class BookingDetailsModal extends StatelessWidget {
   final VoidCallback onDelete;
 
   const BookingDetailsModal({
-    Key? key,
+    super.key,
     required this.booking,
     required this.project,
     required this.members,
     required this.gear,
     required this.onEdit,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

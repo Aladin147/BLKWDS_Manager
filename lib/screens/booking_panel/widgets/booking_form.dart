@@ -4,7 +4,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../../../utils/constants.dart';
+
 import '../../../widgets/blkwds_widgets.dart';
 import '../booking_panel_controller.dart';
 

@@ -3,7 +3,7 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
-import '../../utils/date_formatter.dart';
+
 import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
 import '../add_gear/add_gear_screen.dart';
@@ -11,6 +11,11 @@ import '../booking_panel/booking_panel_screen.dart';
 import '../calendar/calendar_screen.dart';
 import '../settings/settings_screen.dart';
 import 'dashboard_controller.dart';
+import 'widgets/top_bar_summary_widget.dart';
+import 'widgets/quick_actions_panel.dart';
+import 'widgets/today_booking_widget.dart';
+import 'widgets/gear_preview_list_widget.dart';
+import 'widgets/recent_activity_widget.dart';
 
 /// DashboardScreen
 /// The main dashboard screen of the app
@@ -191,47 +196,206 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Member selector and search bar
-          Container(
-            color: BLKWDSColors.white,
-            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-            child: Row(
-              children: [
-                // Member dropdown
-                // Note: We're still using DropdownButtonFormField for Member selection
-                // because BLKWDSDropdown requires explicit type handling that's complex with Member objects
-                Expanded(
-                  flex: 2,
-                  child: DropdownButtonFormField<Member>(
-                    decoration: const InputDecoration(
-                      labelText: 'Select Member',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: BLKWDSConstants.inputHorizontalPadding,
-                        vertical: BLKWDSConstants.inputVerticalPadding,
+      body: ValueListenableBuilder<bool>(
+        valueListenable: _controller.isLoading,
+        builder: (context, isLoading, _) {
+          if (isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return ValueListenableBuilder<String?>(
+            valueListenable: _controller.errorMessage,
+            builder: (context, error, _) {
+              if (error != null) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, size: 48, color: BLKWDSColors.statusOut),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
+                      Text(
+                        'Error loading data',
+                        style: BLKWDSTypography.titleMedium,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingSmall),
+                      Text(
+                        error,
+                        style: BLKWDSTypography.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
+                      ElevatedButton(
+                        onPressed: _initializeData,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Top summary bar
+                  TopBarSummaryWidget(controller: _controller),
+
+                  // Member selector
+                  Container(
+                    color: BLKWDSColors.white,
+                    padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                    child: Row(
+                      children: [
+                        // Member dropdown
+                        Expanded(
+                          child: DropdownButtonFormField<Member>(
+                            decoration: const InputDecoration(
+                              labelText: 'Select Member',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: BLKWDSConstants.inputHorizontalPadding,
+                                vertical: BLKWDSConstants.inputVerticalPadding,
+                              ),
+                            ),
+                            value: _selectedMember,
+                            items: _controller.memberList.value.map((member) {
+                              return DropdownMenuItem<Member>(
+                                value: member,
+                                child: Text(member.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedMember = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Main content area
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left side - Quick actions
+                          Expanded(
+                            flex: 1,
+                            child: QuickActionsPanel(
+                              onAddGear: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AddGearScreen(),
+                                  ),
+                                );
+
+                                if (result == true) {
+                                  // Refresh data when returning from add gear screen
+                                  await _controller.initialize();
+                                  _updateFilteredGear();
+                                }
+                              },
+                              onOpenBookingPanel: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const BookingPanelScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(width: BLKWDSConstants.spacingMedium),
+
+                          // Right side - Today's bookings
+                          Expanded(
+                            flex: 2,
+                            child: TodayBookingWidget(controller: _controller),
+                          ),
+                        ],
                       ),
                     ),
-                    value: _selectedMember,
-                    items: _controller.memberList.value.map((member) {
-                      return DropdownMenuItem<Member>(
-                        value: member,
-                        child: Text(member.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedMember = value;
-                      });
-                    },
+                  ),
+
+                  // Bottom section - Gear preview and activity
+                  Container(
+                    height: 250,
+                    padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Gear preview list
+                        Expanded(
+                          flex: 3,
+                          child: GearPreviewListWidget(
+                            controller: _controller,
+                            onCheckout: _handleCheckout,
+                            onReturn: _handleReturn,
+                            onViewAllGear: () {
+                              // Show search bar and full gear list
+                              _showSearchAndFullGearList(context);
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(width: BLKWDSConstants.spacingMedium),
+
+                        // Recent activity
+                        Expanded(
+                          flex: 2,
+                          child: RecentActivityWidget(controller: _controller),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  // Show search bar and full gear list in a modal bottom sheet
+  void _showSearchAndFullGearList(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (_, scrollController) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: BLKWDSColors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              children: [
+                // Handle
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  height: 5,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: BLKWDSColors.slateGrey.withValues(alpha: 75),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingMedium),
+
                 // Search bar
-                Expanded(
-                  flex: 3,
+                Padding(
+                  padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
                   child: BLKWDSTextField(
                     label: 'Search Gear',
                     prefixIcon: Icons.search,
@@ -242,157 +406,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   ),
                 ),
-              ],
-            ),
-          ),
 
-          // Action buttons
-          Container(
-            color: BLKWDSColors.white,
-            padding: const EdgeInsets.symmetric(
-              horizontal: BLKWDSConstants.spacingMedium,
-              vertical: BLKWDSConstants.spacingSmall,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                BLKWDSButton(
-                  label: 'Add Gear',
-                  icon: Icons.add,
-                  type: BLKWDSButtonType.primary,
-                  onPressed: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddGearScreen(),
-                      ),
-                    );
-
-                    if (result == true) {
-                      // Refresh data when returning from add gear screen
-                      await _controller.initialize();
-                      _updateFilteredGear();
-                    }
-                  },
-                ),
-                const SizedBox(width: BLKWDSConstants.spacingMedium),
-                BLKWDSButton(
-                  label: 'Booking Panel',
-                  icon: Icons.calendar_today,
-                  type: BLKWDSButtonType.primary,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const BookingPanelScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          // Gear list
-          Expanded(
-            child: Container(
-              color: BLKWDSColors.white.withValues(alpha: 230),
-              margin: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _controller.isLoading,
-                builder: (context, isLoading, _) {
-                  if (isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  return ValueListenableBuilder<String?>(
-                    valueListenable: _controller.errorMessage,
-                    builder: (context, error, _) {
-                      if (error != null) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.error_outline, size: 48, color: BLKWDSColors.statusOut),
-                              const SizedBox(height: BLKWDSConstants.spacingMedium),
-                              Text(
-                                'Error loading gear',
-                                style: BLKWDSTypography.titleMedium,
-                              ),
-                              const SizedBox(height: BLKWDSConstants.spacingSmall),
-                              Text(
-                                error,
-                                style: BLKWDSTypography.bodyMedium,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: BLKWDSConstants.spacingMedium),
-                              ElevatedButton(
-                                onPressed: _initializeData,
-                                child: const Text('Retry'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
-                      return _filteredGear.isEmpty
-                          ? Center(
-                              child: Text(
-                                'No gear found',
-                                style: BLKWDSTypography.bodyLarge,
-                              ),
-                            )
-                          : ListView.builder(
-                              itemCount: _filteredGear.length,
-                              itemBuilder: (context, index) {
-                                final gear = _filteredGear[index];
-                                return _buildGearCard(gear);
-                              },
-                            );
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
-
-          // Recent activity
-          Container(
-            height: 150,
-            color: BLKWDSColors.white,
-            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Recent Activity',
-                  style: BLKWDSTypography.titleMedium,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingSmall),
+                // Gear list
                 Expanded(
-                  child: ValueListenableBuilder<List<ActivityLog>>(
-                    valueListenable: _controller.recentActivity,
-                    builder: (context, activities, _) {
-                      return activities.isEmpty
-                          ? const Center(
-                              child: Text('No recent activity'),
-                            )
-                          : ListView.builder(
-                              itemCount: activities.length,
-                              itemBuilder: (context, index) {
-                                final activity = activities[index];
-                                return _buildActivityItem(activity);
-                              },
-                            );
-                    },
-                  ),
+                  child: _filteredGear.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No gear found',
+                          style: BLKWDSTypography.bodyLarge,
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: scrollController,
+                        itemCount: _filteredGear.length,
+                        itemBuilder: (context, index) {
+                          final gear = _filteredGear[index];
+                          return _buildGearCard(gear);
+                        },
+                      ),
                 ),
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -487,56 +523,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // Build an activity item
-  Widget _buildActivityItem(ActivityLog activity) {
-    // Find gear and member names
-    final gear = _controller.gearList.value.firstWhere(
-      (g) => g.id == activity.gearId,
-      orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
-    );
 
-    final member = activity.memberId != null
-        ? _controller.memberList.value.firstWhere(
-            (m) => m.id == activity.memberId,
-            orElse: () => Member(id: 0, name: 'Unknown'),
-          )
-        : null;
-
-    final String actionText = activity.checkedOut
-        ? '${gear.name} checked out to ${member?.name ?? 'Unknown'}'
-        : '${gear.name} returned';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(
-            activity.checkedOut ? Icons.logout : Icons.login,
-            color: activity.checkedOut
-                ? BLKWDSColors.statusOut
-                : BLKWDSColors.statusIn,
-            size: 16,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              actionText,
-              style: BLKWDSTypography.bodyMedium,
-            ),
-          ),
-          Text(
-            _formatTimestamp(activity.timestamp),
-            style: BLKWDSTypography.bodyMedium.copyWith(
-              color: BLKWDSColors.slateGrey.withValues(alpha: 180),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Format a timestamp
-  String _formatTimestamp(DateTime timestamp) {
-    return DateFormatter.formatRelativeTime(timestamp);
-  }
 }

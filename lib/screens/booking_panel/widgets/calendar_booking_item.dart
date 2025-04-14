@@ -13,11 +13,11 @@ class CalendarBookingItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const CalendarBookingItem({
-    Key? key,
+    super.key,
     required this.booking,
     required this.project,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +25,16 @@ class CalendarBookingItem extends StatelessWidget {
     final timeFormat = DateFormat.jm();
     final startTimeStr = timeFormat.format(booking.startDate);
     final endTimeStr = timeFormat.format(booking.endDate);
-    
+
     // Check if booking is in the past, current, or future
     final now = DateTime.now();
     final isPast = booking.endDate.isBefore(now);
     final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
-    final isFuture = booking.startDate.isAfter(now);
-    
+
     // Determine status color
     Color statusColor;
     String statusText;
-    
+
     if (isPast) {
       statusColor = BLKWDSColors.slateGrey;
       statusText = 'Past';
@@ -46,14 +45,14 @@ class CalendarBookingItem extends StatelessWidget {
       statusColor = BLKWDSColors.electricMint;
       statusText = 'Upcoming';
     }
-    
+
     // Determine project color (for the left border)
     // In a real app, you might want to assign colors to projects
     // For now, we'll use a simple hash-based approach
     final projectColor = project != null
-        ? Color(project.hashCode).withOpacity(0.8)
+        ? Color(project.hashCode).withValues(alpha: 200)
         : BLKWDSColors.slateGrey;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
       shape: RoundedRectangleBorder(
@@ -88,7 +87,7 @@ class CalendarBookingItem extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: BLKWDSConstants.spacingMedium),
-              
+
               // Project and details
               Expanded(
                 child: Column(
@@ -142,7 +141,7 @@ class CalendarBookingItem extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Status
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -150,7 +149,7 @@ class CalendarBookingItem extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withValues(alpha: 50),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

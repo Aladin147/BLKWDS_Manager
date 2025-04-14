@@ -16,11 +16,11 @@ class CalendarView extends StatefulWidget {
   final Function(Booking) onBookingSelected;
 
   const CalendarView({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onDaySelected,
     required this.onBookingSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -39,7 +39,7 @@ class _CalendarViewState extends State<CalendarView> {
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
     _selectedBookings = ValueNotifier<List<Booking>>([]);
-    
+
     // Initialize selected bookings
     _updateSelectedBookings();
   }
@@ -60,10 +60,7 @@ class _CalendarViewState extends State<CalendarView> {
     return widget.controller.getBookingsForDay(day);
   }
 
-  // Check if a day has any bookings
-  bool _hasBookingsOnDay(DateTime day) {
-    return widget.controller.hasBookingsOnDay(day);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +114,7 @@ class _CalendarViewState extends State<CalendarView> {
           ),
         ),
         const SizedBox(height: BLKWDSConstants.spacingMedium),
-        
+
         // Calendar
         TableCalendar<Booking>(
           firstDay: DateTime.utc(2020, 1, 1),
@@ -170,7 +167,7 @@ class _CalendarViewState extends State<CalendarView> {
           },
         ),
         const SizedBox(height: BLKWDSConstants.spacingMedium),
-        
+
         // Selected day bookings
         Expanded(
           child: ValueListenableBuilder<List<Booking>>(
@@ -201,14 +198,14 @@ class _CalendarViewState extends State<CalendarView> {
                   ),
                 );
               }
-              
+
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: BLKWDSConstants.spacingMedium),
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
                   final booking = bookings[index];
                   final project = widget.controller.getProjectById(booking.projectId);
-                  
+
                   return CalendarBookingItem(
                     booking: booking,
                     project: project,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import '../../theme/blkwds_colors.dart';
+import 'package:file_selector/file_selector.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -60,18 +59,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     // Pick file
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['json'],
-    );
+    final typeGroup = XTypeGroup(label: 'JSON', extensions: ['json']);
+    final file = await openFile(acceptedTypeGroups: [typeGroup]);
 
-    if (result != null && result.files.isNotEmpty) {
-      final filePath = result.files.first.path;
-      if (filePath != null) {
-        final success = await _controller.importData(filePath);
-        if (success) {
-          _showSnackBar('Data imported successfully');
-        }
+    if (file != null) {
+      final success = await _controller.importData(file.path);
+      if (success) {
+        _showSnackBar('Data imported successfully');
       }
     }
   }
@@ -175,7 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Theme Mode',
                               style: BLKWDSTypography.labelMedium,
                             ),
@@ -209,7 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
-                
+
                 // Data management
                 SettingsSection(
                   title: 'Data Management',
@@ -223,7 +217,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isFullWidth: true,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    
+
                     // Import data
                     BLKWDSButton(
                       label: 'Import Data (JSON)',
@@ -233,7 +227,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isFullWidth: true,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    
+
                     // Export to CSV
                     BLKWDSButton(
                       label: 'Export to CSV',
@@ -243,7 +237,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isFullWidth: true,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    
+
                     // Reset app data
                     BLKWDSButton(
                       label: 'Reset App Data',
@@ -254,7 +248,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
-                
+
                 // App information
                 SettingsSection(
                   title: 'About',
