@@ -38,7 +38,8 @@ This README is the **master reference** for the entire project lifecycle — fro
  ├── models/                 # Data models (gear, member, etc.)
  ├── screens/                # Dashboard, add gear, booking panel, etc.
  │   ├── dashboard/          # Dashboard screen and controller
- │   └── add_gear/           # Add gear screen and controller
+ │   ├── add_gear/           # Add gear screen and controller
+ │   └── booking_panel/      # Booking panel screen and controller
  ├── services/               # Database, image, and export services
  ├── theme/                  # Colors, typography, constants
  ├── utils/                  # Utility functions and constants
@@ -80,10 +81,11 @@ This README is the **master reference** for the entire project lifecycle — fro
 - Add Gear screen implemented with form validation
 - Image upload functionality working
 - Database migration system implemented
+- Booking Panel with list view and form functionality implemented
 
 ### Upcoming Priorities
-- Booking Panel implementation for team projects
 - Calendar View for visualizing bookings
+- Booking filtering and search functionality
 - **UI/UX Enhancement Phase** for professional visual design
   - Professional styling with shadows, gradients, and micro-interactions
   - Animation system for transitions and user actions
@@ -101,13 +103,14 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## ✅ Version
-Current: **v0.4.0 – Gear Management**
+Current: **v0.5.0 – Booking Panel**
 
 ---
 
 ## 🐛 Known Issues
 - Member dropdown in dashboard has equality comparison issues
 - Database migration needs refinement for more complex schema changes
+- Calendar view not yet implemented (planned for v0.6.0)
 - See `Journal.md` for detailed issue tracking
 
 ---

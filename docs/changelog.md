@@ -64,13 +64,22 @@
 
 ---
 
-## 🟡 v0.5.0 – Booking Panel
-### Planned:
-- Booking creation modal with full project/member/gear assignment
-- Gear-to-member optional mapping logic
-- Save booking to DB and link gear status
-- Booking filtering and search functionality
-- Booking status indicators and timeline visualization
+## 🟢 v0.5.0 – Booking Panel (2025-04-19)
+### ✨ Features
+- Implemented Booking Panel screen with list view
+- Created booking form for creating and editing bookings
+- Added date/time pickers and gear selection
+- Implemented gear-to-member assignment functionality
+- Added booking conflict detection
+- Implemented booking status indicators (Past, Current, Upcoming)
+- Connected Booking Panel to Dashboard via navigation
+
+### 🐛 Fixes
+- Added errorRed color to BLKWDSColors for consistent error styling
+
+### ❗ Known Issues
+- Calendar view not yet implemented (planned for v0.6.0)
+- Booking filtering and search functionality not yet implemented
 
 ---
 

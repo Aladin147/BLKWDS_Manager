@@ -11,7 +11,7 @@ Create a beautiful, frictionless desktop tool for internal gear and studio logis
 ### 🎯 Core Functionality Goals
 - ✅ Full UI/UX system foundation
 - ✅ Gear checkout + return flow
-- ⏳ Booking panel for team projects
+- 🔴 Booking panel for team projects (70% complete)
 - ✅ Project, gear, and member models operational
 - ⏳ Calendar overview with studio/gear scheduling
 - ✅ Local SQLite DB + CSV export
@@ -27,7 +27,7 @@ Create a beautiful, frictionless desktop tool for internal gear and studio logis
 ### 📦 Features
 - ✅ Dashboard with live gear status
 - ✅ Quick assignment of gear to member
-- ⏳ Booking creation with optional gear-member linking
+- 🔴 Booking creation with optional gear-member linking (implemented)
 - ✅ Gear inventory with photo upload
 - ✅ Basic design system (colors, typography, constants)
 - ⏳ Enhanced visual design for a cutting-edge production company
