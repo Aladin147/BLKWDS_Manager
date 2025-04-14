@@ -77,7 +77,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## ✅ Version
-Current: **v0.1.0 – Foundation Locked**
+Current: **v0.2.0 – Initial Implementation**
 
 ---
 
