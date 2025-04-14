@@ -16,7 +16,18 @@ Create a beautiful, frictionless desktop tool for internal gear and studio logis
 - 🔴 Calendar overview with studio/gear scheduling (80% complete)
 - ✅ Local SQLite DB + CSV export
 
-### 🌟 UI/UX Enhancement Goals
+### 🔧 Development Approach (Hybrid)
+- 🔴 Phase 1: UI Audit & Basic Fixes (reducing cognitive fatigue)
+  - Fix formatting issues, text readability, and button functionality
+  - Ensure consistent spacing, alignment, and visual hierarchy
+  - Address UI inconsistencies that make development tedious
+
+- 🔴 Phase 2: Core Functionality Completion
+  - Implement remaining core features (booking rescheduling, filtering)
+  - Fix known issues (dropdown equality, database migration)
+  - Ensure all data flows work correctly
+
+### 🌟 UI/UX Enhancement Goals (Phase 3)
 - ⏳ Professional styling with proper shadows, gradients, and micro-interactions
 - ⏳ Animation system for transitions and user actions
 - ⏳ Improved visual hierarchy and layout refinements

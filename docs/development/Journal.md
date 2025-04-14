@@ -1,5 +1,19 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-21
+
+### Development Approach Update - Hybrid Strategy
+
+- Conducted a review of development priorities and approach
+- Decided on a hybrid approach to balance functionality and UI/UX
+- Defined three phases for the development process:
+  1. **Phase 1**: UI Audit & Basic Fixes (reducing cognitive fatigue)
+  2. **Phase 2**: Core Functionality Completion
+  3. **Phase 3**: Comprehensive UI/UX Polish
+- Updated roadmap to reflect the new hybrid approach
+- Prioritized fixing UI issues that cause cognitive fatigue before addressing core functionality
+- Planned for a UI audit to identify the most pressing issues
+
 ## 2025-04-20
 
 ### Calendar View Implementation
