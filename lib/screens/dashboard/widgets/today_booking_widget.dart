@@ -3,6 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_widgets.dart';
 
 import '../dashboard_controller.dart';
 
@@ -90,7 +91,7 @@ class TodayBookingWidget extends StatelessWidget {
     // Get project name
     final project = controller.projectList.value.firstWhere(
       (p) => p.id == booking.projectId,
-      orElse: () => Project(id: 0, title: 'Unknown Project', description: ''),
+      orElse: () => Project(id: 0, title: 'Unknown Project'),
     );
 
     // Get assigned members
@@ -118,75 +119,64 @@ class TodayBookingWidget extends StatelessWidget {
           )
         : null;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
-        child: Row(
-          children: [
-            // Gear or booking type icon
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: BLKWDSColors.slateGrey.withValues(alpha: 25),
-                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
-              ),
-              child: Icon(
-                _getBookingIcon(booking, firstGear),
-                color: BLKWDSColors.blkwdsGreen,
-              ),
+    return BLKWDSCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+      child: Row(
+        children: [
+          // Gear or booking type icon
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: BLKWDSColors.slateGrey.withValues(alpha: 25),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
             ),
-            const SizedBox(width: BLKWDSConstants.spacingSmall),
+            child: BLKWDSIcon(
+              icon: _getBookingIcon(booking, firstGear),
+              color: BLKWDSColors.blkwdsGreen,
+              size: BLKWDSIconSize.medium,
+            ),
+          ),
+          const SizedBox(width: BLKWDSConstants.spacingSmall),
 
-            // Booking details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Project name
+          // Booking details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Project name
+                Text(
+                  project.title,
+                  style: BLKWDSTypography.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                // Member name
+                if (primaryMember != null)
                   Text(
-                    project.title,
-                    style: BLKWDSTypography.titleSmall,
+                    primaryMember.name,
+                    style: BLKWDSTypography.bodyMedium,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  // Member name
-                  if (primaryMember != null)
-                    Text(
-                      primaryMember.name,
-                      style: BLKWDSTypography.bodyMedium,
-                    ),
-
-                  // Time
-                  Text(
-                    _formatBookingTime(booking),
-                    style: BLKWDSTypography.bodySmall.copyWith(
-                      color: BLKWDSColors.slateGrey,
-                    ),
+                // Time
+                Text(
+                  _formatBookingTime(booking),
+                  style: BLKWDSTypography.bodySmall.copyWith(
+                    color: BLKWDSColors.slateGrey,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
 
-            // Gear count badge
-            if (booking.gearIds.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: BLKWDSColors.slateGrey.withValues(alpha: 25),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '${booking.gearIds.length} items',
-                  style: BLKWDSTypography.labelSmall,
-                ),
-              ),
-          ],
-        ),
+          // Gear count badge
+          if (booking.gearIds.isNotEmpty)
+            BLKWDSStatusBadge(
+              text: '${booking.gearIds.length} items',
+              color: BLKWDSColors.slateGrey,
+            ),
+        ],
       ),
     );
   }

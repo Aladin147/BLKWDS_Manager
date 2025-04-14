@@ -78,12 +78,12 @@ class BookingPanelController {
         final projectMatch = project != null &&
             project.title.toLowerCase().contains(searchLower);
 
-        // Search in project description
-        final descriptionMatch = project != null &&
-            project.description?.toLowerCase().contains(searchLower) == true;
+        // Search in project notes
+        final notesMatch = project != null &&
+            project.notes?.toLowerCase().contains(searchLower) == true;
 
         // If no match found, exclude this booking
-        if (!projectMatch && !descriptionMatch) {
+        if (!projectMatch && !notesMatch) {
           return false;
         }
       }

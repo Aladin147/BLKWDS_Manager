@@ -1,5 +1,6 @@
 import '../models/models.dart';
 import 'db_service.dart';
+import 'log_service.dart';
 
 /// DataSeeder
 /// Utility class for seeding the database with sample data
@@ -9,30 +10,30 @@ class DataSeeder {
     // Check if database is already seeded
     final members = await DBService.getAllMembers();
     if (members.isNotEmpty) {
-      print('Database already seeded');
+      LogService.info('Database already seeded');
       return;
     }
-    
-    print('Seeding database...');
-    
+
+    LogService.info('Seeding database...');
+
     // Seed members
     final memberIds = await _seedMembers();
-    
+
     // Seed gear
     final gearIds = await _seedGear();
-    
+
     // Seed projects
     final projectIds = await _seedProjects(memberIds);
-    
+
     // Seed bookings
     await _seedBookings(projectIds, gearIds, memberIds);
-    
+
     // Seed activity logs
     await _seedActivityLogs(gearIds, memberIds);
-    
-    print('Database seeded successfully');
+
+    LogService.info('Database seeded successfully');
   }
-  
+
   /// Seed members
   static Future<List<int>> _seedMembers() async {
     final members = [
@@ -53,16 +54,16 @@ class DataSeeder {
         role: 'Producer',
       ),
     ];
-    
+
     final memberIds = <int>[];
     for (final member in members) {
       final id = await DBService.insertMember(member);
       memberIds.add(id);
     }
-    
+
     return memberIds;
   }
-  
+
   /// Seed gear
   static Future<List<int>> _seedGear() async {
     final gear = [
@@ -109,16 +110,16 @@ class DataSeeder {
         isOut: true,
       ),
     ];
-    
+
     final gearIds = <int>[];
     for (final item in gear) {
       final id = await DBService.insertGear(item);
       gearIds.add(id);
     }
-    
+
     return gearIds;
   }
-  
+
   /// Seed projects
   static Future<List<int>> _seedProjects(List<int> memberIds) async {
     final projects = [
@@ -141,16 +142,16 @@ class DataSeeder {
         memberIds: [memberIds[2], memberIds[3]],
       ),
     ];
-    
+
     final projectIds = <int>[];
     for (final project in projects) {
       final id = await DBService.insertProject(project);
       projectIds.add(id);
     }
-    
+
     return projectIds;
   }
-  
+
   /// Seed bookings
   static Future<List<int>> _seedBookings(
     List<int> projectIds,
@@ -158,7 +159,7 @@ class DataSeeder {
     List<int> memberIds,
   ) async {
     final now = DateTime.now();
-    
+
     final bookings = [
       Booking(
         projectId: projectIds[0],
@@ -190,23 +191,23 @@ class DataSeeder {
         gearIds: [gearIds[3], gearIds[6], gearIds[7]],
       ),
     ];
-    
+
     final bookingIds = <int>[];
     for (final booking in bookings) {
       final id = await DBService.insertBooking(booking);
       bookingIds.add(id);
     }
-    
+
     return bookingIds;
   }
-  
+
   /// Seed activity logs
   static Future<void> _seedActivityLogs(
     List<int> gearIds,
     List<int> memberIds,
   ) async {
     final now = DateTime.now();
-    
+
     final activityLogs = [
       ActivityLog(
         gearId: gearIds[1],
@@ -242,11 +243,11 @@ class DataSeeder {
         note: 'Returned with full battery',
       ),
     ];
-    
+
     for (final log in activityLogs) {
       await DBService.insertActivityLog(log);
     }
-    
+
     // Add status notes
     final statusNotes = [
       StatusNote(
@@ -265,7 +266,7 @@ class DataSeeder {
         timestamp: DateTime(now.year, now.month, now.day - 5, 9, 0),
       ),
     ];
-    
+
     for (final note in statusNotes) {
       await DBService.insertStatusNote(note);
     }

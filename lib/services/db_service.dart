@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/models.dart';
+import 'log_service.dart';
+import 'error_service.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -19,28 +21,99 @@ class DBService {
     final path = join(await getDatabasesPath(), 'blkwds_manager.db');
     return await openDatabase(
       path,
-      version: 2, // Increment version to trigger migration
+      version: 3, // Increment version to trigger migration
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
     );
   }
 
   /// Handle database upgrades
+  /// This method orchestrates the migration process between versions
   static Future<void> _upgradeDatabase(Database db, int oldVersion, int newVersion) async {
-    print('Upgrading database from version $oldVersion to $newVersion');
+    LogService.info('Upgrading database from version $oldVersion to $newVersion');
 
-    if (oldVersion == 1 && newVersion == 2) {
+    // Execute migrations sequentially
+    if (oldVersion < 2) {
+      await _migrateV1ToV2(db);
+    }
+
+    if (oldVersion < 3) {
+      await _migrateV2ToV3(db);
+    }
+
+    // Add future migrations here as needed
+    // if (oldVersion < 4) {
+    //   await _migrateV3ToV4(db);
+    // }
+  }
+
+  /// Migration from v1 to v2
+  /// Adds description, serialNumber, and purchaseDate columns to gear table
+  static Future<void> _migrateV1ToV2(Database db) async {
+    LogService.info('Running migration v1 to v2');
+
+    // Begin transaction for atomicity
+    await db.transaction((txn) async {
       try {
         // Add new columns to gear table
-        await db.execute('ALTER TABLE gear ADD COLUMN description TEXT DEFAULT NULL');
-        await db.execute('ALTER TABLE gear ADD COLUMN serialNumber TEXT DEFAULT NULL');
-        await db.execute('ALTER TABLE gear ADD COLUMN purchaseDate TEXT DEFAULT NULL');
-        print('Added new columns to gear table');
-      } catch (e) {
-        print('Error during database migration: $e');
-        // If columns already exist, that's fine
+        await txn.execute('ALTER TABLE gear ADD COLUMN description TEXT DEFAULT NULL');
+        await txn.execute('ALTER TABLE gear ADD COLUMN serialNumber TEXT DEFAULT NULL');
+        await txn.execute('ALTER TABLE gear ADD COLUMN purchaseDate TEXT DEFAULT NULL');
+
+        // Verify migration success
+        final result = await txn.rawQuery('PRAGMA table_info(gear)');
+        final columns = result.map((col) => col['name'] as String).toList();
+
+        if (!columns.contains('description') ||
+            !columns.contains('serialNumber') ||
+            !columns.contains('purchaseDate')) {
+          throw Exception('Migration v1 to v2 failed: columns not added correctly');
+        }
+
+        LogService.info('Migration v1 to v2 completed successfully');
+      } catch (e, stackTrace) {
+        LogService.error('Error during migration v1 to v2', e, stackTrace);
+        rethrow; // This will roll back the transaction
       }
-    }
+    });
+  }
+
+  /// Migration from v2 to v3
+  /// Adds a settings table and color column to booking table
+  static Future<void> _migrateV2ToV3(Database db) async {
+    LogService.info('Running migration v2 to v3');
+
+    await db.transaction((txn) async {
+      try {
+        // Add settings table for app configuration
+        await txn.execute('''
+          CREATE TABLE settings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            key TEXT NOT NULL UNIQUE,
+            value TEXT NOT NULL
+          )
+        ''');
+
+        // Add color column to booking table for visual identification
+        await txn.execute('ALTER TABLE booking ADD COLUMN color TEXT DEFAULT NULL');
+
+        // Verify migration success
+        final bookingResult = await txn.rawQuery('PRAGMA table_info(booking)');
+        final bookingColumns = bookingResult.map((col) => col['name'] as String).toList();
+
+        final tableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+        final tables = tableResult.map((t) => t['name'] as String).toList();
+
+        if (!bookingColumns.contains('color') || !tables.contains('settings')) {
+          throw Exception('Migration v2 to v3 failed: schema changes not applied correctly');
+        }
+
+        LogService.info('Migration v2 to v3 completed successfully');
+      } catch (e, stackTrace) {
+        LogService.error('Error during migration v2 to v3', e, stackTrace);
+        rethrow;
+      }
+    });
   }
 
   /// Create database tables
@@ -162,10 +235,10 @@ class DBService {
       if (gear.thumbnailPath != null) gearMap['thumbnailPath'] = gear.thumbnailPath!;
       if (gear.lastNote != null) gearMap['lastNote'] = gear.lastNote!;
 
-      print('Inserting gear: $gearMap');
+      LogService.debug('Inserting gear: $gearMap');
       return await db.insert('gear', gearMap);
-    } catch (e) {
-      print('Error inserting gear: $e');
+    } catch (e, stackTrace) {
+      LogService.error('Error inserting gear', e, stackTrace);
       rethrow;
     }
   }
@@ -217,7 +290,16 @@ class DBService {
   /// Insert a new member
   static Future<int> insertMember(Member member) async {
     final db = await database;
-    return await db.insert('member', member.toMap());
+    // Create a map with only the columns that exist in the table
+    final Map<String, dynamic> memberMap = {
+      'name': member.name,
+    };
+
+    // Add optional fields if they exist
+    if (member.role != null) memberMap['role'] = member.role;
+    if (member.id != null) memberMap['id'] = member.id;
+
+    return await db.insert('member', memberMap);
   }
 
   /// Get all members
@@ -244,9 +326,17 @@ class DBService {
   /// Update a member
   static Future<int> updateMember(Member member) async {
     final db = await database;
+    // Create a map with only the columns that exist in the table
+    final Map<String, dynamic> memberMap = {
+      'name': member.name,
+    };
+
+    // Add optional fields if they exist
+    if (member.role != null) memberMap['role'] = member.role;
+
     return await db.update(
       'member',
-      member.toMap(),
+      memberMap,
       where: 'id = ?',
       whereArgs: [member.id],
     );
@@ -270,8 +360,18 @@ class DBService {
 
     // Begin transaction
     return await db.transaction((txn) async {
+      // Create a map with only the columns that exist in the table
+      final Map<String, dynamic> projectMap = {
+        'title': project.title,
+      };
+
+      // Add optional fields if they exist
+      if (project.client != null) projectMap['client'] = project.client;
+      if (project.notes != null) projectMap['notes'] = project.notes;
+      if (project.id != null) projectMap['id'] = project.id;
+
       // Insert project
-      final projectId = await txn.insert('project', project.toMap());
+      final projectId = await txn.insert('project', projectMap);
 
       // Insert project-member associations
       for (final memberId in project.memberIds) {
@@ -352,10 +452,19 @@ class DBService {
 
     // Begin transaction
     return await db.transaction((txn) async {
+      // Create a map with only the columns that exist in the table
+      final Map<String, dynamic> projectMap = {
+        'title': project.title,
+      };
+
+      // Add optional fields if they exist
+      if (project.client != null) projectMap['client'] = project.client;
+      if (project.notes != null) projectMap['notes'] = project.notes;
+
       // Update project
       await txn.update(
         'project',
-        project.toMap(),
+        projectMap,
         where: 'id = ?',
         whereArgs: [project.id],
       );
@@ -716,6 +825,55 @@ class DBService {
     });
   }
 
+  // SETTINGS OPERATIONS
+
+  /// Get a setting by key
+  static Future<Settings?> getSettingByKey(String key) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'settings',
+      where: 'key = ?',
+      whereArgs: [key],
+    );
+    if (maps.isNotEmpty) {
+      return Settings.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  /// Get all settings
+  static Future<List<Settings>> getAllSettings() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('settings');
+    return List.generate(maps.length, (i) => Settings.fromMap(maps[i]));
+  }
+
+  /// Insert or update a setting
+  static Future<int> upsertSetting(Settings setting) async {
+    final db = await database;
+    final existing = await getSettingByKey(setting.key);
+    if (existing != null) {
+      return await db.update(
+        'settings',
+        setting.toMap(),
+        where: 'key = ?',
+        whereArgs: [setting.key],
+      );
+    } else {
+      return await db.insert('settings', setting.toMap());
+    }
+  }
+
+  /// Delete a setting by key
+  static Future<int> deleteSetting(String key) async {
+    final db = await database;
+    return await db.delete(
+      'settings',
+      where: 'key = ?',
+      whereArgs: [key],
+    );
+  }
+
   /// Clear all data from the database
   static Future<void> clearAllData() async {
     final db = await database;
@@ -730,7 +888,8 @@ class DBService {
       await txn.delete('project_member');
       await txn.delete('activity_log');
       await txn.delete('status_note');
+      await txn.delete('settings');
     });
-    print('All data cleared from database');
+    LogService.info('All data cleared from database');
   }
 }

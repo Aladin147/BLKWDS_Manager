@@ -250,11 +250,11 @@ class SettingsController {
     final buffer = StringBuffer();
 
     // Header
-    buffer.writeln('ID,Name,Email,Phone');
+    buffer.writeln('ID,Name,Role');
 
     // Data
     for (final member in members) {
-      buffer.writeln('${member.id},${_escapeCsv(member.name)},${_escapeCsv(member.email ?? '')},${_escapeCsv(member.phone ?? '')}');
+      buffer.writeln('${member.id},${_escapeCsv(member.name)},${_escapeCsv(member.role ?? '')}');
     }
 
     return buffer.toString();
@@ -265,11 +265,11 @@ class SettingsController {
     final buffer = StringBuffer();
 
     // Header
-    buffer.writeln('ID,Title,Description,Client');
+    buffer.writeln('ID,Title,Client,Notes');
 
     // Data
     for (final project in projects) {
-      buffer.writeln('${project.id},${_escapeCsv(project.title)},${_escapeCsv(project.description ?? '')},${_escapeCsv(project.client ?? '')}');
+      buffer.writeln('${project.id},${_escapeCsv(project.title)},${_escapeCsv(project.client ?? '')},${_escapeCsv(project.notes ?? '')}');
     }
 
     return buffer.toString();
@@ -349,16 +349,15 @@ class SettingsController {
     await DBService.insertMember(Member(
       id: 1,
       name: 'Alex Johnson',
-      email: 'alex@example.com',
-      phone: '555-123-4567',
+      role: 'Director',
     ));
 
     // Add default projects
     await DBService.insertProject(Project(
       id: 1,
       title: 'Brand Commercial',
-      description: 'Commercial shoot for Brand X',
       client: 'Brand X',
+      notes: 'Commercial shoot for Brand X',
     ));
 
     // Add default gear

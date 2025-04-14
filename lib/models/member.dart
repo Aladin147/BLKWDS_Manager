@@ -4,15 +4,11 @@ class Member {
   final int? id;
   final String name;
   final String? role;
-  final String? email;
-  final String? phone;
 
   Member({
     this.id,
     required this.name,
     this.role,
-    this.email,
-    this.phone,
   });
 
   /// Create a Member object from a map (for database operations)
@@ -21,8 +17,6 @@ class Member {
       id: map['id'] as int,
       name: map['name'] as String,
       role: map['role'] as String?,
-      email: map['email'] as String?,
-      phone: map['phone'] as String?,
     );
   }
 
@@ -32,8 +26,6 @@ class Member {
       id: json['id'] as int?,
       name: json['name'] as String,
       role: json['role'] as String?,
-      email: json['email'] as String?,
-      phone: json['phone'] as String?,
     );
   }
 
@@ -43,8 +35,6 @@ class Member {
       'id': id,
       'name': name,
       'role': role,
-      'email': email,
-      'phone': phone,
     };
   }
 
@@ -54,8 +44,6 @@ class Member {
       'id': id,
       'name': name,
       'role': role,
-      'email': email,
-      'phone': phone,
     };
   }
 
@@ -64,21 +52,17 @@ class Member {
     int? id,
     String? name,
     String? role,
-    String? email,
-    String? phone,
   }) {
     return Member(
       id: id ?? this.id,
       name: name ?? this.name,
       role: role ?? this.role,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
     );
   }
 
   @override
   String toString() {
-    return 'Member(id: $id, name: $name, role: $role, email: $email, phone: $phone)';
+    return 'Member(id: $id, name: $name, role: $role)';
   }
 
   // Fixed equality comparison for Member class
@@ -92,9 +76,7 @@ class Member {
     // If both IDs are null, compare other fields
     if (id == null && other.id == null) {
       return other.name == name &&
-          other.role == role &&
-          other.email == email &&
-          other.phone == phone;
+          other.role == role;
     }
 
     // If IDs are available, use them for equality
@@ -108,8 +90,6 @@ class Member {
       return id.hashCode;
     }
     return name.hashCode ^
-        (role?.hashCode ?? 0) ^
-        (email?.hashCode ?? 0) ^
-        (phone?.hashCode ?? 0);
+        (role?.hashCode ?? 0);
   }
 }

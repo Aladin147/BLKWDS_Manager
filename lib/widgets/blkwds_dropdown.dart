@@ -4,7 +4,7 @@ import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized dropdown component for BLKWDS Manager
-/// 
+///
 /// Provides consistent styling for all dropdowns in the app
 class BLKWDSDropdown<T> extends StatelessWidget {
   final String label;
@@ -56,7 +56,7 @@ class BLKWDSDropdown<T> extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Dropdown with consistent styling
         Container(
           decoration: BoxDecoration(
@@ -77,7 +77,7 @@ class BLKWDSDropdown<T> extends StatelessWidget {
                 hint: Text(
                   hintText,
                   style: BLKWDSTypography.bodyMedium.copyWith(
-                    color: BLKWDSColors.slateGrey.withOpacity(0.5),
+                    color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
                   ),
                 ),
                 isExpanded: true,
@@ -97,7 +97,7 @@ class BLKWDSDropdown<T> extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Error text if provided
         if (errorText != null)
           Padding(

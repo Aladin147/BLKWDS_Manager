@@ -5,7 +5,7 @@ import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized time picker component for BLKWDS Manager
-/// 
+///
 /// Provides consistent styling for all time pickers in the app
 class BLKWDSTimePicker extends StatelessWidget {
   final String label;
@@ -101,7 +101,7 @@ class BLKWDSTimePicker extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Time picker field with consistent styling
         InkWell(
           onTap: () => _selectTime(context),
@@ -129,7 +129,7 @@ class BLKWDSTimePicker extends StatelessWidget {
                     style: selectedTime != null
                         ? BLKWDSTypography.bodyMedium
                         : BLKWDSTypography.bodyMedium.copyWith(
-                            color: BLKWDSColors.slateGrey.withOpacity(0.5),
+                            color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
                           ),
                   ),
                 ),
@@ -141,7 +141,7 @@ class BLKWDSTimePicker extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Error text if provided
         if (errorText != null)
           Padding(

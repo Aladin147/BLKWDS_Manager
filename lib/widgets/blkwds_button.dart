@@ -4,7 +4,7 @@ import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized button component for BLKWDS Manager
-/// 
+///
 /// Provides consistent styling for all buttons in the app
 /// with primary, secondary, and danger variants
 enum BLKWDSButtonType {
@@ -39,7 +39,7 @@ class BLKWDSButton extends StatelessWidget {
     Color backgroundColor;
     Color textColor;
     Color? borderColor;
-    
+
     switch (type) {
       case BLKWDSButtonType.primary:
         backgroundColor = BLKWDSColors.primaryButtonBackground;
@@ -57,25 +57,25 @@ class BLKWDSButton extends StatelessWidget {
         borderColor = null;
         break;
     }
-    
+
     // Apply disabled styling if needed
     if (isDisabled) {
-      backgroundColor = backgroundColor.withOpacity(0.5);
-      textColor = textColor.withOpacity(0.7);
+      backgroundColor = backgroundColor.withValues(alpha: 128); // 0.5 * 255 = 128
+      textColor = textColor.withValues(alpha: 179); // 0.7 * 255 = 179
       if (borderColor != null) {
-        borderColor = borderColor.withOpacity(0.5);
+        borderColor = borderColor.withValues(alpha: 128); // 0.5 * 255 = 128
       }
     }
-    
+
     // Determine padding based on size
-    final double horizontalPadding = isSmall 
+    final double horizontalPadding = isSmall
         ? BLKWDSConstants.buttonHorizontalPadding / 1.5
         : BLKWDSConstants.buttonHorizontalPadding;
-    
+
     final double verticalPadding = isSmall
         ? BLKWDSConstants.buttonVerticalPadding / 1.5
         : BLKWDSConstants.buttonVerticalPadding;
-    
+
     // Create button content
     Widget buttonContent = Row(
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
@@ -97,7 +97,7 @@ class BLKWDSButton extends StatelessWidget {
         ),
       ],
     );
-    
+
     // Create the button with appropriate styling
     return Material(
       color: Colors.transparent,

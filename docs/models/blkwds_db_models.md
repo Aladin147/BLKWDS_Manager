@@ -22,6 +22,7 @@ class Member {
   final int id;
   final String name;
   final String? role;
+  // Note: email and phone fields were removed to match database schema
 
   Member({
     required this.id,
@@ -35,6 +36,7 @@ class Project {
   final String title;
   final String? client;
   final String? notes;
+  // Note: description field was removed to match database schema
   final List<int> memberIds;
 
   Project({
@@ -98,4 +100,4 @@ class ActivityLog {
     required this.timestamp,
     this.note,
   });
-} 
+}

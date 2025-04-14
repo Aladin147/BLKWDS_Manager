@@ -4,6 +4,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_widgets.dart';
 
 /// CalendarBookingItem
 /// Widget for displaying a booking in the calendar view
@@ -56,115 +57,90 @@ class CalendarBookingItem extends StatelessWidget {
         : BLKWDSColors.slateGrey;
 
     // Create a draggable widget if onReschedule is provided
-    Widget bookingCard = Card(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        side: BorderSide(
-          color: projectColor,
-          width: 4,
-        ),
-      ),
-      elevation: BLKWDSConstants.cardElevation,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: Row(
+    Widget bookingCard = BLKWDSCard(
+      borderColor: projectColor,
+      onTap: onTap,
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Row(
+        children: [
+          // Time
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Time
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    startTimeStr,
-                    style: BLKWDSTypography.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    endTimeStr,
-                    style: BLKWDSTypography.bodySmall,
-                  ),
-                ],
+              Text(
+                startTimeStr,
+                style: BLKWDSTypography.bodyMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(width: BLKWDSConstants.spacingMedium),
+              Text(
+                endTimeStr,
+                style: BLKWDSTypography.bodySmall,
+              ),
+            ],
+          ),
+          const SizedBox(width: BLKWDSConstants.spacingMedium),
 
-              // Project and details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          // Project and details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  project?.title ?? 'Unknown Project',
+                  style: BLKWDSTypography.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: BLKWDSConstants.spacingExtraSmall),
+                Row(
                   children: [
-                    Text(
-                      project?.title ?? 'Unknown Project',
-                      style: BLKWDSTypography.titleSmall,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        if (booking.isRecordingStudio || booking.isProductionStudio)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.business,
-                                  size: 14,
-                                  color: BLKWDSColors.slateGrey,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  [
-                                    if (booking.isRecordingStudio) 'Recording',
-                                    if (booking.isProductionStudio) 'Production',
-                                  ].join(', '),
-                                  style: BLKWDSTypography.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        Row(
+                    if (booking.isRecordingStudio || booking.isProductionStudio)
+                      Padding(
+                        padding: const EdgeInsets.only(right: BLKWDSConstants.spacingSmall),
+                        child: Row(
                           children: [
-                            const Icon(
-                              Icons.camera_alt,
-                              size: 14,
+                            BLKWDSIcon(
+                              icon: Icons.business,
+                              size: BLKWDSIconSize.extraSmall,
                               color: BLKWDSColors.slateGrey,
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
                             Text(
-                              '${booking.gearIds.length} gear',
+                              [
+                                if (booking.isRecordingStudio) 'Recording',
+                                if (booking.isProductionStudio) 'Production',
+                              ].join(', '),
                               style: BLKWDSTypography.bodySmall,
                             ),
                           ],
+                        ),
+                      ),
+                    Row(
+                      children: [
+                        BLKWDSIcon(
+                          icon: Icons.camera_alt,
+                          size: BLKWDSIconSize.extraSmall,
+                          color: BLKWDSColors.slateGrey,
+                        ),
+                        const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
+                        Text(
+                          '${booking.gearIds.length} gear',
+                          style: BLKWDSTypography.bodySmall,
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-
-              // Status
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 50),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  statusText,
-                  style: BLKWDSTypography.labelSmall.copyWith(
-                    color: statusColor,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+
+          // Status
+          BLKWDSStatusBadge(
+            text: statusText,
+            color: statusColor,
+          ),
+        ],
       ),
     );
 
@@ -175,17 +151,37 @@ class CalendarBookingItem extends StatelessWidget {
         data: booking,
         // Feedback is what appears under the pointer during drag
         feedback: Material(
-          elevation: 4.0,
+          elevation: 8.0,
+          shadowColor: BLKWDSColors.deepBlack,
+          borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
           child: Container(
             width: 300,
             padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
             decoration: BoxDecoration(
-              color: BLKWDSColors.white,
+              color: BLKWDSColors.deepBlack,
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
               border: Border.all(color: projectColor, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: BLKWDSColors.electricMint.withValues(alpha: 100),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                ),
+              ],
             ),
             child: Row(
               children: [
+                // Left border indicator
+                Container(
+                  width: 4,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: projectColor,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingSmall),
+
                 // Time
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,11 +191,14 @@ class CalendarBookingItem extends StatelessWidget {
                       startTimeStr,
                       style: BLKWDSTypography.bodyMedium.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: BLKWDSColors.white,
                       ),
                     ),
                     Text(
                       endTimeStr,
-                      style: BLKWDSTypography.bodySmall,
+                      style: BLKWDSTypography.bodySmall.copyWith(
+                        color: BLKWDSColors.slateGrey,
+                      ),
                     ),
                   ],
                 ),
@@ -209,18 +208,45 @@ class CalendarBookingItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     project?.title ?? 'Unknown Project',
-                    style: BLKWDSTypography.titleSmall,
+                    style: BLKWDSTypography.titleSmall.copyWith(
+                      color: BLKWDSColors.white,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
+                ),
+
+                // Drag indicator
+                BLKWDSIcon(
+                  icon: Icons.drag_indicator,
+                  size: BLKWDSIconSize.extraSmall,
+                  color: BLKWDSColors.electricMint,
                 ),
               ],
             ),
           ),
         ),
         // ChildWhenDragging is what remains in the original location during drag
-        childWhenDragging: Opacity(
-          opacity: 0.5,
-          child: bookingCard,
+        childWhenDragging: Container(
+          margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+          decoration: BoxDecoration(
+            color: BLKWDSColors.deepBlack.withValues(alpha: 30),
+            borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+            border: Border.all(
+              color: BLKWDSColors.slateGrey.withValues(alpha: 100),
+              width: 1,
+              style: BorderStyle.solid,
+            ),
+          ),
+          height: 72, // Approximate height of the booking card
+          child: Center(
+            child: Text(
+              'Moving...',
+              style: BLKWDSTypography.bodyMedium.copyWith(
+                color: BLKWDSColors.slateGrey,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
         ),
         // The actual widget that can be dragged
         child: bookingCard,

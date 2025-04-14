@@ -57,127 +57,120 @@ class BookingListItem extends StatelessWidget {
       statusText = 'Upcoming';
     }
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-      ),
-      elevation: BLKWDSConstants.cardElevation,
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with project name and status
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    project?.title ?? 'Unknown Project',
-                    style: BLKWDSTypography.titleMedium,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+    return BLKWDSCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with project name and status
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  project?.title ?? 'Unknown Project',
+                  style: BLKWDSTypography.titleMedium,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 50),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    statusText,
-                    style: BLKWDSTypography.labelMedium.copyWith(
-                      color: statusColor,
-                    ),
-                  ),
+              ),
+              BLKWDSStatusBadge(
+                text: statusText,
+                color: statusColor,
+                fontSize: 12,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
                 ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingSmall),
+              ),
+            ],
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingSmall),
 
-            // Date and time
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_today,
-                  size: 16,
-                  color: BLKWDSColors.slateGrey,
-                ),
-                const SizedBox(width: 8),
-                Text(
+          // Date and time
+          Row(
+            children: [
+              BLKWDSIcon(
+                icon: Icons.calendar_today,
+                size: BLKWDSIconSize.extraSmall,
+                color: BLKWDSColors.slateGrey,
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
+              Expanded(
+                child: Text(
                   startDateStr == endDateStr
                       ? '$startDateStr, $startTimeStr - $endTimeStr'
                       : '$startDateStr $startTimeStr - $endDateStr $endTimeStr',
                   style: BLKWDSTypography.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingSmall),
+              ),
+            ],
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingSmall),
 
-            // Studio space
-            if (booking.isRecordingStudio || booking.isProductionStudio)
-              Row(
-                children: [
-                  const Icon(
-                    Icons.business,
-                    size: 16,
-                    color: BLKWDSColors.slateGrey,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
+          // Studio space
+          if (booking.isRecordingStudio || booking.isProductionStudio)
+            Row(
+              children: [
+                BLKWDSIcon(
+                  icon: Icons.business,
+                  size: BLKWDSIconSize.extraSmall,
+                  color: BLKWDSColors.slateGrey,
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
+                Expanded(
+                  child: Text(
                     [
                       if (booking.isRecordingStudio) 'Recording Studio',
                       if (booking.isProductionStudio) 'Production Studio',
                     ].join(', '),
                     style: BLKWDSTypography.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
+          if (booking.isRecordingStudio || booking.isProductionStudio)
             const SizedBox(height: BLKWDSConstants.spacingSmall),
 
-            // Gear count
-            Row(
-              children: [
-                const Icon(
-                  Icons.camera_alt,
-                  size: 16,
-                  color: BLKWDSColors.slateGrey,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${booking.gearIds.length} gear items',
-                  style: BLKWDSTypography.bodyMedium,
-                ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
+          // Gear count
+          Row(
+            children: [
+              BLKWDSIcon(
+                icon: Icons.camera_alt,
+                size: BLKWDSIconSize.extraSmall,
+                color: BLKWDSColors.slateGrey,
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
+              Text(
+                '${booking.gearIds.length} gear items',
+                style: BLKWDSTypography.bodyMedium,
+              ),
+            ],
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-            // Actions
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                BLKWDSButton(
-                  label: 'Edit',
-                  icon: Icons.edit,
-                  type: BLKWDSButtonType.secondary,
-                  isSmall: true,
-                  onPressed: onEdit,
-                ),
-                const SizedBox(width: BLKWDSConstants.spacingSmall),
-                BLKWDSButton(
-                  label: 'Delete',
-                  icon: Icons.delete,
-                  type: BLKWDSButtonType.danger,
-                  isSmall: true,
-                  onPressed: onDelete,
-                ),
-              ],
-            ),
-          ],
-        ),
+          // Actions
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              BLKWDSButton(
+                label: 'Edit',
+                icon: Icons.edit,
+                type: BLKWDSButtonType.secondary,
+                isSmall: true,
+                onPressed: onEdit,
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingSmall),
+              BLKWDSButton(
+                label: 'Delete',
+                icon: Icons.delete,
+                type: BLKWDSButtonType.danger,
+                isSmall: true,
+                onPressed: onDelete,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

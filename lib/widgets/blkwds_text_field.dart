@@ -4,7 +4,7 @@ import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized text field component for BLKWDS Manager
-/// 
+///
 /// Provides consistent styling for all text fields in the app
 class BLKWDSTextField extends StatelessWidget {
   final String label;
@@ -70,7 +70,7 @@ class BLKWDSTextField extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Text field with consistent styling
         TextFormField(
           controller: controller,
@@ -86,7 +86,7 @@ class BLKWDSTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: BLKWDSTypography.bodyMedium.copyWith(
-              color: BLKWDSColors.slateGrey.withOpacity(0.5),
+              color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
             ),
             errorText: errorText,
             errorStyle: BLKWDSTypography.bodySmall.copyWith(

@@ -9,6 +9,7 @@ class Booking {
   final bool isProductionStudio;
   final List<int> gearIds;
   final Map<int, int>? assignedGearToMember; // {gearId: memberId}
+  final String? color; // Hex color code for visual identification
 
   Booking({
     this.id,
@@ -19,6 +20,7 @@ class Booking {
     this.isProductionStudio = false,
     this.gearIds = const [],
     this.assignedGearToMember,
+    this.color,
   });
 
   /// Create a Booking object from a map (for database operations)
@@ -33,6 +35,7 @@ class Booking {
       // Gear IDs and assignments are stored in a separate table, so they're not in the map
       gearIds: const [],
       assignedGearToMember: {},
+      color: map['color'] as String?,
     );
   }
 
@@ -58,13 +61,13 @@ class Booking {
           ? List<int>.from(json['gearIds'] as List)
           : const [],
       assignedGearToMember: assignments,
+      color: json['color'] as String?,
     );
   }
 
   /// Convert Booking object to a map (for database operations)
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    final map = <String, dynamic>{
       'projectId': projectId,
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
@@ -72,6 +75,12 @@ class Booking {
       'isProductionStudio': isProductionStudio ? 1 : 0,
       // Gear IDs and assignments are stored in a separate table, so they're not in the map
     };
+
+    // Only add non-null values
+    if (id != null) map['id'] = id;
+    if (color != null) map['color'] = color;
+
+    return map;
   }
 
   /// Convert Booking object to JSON
@@ -93,6 +102,7 @@ class Booking {
       'isProductionStudio': isProductionStudio,
       'gearIds': gearIds,
       'assignedGearToMember': assignments,
+      'color': color,
     };
   }
 
@@ -106,6 +116,7 @@ class Booking {
     bool? isProductionStudio,
     List<int>? gearIds,
     Map<int, int>? assignedGearToMember,
+    String? color,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -116,6 +127,7 @@ class Booking {
       isProductionStudio: isProductionStudio ?? this.isProductionStudio,
       gearIds: gearIds ?? this.gearIds,
       assignedGearToMember: assignedGearToMember ?? this.assignedGearToMember,
+      color: color ?? this.color,
     );
   }
 
@@ -133,7 +145,8 @@ class Booking {
         other.startDate == startDate &&
         other.endDate == endDate &&
         other.isRecordingStudio == isRecordingStudio &&
-        other.isProductionStudio == isProductionStudio;
+        other.isProductionStudio == isProductionStudio &&
+        other.color == color;
   }
 
   @override
@@ -143,5 +156,6 @@ class Booking {
       startDate.hashCode ^
       endDate.hashCode ^
       isRecordingStudio.hashCode ^
-      isProductionStudio.hashCode;
+      isProductionStudio.hashCode ^
+      color.hashCode;
 }

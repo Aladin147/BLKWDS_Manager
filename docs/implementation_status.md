@@ -35,7 +35,9 @@ This document tracks the implementation status of core functionality in the BLKW
 - ✅ Booking details display
 - ✅ Filtering by project, member, gear, and date range
 - ✅ Navigation to Booking Panel for editing
-- ⬜ Drag-and-drop functionality for rescheduling (In Progress)
+- ✅ Drag-and-drop functionality for rescheduling
+- ✅ Visual feedback during drag operations
+- ✅ Conflict detection for rescheduling
 
 ### Settings Screen
 - ✅ UI implemented with standardized components
@@ -54,16 +56,40 @@ This document tracks the implementation status of core functionality in the BLKW
 
 ## Known Issues
 1. ~~Member dropdown in Dashboard has potential equality comparison issues~~ (FIXED in v0.9.0)
-2. Some screens may still have deprecated `withOpacity` calls that should be replaced with `withValues`
+2. ~~Some screens may still have deprecated `withOpacity` calls that should be replaced with `withValues`~~ (FIXED in v0.11.1)
 3. Calendar screen filtering needs optimization
 4. ~~Settings screen theme switching needs testing~~ (REMOVED in v0.9.0 - dark mode only)
+5. ~~Database migration system needs refinement~~ (FIXED in v0.10.0)
+6. ~~Database schema and model mismatches~~ (FIXED in v0.11.2)
+7. ~~No proper error handling or logging system~~ (FIXED in v0.11.3)
 
 ## Next Steps
-1. Enhance Calendar screen with drag-and-drop functionality
-2. Improve database migration system
-3. Fix any remaining UI inconsistencies
-4. Add comprehensive error handling
-5. Add unit and integration tests
+1. ✅ Enhance Calendar screen with drag-and-drop functionality (COMPLETED in v0.11.0)
+2. ✅ Improve database migration system (COMPLETED in v0.10.0)
+3. ✅ Add comprehensive error handling (COMPLETED in v0.11.3)
+4. ✅ Add unit and integration tests (COMPLETED in v0.11.4)
+5. ✅ Fix UI inconsistencies (COMPLETED in v0.11.5)
+6. Implement UI/UX Enhancement Phase
+
+## Testing Framework
+- ✅ Unit tests for models (Gear, Member)
+- ✅ Unit tests for services (LogService, ErrorService)
+- ✅ Widget tests for UI components
+- ✅ Integration tests for key user flows
+- ✅ Test helpers and utilities
+- ✅ Mock implementations for testing
+- ✅ Test runner for all tests
+- ✅ Testing documentation
+
+## Error Handling and Logging
+- ✅ Centralized logging service with different log levels
+- ✅ Structured logging with timestamps and context
+- ✅ Error handling service with user-friendly messages
+- ✅ Global error handling for Flutter framework errors
+- ✅ Custom error widget for better user experience
+- ✅ Error dialog and snackbar display
+- ✅ Improved database error handling
+- ✅ Replaced all print statements with structured logging
 
 ## UI Standardization
 - ✅ Standardized button component created and implemented

@@ -64,6 +64,23 @@ class _CalendarViewState extends State<CalendarView> {
 
   // Handle booking drop for rescheduling
   void _handleBookingDrop(Booking booking, DateTime newDay) async {
+    // First check for conflicts
+    final noConflicts = await _checkBookingConflicts(booking, newDay);
+
+    // Check if the widget is still mounted before showing snackbar
+    if (!mounted) return;
+
+    if (!noConflicts) {
+      // Show a snackbar message if there are conflicts
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cannot reschedule: conflicts with existing bookings'),
+          backgroundColor: BLKWDSColors.statusOut,
+        ),
+      );
+      return;
+    }
+
     // Create a new start date with the same time as the original booking
     final newStartDate = DateTime(
       newDay.year,
@@ -77,6 +94,43 @@ class _CalendarViewState extends State<CalendarView> {
     if (widget.onBookingRescheduled != null) {
       widget.onBookingRescheduled!(booking, newStartDate);
     }
+  }
+
+  // Check if a booking can be dropped on a specific day
+  bool _canDropBookingOnDay(Booking booking, DateTime day) {
+    // For now, we'll accept all drops and check conflicts in the handler
+    // This is because onWillAcceptWithDetails doesn't support async operations
+    return true;
+  }
+
+  // Check for booking conflicts before actually rescheduling
+  Future<bool> _checkBookingConflicts(Booking booking, DateTime day) async {
+    // Create a new start date with the same time as the original booking
+    final newStartDate = DateTime(
+      day.year,
+      day.month,
+      day.day,
+      booking.startDate.hour,
+      booking.startDate.minute,
+    );
+
+    // Calculate the duration of the original booking
+    final duration = booking.endDate.difference(booking.startDate);
+
+    // Create a new end date based on the new start date and the original duration
+    final newEndDate = newStartDate.add(duration);
+
+    // Create a new booking with the updated dates
+    final rescheduledBooking = booking.copyWith(
+      startDate: newStartDate,
+      endDate: newEndDate,
+    );
+
+    // Check for conflicts
+    return !await widget.controller.hasBookingConflicts(
+      rescheduledBooking,
+      excludeBookingId: booking.id,
+    );
   }
 
   @override
@@ -132,65 +186,173 @@ class _CalendarViewState extends State<CalendarView> {
         ),
         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-        // Calendar wrapped in a DragTarget for rescheduling
-        DragTarget<Booking>(
-          onAcceptWithDetails: (details) {
-            // Handle the dropped booking
-            _handleBookingDrop(details.data, _selectedDay);
+        // Calendar with enhanced drag-and-drop support
+        TableCalendar<Booking>(
+          firstDay: DateTime.utc(2020, 1, 1),
+          lastDay: DateTime.utc(2030, 12, 31),
+          focusedDay: _focusedDay,
+          calendarFormat: _calendarFormat,
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
           },
-          // Show a visual indicator when a booking is being dragged over a day
-          builder: (context, candidateData, rejectedData) {
-            return TableCalendar<Booking>(
-              firstDay: DateTime.utc(2020, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              eventLoader: _getBookingsForDay,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              calendarStyle: CalendarStyle(
-                markersMaxCount: 3,
-                markerDecoration: const BoxDecoration(
-                  color: BLKWDSColors.electricMint,
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: const BoxDecoration(
-                  color: BLKWDSColors.blkwdsGreen,
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration: const BoxDecoration(
-                  color: BLKWDSColors.mustardOrange,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-                titleTextStyle: BLKWDSTypography.titleMedium,
-                leftChevronIcon: const Icon(
-                  Icons.chevron_left,
-                  color: BLKWDSColors.slateGrey,
-                ),
-                rightChevronIcon: const Icon(
-                  Icons.chevron_right,
-                  color: BLKWDSColors.slateGrey,
-                ),
-              ),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                  _updateSelectedBookings();
-                });
-                widget.onDaySelected(selectedDay);
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-            );
+          eventLoader: _getBookingsForDay,
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          calendarStyle: CalendarStyle(
+            markersMaxCount: 3,
+            markerDecoration: const BoxDecoration(
+              color: BLKWDSColors.electricMint,
+              shape: BoxShape.circle,
+            ),
+            todayDecoration: const BoxDecoration(
+              color: BLKWDSColors.blkwdsGreen,
+              shape: BoxShape.circle,
+            ),
+            selectedDecoration: const BoxDecoration(
+              color: BLKWDSColors.mustardOrange,
+              shape: BoxShape.circle,
+            ),
+          ),
+          headerStyle: HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+            titleTextStyle: BLKWDSTypography.titleMedium,
+            leftChevronIcon: const Icon(
+              Icons.chevron_left,
+              color: BLKWDSColors.slateGrey,
+            ),
+            rightChevronIcon: const Icon(
+              Icons.chevron_right,
+              color: BLKWDSColors.slateGrey,
+            ),
+          ),
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+              _updateSelectedBookings();
+            });
+            widget.onDaySelected(selectedDay);
           },
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
+          // Custom calendar builder for drag-and-drop support
+          calendarBuilders: CalendarBuilders(
+            // Custom day builder to make each day a drop target
+            defaultBuilder: (context, day, focusedDay) {
+              return DragTarget<Booking>(
+                onAcceptWithDetails: (details) {
+                  // Handle the dropped booking
+                  _handleBookingDrop(details.data, day);
+                },
+                onWillAcceptWithDetails: (details) {
+                  // Check if the booking can be dropped on this day
+                  return _canDropBookingOnDay(details.data, day);
+                },
+                builder: (context, candidateData, rejectedData) {
+                  // Show a visual indicator when a booking is being dragged over a day
+                  final isAccepting = candidateData.isNotEmpty;
+
+                  return Container(
+                    margin: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: isAccepting ? BLKWDSColors.electricMint.withValues(alpha: 50) : null,
+                      borderRadius: BorderRadius.circular(8),
+                      border: isAccepting
+                        ? Border.all(color: BLKWDSColors.electricMint, width: 2)
+                        : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${day.day}',
+                        style: BLKWDSTypography.bodyMedium.copyWith(
+                          color: isAccepting ? BLKWDSColors.deepBlack : null,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            // Custom today builder to make today a drop target
+            todayBuilder: (context, day, focusedDay) {
+              return DragTarget<Booking>(
+                onAcceptWithDetails: (details) {
+                  // Handle the dropped booking
+                  _handleBookingDrop(details.data, day);
+                },
+                onWillAcceptWithDetails: (details) {
+                  // Check if the booking can be dropped on this day
+                  return _canDropBookingOnDay(details.data, day);
+                },
+                builder: (context, candidateData, rejectedData) {
+                  // Show a visual indicator when a booking is being dragged over a day
+                  final isAccepting = candidateData.isNotEmpty;
+
+                  return Container(
+                    margin: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: isAccepting
+                        ? BLKWDSColors.electricMint.withValues(alpha: 50)
+                        : BLKWDSColors.blkwdsGreen,
+                      borderRadius: BorderRadius.circular(8),
+                      border: isAccepting
+                        ? Border.all(color: BLKWDSColors.electricMint, width: 2)
+                        : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${day.day}',
+                        style: BLKWDSTypography.bodyMedium.copyWith(
+                          color: BLKWDSColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            // Custom selected day builder to make selected day a drop target
+            selectedBuilder: (context, day, focusedDay) {
+              return DragTarget<Booking>(
+                onAcceptWithDetails: (details) {
+                  // Handle the dropped booking
+                  _handleBookingDrop(details.data, day);
+                },
+                onWillAcceptWithDetails: (details) {
+                  // Check if the booking can be dropped on this day
+                  return _canDropBookingOnDay(details.data, day);
+                },
+                builder: (context, candidateData, rejectedData) {
+                  // Show a visual indicator when a booking is being dragged over a day
+                  final isAccepting = candidateData.isNotEmpty;
+
+                  return Container(
+                    margin: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: isAccepting
+                        ? BLKWDSColors.electricMint.withValues(alpha: 50)
+                        : BLKWDSColors.mustardOrange,
+                      borderRadius: BorderRadius.circular(8),
+                      border: isAccepting
+                        ? Border.all(color: BLKWDSColors.electricMint, width: 2)
+                        : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${day.day}',
+                        style: BLKWDSTypography.bodyMedium.copyWith(
+                          color: BLKWDSColors.deepBlack,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
         const SizedBox(height: BLKWDSConstants.spacingMedium),
 

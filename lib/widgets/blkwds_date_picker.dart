@@ -5,7 +5,7 @@ import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized date picker component for BLKWDS Manager
-/// 
+///
 /// Provides consistent styling for all date pickers in the app
 class BLKWDSDatePicker extends StatelessWidget {
   final String label;
@@ -98,7 +98,7 @@ class BLKWDSDatePicker extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Date picker field with consistent styling
         InkWell(
           onTap: () => _selectDate(context),
@@ -126,7 +126,7 @@ class BLKWDSDatePicker extends StatelessWidget {
                     style: selectedDate != null
                         ? BLKWDSTypography.bodyMedium
                         : BLKWDSTypography.bodyMedium.copyWith(
-                            color: BLKWDSColors.slateGrey.withOpacity(0.5),
+                            color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
                           ),
                   ),
                 ),
@@ -138,7 +138,7 @@ class BLKWDSDatePicker extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Error text if provided
         if (errorText != null)
           Padding(

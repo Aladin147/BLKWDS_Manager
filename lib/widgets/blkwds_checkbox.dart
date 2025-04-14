@@ -4,7 +4,7 @@ import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized checkbox component for BLKWDS Manager
-/// 
+///
 /// Provides consistent styling for all checkboxes in the app
 class BLKWDSCheckbox extends StatelessWidget {
   final String label;
@@ -44,7 +44,7 @@ class BLKWDSCheckbox extends StatelessWidget {
                 ),
                 side: BorderSide(
                   color: isDisabled
-                      ? BLKWDSColors.slateGrey.withOpacity(0.5)
+                      ? BLKWDSColors.slateGrey.withValues(alpha: 128) // 0.5 * 255 = 128
                       : BLKWDSColors.slateGrey,
                   width: 1.5,
                 ),
@@ -56,7 +56,7 @@ class BLKWDSCheckbox extends StatelessWidget {
                 label,
                 style: BLKWDSTypography.bodyMedium.copyWith(
                   color: isDisabled
-                      ? BLKWDSColors.slateGrey.withOpacity(0.5)
+                      ? BLKWDSColors.slateGrey.withValues(alpha: 128) // 0.5 * 255 = 128
                       : BLKWDSColors.slateGrey,
                 ),
               ),

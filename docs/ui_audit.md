@@ -32,27 +32,31 @@ This document tracks the UI standardization efforts for the BLKWDS Manager appli
 
 ### Medium Priority
 
-7. ⬜ **Inconsistent Card Styling**
-   - Different styles for gear cards, booking cards, etc.
-   - Solution: Update all card instances to use the standardized `BLKWDSCard` component
+- ✅ **Inconsistent Card Styling**
+  - Different styles for gear cards, booking cards, etc.
+  - Fixed by updating all card instances to use the standardized `BLKWDSCard` component
 
-8. ⬜ **Inconsistent Icon Usage**
-   - Different icon styles and sizes across the app
-   - Solution: Standardize icon usage with consistent sizing and styling
+- ✅ **Inconsistent Icon Usage**
+  - Different icon styles and sizes across the app
+  - Fixed by creating and using the standardized `BLKWDSIcon` component with consistent sizing
 
-9. ⬜ **Inconsistent List Item Styling**
-   - Different styles for list items in various screens
-   - Solution: Create a standardized list item component
+- ✅ **Inconsistent List Item Styling**
+  - Different styles for list items in various screens
+  - Fixed by creating and using the standardized `BLKWDSListItem` component
+
+- ✅ **Inconsistent Status Indicators**
+  - Different styles for status badges across the app
+  - Fixed by creating and using the standardized `BLKWDSStatusBadge` component
 
 ### Low Priority
 
-10. ⬜ **Animation Inconsistencies**
-    - Different animation durations and curves
-    - Solution: Use standardized animation constants
+- ⬜ **Animation Inconsistencies**
+  - Different animation durations and curves
+  - Solution: Use standardized animation constants
 
-11. ⬜ **Responsive Layout Issues**
-    - Inconsistent behavior on different screen sizes
-    - Solution: Implement responsive layout guidelines
+- ⬜ **Responsive Layout Issues**
+  - Inconsistent behavior on different screen sizes
+  - Solution: Implement responsive layout guidelines
 
 ## Screens to Update
 
