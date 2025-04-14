@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
@@ -54,7 +53,7 @@ class CalendarFilterPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          
+
           // Filter options
           Wrap(
             spacing: BLKWDSConstants.spacingMedium,
@@ -65,25 +64,25 @@ class CalendarFilterPanel extends StatelessWidget {
                 width: 200,
                 child: _buildProjectFilter(),
               ),
-              
+
               // Member filter
               SizedBox(
                 width: 200,
                 child: _buildMemberFilter(),
               ),
-              
+
               // Gear filter
               SizedBox(
                 width: 200,
                 child: _buildGearFilter(),
               ),
-              
+
               // Date range filters
               SizedBox(
                 width: 200,
                 child: _buildStartDateFilter(context),
               ),
-              
+
               SizedBox(
                 width: 200,
                 child: _buildEndDateFilter(context),

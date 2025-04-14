@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/blkwds_colors.dart';
-import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
 
 /// Standardized status badge component for BLKWDS Manager
@@ -51,7 +50,7 @@ class BLKWDSStatusBadge extends StatelessWidget {
       case 'out':
       case 'warning':
       case 'attention':
-        color = BLKWDSColors.warningOrange;
+        color = BLKWDSColors.mustardOrange;
         break;
       case 'error':
       case 'critical':

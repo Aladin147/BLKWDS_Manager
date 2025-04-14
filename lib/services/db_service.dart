@@ -2,7 +2,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/models.dart';
 import 'log_service.dart';
-import 'error_service.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
