@@ -1,7 +1,7 @@
 # BLKWDS Manager – Project README
 
 ## 🎯 Overview
-**BLKWDS Manager** is a sleek, offline-first desktop app designed for managing gear logistics, bookings, and team operations within a creative production studio. Built with usability and aesthetics at its core, it's crafted to support internal workflows without cloud complexity or admin fatigue.
+**BLKWDS Manager** is a sleek, offline-first desktop app designed for managing gear logistics, bookings, and team operations within a creative production studio. Built with usability and aesthetics at its core, it’s crafted to support internal workflows without cloud complexity or admin fatigue.
 
 This README is the **master reference** for the entire project lifecycle — from setup to deployment to iteration.
 
@@ -20,13 +20,13 @@ This README is the **master reference** for the entire project lifecycle — fro
 ---
 
 ## 🧱 Architecture
-| Layer      | Description                                          |
-|------------|------------------------------------------------------|
-| UI         | Flutter Desktop (Windows)                            |
-| State      | ValueNotifier / Riverpod (optional)                  |
-| DB         | SQLite via `sqflite` and `sqflite_common_ffi`        |
-| Assets     | Local image paths, stored in `/images`               |
-| Export     | CSV via `csv` package                                |
+| Layer      | Description                         |
+|-----------|-------------------------------------|
+| UI        | Flutter Desktop (Windows)            |
+| State     | ValueNotifier / Riverpod (optional)  |
+| DB        | SQLite via `sqflite`                 |
+| Assets    | Local image paths, stored in `/images` |
+| Export    | CSV via `csv` package                |
 
 ---
 
@@ -65,14 +65,6 @@ This README is the **master reference** for the entire project lifecycle — fro
 | `roadmap.md`             | Feature evolution plan              |
 | `changelog.md`           | Version history                     |
 | `architecture_and_tech_stack.md` | Stack breakdown and rationale |
-
----
-
-## 🚦 Development Status
-- Basic project structure and architecture implemented
-- Theme system and data models created
-- Dashboard UI with mock data implemented
-- Windows compatibility issues resolved
 
 ---
 
