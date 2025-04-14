@@ -13,6 +13,11 @@
 - Implemented form validation and error handling
 - Added date picker for purchase date selection
 
+### Known Issues
+
+- **Dropdown Issue**: There's an issue with the Member dropdown in the dashboard where it throws an assertion error: `Failed assertion: 'items == null || items.isEmpty || value == null || items.where(((DropdownMenuItem<T> item) => item.value == value).length == 1'`. This is likely due to equality comparison issues with the Member class. We've added the `==` operator and `hashCode` method to the Member class, but the issue persists. This needs further investigation.
+- **Database Migration**: When adding new fields to models, we need to properly handle database migrations to avoid SQLite errors. We've implemented a basic migration system, but it needs refinement.
+
 ## 2025-04-16
 
 ### Database Implementation

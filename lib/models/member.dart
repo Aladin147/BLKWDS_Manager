@@ -46,4 +46,19 @@ class Member {
   String toString() {
     return 'Member(id: $id, name: $name, role: $role)';
   }
+
+  // TODO: Fix equality comparison for Member class
+  // This implementation doesn't seem to fully resolve the dropdown assertion error
+  // Need to investigate further why the dropdown still has issues with equality comparison
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Member &&
+        other.id == id &&
+        other.name == name &&
+        other.role == role;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ (role?.hashCode ?? 0);
 }

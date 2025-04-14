@@ -187,6 +187,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Row(
               children: [
                 // Member dropdown
+                // TODO: Fix dropdown assertion error - items.where((item) => item.value == value).length == 1
+                // This is likely due to equality comparison issues with the Member class
                 Expanded(
                   flex: 2,
                   child: DropdownButtonFormField<Member>(
