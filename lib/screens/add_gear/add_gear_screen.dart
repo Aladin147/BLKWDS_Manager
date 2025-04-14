@@ -72,12 +72,21 @@ class _AddGearScreenState extends State<AddGearScreen> {
     try {
       final File? imageFile = await ImageService.pickImage();
 
-      if (imageFile != null) {
-        _controller.setThumbnailPath(imageFile.path);
+      if (imageFile != null && mounted) {
+        setState(() {
+          _controller.setThumbnailPath(imageFile.path);
+        });
       }
     } catch (e) {
       // Use a logger in production code instead of print
-      // print('Error picking image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error selecting image: ${e.toString()}'),
+            backgroundColor: BLKWDSColors.statusOut,
+          ),
+        );
+      }
     }
   }
 

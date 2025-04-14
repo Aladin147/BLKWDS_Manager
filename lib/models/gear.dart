@@ -42,17 +42,22 @@ class Gear {
 
   /// Convert Gear object to a map (for database operations)
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    // Create a map with non-null values only
+    final map = <String, dynamic>{
       'name': name,
       'category': category,
-      'description': description,
-      'serialNumber': serialNumber,
-      'purchaseDate': purchaseDate?.toIso8601String(),
-      'thumbnailPath': thumbnailPath,
       'isOut': isOut ? 1 : 0,
-      'lastNote': lastNote,
     };
+
+    // Only add non-null values
+    if (id != null) map['id'] = id;
+    if (description != null) map['description'] = description;
+    if (serialNumber != null) map['serialNumber'] = serialNumber;
+    if (purchaseDate != null) map['purchaseDate'] = purchaseDate!.toIso8601String();
+    if (thumbnailPath != null) map['thumbnailPath'] = thumbnailPath;
+    if (lastNote != null) map['lastNote'] = lastNote;
+
+    return map;
   }
 
   /// Create a copy of this Gear with modified fields

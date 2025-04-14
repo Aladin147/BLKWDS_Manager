@@ -53,10 +53,20 @@ class AddGearController {
 
     try {
       // Process image if selected
-      String? finalImagePath = thumbnailPath.value;
-      if (thumbnailPath.value != null) {
-        final imageFile = File(thumbnailPath.value!);
-        finalImagePath = await ImageService.saveImage(imageFile, name.value.trim());
+      String? finalImagePath;
+      if (thumbnailPath.value != null && thumbnailPath.value!.isNotEmpty) {
+        try {
+          final imageFile = File(thumbnailPath.value!);
+          if (await imageFile.exists()) {
+            final savedPath = await ImageService.saveImage(imageFile, name.value.trim());
+            if (savedPath != null) {
+              finalImagePath = savedPath;
+            }
+          }
+        } catch (e) {
+          print('Error processing image: $e');
+          // Continue without the image if there's an error
+        }
       }
 
       // Create gear object
@@ -67,6 +77,8 @@ class AddGearController {
         serialNumber: serialNumber.value.trim().isNotEmpty ? serialNumber.value.trim() : null,
         purchaseDate: purchaseDate.value,
         thumbnailPath: finalImagePath,
+        isOut: false, // Explicitly set isOut to false
+        lastNote: null,
       );
 
       // Save to database

@@ -25,10 +25,10 @@ class DateFormatter {
 
   /// Format a date range (e.g., "Apr 15, 10:30 AM - 2:30 PM")
   static String formatDateTimeRange(DateTime start, DateTime end) {
-    final bool sameDay = start.year == end.year && 
-                         start.month == end.month && 
+    final bool sameDay = start.year == end.year &&
+                         start.month == end.month &&
                          start.day == end.day;
-    
+
     if (sameDay) {
       return '${DateFormat.yMMMd().format(start)}, ${DateFormat.jm().format(start)} - ${DateFormat.jm().format(end)}';
     } else {
@@ -42,19 +42,37 @@ class DateFormatter {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final dateOnly = DateTime(date.year, date.month, date.day);
-    
+
     if (dateOnly == today) {
       return 'Today, ${DateFormat.jm().format(date)}';
     } else if (dateOnly == yesterday) {
       return 'Yesterday, ${DateFormat.jm().format(date)}';
     } else {
       final difference = today.difference(dateOnly).inDays;
-      
+
       if (difference < 7) {
         return '$difference days ago, ${DateFormat.jm().format(date)}';
       } else {
         return DateFormat.yMMMd().add_jm().format(date);
       }
+    }
+  }
+
+  /// Format a relative time (e.g., "Just now", "5m ago", "2h ago")
+  static String formatRelativeTime(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return formatShortDate(timestamp);
     }
   }
 }

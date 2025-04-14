@@ -19,9 +19,28 @@ class DBService {
     final path = join(await getDatabasesPath(), 'blkwds_manager.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Increment version to trigger migration
       onCreate: _createTables,
+      onUpgrade: _upgradeDatabase,
     );
+  }
+
+  /// Handle database upgrades
+  static Future<void> _upgradeDatabase(Database db, int oldVersion, int newVersion) async {
+    print('Upgrading database from version $oldVersion to $newVersion');
+
+    if (oldVersion == 1 && newVersion == 2) {
+      try {
+        // Add new columns to gear table
+        await db.execute('ALTER TABLE gear ADD COLUMN description TEXT DEFAULT NULL');
+        await db.execute('ALTER TABLE gear ADD COLUMN serialNumber TEXT DEFAULT NULL');
+        await db.execute('ALTER TABLE gear ADD COLUMN purchaseDate TEXT DEFAULT NULL');
+        print('Added new columns to gear table');
+      } catch (e) {
+        print('Error during database migration: $e');
+        // If columns already exist, that's fine
+      }
+    }
   }
 
   /// Create database tables
@@ -128,7 +147,27 @@ class DBService {
   /// Insert a new gear item
   static Future<int> insertGear(Gear gear) async {
     final db = await database;
-    return await db.insert('gear', gear.toMap());
+    try {
+      // Create a map with only the columns that exist in the table
+      final Map<String, dynamic> gearMap = {
+        'name': gear.name,
+        'category': gear.category,
+        'isOut': gear.isOut ? 1 : 0,
+      };
+
+      // Add optional fields if they exist
+      if (gear.description != null) gearMap['description'] = gear.description!;
+      if (gear.serialNumber != null) gearMap['serialNumber'] = gear.serialNumber!;
+      if (gear.purchaseDate != null) gearMap['purchaseDate'] = gear.purchaseDate!.toIso8601String();
+      if (gear.thumbnailPath != null) gearMap['thumbnailPath'] = gear.thumbnailPath!;
+      if (gear.lastNote != null) gearMap['lastNote'] = gear.lastNote!;
+
+      print('Inserting gear: $gearMap');
+      return await db.insert('gear', gearMap);
+    } catch (e) {
+      print('Error inserting gear: $e');
+      rethrow;
+    }
   }
 
   /// Get all gear items
