@@ -3,8 +3,10 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
+import '../../utils/date_formatter.dart';
 import '../../models/models.dart';
-import '../../data/mock_data.dart';
+import '../add_gear/add_gear_screen.dart';
+import 'dashboard_controller.dart';
 
 /// DashboardScreen
 /// The main dashboard screen of the app
@@ -16,93 +18,133 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Mock data for development
-  late List<Gear> _gearList;
-  late List<Member> _memberList;
-  late List<ActivityLog> _recentActivity;
-  
+  // Controller for database operations and state management
+  final _controller = DashboardController();
+
   // Selected member for checkout
   Member? _selectedMember;
-  
+
   // Search query
   String _searchQuery = '';
-  
+
+  // Filtered gear list
+  List<Gear> _filteredGear = [];
+
   @override
   void initState() {
     super.initState();
-    
-    // Load mock data
-    _gearList = MockData.getSampleGear();
-    _memberList = MockData.getSampleMembers();
-    _recentActivity = MockData.getSampleActivityLogs();
-    
-    // Set default selected member
-    if (_memberList.isNotEmpty) {
-      _selectedMember = _memberList.first;
+
+    // Initialize controller and load data
+    _initializeData();
+
+    // Listen for changes in gear list
+    _controller.gearList.addListener(_updateFilteredGear);
+
+    // Listen for changes in member list
+    _controller.memberList.addListener(_updateSelectedMember);
+  }
+
+  // Initialize data from database
+  Future<void> _initializeData() async {
+    await _controller.initialize();
+    _updateFilteredGear();
+    _updateSelectedMember();
+  }
+
+  // Update filtered gear list when gear list or search query changes
+  void _updateFilteredGear() {
+    setState(() {
+      _filteredGear = _controller.searchGear(_searchQuery);
+    });
+  }
+
+  // Update selected member when member list changes
+  void _updateSelectedMember() {
+    if (_controller.memberList.value.isNotEmpty && _selectedMember == null) {
+      setState(() {
+        _selectedMember = _controller.memberList.value.first;
+      });
     }
   }
-  
-  // Filter gear based on search query
-  List<Gear> get _filteredGear {
-    if (_searchQuery.isEmpty) {
-      return _gearList;
-    }
-    
-    return _gearList.where((gear) {
-      return gear.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-             gear.category.toLowerCase().contains(_searchQuery.toLowerCase());
-    }).toList();
+
+  @override
+  void dispose() {
+    // Clean up controller
+    _controller.gearList.removeListener(_updateFilteredGear);
+    _controller.memberList.removeListener(_updateSelectedMember);
+    _controller.dispose();
+    super.dispose();
   }
-  
+
   // Handle gear checkout
-  void _handleCheckout(Gear gear) {
+  Future<void> _handleCheckout(Gear gear) async {
     if (_selectedMember == null) {
       _showSnackBar('Please select a member first');
       return;
     }
-    
-    setState(() {
-      // Update gear status
-      final index = _gearList.indexWhere((g) => g.id == gear.id);
-      if (index != -1) {
-        _gearList[index] = gear.copyWith(isOut: true);
-      }
-      
-      // Add activity log
-      _recentActivity.insert(0, ActivityLog(
-        id: _recentActivity.length + 1,
-        gearId: gear.id!,
-        memberId: _selectedMember!.id,
-        checkedOut: true,
-        timestamp: DateTime.now(),
-      ));
-    });
-    
-    _showSnackBar('${gear.name} checked out to ${_selectedMember!.name}');
+
+    // Show note dialog
+    final note = await _showNoteDialog('Checkout Note (Optional)');
+
+    // Check out gear using controller
+    final success = await _controller.checkOutGear(
+      gear,
+      _selectedMember!,
+      note: note,
+    );
+
+    if (success) {
+      _showSnackBar('${gear.name} checked out to ${_selectedMember!.name}');
+    } else if (_controller.errorMessage.value != null) {
+      _showSnackBar(_controller.errorMessage.value!);
+    }
   }
-  
+
   // Handle gear return
-  void _handleReturn(Gear gear) {
-    setState(() {
-      // Update gear status
-      final index = _gearList.indexWhere((g) => g.id == gear.id);
-      if (index != -1) {
-        _gearList[index] = gear.copyWith(isOut: false);
-      }
-      
-      // Add activity log
-      _recentActivity.insert(0, ActivityLog(
-        id: _recentActivity.length + 1,
-        gearId: gear.id!,
-        memberId: null,
-        checkedOut: false,
-        timestamp: DateTime.now(),
-      ));
-    });
-    
-    _showSnackBar('${gear.name} returned');
+  Future<void> _handleReturn(Gear gear) async {
+    // Show note dialog
+    final note = await _showNoteDialog('Return Note (Optional)');
+
+    // Check in gear using controller
+    final success = await _controller.checkInGear(gear, note: note);
+
+    if (success) {
+      _showSnackBar('${gear.name} returned to inventory');
+    } else if (_controller.errorMessage.value != null) {
+      _showSnackBar(_controller.errorMessage.value!);
+    }
   }
-  
+
+  // Show a dialog to enter a note
+  Future<String?> _showNoteDialog(String title) async {
+    final controller = TextEditingController();
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Enter a note (optional)',
+          ),
+          maxLines: 3,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    return result?.isNotEmpty == true ? result : null;
+  }
+
   // Show a snackbar message
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -112,7 +154,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       labelText: 'Select Member',
                     ),
                     value: _selectedMember,
-                    items: _memberList.map((member) {
+                    items: _controller.memberList.value.map((member) {
                       return DropdownMenuItem<Member>(
                         value: member,
                         child: Text(member.name),
@@ -184,7 +226,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           ),
-          
+
           // Action buttons
           Container(
             color: BLKWDSColors.white,
@@ -198,9 +240,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.add),
                   label: const Text('Add Gear'),
-                  onPressed: () {
-                    // TODO: Navigate to add gear screen
-                    _showSnackBar('Add gear screen not implemented yet');
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddGearScreen(),
+                      ),
+                    );
+
+                    if (result == true) {
+                      // Refresh data when returning from add gear screen
+                      await _controller.initialize();
+                      _updateFilteredGear();
+                    }
                   },
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingMedium),
@@ -215,29 +267,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           ),
-          
+
           // Gear list
           Expanded(
             child: Container(
-              color: BLKWDSColors.white.withOpacity(0.9),
+              color: BLKWDSColors.white.withValues(alpha: 230),
               margin: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-              child: _filteredGear.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No gear found',
-                        style: BLKWDSTypography.bodyLarge,
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _filteredGear.length,
-                      itemBuilder: (context, index) {
-                        final gear = _filteredGear[index];
-                        return _buildGearCard(gear);
-                      },
-                    ),
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _controller.isLoading,
+                builder: (context, isLoading, _) {
+                  if (isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  return ValueListenableBuilder<String?>(
+                    valueListenable: _controller.errorMessage,
+                    builder: (context, error, _) {
+                      if (error != null) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.error_outline, size: 48, color: BLKWDSColors.statusOut),
+                              const SizedBox(height: BLKWDSConstants.spacingMedium),
+                              Text(
+                                'Error loading gear',
+                                style: BLKWDSTypography.titleMedium,
+                              ),
+                              const SizedBox(height: BLKWDSConstants.spacingSmall),
+                              Text(
+                                error,
+                                style: BLKWDSTypography.bodyMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: BLKWDSConstants.spacingMedium),
+                              ElevatedButton(
+                                onPressed: _initializeData,
+                                child: const Text('Retry'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      return _filteredGear.isEmpty
+                          ? Center(
+                              child: Text(
+                                'No gear found',
+                                style: BLKWDSTypography.bodyLarge,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: _filteredGear.length,
+                              itemBuilder: (context, index) {
+                                final gear = _filteredGear[index];
+                                return _buildGearCard(gear);
+                              },
+                            );
+                    },
+                  );
+                },
+              ),
             ),
           ),
-          
+
           // Recent activity
           Container(
             height: 150,
@@ -252,11 +347,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: BLKWDSConstants.spacingSmall),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: _recentActivity.length,
-                    itemBuilder: (context, index) {
-                      final activity = _recentActivity[index];
-                      return _buildActivityItem(activity);
+                  child: ValueListenableBuilder<List<ActivityLog>>(
+                    valueListenable: _controller.recentActivity,
+                    builder: (context, activities, _) {
+                      return activities.isEmpty
+                          ? const Center(
+                              child: Text('No recent activity'),
+                            )
+                          : ListView.builder(
+                              itemCount: activities.length,
+                              itemBuilder: (context, index) {
+                                final activity = activities[index];
+                                return _buildActivityItem(activity);
+                              },
+                            );
                     },
                   ),
                 ),
@@ -267,7 +371,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-  
+
   // Build a gear card
   Widget _buildGearCard(Gear gear) {
     return Card(
@@ -284,7 +388,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: BLKWDSColors.slateGrey.withOpacity(0.2),
+                color: BLKWDSColors.slateGrey.withValues(alpha: 50),
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
               ),
               child: const Icon(Icons.camera_alt),
@@ -324,8 +428,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               decoration: BoxDecoration(
                 color: gear.isOut
-                    ? BLKWDSColors.statusOut.withOpacity(0.2)
-                    : BLKWDSColors.statusIn.withOpacity(0.2),
+                    ? BLKWDSColors.statusOut.withValues(alpha: 50)
+                    : BLKWDSColors.statusIn.withValues(alpha: 50),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -356,26 +460,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-  
+
   // Build an activity item
   Widget _buildActivityItem(ActivityLog activity) {
     // Find gear and member names
-    final gear = _gearList.firstWhere(
+    final gear = _controller.gearList.value.firstWhere(
       (g) => g.id == activity.gearId,
       orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
     );
-    
+
     final member = activity.memberId != null
-        ? _memberList.firstWhere(
+        ? _controller.memberList.value.firstWhere(
             (m) => m.id == activity.memberId,
             orElse: () => Member(id: 0, name: 'Unknown'),
           )
         : null;
-    
+
     final String actionText = activity.checkedOut
         ? '${gear.name} checked out to ${member?.name ?? 'Unknown'}'
         : '${gear.name} returned';
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -397,27 +501,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             _formatTimestamp(activity.timestamp),
             style: BLKWDSTypography.bodyMedium.copyWith(
-              color: BLKWDSColors.slateGrey.withOpacity(0.7),
+              color: BLKWDSColors.slateGrey.withValues(alpha: 180),
             ),
           ),
         ],
       ),
     );
   }
-  
+
   // Format a timestamp
   String _formatTimestamp(DateTime timestamp) {
-    final now = DateTime.now();
-    final difference = now.difference(timestamp);
-    
-    if (difference.inMinutes < 1) {
-      return 'Just now';
-    } else if (difference.inHours < 1) {
-      return '${difference.inMinutes}m ago';
-    } else if (difference.inDays < 1) {
-      return '${difference.inHours}h ago';
-    } else {
-      return '${difference.inDays}d ago';
-    }
+    return DateFormatter.formatRelativeTime(timestamp);
   }
 }

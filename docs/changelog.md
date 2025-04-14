@@ -50,7 +50,21 @@
 
 ---
 
-## 🟡 v0.4.0 – Booking Panel
+## 🟢 v0.4.0 – Gear Management (2025-04-17)
+### ✨ Features
+- Extended Gear model with additional fields
+- Implemented Add Gear screen with form validation
+- Added image upload functionality
+- Connected Add Gear screen to Dashboard
+- Added date picker for purchase date selection
+
+### 🐛 Fixes
+- Fixed image handling in ImageService
+- Improved form validation and error handling
+
+---
+
+## 🟡 v0.5.0 – Booking Panel
 ### Planned:
 - Booking creation modal with full project/member/gear assignment
 - Gear-to-member optional mapping logic

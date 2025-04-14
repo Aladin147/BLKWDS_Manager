@@ -1,5 +1,18 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-17
+
+### Add Gear Screen Implementation
+
+- Extended Gear model with additional fields (description, serialNumber, purchaseDate)
+- Updated database schema to include new fields
+- Created AddGearController for state management and business logic
+- Implemented Add Gear Screen with form validation
+- Added image upload functionality using ImageService
+- Connected Add Gear Screen to Dashboard for seamless workflow
+- Implemented form validation and error handling
+- Added date picker for purchase date selection
+
 ## 2025-04-16
 
 ### Database Implementation

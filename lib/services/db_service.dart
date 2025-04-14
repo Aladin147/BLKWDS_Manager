@@ -32,6 +32,9 @@ class DBService {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         category TEXT NOT NULL,
+        description TEXT,
+        serialNumber TEXT,
+        purchaseDate TEXT,
         thumbnailPath TEXT,
         isOut INTEGER NOT NULL DEFAULT 0,
         lastNote TEXT

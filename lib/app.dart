@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'theme/blkwds_theme.dart';
 import 'utils/constants.dart';
-import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/screens.dart';
 
 /// BLKWDSApp
 /// The main application widget
