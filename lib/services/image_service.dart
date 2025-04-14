@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -9,26 +9,24 @@ class ImageService {
   /// Pick an image from the file system
   static Future<File?> pickImage() async {
     try {
-      // Use FilePicker to select an image
-      final FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
+      // Use file_selector to select an image
+      final file_selector.XTypeGroup imageTypeGroup = file_selector.XTypeGroup(
+        label: 'Images',
+        extensions: ['jpg', 'jpeg', 'png', 'gif'],
       );
-      
-      if (result == null || result.files.isEmpty) {
+
+      final file_selector.XFile? file = await file_selector.openFile(
+        acceptedTypeGroups: [imageTypeGroup],
+      );
+
+      if (file == null) {
         return null;
       }
-      
-      // Get the selected file path
-      final String? filePath = result.files.first.path;
-      
-      if (filePath == null) {
-        return null;
-      }
-      
-      return File(filePath);
+
+      return File(file.path);
     } catch (e) {
-      print('Error picking image: $e');
+      // Use a logger in production code instead of print
+      // print('Error picking image: $e');
       return null;
     }
   }
@@ -40,24 +38,25 @@ class ImageService {
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
       final String sanitizedName = gearName.replaceAll(RegExp(r'[^\w\s]+'), '').replaceAll(' ', '_').toLowerCase();
       final String filename = '${sanitizedName}_$timestamp${path.extension(imageFile.path)}';
-      
+
       // Get the app's local storage directory
       final Directory appDir = await getApplicationDocumentsDirectory();
       final String imagesDir = path.join(appDir.path, 'images');
-      
+
       // Create the images directory if it doesn't exist
       final Directory imagesDirFile = Directory(imagesDir);
       if (!await imagesDirFile.exists()) {
         await imagesDirFile.create(recursive: true);
       }
-      
+
       // Copy the image to the app's local storage
       final String destPath = path.join(imagesDir, filename);
       await imageFile.copy(destPath);
-      
+
       return destPath;
     } catch (e) {
-      print('Error saving image: $e');
+      // Use a logger in production code instead of print
+      // print('Error saving image: $e');
       return null;
     }
   }
@@ -66,15 +65,16 @@ class ImageService {
   static Future<bool> deleteImage(String imagePath) async {
     try {
       final File file = File(imagePath);
-      
+
       if (await file.exists()) {
         await file.delete();
         return true;
       }
-      
+
       return false;
     } catch (e) {
-      print('Error deleting image: $e');
+      // Use a logger in production code instead of print
+      // print('Error deleting image: $e');
       return false;
     }
   }

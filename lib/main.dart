@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'app.dart';
 import 'services/db_service.dart';
 
@@ -6,6 +7,10 @@ import 'services/db_service.dart';
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize sqflite_ffi for Windows support
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
 
   // Initialize the database
   await DBService.database;

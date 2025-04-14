@@ -37,6 +37,7 @@ dependencies:
 
   # Database
   sqflite: ^2.3.2
+  sqflite_common_ffi: ^2.3.2+1
   path: ^1.9.0
   path_provider: ^2.1.2
 
@@ -47,7 +48,9 @@ dependencies:
   # Utilities
   intl: ^0.19.0
   csv: ^5.1.1
-  file_picker: ^6.1.1
+  # Using file_selector instead of file_picker for better Windows compatibility
+  file_selector: ^1.0.2
+  file_selector_windows: ^0.9.3
 
   # State Management (optional)
   flutter_riverpod: ^2.4.10
@@ -89,26 +92,15 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font.
-  fonts:
-    - family: Sora
-      fonts:
-        - asset: assets/fonts/Sora-Regular.ttf
-        - asset: assets/fonts/Sora-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Sora-Light.ttf
-          weight: 300
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Regular.ttf
-        - asset: assets/fonts/Inter-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Inter-Light.ttf
-          weight: 300
-    - family: JetBrainsMono
-      fonts:
-        - asset: assets/fonts/JetBrainsMono-Regular.ttf
-        - asset: assets/fonts/JetBrainsMono-Bold.ttf
-          weight: 700
+  # Fonts will be added later when we have the actual font files
+  # fonts:
+  #   - family: Sora
+  #     fonts:
+  #       - asset: assets/fonts/Sora-Regular.ttf
+  #       - asset: assets/fonts/Sora-Bold.ttf
+  #         weight: 700
+  #       - asset: assets/fonts/Sora-Light.ttf
+  #         weight: 300
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

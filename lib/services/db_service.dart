@@ -25,7 +25,7 @@ class DBService {
   }
 
   /// Create database tables
-  static Future<void> _createTables(Database db) async {
+  static Future<void> _createTables(Database db, int version) async {
     // Gear table
     await db.execute('''
       CREATE TABLE gear (
@@ -225,12 +225,12 @@ class DBService {
   /// Insert a new project with member associations
   static Future<int> insertProject(Project project) async {
     final db = await database;
-    
+
     // Begin transaction
     return await db.transaction((txn) async {
       // Insert project
       final projectId = await txn.insert('project', project.toMap());
-      
+
       // Insert project-member associations
       for (final memberId in project.memberIds) {
         await txn.insert('project_member', {
@@ -238,7 +238,7 @@ class DBService {
           'memberId': memberId,
         });
       }
-      
+
       return projectId;
     });
   }
@@ -246,16 +246,16 @@ class DBService {
   /// Get all projects with their member IDs
   static Future<List<Project>> getAllProjects() async {
     final db = await database;
-    
+
     // Get all projects
     final List<Map<String, dynamic>> projectMaps = await db.query('project');
-    
+
     // Create Project objects
     final List<Project> projects = [];
-    
+
     for (final projectMap in projectMaps) {
       final projectId = projectMap['id'] as int;
-      
+
       // Get member IDs for this project
       final List<Map<String, dynamic>> memberMaps = await db.query(
         'project_member',
@@ -263,33 +263,33 @@ class DBService {
         where: 'projectId = ?',
         whereArgs: [projectId],
       );
-      
+
       final List<int> memberIds = memberMaps.map((m) => m['memberId'] as int).toList();
-      
+
       // Create Project with member IDs
       projects.add(
         Project.fromMap(projectMap).copyWith(memberIds: memberIds),
       );
     }
-    
+
     return projects;
   }
 
   /// Get a project by ID with its member IDs
   static Future<Project?> getProjectById(int id) async {
     final db = await database;
-    
+
     // Get project
     final List<Map<String, dynamic>> projectMaps = await db.query(
       'project',
       where: 'id = ?',
       whereArgs: [id],
     );
-    
+
     if (projectMaps.isEmpty) {
       return null;
     }
-    
+
     // Get member IDs for this project
     final List<Map<String, dynamic>> memberMaps = await db.query(
       'project_member',
@@ -297,9 +297,9 @@ class DBService {
       where: 'projectId = ?',
       whereArgs: [id],
     );
-    
+
     final List<int> memberIds = memberMaps.map((m) => m['memberId'] as int).toList();
-    
+
     // Create Project with member IDs
     return Project.fromMap(projectMaps.first).copyWith(memberIds: memberIds);
   }
@@ -307,7 +307,7 @@ class DBService {
   /// Update a project with member associations
   static Future<int> updateProject(Project project) async {
     final db = await database;
-    
+
     // Begin transaction
     return await db.transaction((txn) async {
       // Update project
@@ -317,14 +317,14 @@ class DBService {
         where: 'id = ?',
         whereArgs: [project.id],
       );
-      
+
       // Delete existing project-member associations
       await txn.delete(
         'project_member',
         where: 'projectId = ?',
         whereArgs: [project.id],
       );
-      
+
       // Insert new project-member associations
       for (final memberId in project.memberIds) {
         await txn.insert('project_member', {
@@ -332,7 +332,7 @@ class DBService {
           'memberId': memberId,
         });
       }
-      
+
       return project.id!;
     });
   }
@@ -352,23 +352,23 @@ class DBService {
   /// Insert a new booking with gear assignments
   static Future<int> insertBooking(Booking booking) async {
     final db = await database;
-    
+
     // Begin transaction
     return await db.transaction((txn) async {
       // Insert booking
       final bookingId = await txn.insert('booking', booking.toMap());
-      
+
       // Insert booking-gear associations with optional member assignments
       for (final gearId in booking.gearIds) {
         final assignedMemberId = booking.assignedGearToMember?[gearId];
-        
+
         await txn.insert('booking_gear', {
           'bookingId': bookingId,
           'gearId': gearId,
           'assignedMemberId': assignedMemberId,
         });
       }
-      
+
       return bookingId;
     });
   }
@@ -376,35 +376,35 @@ class DBService {
   /// Get all bookings with their gear and member assignments
   static Future<List<Booking>> getAllBookings() async {
     final db = await database;
-    
+
     // Get all bookings
     final List<Map<String, dynamic>> bookingMaps = await db.query('booking');
-    
+
     // Create Booking objects
     final List<Booking> bookings = [];
-    
+
     for (final bookingMap in bookingMaps) {
       final bookingId = bookingMap['id'] as int;
-      
+
       // Get gear IDs and member assignments for this booking
       final List<Map<String, dynamic>> gearMaps = await db.query(
         'booking_gear',
         where: 'bookingId = ?',
         whereArgs: [bookingId],
       );
-      
+
       final List<int> gearIds = gearMaps.map((m) => m['gearId'] as int).toList();
-      
+
       final Map<int, int> assignedGearToMember = {};
       for (final gearMap in gearMaps) {
         final gearId = gearMap['gearId'] as int;
         final memberId = gearMap['assignedMemberId'] as int?;
-        
+
         if (memberId != null) {
           assignedGearToMember[gearId] = memberId;
         }
       }
-      
+
       // Create Booking with gear IDs and member assignments
       bookings.add(
         Booking.fromMap(bookingMap).copyWith(
@@ -413,44 +413,44 @@ class DBService {
         ),
       );
     }
-    
+
     return bookings;
   }
 
   /// Get a booking by ID with its gear and member assignments
   static Future<Booking?> getBookingById(int id) async {
     final db = await database;
-    
+
     // Get booking
     final List<Map<String, dynamic>> bookingMaps = await db.query(
       'booking',
       where: 'id = ?',
       whereArgs: [id],
     );
-    
+
     if (bookingMaps.isEmpty) {
       return null;
     }
-    
+
     // Get gear IDs and member assignments for this booking
     final List<Map<String, dynamic>> gearMaps = await db.query(
       'booking_gear',
       where: 'bookingId = ?',
       whereArgs: [id],
     );
-    
+
     final List<int> gearIds = gearMaps.map((m) => m['gearId'] as int).toList();
-    
+
     final Map<int, int> assignedGearToMember = {};
     for (final gearMap in gearMaps) {
       final gearId = gearMap['gearId'] as int;
       final memberId = gearMap['assignedMemberId'] as int?;
-      
+
       if (memberId != null) {
         assignedGearToMember[gearId] = memberId;
       }
     }
-    
+
     // Create Booking with gear IDs and member assignments
     return Booking.fromMap(bookingMaps.first).copyWith(
       gearIds: gearIds,
@@ -461,7 +461,7 @@ class DBService {
   /// Update a booking with gear assignments
   static Future<int> updateBooking(Booking booking) async {
     final db = await database;
-    
+
     // Begin transaction
     return await db.transaction((txn) async {
       // Update booking
@@ -471,25 +471,25 @@ class DBService {
         where: 'id = ?',
         whereArgs: [booking.id],
       );
-      
+
       // Delete existing booking-gear associations
       await txn.delete(
         'booking_gear',
         where: 'bookingId = ?',
         whereArgs: [booking.id],
       );
-      
+
       // Insert new booking-gear associations with optional member assignments
       for (final gearId in booking.gearIds) {
         final assignedMemberId = booking.assignedGearToMember?[gearId];
-        
+
         await txn.insert('booking_gear', {
           'bookingId': booking.id,
           'gearId': gearId,
           'assignedMemberId': assignedMemberId,
         });
       }
-      
+
       return booking.id!;
     });
   }
@@ -572,7 +572,7 @@ class DBService {
   /// Check out gear to a member
   static Future<bool> checkOutGear(int gearId, int memberId, {String? note}) async {
     final db = await database;
-    
+
     // Begin transaction
     return await db.transaction((txn) async {
       // Get gear
@@ -581,18 +581,18 @@ class DBService {
         where: 'id = ?',
         whereArgs: [gearId],
       );
-      
+
       if (gearMaps.isEmpty) {
         return false;
       }
-      
+
       final gear = Gear.fromMap(gearMaps.first);
-      
+
       // Check if gear is already checked out
       if (gear.isOut) {
         return false;
       }
-      
+
       // Update gear status
       await txn.update(
         'gear',
@@ -600,7 +600,7 @@ class DBService {
         where: 'id = ?',
         whereArgs: [gearId],
       );
-      
+
       // Create activity log entry
       final activityLog = ActivityLog(
         gearId: gearId,
@@ -609,9 +609,9 @@ class DBService {
         timestamp: DateTime.now(),
         note: note,
       );
-      
+
       await txn.insert('activity_log', activityLog.toMap());
-      
+
       return true;
     });
   }
@@ -619,7 +619,7 @@ class DBService {
   /// Check in gear
   static Future<bool> checkInGear(int gearId, {String? note}) async {
     final db = await database;
-    
+
     // Begin transaction
     return await db.transaction((txn) async {
       // Get gear
@@ -628,18 +628,18 @@ class DBService {
         where: 'id = ?',
         whereArgs: [gearId],
       );
-      
+
       if (gearMaps.isEmpty) {
         return false;
       }
-      
+
       final gear = Gear.fromMap(gearMaps.first);
-      
+
       // Check if gear is already checked in
       if (!gear.isOut) {
         return false;
       }
-      
+
       // Update gear status
       await txn.update(
         'gear',
@@ -647,7 +647,7 @@ class DBService {
         where: 'id = ?',
         whereArgs: [gearId],
       );
-      
+
       // Create activity log entry
       final activityLog = ActivityLog(
         gearId: gearId,
@@ -656,9 +656,9 @@ class DBService {
         timestamp: DateTime.now(),
         note: note,
       );
-      
+
       await txn.insert('activity_log', activityLog.toMap());
-      
+
       // Create status note if provided
       if (note != null && note.isNotEmpty) {
         final statusNote = StatusNote(
@@ -666,10 +666,10 @@ class DBService {
           note: note,
           timestamp: DateTime.now(),
         );
-        
+
         await txn.insert('status_note', statusNote.toMap());
       }
-      
+
       return true;
     });
   }

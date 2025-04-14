@@ -1,4 +1,5 @@
 /// Export all models for easy import
+library;
 export 'gear.dart';
 export 'member.dart';
 export 'project.dart';

@@ -18,8 +18,6 @@ class BLKWDSTheme {
         onSecondary: BLKWDSColors.deepBlack,
         error: BLKWDSColors.alertCoral,
         onError: BLKWDSColors.white,
-        background: BLKWDSColors.blkwdsGreen,
-        onBackground: BLKWDSColors.white,
         surface: BLKWDSColors.white,
         onSurface: BLKWDSColors.deepBlack,
       ),
