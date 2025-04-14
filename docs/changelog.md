@@ -114,7 +114,20 @@
 - Improved error handling in booking controller
 - Enhanced state management during booking operations
 
-## 🟡 v0.8.0 – Calendar Enhancements
+## 🟢 v0.8.0 – Booking Filtering and Search (2025-04-24)
+### ✨ Features
+- Implemented comprehensive filtering and search functionality for bookings
+- Added a FilterBar widget with search field, filter chips, and sort options
+- Implemented filtering by project, member, gear, studio type, and date range
+- Added sorting options (date, project, duration) with ascending/descending options
+- Improved UI with active filter indicators and reset functionality
+- Added empty state handling for when no bookings match the filter criteria
+
+### 🐛 Fixes
+- Fixed null safety issues in booking controller
+- Improved error handling in filter operations
+
+## 🟡 v0.9.0 – Calendar Enhancements
 ### Planned:
 - Render monthly calendar with improved visualization
 - Color-code booking types

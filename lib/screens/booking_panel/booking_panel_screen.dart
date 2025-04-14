@@ -7,6 +7,7 @@ import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
+import 'widgets/booking_filter_bar.dart';
 import 'widgets/booking_form.dart';
 import 'widgets/booking_list_item.dart';
 import 'widgets/calendar_view.dart';
@@ -209,60 +210,111 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Build list view
   Widget _buildListView() {
-    return ValueListenableBuilder<List<Booking>>(
-      valueListenable: _controller.bookingList,
-      builder: (context, bookings, child) {
-        if (bookings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.calendar_today,
-                  size: 64,
-                  color: BLKWDSColors.slateGrey,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                Text(
-                  'No bookings yet',
-                  style: BLKWDSTypography.titleMedium,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingSmall),
-                Text(
-                  'Create a booking to get started',
-                  style: BLKWDSTypography.bodyMedium,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                BLKWDSButton(
-                  label: 'Create Booking',
-                  icon: Icons.add,
-                  type: BLKWDSButtonType.primary,
-                  onPressed: _showCreateBookingForm,
-                ),
-              ],
-            ),
-          );
-        }
-
-        // Sort bookings by start date (newest first)
-        final sortedBookings = List<Booking>.from(bookings)
-          ..sort((a, b) => b.startDate.compareTo(a.startDate));
-
-        return ListView.builder(
+    return Column(
+      children: [
+        // Filter bar
+        Padding(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          itemCount: sortedBookings.length,
-          itemBuilder: (context, index) {
-            final booking = sortedBookings[index];
+          child: BookingFilterBar(
+            controller: _controller,
+            onFilterChanged: () {
+              // Refresh the UI when filters change
+              setState(() {});
+            },
+          ),
+        ),
 
-            return BookingListItem(
-              booking: booking,
-              controller: _controller,
-              onEdit: () => _showEditBookingForm(booking),
-              onDelete: () => _deleteBooking(booking),
-            );
-          },
-        );
-      },
+        // Booking list
+        Expanded(
+          child: ValueListenableBuilder<List<Booking>>(
+            valueListenable: _controller.filteredBookingList,
+            builder: (context, filteredBookings, child) {
+              if (_controller.bookingList.value.isEmpty) {
+                // No bookings at all
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.calendar_today,
+                        size: 64,
+                        color: BLKWDSColors.slateGrey,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
+                      Text(
+                        'No bookings yet',
+                        style: BLKWDSTypography.titleMedium,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingSmall),
+                      Text(
+                        'Create a booking to get started',
+                        style: BLKWDSTypography.bodyMedium,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
+                      BLKWDSButton(
+                        label: 'Create Booking',
+                        icon: Icons.add,
+                        type: BLKWDSButtonType.primary,
+                        onPressed: _showCreateBookingForm,
+                      ),
+                    ],
+                  ),
+                );
+              } else if (filteredBookings.isEmpty) {
+                // Bookings exist but none match the current filter
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.filter_alt_off,
+                        size: 64,
+                        color: BLKWDSColors.slateGrey,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
+                      Text(
+                        'No bookings match your filters',
+                        style: BLKWDSTypography.titleMedium,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingSmall),
+                      Text(
+                        'Try adjusting your filter criteria',
+                        style: BLKWDSTypography.bodyMedium,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
+                      BLKWDSButton(
+                        label: 'Reset Filters',
+                        icon: Icons.clear_all,
+                        type: BLKWDSButtonType.secondary,
+                        onPressed: () {
+                          _controller.resetFilters();
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              // Show filtered bookings
+              return ListView.builder(
+                padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                itemCount: filteredBookings.length,
+                itemBuilder: (context, index) {
+                  final booking = filteredBookings[index];
+
+                  return BookingListItem(
+                    booking: booking,
+                    controller: _controller,
+                    onEdit: () => _showEditBookingForm(booking),
+                    onDelete: () => _deleteBooking(booking),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 

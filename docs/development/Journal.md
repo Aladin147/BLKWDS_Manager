@@ -1,5 +1,18 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-04-24
+
+### Booking Filtering and Search Implementation
+
+- Implemented comprehensive filtering and search functionality for bookings
+- Created a BookingFilter model to hold filter criteria
+- Added a FilterBar widget with search field, filter chips, and sort options
+- Implemented filtering by project, member, gear, studio type, and date range
+- Added sorting options (date, project, duration) with ascending/descending options
+- Improved UI with active filter indicators and reset functionality
+- Enhanced the controller with filter application logic
+- Added empty state handling for when no bookings match the filter criteria
+
 ## 2025-04-23
 
 ### Booking Rescheduling Implementation

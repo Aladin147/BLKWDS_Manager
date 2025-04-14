@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../theme/blkwds_colors.dart';
+import 'models/booking_filter.dart';
 
 /// BookingPanelController
 /// Handles state management and business logic for the Booking Panel screen
@@ -15,6 +16,10 @@ class BookingPanelController {
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
 
+  // Filter-related notifiers
+  final ValueNotifier<BookingFilter> filter = ValueNotifier<BookingFilter>(const BookingFilter());
+  final ValueNotifier<List<Booking>> filteredBookingList = ValueNotifier<List<Booking>>([]);
+
   // Initialize controller
   Future<void> initialize() async {
     isLoading.value = true;
@@ -25,6 +30,9 @@ class BookingPanelController {
       await _loadProjects();
       await _loadMembers();
       await _loadGear();
+
+      // Initialize filtered list with all bookings
+      _applyFilters();
     } catch (e) {
       errorMessage.value = 'Error initializing data: $e';
       print('Error initializing data: $e');
@@ -38,10 +46,155 @@ class BookingPanelController {
     try {
       final bookings = await DBService.getAllBookings();
       bookingList.value = bookings;
+
+      // Update filtered list when bookings change
+      _applyFilters();
     } catch (e) {
       print('Error loading bookings: $e');
       rethrow;
     }
+  }
+
+  // Apply filters to the booking list
+  void _applyFilters() {
+    final currentFilter = filter.value;
+    final allBookings = bookingList.value;
+
+    // If no filter is active, show all bookings
+    if (!currentFilter.isActive && currentFilter.sortOrder == BookingSortOrder.dateDesc) {
+      filteredBookingList.value = List<Booking>.from(allBookings)
+        ..sort((a, b) => b.startDate.compareTo(a.startDate));
+      return;
+    }
+
+    // Apply filters
+    var filtered = allBookings.where((booking) {
+      // Text search filter
+      if (currentFilter.searchQuery.isNotEmpty) {
+        final project = getProjectById(booking.projectId);
+        final searchLower = currentFilter.searchQuery.toLowerCase();
+
+        // Search in project title
+        final projectMatch = project != null &&
+            project.title.toLowerCase().contains(searchLower);
+
+        // Search in project description
+        final descriptionMatch = project != null &&
+            project.description?.toLowerCase().contains(searchLower) == true;
+
+        // If no match found, exclude this booking
+        if (!projectMatch && !descriptionMatch) {
+          return false;
+        }
+      }
+
+      // Date range filter
+      if (currentFilter.dateRange != null) {
+        final startDate = DateTime(
+          currentFilter.dateRange!.start.year,
+          currentFilter.dateRange!.start.month,
+          currentFilter.dateRange!.start.day,
+        );
+
+        final endDate = DateTime(
+          currentFilter.dateRange!.end.year,
+          currentFilter.dateRange!.end.month,
+          currentFilter.dateRange!.end.day,
+          23, 59, 59,
+        );
+
+        // Check if booking overlaps with the date range
+        if (booking.endDate.isBefore(startDate) || booking.startDate.isAfter(endDate)) {
+          return false;
+        }
+      }
+
+      // Project filter
+      if (currentFilter.projectId != null && booking.projectId != currentFilter.projectId) {
+        return false;
+      }
+
+      // Member filter
+      if (currentFilter.memberId != null && booking.assignedGearToMember != null) {
+        // Check if the member is assigned to any gear in this booking
+        final memberAssigned = booking.assignedGearToMember!.values.contains(currentFilter.memberId);
+        if (!memberAssigned) {
+          return false;
+        }
+      }
+
+      // Gear filter
+      if (currentFilter.gearId != null && !booking.gearIds.contains(currentFilter.gearId)) {
+        return false;
+      }
+
+      // Studio filters
+      if (currentFilter.isRecordingStudio != null &&
+          booking.isRecordingStudio != currentFilter.isRecordingStudio) {
+        return false;
+      }
+
+      if (currentFilter.isProductionStudio != null &&
+          booking.isProductionStudio != currentFilter.isProductionStudio) {
+        return false;
+      }
+
+      // Include this booking in the results
+      return true;
+    }).toList();
+
+    // Apply sorting
+    switch (currentFilter.sortOrder) {
+      case BookingSortOrder.dateAsc:
+        filtered.sort((a, b) => a.startDate.compareTo(b.startDate));
+        break;
+      case BookingSortOrder.dateDesc:
+        filtered.sort((a, b) => b.startDate.compareTo(a.startDate));
+        break;
+      case BookingSortOrder.projectAsc:
+        filtered.sort((a, b) {
+          final projectA = getProjectById(a.projectId)?.title ?? '';
+          final projectB = getProjectById(b.projectId)?.title ?? '';
+          return projectA.compareTo(projectB);
+        });
+        break;
+      case BookingSortOrder.projectDesc:
+        filtered.sort((a, b) {
+          final projectA = getProjectById(a.projectId)?.title ?? '';
+          final projectB = getProjectById(b.projectId)?.title ?? '';
+          return projectB.compareTo(projectA);
+        });
+        break;
+      case BookingSortOrder.durationAsc:
+        filtered.sort((a, b) {
+          final durationA = a.endDate.difference(a.startDate).inMinutes;
+          final durationB = b.endDate.difference(b.startDate).inMinutes;
+          return durationA.compareTo(durationB);
+        });
+        break;
+      case BookingSortOrder.durationDesc:
+        filtered.sort((a, b) {
+          final durationA = a.endDate.difference(a.startDate).inMinutes;
+          final durationB = b.endDate.difference(b.startDate).inMinutes;
+          return durationB.compareTo(durationA);
+        });
+        break;
+    }
+
+    // Update the filtered list
+    filteredBookingList.value = filtered;
+  }
+
+  // Update the filter and apply it
+  void updateFilter(BookingFilter newFilter) {
+    filter.value = newFilter;
+    _applyFilters();
+  }
+
+  // Reset all filters
+  void resetFilters() {
+    filter.value = const BookingFilter();
+    _applyFilters();
   }
 
   // Load projects from database
@@ -289,5 +442,7 @@ class BookingPanelController {
     gearList.dispose();
     isLoading.dispose();
     errorMessage.dispose();
+    filter.dispose();
+    filteredBookingList.dispose();
   }
 }
