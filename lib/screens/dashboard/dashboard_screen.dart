@@ -6,6 +6,7 @@ import '../../utils/constants.dart';
 import '../../utils/date_formatter.dart';
 import '../../models/models.dart';
 import '../add_gear/add_gear_screen.dart';
+import '../booking_panel/booking_panel_screen.dart';
 import 'dashboard_controller.dart';
 
 /// DashboardScreen
@@ -262,8 +263,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   icon: const Icon(Icons.calendar_today),
                   label: const Text('Booking Panel'),
                   onPressed: () {
-                    // TODO: Navigate to booking panel
-                    _showSnackBar('Booking panel not implemented yet');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BookingPanelScreen(),
+                      ),
+                    );
                   },
                 ),
               ],
