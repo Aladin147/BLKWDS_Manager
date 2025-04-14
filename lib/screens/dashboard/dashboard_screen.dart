@@ -5,6 +5,7 @@ import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
 import '../../utils/date_formatter.dart';
 import '../../models/models.dart';
+import '../../widgets/blkwds_widgets.dart';
 import '../add_gear/add_gear_screen.dart';
 import '../booking_panel/booking_panel_screen.dart';
 import 'dashboard_controller.dart';
@@ -188,13 +189,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Row(
               children: [
                 // Member dropdown
-                // TODO: Fix dropdown assertion error - items.where((item) => item.value == value).length == 1
-                // This is likely due to equality comparison issues with the Member class
+                // Note: We're still using DropdownButtonFormField for Member selection
+                // because BLKWDSDropdown requires explicit type handling that's complex with Member objects
                 Expanded(
                   flex: 2,
                   child: DropdownButtonFormField<Member>(
                     decoration: const InputDecoration(
                       labelText: 'Select Member',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: BLKWDSConstants.inputHorizontalPadding,
+                        vertical: BLKWDSConstants.inputVerticalPadding,
+                      ),
                     ),
                     value: _selectedMember,
                     items: _controller.memberList.value.map((member) {
@@ -214,11 +220,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Search bar
                 Expanded(
                   flex: 3,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Search Gear',
-                      prefixIcon: Icon(Icons.search),
-                    ),
+                  child: BLKWDSTextField(
+                    label: 'Search Gear',
+                    prefixIcon: Icons.search,
                     onChanged: (value) {
                       setState(() {
                         _searchQuery = value;
@@ -240,9 +244,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add Gear'),
+                BLKWDSButton(
+                  label: 'Add Gear',
+                  icon: Icons.add,
+                  type: BLKWDSButtonType.primary,
                   onPressed: () async {
                     final result = await Navigator.push(
                       context,
@@ -259,9 +264,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   },
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingMedium),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.calendar_today),
-                  label: const Text('Booking Panel'),
+                BLKWDSButton(
+                  label: 'Booking Panel',
+                  icon: Icons.calendar_today,
+                  type: BLKWDSButtonType.primary,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -451,16 +457,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(width: BLKWDSConstants.spacingMedium),
             // Action button
             gear.isOut
-                ? ElevatedButton(
+                ? BLKWDSButton(
+                    label: 'Return',
                     onPressed: () => _handleReturn(gear),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: BLKWDSColors.electricMint,
-                    ),
-                    child: const Text('Return'),
+                    type: BLKWDSButtonType.secondary,
+                    isSmall: true,
                   )
-                : ElevatedButton(
+                : BLKWDSButton(
+                    label: 'Check Out',
                     onPressed: () => _handleCheckout(gear),
-                    child: const Text('Check Out'),
+                    type: BLKWDSButtonType.primary,
+                    isSmall: true,
                   ),
           ],
         ),

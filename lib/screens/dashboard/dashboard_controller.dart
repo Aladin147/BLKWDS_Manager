@@ -40,7 +40,7 @@ class DashboardController {
       gearList.value = gear;
     } catch (e) {
       print('Error loading gear: $e');
-      throw e;
+      rethrow;
     }
   }
   
@@ -51,7 +51,7 @@ class DashboardController {
       memberList.value = members;
     } catch (e) {
       print('Error loading members: $e');
-      throw e;
+      rethrow;
     }
   }
   
@@ -62,7 +62,7 @@ class DashboardController {
       recentActivity.value = activity;
     } catch (e) {
       print('Error loading activity logs: $e');
-      throw e;
+      rethrow;
     }
   }
   

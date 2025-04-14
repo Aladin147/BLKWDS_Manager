@@ -3,6 +3,7 @@ import '../../models/models.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
+import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
 import 'widgets/booking_form.dart';
@@ -174,7 +175,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
       floatingActionButton: !_showBookingForm
           ? FloatingActionButton(
               onPressed: _showCreateBookingForm,
-              backgroundColor: BLKWDSColors.blkwdsGreen,
+              backgroundColor: BLKWDSColors.primaryButtonBackground,
+              foregroundColor: BLKWDSColors.primaryButtonText,
               child: const Icon(Icons.add),
             )
           : null,
@@ -230,9 +232,10 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
                   style: BLKWDSTypography.bodyMedium,
                 ),
                 const SizedBox(height: BLKWDSConstants.spacingMedium),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.add),
-                  label: const Text('Create Booking'),
+                BLKWDSButton(
+                  label: 'Create Booking',
+                  icon: Icons.add,
+                  type: BLKWDSButtonType.primary,
                   onPressed: _showCreateBookingForm,
                 ),
               ],

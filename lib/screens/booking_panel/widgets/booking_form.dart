@@ -5,6 +5,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../utils/constants.dart';
+import '../../../widgets/blkwds_widgets.dart';
 import '../booking_panel_controller.dart';
 
 /// BookingForm
@@ -29,7 +30,7 @@ class BookingForm extends StatefulWidget {
 
 class _BookingFormState extends State<BookingForm> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Form fields
   late int? _selectedProjectId;
   late DateTime _startDate;
@@ -44,7 +45,7 @@ class _BookingFormState extends State<BookingForm> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize form fields
     if (widget.booking != null) {
       // Editing existing booking
@@ -59,17 +60,17 @@ class _BookingFormState extends State<BookingForm> {
       _assignedGearToMember = Map.from(widget.booking!.assignedGearToMember ?? {});
     } else {
       // Creating new booking
-      _selectedProjectId = widget.controller.projectList.value.isNotEmpty ? 
+      _selectedProjectId = widget.controller.projectList.value.isNotEmpty ?
           widget.controller.projectList.value.first.id : null;
-      
+
       final now = DateTime.now();
       _startDate = now;
       _startTime = TimeOfDay.fromDateTime(now);
-      
+
       final tomorrow = now.add(const Duration(days: 1));
       _endDate = tomorrow;
       _endTime = TimeOfDay.fromDateTime(tomorrow);
-      
+
       _isRecordingStudio = false;
       _isProductionStudio = false;
       _selectedGearIds = [];
@@ -102,7 +103,7 @@ class _BookingFormState extends State<BookingForm> {
         gearIds: _selectedGearIds,
         assignedGearToMember: _assignedGearToMember.isEmpty ? null : _assignedGearToMember,
       );
-      
+
       // Call onSave callback
       widget.onSave(booking);
     }
@@ -112,14 +113,14 @@ class _BookingFormState extends State<BookingForm> {
   Future<void> _pickDate(bool isStartDate) async {
     final initialDate = isStartDate ? _startDate : _endDate;
     final firstDate = isStartDate ? DateTime.now() : _startDate;
-    
+
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    
+
     if (pickedDate != null) {
       setState(() {
         if (isStartDate) {
@@ -138,20 +139,20 @@ class _BookingFormState extends State<BookingForm> {
   // Pick a time
   Future<void> _pickTime(bool isStartTime) async {
     final initialTime = isStartTime ? _startTime : _endTime;
-    
+
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: initialTime,
     );
-    
+
     if (pickedTime != null) {
       setState(() {
         if (isStartTime) {
           _startTime = pickedTime;
-          
+
           // If start and end dates are the same and end time is before start time, update it
-          if (_startDate.year == _endDate.year && 
-              _startDate.month == _endDate.month && 
+          if (_startDate.year == _endDate.year &&
+              _startDate.month == _endDate.month &&
               _startDate.day == _endDate.day &&
               _endTime.hour < _startTime.hour) {
             _endTime = TimeOfDay(hour: _startTime.hour + 1, minute: _startTime.minute);
@@ -195,7 +196,7 @@ class _BookingFormState extends State<BookingForm> {
             },
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          
+
           // Date and time pickers
           Row(
             children: [
@@ -246,7 +247,7 @@ class _BookingFormState extends State<BookingForm> {
                 ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingMedium),
-              
+
               // End date and time
               Expanded(
                 child: Column(
@@ -296,7 +297,7 @@ class _BookingFormState extends State<BookingForm> {
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          
+
           // Studio checkboxes
           Text(
             'Studio Space',
@@ -334,7 +335,7 @@ class _BookingFormState extends State<BookingForm> {
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          
+
           // Gear selection
           Text(
             'Gear Selection',
@@ -352,7 +353,7 @@ class _BookingFormState extends State<BookingForm> {
               itemBuilder: (context, index) {
                 final gear = widget.controller.gearList.value[index];
                 final isSelected = _selectedGearIds.contains(gear.id);
-                
+
                 return CheckboxListTile(
                   title: Text(gear.name),
                   subtitle: Text(gear.category),
@@ -372,7 +373,7 @@ class _BookingFormState extends State<BookingForm> {
             ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          
+
           // Member assignment (only if gear is selected)
           if (_selectedGearIds.isNotEmpty) ...[
             Text(
@@ -392,7 +393,7 @@ class _BookingFormState extends State<BookingForm> {
                   final gearId = _selectedGearIds[index];
                   final gear = widget.controller.getGearById(gearId);
                   final assignedMemberId = _assignedGearToMember[gearId];
-                  
+
                   return ListTile(
                     title: Text(gear?.name ?? 'Unknown Gear'),
                     subtitle: DropdownButton<int?>(
@@ -427,19 +428,21 @@ class _BookingFormState extends State<BookingForm> {
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
           ],
-          
+
           // Buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(
+              BLKWDSButton(
+                label: 'Cancel',
                 onPressed: widget.onCancel,
-                child: const Text('Cancel'),
+                type: BLKWDSButtonType.secondary,
               ),
               const SizedBox(width: BLKWDSConstants.spacingMedium),
-              ElevatedButton(
+              BLKWDSButton(
+                label: widget.booking == null ? 'Create Booking' : 'Update Booking',
                 onPressed: _saveBooking,
-                child: Text(widget.booking == null ? 'Create Booking' : 'Update Booking'),
+                type: BLKWDSButtonType.primary,
               ),
             ],
           ),

@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../services/image_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
+import '../../widgets/blkwds_widgets.dart';
 import 'add_gear_controller.dart';
 
 /// AddGearScreen
@@ -28,6 +28,9 @@ class _AddGearScreenState extends State<AddGearScreen> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _serialNumberController = TextEditingController();
+
+  // Track if form has been submitted for validation
+  bool _formSubmitted = false;
 
   @override
   void initState() {
@@ -90,19 +93,7 @@ class _AddGearScreenState extends State<AddGearScreen> {
     }
   }
 
-  // Pick a date for purchase date
-  Future<void> _pickDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _controller.purchaseDate.value ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null) {
-      _controller.setPurchaseDate(picked);
-    }
-  }
+  // Save gear method is used by the Save button
 
   // Save gear
   Future<void> _saveGear() async {
@@ -176,18 +167,14 @@ class _AddGearScreenState extends State<AddGearScreen> {
                           ),
 
                         // Name field
-                        TextFormField(
+                        BLKWDSTextField(
+                          label: 'Name',
+                          isRequired: true,
+                          hintText: 'Enter gear name',
                           controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Name *',
-                            hintText: 'Enter gear name',
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Name is required';
-                            }
-                            return null;
-                          },
+                          errorText: _controller.name.value.trim().isEmpty && _formSubmitted
+                              ? 'Name is required'
+                              : null,
                           onChanged: (value) {
                             _controller.name.value = value;
                           },
@@ -195,11 +182,14 @@ class _AddGearScreenState extends State<AddGearScreen> {
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Category dropdown
-                        DropdownButtonFormField<String>(
+                        BLKWDSDropdown<String>(
+                          label: 'Category',
+                          isRequired: true,
                           value: _controller.category.value,
-                          decoration: const InputDecoration(
-                            labelText: 'Category *',
-                          ),
+                          hintText: 'Select a category',
+                          errorText: _controller.category.value.isEmpty && _formSubmitted
+                              ? 'Category is required'
+                              : null,
                           items: Constants.gearCategories.map((category) {
                             return DropdownMenuItem<String>(
                               value: category,
@@ -211,23 +201,15 @@ class _AddGearScreenState extends State<AddGearScreen> {
                               _controller.category.value = value;
                             }
                           },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Category is required';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Description field
-                        TextFormField(
+                        BLKWDSTextField(
+                          label: 'Description',
+                          hintText: 'Enter gear description',
                           controller: _descriptionController,
-                          decoration: const InputDecoration(
-                            labelText: 'Description',
-                            hintText: 'Enter gear description',
-                          ),
-                          maxLines: 3,
+                          isMultiline: true,
                           onChanged: (value) {
                             _controller.description.value = value;
                           },
@@ -235,12 +217,10 @@ class _AddGearScreenState extends State<AddGearScreen> {
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Serial number field
-                        TextFormField(
+                        BLKWDSTextField(
+                          label: 'Serial Number',
+                          hintText: 'Enter serial number',
                           controller: _serialNumberController,
-                          decoration: const InputDecoration(
-                            labelText: 'Serial Number',
-                            hintText: 'Enter serial number',
-                          ),
                           onChanged: (value) {
                             _controller.serialNumber.value = value;
                           },
@@ -251,24 +231,13 @@ class _AddGearScreenState extends State<AddGearScreen> {
                         ValueListenableBuilder<DateTime?>(
                           valueListenable: _controller.purchaseDate,
                           builder: (context, purchaseDate, _) {
-                            return InkWell(
-                              onTap: _pickDate,
-                              child: InputDecorator(
-                                decoration: const InputDecoration(
-                                  labelText: 'Purchase Date',
-                                  suffixIcon: Icon(Icons.calendar_today),
-                                ),
-                                child: Text(
-                                  purchaseDate != null
-                                      ? DateFormat.yMMMd().format(purchaseDate)
-                                      : 'Select purchase date',
-                                  style: purchaseDate != null
-                                      ? BLKWDSTypography.bodyMedium
-                                      : BLKWDSTypography.bodyMedium.copyWith(
-                                          color: BLKWDSColors.slateGrey,
-                                        ),
-                                ),
-                              ),
+                            return BLKWDSDatePicker(
+                              label: 'Purchase Date',
+                              selectedDate: purchaseDate,
+                              hintText: 'Select purchase date',
+                              onDateSelected: (date) {
+                                _controller.setPurchaseDate(date);
+                              },
                             );
                           },
                         ),
@@ -332,39 +301,25 @@ class _AddGearScreenState extends State<AddGearScreen> {
                         const SizedBox(height: BLKWDSConstants.spacingLarge),
 
                         // Save button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _saveGear,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: BLKWDSColors.blkwdsGreen,
-                              foregroundColor: BLKWDSColors.white,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: BLKWDSConstants.spacingMedium,
-                              ),
-                            ),
-                            child: Text(
-                              'Save Gear',
-                              style: BLKWDSTypography.titleMedium.copyWith(
-                                color: BLKWDSColors.white,
-                              ),
-                            ),
-                          ),
+                        BLKWDSButton(
+                          label: 'Save Gear',
+                          onPressed: () {
+                            setState(() {
+                              _formSubmitted = true;
+                            });
+                            _saveGear();
+                          },
+                          type: BLKWDSButtonType.primary,
+                          isFullWidth: true,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Cancel button
-                        SizedBox(
-                          width: double.infinity,
-                          child: TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              'Cancel',
-                              style: BLKWDSTypography.bodyLarge.copyWith(
-                                color: BLKWDSColors.slateGrey,
-                              ),
-                            ),
-                          ),
+                        BLKWDSButton(
+                          label: 'Cancel',
+                          onPressed: () => Navigator.pop(context),
+                          type: BLKWDSButtonType.secondary,
+                          isFullWidth: true,
                         ),
                       ],
                     ),

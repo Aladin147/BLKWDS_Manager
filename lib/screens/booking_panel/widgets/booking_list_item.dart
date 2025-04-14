@@ -4,6 +4,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_widgets.dart';
 import '../booking_panel_controller.dart';
 
 /// BookingListItem
@@ -26,26 +27,26 @@ class BookingListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get project
     final project = controller.getProjectById(booking.projectId);
-    
+
     // Format dates
     final dateFormat = DateFormat.yMMMd();
     final timeFormat = DateFormat.jm();
-    
+
     final startDateStr = dateFormat.format(booking.startDate);
     final startTimeStr = timeFormat.format(booking.startDate);
     final endDateStr = dateFormat.format(booking.endDate);
     final endTimeStr = timeFormat.format(booking.endDate);
-    
+
     // Check if booking is in the past, current, or future
     final now = DateTime.now();
     final isPast = booking.endDate.isBefore(now);
     final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
     final isFuture = booking.startDate.isAfter(now);
-    
+
     // Determine status color
     Color statusColor;
     String statusText;
-    
+
     if (isPast) {
       statusColor = BLKWDSColors.slateGrey;
       statusText = 'Past';
@@ -56,7 +57,7 @@ class BookingListItem extends StatelessWidget {
       statusColor = BLKWDSColors.electricMint;
       statusText = 'Upcoming';
     }
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
       shape: RoundedRectangleBorder(
@@ -97,7 +98,7 @@ class BookingListItem extends StatelessWidget {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingSmall),
-            
+
             // Date and time
             Row(
               children: [
@@ -116,7 +117,7 @@ class BookingListItem extends StatelessWidget {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingSmall),
-            
+
             // Studio space
             if (booking.isRecordingStudio || booking.isProductionStudio)
               Row(
@@ -137,7 +138,7 @@ class BookingListItem extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: BLKWDSConstants.spacingSmall),
-            
+
             // Gear count
             Row(
               children: [
@@ -154,23 +155,24 @@ class BookingListItem extends StatelessWidget {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Actions
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton.icon(
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Edit'),
+                BLKWDSButton(
+                  label: 'Edit',
+                  icon: Icons.edit,
+                  type: BLKWDSButtonType.secondary,
+                  isSmall: true,
                   onPressed: onEdit,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
-                TextButton.icon(
-                  icon: const Icon(Icons.delete),
-                  label: const Text('Delete'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: BLKWDSColors.errorRed,
-                  ),
+                BLKWDSButton(
+                  label: 'Delete',
+                  icon: Icons.delete,
+                  type: BLKWDSButtonType.danger,
+                  isSmall: true,
                   onPressed: onDelete,
                 ),
               ],

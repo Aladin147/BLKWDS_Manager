@@ -4,6 +4,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_widgets.dart';
 
 /// BookingDetailsModal
 /// Widget for displaying booking details in a modal
@@ -30,21 +31,21 @@ class BookingDetailsModal extends StatelessWidget {
     // Format dates and times
     final dateFormat = DateFormat.yMMMMd();
     final timeFormat = DateFormat.jm();
-    
+
     final startDateStr = dateFormat.format(booking.startDate);
     final startTimeStr = timeFormat.format(booking.startDate);
     final endDateStr = dateFormat.format(booking.endDate);
     final endTimeStr = timeFormat.format(booking.endDate);
-    
+
     // Check if booking is in the past, current, or future
     final now = DateTime.now();
     final isPast = booking.endDate.isBefore(now);
     final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
-    
+
     // Determine status color and text
     Color statusColor;
     String statusText;
-    
+
     if (isPast) {
       statusColor = BLKWDSColors.slateGrey;
       statusText = 'Past';
@@ -55,7 +56,7 @@ class BookingDetailsModal extends StatelessWidget {
       statusColor = BLKWDSColors.electricMint;
       statusText = 'Upcoming';
     }
-    
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
@@ -82,7 +83,7 @@ class BookingDetailsModal extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.2),
+                    color: statusColor.withValues(alpha: 50),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -95,7 +96,7 @@ class BookingDetailsModal extends StatelessWidget {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Date and time
             Row(
               children: [
@@ -114,7 +115,7 @@ class BookingDetailsModal extends StatelessWidget {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Studio space
             if (booking.isRecordingStudio || booking.isProductionStudio) ...[
               Row(
@@ -136,7 +137,7 @@ class BookingDetailsModal extends StatelessWidget {
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
             ],
-            
+
             // Gear
             if (gear.isNotEmpty) ...[
               Text(
@@ -147,7 +148,7 @@ class BookingDetailsModal extends StatelessWidget {
               Container(
                 height: 150,
                 decoration: BoxDecoration(
-                  border: Border.all(color: BLKWDSColors.slateGrey.withOpacity(0.3)),
+                  border: Border.all(color: BLKWDSColors.slateGrey.withValues(alpha: 75)),
                   borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                 ),
                 child: ListView.builder(
@@ -162,14 +163,14 @@ class BookingDetailsModal extends StatelessWidget {
                             orElse: () => Member(name: 'Unknown', role: 'Unknown'),
                           )
                         : null;
-                    
+
                     return ListTile(
                       title: Text(gearItem.name),
                       subtitle: Text(gearItem.category),
                       trailing: assignedMember != null
                           ? Chip(
                               label: Text(assignedMember.name),
-                              backgroundColor: BLKWDSColors.electricMint.withOpacity(0.2),
+                              backgroundColor: BLKWDSColors.electricMint.withValues(alpha: 50),
                             )
                           : null,
                     );
@@ -178,31 +179,34 @@ class BookingDetailsModal extends StatelessWidget {
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
             ],
-            
+
             // Actions
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                BLKWDSButton(
+                  label: 'Close',
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
+                  type: BLKWDSButtonType.secondary,
+                  isSmall: true,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
-                TextButton.icon(
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Edit'),
+                BLKWDSButton(
+                  label: 'Edit',
+                  icon: Icons.edit,
+                  type: BLKWDSButtonType.secondary,
+                  isSmall: true,
                   onPressed: () {
                     Navigator.pop(context);
                     onEdit();
                   },
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
-                TextButton.icon(
-                  icon: const Icon(Icons.delete),
-                  label: const Text('Delete'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: BLKWDSColors.errorRed,
-                  ),
+                BLKWDSButton(
+                  label: 'Delete',
+                  icon: Icons.delete,
+                  type: BLKWDSButtonType.danger,
+                  isSmall: true,
                   onPressed: () {
                     Navigator.pop(context);
                     onDelete();
