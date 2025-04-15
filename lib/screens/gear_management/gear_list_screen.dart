@@ -8,6 +8,7 @@ import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'gear_detail_screen.dart';
 import 'gear_form_screen.dart';
+import 'widgets/gear_card_with_note.dart';
 
 /// GearListScreen
 /// Displays a list of all gear with search and filtering capabilities
@@ -21,22 +22,22 @@ class GearListScreen extends StatefulWidget {
 class _GearListScreenState extends State<GearListScreen> {
   // List of all gear
   List<Gear> _gear = [];
-  
+
   // Filtered list of gear
   List<Gear> _filteredGear = [];
-  
+
   // Loading state
   bool _isLoading = true;
-  
+
   // Error message
   String? _errorMessage;
-  
+
   // Search query
   String _searchQuery = '';
-  
+
   // Selected category filter
   String? _selectedCategory;
-  
+
   // Selected status filter
   bool? _selectedStatus;
 
@@ -69,7 +70,7 @@ class _GearListScreenState extends State<GearListScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -90,15 +91,15 @@ class _GearListScreenState extends State<GearListScreen> {
             gear.category.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             (gear.serialNumber?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
             (gear.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
-        
+
         // Apply category filter
-        final matchesCategory = _selectedCategory == null || 
+        final matchesCategory = _selectedCategory == null ||
             gear.category == _selectedCategory;
-        
+
         // Apply status filter
-        final matchesStatus = _selectedStatus == null || 
+        final matchesStatus = _selectedStatus == null ||
             gear.isOut == _selectedStatus;
-        
+
         return matchesSearch && matchesCategory && matchesStatus;
       }).toList();
     });
@@ -174,7 +175,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
     try {
       await DBService.deleteGear(gear.id!);
-      
+
       // Show success snackbar with undo option
       if (mounted) {
         SnackbarService.showSuccessSnackBar(
@@ -210,7 +211,7 @@ class _GearListScreenState extends State<GearListScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -222,13 +223,15 @@ class _GearListScreenState extends State<GearListScreen> {
   }
 
   // Check out gear to a member
-  Future<void> _checkoutGear(Gear gear) async {
+  Future<void> _checkoutGear(Gear gear, String? note) async {
     if (gear.isOut) {
       // Show error snackbar
-      SnackbarService.showErrorSnackBar(
-        context,
-        'This gear is already checked out',
-      );
+      if (mounted) {
+        SnackbarService.showErrorSnackBar(
+          context,
+          'This gear is already checked out',
+        );
+      }
       return;
     }
 
@@ -236,12 +239,16 @@ class _GearListScreenState extends State<GearListScreen> {
     final members = await DBService.getAllMembers();
     if (members.isEmpty) {
       // Show error snackbar
-      SnackbarService.showErrorSnackBar(
-        context,
-        'No members available for checkout',
-      );
+      if (mounted) {
+        SnackbarService.showErrorSnackBar(
+          context,
+          'No members available for checkout',
+        );
+      }
       return;
     }
+
+    if (!mounted) return;
 
     // Show member selection dialog
     final selectedMember = await showDialog<Member>(
@@ -282,33 +289,7 @@ class _GearListScreenState extends State<GearListScreen> {
       ),
     );
 
-    if (selectedMember == null) return;
-
-    // Show note dialog
-    final TextEditingController noteController = TextEditingController();
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Note (Optional)'),
-        content: TextField(
-          controller: noteController,
-          decoration: const InputDecoration(
-            hintText: 'Enter a note for this checkout',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, ''),
-            child: const Text('Skip'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, noteController.text),
-            child: const Text('Add Note'),
-          ),
-        ],
-      ),
-    );
+    if (selectedMember == null || !mounted) return;
 
     // Check out gear
     setState(() {
@@ -350,7 +331,7 @@ class _GearListScreenState extends State<GearListScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -362,41 +343,17 @@ class _GearListScreenState extends State<GearListScreen> {
   }
 
   // Check in gear
-  Future<void> _checkinGear(Gear gear) async {
+  Future<void> _checkinGear(Gear gear, String? note) async {
     if (!gear.isOut) {
       // Show error snackbar
-      SnackbarService.showErrorSnackBar(
-        context,
-        'This gear is already checked in',
-      );
+      if (mounted) {
+        SnackbarService.showErrorSnackBar(
+          context,
+          'This gear is already checked in',
+        );
+      }
       return;
     }
-
-    // Show note dialog
-    final TextEditingController noteController = TextEditingController();
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Note (Optional)'),
-        content: TextField(
-          controller: noteController,
-          decoration: const InputDecoration(
-            hintText: 'Enter a note for this check-in',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, ''),
-            child: const Text('Skip'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, noteController.text),
-            child: const Text('Add Note'),
-          ),
-        ],
-      ),
-    );
 
     // Check in gear
     setState(() {
@@ -437,7 +394,7 @@ class _GearListScreenState extends State<GearListScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -587,7 +544,7 @@ class _GearListScreenState extends State<GearListScreen> {
               ],
             ),
           ),
-          
+
           // Gear list
           Expanded(
             child: _isLoading
@@ -668,129 +625,13 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Build a card for a gear item
   Widget _buildGearCard(Gear gear) {
-    return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: BLKWDSConstants.spacingMedium,
-        vertical: BLKWDSConstants.spacingSmall,
-      ),
-      child: InkWell(
-        onTap: () => _navigateToGearDetail(gear),
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Gear name, category, and actions
-              Row(
-                children: [
-                  // Status indicator
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  // Gear info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          gear.name,
-                          style: BLKWDSTypography.titleMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          gear.category,
-                          style: BLKWDSTypography.bodyMedium.copyWith(
-                            color: BLKWDSColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Action buttons
-                  Row(
-                    children: [
-                      // Check out/in button
-                      IconButton(
-                        icon: Icon(
-                          gear.isOut ? Icons.check_circle : Icons.logout,
-                          color: gear.isOut ? BLKWDSColors.statusIn : BLKWDSColors.statusOut,
-                        ),
-                        tooltip: gear.isOut ? 'Check In' : 'Check Out',
-                        onPressed: () => gear.isOut ? _checkinGear(gear) : _checkoutGear(gear),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        tooltip: 'Edit',
-                        onPressed: () => _navigateToEditGear(gear),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        tooltip: 'Delete',
-                        onPressed: () => _deleteGear(gear),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              
-              // Serial number if available
-              if (gear.serialNumber != null && gear.serialNumber!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: BLKWDSConstants.spacingSmall),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.qr_code,
-                        size: 16,
-                        color: BLKWDSColors.textSecondary,
-                      ),
-                      const SizedBox(width: BLKWDSConstants.spacingSmall),
-                      Text(
-                        'S/N: ${gear.serialNumber}',
-                        style: BLKWDSTypography.bodySmall.copyWith(
-                          color: BLKWDSColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              
-              // Status note if available
-              if (gear.lastNote != null && gear.lastNote!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: BLKWDSConstants.spacingSmall),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.note,
-                        size: 16,
-                        color: BLKWDSColors.textSecondary,
-                      ),
-                      const SizedBox(width: BLKWDSConstants.spacingSmall),
-                      Expanded(
-                        child: Text(
-                          gear.lastNote!,
-                          style: BLKWDSTypography.bodySmall.copyWith(
-                            color: BLKWDSColors.textSecondary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
+    return GearCardWithNote(
+      gear: gear,
+      onCheckout: _checkoutGear,
+      onCheckin: _checkinGear,
+      onEdit: _navigateToEditGear,
+      onDelete: _deleteGear,
+      onTap: _navigateToGearDetail,
     );
   }
 }
