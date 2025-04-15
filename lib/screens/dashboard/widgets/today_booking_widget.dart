@@ -163,7 +163,9 @@ class TodayBookingWidget extends StatelessWidget {
         } else {
           member = Member(id: 0, name: 'Unknown');
         }
-        assignedMembers.add(member);
+        if (member != null) {
+          assignedMembers.add(member);
+        }
       }
     }
 

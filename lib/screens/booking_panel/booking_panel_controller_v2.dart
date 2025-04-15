@@ -4,6 +4,7 @@ import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../utils/booking_converter.dart';
+import '../../utils/date_utils.dart';
 import 'models/booking_filter.dart';
 
 /// BookingPanelControllerV2
@@ -466,6 +467,11 @@ class BookingPanelControllerV2 {
     } catch (e) {
       return null;
     }
+  }
+
+  // Get color for booking based on its status
+  Color getStatusColorForBooking(BookingV2 booking) {
+    return BLKWDSDateUtils.getColorForBooking(booking);
   }
 
   // Convert BookingV2 to Booking for compatibility

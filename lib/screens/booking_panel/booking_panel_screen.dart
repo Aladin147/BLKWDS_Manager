@@ -10,6 +10,7 @@ import '../../widgets/blkwds_widgets.dart';
 import 'booking_panel_controller.dart';
 import 'booking_panel_controller_v2.dart';
 import 'booking_detail_screen.dart';
+import 'booking_detail_screen_v2.dart';
 import 'booking_list_screen.dart';
 import 'widgets/booking_form.dart';
 import 'widgets/booking_form_adapter.dart';
@@ -443,10 +444,22 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
     if (booking is BookingV2 && _controllerV2 != null) {
-      // For BookingV2, convert to Booking for now
-      // In a future update, we'll create a BookingDetailScreenV2
-      final bookingV1 = await _controllerV2!.convertToBookingV1(booking);
-      _navigateToBookingDetail(bookingV1);
+      // Use BookingDetailScreenV2 for BookingV2 objects
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookingDetailScreenV2(
+            booking: booking,
+            controller: _controllerV2!,
+          ),
+        ),
+      ).then((result) {
+        // Refresh data if booking was updated or deleted
+        if (result == true) {
+          _controller.initialize();
+          _controllerV2!.initialize();
+        }
+      });
     } else if (booking is Booking) {
       // Handle Booking detail navigation
       Navigator.push(
