@@ -45,11 +45,28 @@ class QuickActionsPanel extends StatelessWidget {
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Quick Actions',
-            style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.textPrimary,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.flash_on,
+                  color: BLKWDSColors.accentTeal,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingSmall),
+              Text(
+                'Quick Actions',
+                style: BLKWDSTypography.titleMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 

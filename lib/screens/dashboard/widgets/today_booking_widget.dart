@@ -45,11 +45,49 @@ class TodayBookingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Today\'s Bookings',
-            style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.textPrimary,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.event,
+                      color: BLKWDSColors.accentTeal,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Text(
+                    'Today\'s Bookings',
+                    style: BLKWDSTypography.titleMedium.copyWith(
+                      color: BLKWDSColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  // This would navigate to a full bookings screen in a real app
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('View all bookings would open here'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.visibility),
+                label: const Text('View All'),
+                style: TextButton.styleFrom(
+                  foregroundColor: BLKWDSColors.accentTeal,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 

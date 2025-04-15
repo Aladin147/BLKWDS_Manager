@@ -45,11 +45,28 @@ class GearPreviewListWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Recent Gear Activity',
-                style: BLKWDSTypography.titleMedium.copyWith(
-                  color: BLKWDSColors.textPrimary,
-                ),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: BLKWDSColors.accentTeal,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Text(
+                    'Recent Gear Activity',
+                    style: BLKWDSTypography.titleMedium.copyWith(
+                      color: BLKWDSColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
               TextButton.icon(
                 onPressed: onViewAllGear,
@@ -84,15 +101,15 @@ class GearPreviewListWidget extends StatelessWidget {
                 vertical: BLKWDSConstants.spacingSmall,
               ),
               decoration: BoxDecoration(
-                color: BLKWDSColors.errorRed.withValues(alpha: 20),
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                border: Border.all(color: BLKWDSColors.errorRed.withValues(alpha: 50)),
+                border: Border.all(color: BLKWDSColors.warningAmber),
               ),
               child: Row(
                 children: [
                   const Icon(
                     Icons.warning_amber_rounded,
-                    color: BLKWDSColors.errorRed,
+                    color: BLKWDSColors.warningAmber,
                     size: 20,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
@@ -100,7 +117,7 @@ class GearPreviewListWidget extends StatelessWidget {
                     child: Text(
                       'OVERDUE: OVERDUE BY 24 HOURS',
                       style: BLKWDSTypography.labelMedium.copyWith(
-                        color: BLKWDSColors.errorRed,
+                        color: BLKWDSColors.warningAmber,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
