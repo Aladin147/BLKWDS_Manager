@@ -80,6 +80,7 @@ class BLKWDSButton extends StatelessWidget {
     Widget buttonContent = Row(
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (icon != null) ...[
           Icon(
@@ -89,11 +90,15 @@ class BLKWDSButton extends StatelessWidget {
           ),
           SizedBox(width: BLKWDSConstants.spacingSmall),
         ],
-        Text(
-          label,
-          style: isSmall
-              ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
-              : BLKWDSTypography.labelLarge.copyWith(color: textColor),
+        Flexible(
+          child: Text(
+            label,
+            style: isSmall
+                ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
+                : BLKWDSTypography.labelLarge.copyWith(color: textColor),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
       ],
     );

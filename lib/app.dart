@@ -7,6 +7,9 @@ import 'services/log_service.dart';
 import 'services/error_type.dart';
 import 'services/navigation_service.dart';
 import 'theme/blkwds_animations.dart';
+import 'theme/blkwds_constants_enhanced.dart';
+import 'theme/blkwds_colors.dart';
+import 'theme/blkwds_typography.dart';
 
 /// BLKWDSApp
 /// The main application widget
@@ -88,26 +91,27 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
     return Material(
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(BLKWDSConstants.contentPaddingMedium),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
                 Icons.error_outline,
-                color: Colors.red,
-                size: 60,
+                color: BLKWDSColors.errorRed,
+                size: BLKWDSConstants.iconSizeLarge,
               ),
-              const SizedBox(height: 16),
-              const Text(
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+              Text(
                 'Something went wrong',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: BLKWDSTypography.headlineMedium,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: BLKWDSConstants.spacingXSmall),
               Text(
                 ErrorService.getUserFriendlyMessage(ErrorType.unknown, errorMessage),
                 textAlign: TextAlign.center,
+                style: BLKWDSTypography.bodyMedium,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
               ElevatedButton(
                 onPressed: () {
                   _navigationService.navigateToDashboard(clearStack: true);

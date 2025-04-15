@@ -190,7 +190,9 @@ class CalendarFilterPanel extends StatelessWidget {
                   horizontal: BLKWDSConstants.inputHorizontalPadding,
                   vertical: BLKWDSConstants.inputVerticalPadding / 2,
                 ),
+                isDense: true,
               ),
+              isExpanded: true,
               value: selectedGearId,
               items: [
                 const DropdownMenuItem<int?>(
@@ -200,7 +202,11 @@ class CalendarFilterPanel extends StatelessWidget {
                 ...gear.map((item) {
                   return DropdownMenuItem<int?>(
                     value: item.id,
-                    child: Text('${item.name} (${item.category})'),
+                    child: Text(
+                      '${item.name} (${item.category})',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   );
                 }),
               ],

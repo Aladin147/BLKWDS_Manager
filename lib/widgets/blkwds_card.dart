@@ -75,7 +75,7 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
     super.initState();
     _loadingController = AnimationController(
       vsync: this,
-      duration: BLKWDSAnimations.extraLong,
+      duration: BLKWDSAnimations.xLong,
     );
 
     if (widget.isLoading) {

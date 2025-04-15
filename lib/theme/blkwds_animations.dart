@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'blkwds_constants.dart';
+import 'blkwds_constants_enhanced.dart';
 import 'blkwds_colors.dart';
+import 'blkwds_shadows.dart';
 
 /// BLKWDS Manager Animation System
 ///
 /// Provides standardized animations for consistent motion throughout the app
+/// Enhanced for better visual feedback and performance
 class BLKWDSAnimations {
   // Animation Durations
-  static const Duration extraShort = Duration(milliseconds: 50);
-  static const Duration short = BLKWDSConstants.shortAnimationDuration;
-  static const Duration medium = BLKWDSConstants.mediumAnimationDuration;
-  static const Duration long = Duration(milliseconds: 300);
-  static const Duration extraLong = Duration(milliseconds: 500);
+  static const Duration xShort = Duration(milliseconds: 50);
+  static const Duration short = Duration(milliseconds: 150);
+  static const Duration medium = Duration(milliseconds: 300);
+  static const Duration long = Duration(milliseconds: 500);
+  static const Duration xLong = Duration(milliseconds: 800);
 
   // Animation Curves
   static const Curve standard = Curves.easeInOut;
@@ -19,21 +21,31 @@ class BLKWDSAnimations {
   static const Curve decelerate = Curves.easeOutQuint;
   static const Curve accelerate = Curves.easeInQuint;
   static const Curve sharp = Curves.easeInOutQuart;
+  static const Curve bounce = Curves.elasticOut;
+  static const Curve gentle = Curves.easeOutSine;
 
-  // Hover Animation Scale Factors
-  static const double hoverScaleFactor = 1.02;
-  static const double pressScaleFactor = 0.98;
+  // Animation Scale Factors
+  static const double hoverScaleFactor = 1.03;
+  static const double pressScaleFactor = 0.97;
+  static const double focusScaleFactor = 1.02;
+  static const double errorScaleFactor = 1.01;
+  static const double successScaleFactor = 1.01;
 
   // Elevation Animation Values
-  static const double baseElevation = BLKWDSConstants.cardElevation;
-  static const double hoverElevation = BLKWDSConstants.cardElevation + 2;
-  static const double activeElevation = BLKWDSConstants.cardElevation + 4;
+  static const double baseElevation = BLKWDSConstants.cardElevationMedium;
+  static const double hoverElevation = BLKWDSConstants.cardElevationLarge;
+  static const double activeElevation = BLKWDSConstants.cardElevationXLarge;
+  static const double focusElevation = BLKWDSConstants.cardElevationLarge;
+  static const double disabledElevation = BLKWDSConstants.cardElevationSmall;
 
   // Opacity Animation Values
   static const double fadeInStart = 0.0;
   static const double fadeInEnd = 1.0;
   static const double fadeOutStart = 1.0;
   static const double fadeOutEnd = 0.0;
+  static const double disabledOpacity = 0.5;
+  static const double hoverOpacity = 0.8;
+  static const double pressedOpacity = 0.7;
 
   /// Creates a standard fade transition
   static Widget fadeTransition({
@@ -116,7 +128,7 @@ class BLKWDSAnimations {
     );
   }
 
-  /// Creates a hover animation container
+  /// Creates a hover animation container with enhanced visual feedback
   static Widget hoverAnimationContainer({
     required Widget child,
     required bool isHovered,
@@ -125,37 +137,49 @@ class BLKWDSAnimations {
     double hoverScale = hoverScaleFactor,
     double baseElevation = 0,
     double hoverElevation = 2,
+    Color? hoverColor,
+    BorderRadius? borderRadius,
   }) {
     return AnimatedContainer(
       duration: duration,
       curve: curve,
       transform: Matrix4.identity()..scale(isHovered ? hoverScale : 1.0),
       decoration: BoxDecoration(
-        boxShadow: [
-          if (baseElevation > 0 || (isHovered && hoverElevation > 0))
-            BoxShadow(
-              color: BLKWDSColors.deepBlack.withValues(alpha: isHovered ? 100 : 50),
-              blurRadius: isHovered ? hoverElevation : baseElevation,
-              spreadRadius: isHovered ? hoverElevation / 4 : baseElevation / 4,
-            ),
-        ],
+        borderRadius: borderRadius,
+        boxShadow: isHovered
+            ? BLKWDSShadows.getHoverShadow()
+            : (baseElevation > 0 ? BLKWDSShadows.getShadow(BLKWDSShadows.level2) : []),
+        color: isHovered && hoverColor != null
+            ? Color.fromRGBO(
+                hoverColor.r.toInt(),
+                hoverColor.g.toInt(),
+                hoverColor.b.toInt(),
+                0.9)
+            : null,
       ),
       child: child,
     );
   }
 
-  /// Creates a press animation container
+  /// Creates a press animation container with enhanced visual feedback
   static Widget pressAnimationContainer({
     required Widget child,
     required bool isPressed,
-    Duration duration = extraShort,
+    Duration duration = xShort,
     Curve curve = sharp,
     double pressScale = pressScaleFactor,
+    BorderRadius? borderRadius,
   }) {
     return AnimatedContainer(
       duration: duration,
       curve: curve,
       transform: Matrix4.identity()..scale(isPressed ? pressScale : 1.0),
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        boxShadow: isPressed
+            ? BLKWDSShadows.getActiveShadow()
+            : [],
+      ),
       child: child,
     );
   }
@@ -163,9 +187,9 @@ class BLKWDSAnimations {
   /// Creates a shimmer loading effect
   static Widget shimmerLoading({
     required Widget child,
-    Color baseColor = const Color(0xFF3A3A3A),
+    Color baseColor = const Color(0xFF2A2A2A),
     Color highlightColor = const Color(0xFF4A4A4A),
-    Duration duration = extraLong,
+    Duration duration = long,
   }) {
     return ShaderMask(
       blendMode: BlendMode.srcATop,
@@ -190,7 +214,7 @@ class BLKWDSPageRoute<T> extends PageRouteBuilder<T> {
   BLKWDSPageRoute({
     required this.page,
     this.transitionType = BLKWDSPageTransitionType.rightToLeft,
-    RouteSettings? settings,
+    super.settings,
   }) : super(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -231,7 +255,6 @@ class BLKWDSPageRoute<T> extends PageRouteBuilder<T> {
           );
       }
     },
-    settings: settings,
   );
 }
 
@@ -282,13 +305,15 @@ extension AnimatedColorExtension on Color {
 class BLKWDSLoadingSpinner extends StatefulWidget {
   final double size;
   final Color color;
+  final Color? backgroundColor;
   final Duration duration;
   final double strokeWidth;
 
   const BLKWDSLoadingSpinner({
     super.key,
     this.size = 40.0,
-    this.color = BLKWDSColors.electricMint,
+    this.color = BLKWDSColors.accentTeal,
+    this.backgroundColor,
     this.duration = const Duration(milliseconds: 1200),
     this.strokeWidth = 3.0,
   });
@@ -339,12 +364,14 @@ class _BLKWDSLoadingSpinnerState extends State<BLKWDSLoadingSpinner> with Single
 class _SpinnerPainter extends CustomPainter {
   final Animation<double> animation;
   final Color color;
+  final Color? backgroundColor;
   final double strokeWidth;
 
   _SpinnerPainter({
     required this.animation,
     required this.color,
     required this.strokeWidth,
+    this.backgroundColor,
   });
 
   @override
@@ -360,7 +387,7 @@ class _SpinnerPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // Draw background circle with lower opacity
-    paint.color = color.withValues(alpha: 50);
+    paint.color = backgroundColor ?? Color.fromRGBO(color.r.toInt(), color.g.toInt(), color.b.toInt(), 0.2);
     canvas.drawCircle(center, radius, paint);
 
     // Draw animated arc
@@ -394,16 +421,18 @@ class BLKWDSProgressIndicator extends StatelessWidget {
   final bool isAnimated;
   final Duration animationDuration;
   final Curve animationCurve;
+  final BorderRadius? borderRadius;
 
   const BLKWDSProgressIndicator({
     super.key,
     required this.value,
     this.backgroundColor = const Color(0xFF2A2A2A),
-    this.progressColor = BLKWDSColors.electricMint,
+    this.progressColor = BLKWDSColors.accentTeal,
     this.height = 6.0,
     this.isAnimated = true,
     this.animationDuration = BLKWDSAnimations.medium,
     this.animationCurve = BLKWDSAnimations.emphasized,
+    this.borderRadius,
   });
 
   @override
@@ -412,7 +441,7 @@ class BLKWDSProgressIndicator extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(height / 2),
+        borderRadius: borderRadius ?? BorderRadius.circular(height / 2),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -429,10 +458,10 @@ class BLKWDSProgressIndicator extends StatelessWidget {
                       width: progressWidth,
                       decoration: BoxDecoration(
                         color: progressColor,
-                        borderRadius: BorderRadius.circular(height / 2),
+                        borderRadius: borderRadius ?? BorderRadius.circular(height / 2),
                         boxShadow: [
                           BoxShadow(
-                            color: progressColor.withValues(alpha: 100),
+                            color: Color.fromRGBO(progressColor.r.toInt(), progressColor.g.toInt(), progressColor.b.toInt(), 0.4),
                             blurRadius: 4,
                             spreadRadius: 0,
                           ),
@@ -443,7 +472,7 @@ class BLKWDSProgressIndicator extends StatelessWidget {
                       width: progressWidth,
                       decoration: BoxDecoration(
                         color: progressColor,
-                        borderRadius: BorderRadius.circular(height / 2),
+                        borderRadius: borderRadius ?? BorderRadius.circular(height / 2),
                       ),
                     ),
             ],

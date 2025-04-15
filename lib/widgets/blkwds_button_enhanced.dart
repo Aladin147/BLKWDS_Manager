@@ -150,7 +150,7 @@ class _BLKWDSButtonEnhancedState extends State<BLKWDSButtonEnhanced> with Single
     super.initState();
     _loadingController = AnimationController(
       vsync: this,
-      duration: BLKWDSAnimations.extraLong,
+      duration: BLKWDSAnimations.xLong,
     );
 
     if (widget.isLoading) {

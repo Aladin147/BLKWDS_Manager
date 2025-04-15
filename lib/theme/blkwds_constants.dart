@@ -1,5 +1,5 @@
 /// BLKWDS Manager Constants
-/// Based on the visual guidelines document
+/// Based on the visual guidelines document with enhanced spacing and layout system
 class BLKWDSConstants {
   // Spacing
   static const double spacingExtraSmall = 4.0;
