@@ -2,6 +2,51 @@
 
 ---
 
+## 🟢 v0.13.0 – UI/UX Enhancement Phase 2 (2025-05-15)
+
+### ✨ Features
+
+- Implemented screen transition system with NavigationService
+  - Created centralized navigation service for consistent animations
+  - Added various transition types (fade, slide, scale) for different navigation patterns
+  - Implemented custom page routes with BLKWDS branding
+- Created layout animation system
+  - Implemented BLKWDSAnimatedList and BLKWDSAnimatedGrid for staggered list animations
+  - Created BLKWDSExpandable for smooth expand/collapse animations
+  - Added BLKWDSAnimatedSwitcher for content transitions
+- Enhanced form elements with micro-interactions
+  - Added focus, error, and success animations to text fields
+  - Implemented open/close and focus animations for dropdowns
+  - Added hover effects and visual feedback for all form elements
+- Created comprehensive documentation for UI/UX enhancements Phase 2
+
+---
+
+## 🟢 v0.12.0 – UI/UX Enhancement Phase 1 (2025-05-14)
+
+### ✨ Features
+
+- Implemented animation system with standardized durations, curves, and transitions
+  - Created fade, slide, and scale transitions for consistent motion
+  - Added hover and press animations for interactive elements
+  - Implemented loading animations and progress indicators
+- Created shadow system for visual hierarchy and depth
+  - Implemented shadow levels for different elevations
+  - Added state-based shadows (hover, active, focus, error, success, warning)
+  - Created colored shadows for visual feedback
+- Added gradient system for visual interest and depth
+  - Implemented standard gradients for primary, secondary, and accent colors
+  - Created button and card gradients for a more polished look
+  - Added background gradients for depth and visual hierarchy
+- Enhanced UI components
+  - Updated BLKWDSCard with animations, shadows, gradients, and loading states
+  - Enhanced BLKWDSButton with animations, shadows, gradients, and loading states
+  - Added new button types (success, warning, text, icon)
+  - Implemented custom loading spinner with BLKWDS branding
+- Created comprehensive documentation for UI/UX enhancements
+
+---
+
 ## 🟢 v0.11.5 – UI Consistency (2025-05-09)
 
 ### ✨ Features
