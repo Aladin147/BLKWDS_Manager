@@ -1,6 +1,9 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
 import '../models/models.dart';
+import '../utils/booking_converter.dart';
+import '../utils/feature_flags.dart';
 import 'log_service.dart';
 
 /// DBService
@@ -20,7 +23,7 @@ class DBService {
     final path = join(await getDatabasesPath(), 'blkwds_manager.db');
     return await openDatabase(
       path,
-      version: 4, // Increment version to trigger migration
+      version: 6, // Increment version to trigger migration
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
     );
@@ -44,9 +47,17 @@ class DBService {
       await _migrateV3ToV4(db);
     }
 
+    if (oldVersion < 5) {
+      await _migrateV4ToV5(db);
+    }
+
+    if (oldVersion < 6) {
+      await _migrateV5ToV6(db);
+    }
+
     // Add future migrations here as needed
-    // if (oldVersion < 5) {
-    //   await _migrateV4ToV5(db);
+    // if (oldVersion < 7) {
+    //   await _migrateV6ToV7(db);
     // }
   }
 
@@ -145,6 +156,280 @@ class DBService {
     });
   }
 
+  /// Migration from v4 to v5
+  /// Adds studio tables and updates booking table for studio management
+  static Future<void> _migrateV4ToV5(Database db) async {
+    LogService.info('Running migration v4 to v5');
+
+    await db.transaction((txn) async {
+      try {
+        // Check if tables already exist
+        final tableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+        final tables = tableResult.map((t) => t['name'] as String).toList();
+
+        // Create studio table if it doesn't exist
+        if (!tables.contains('studio')) {
+          LogService.info('Creating studio table');
+          await txn.execute('''
+            CREATE TABLE studio (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT NOT NULL,
+              type TEXT NOT NULL,
+              description TEXT,
+              features TEXT,
+              hourlyRate REAL,
+              status TEXT NOT NULL DEFAULT 'available',
+              color TEXT
+            )
+          ''');
+        } else {
+          LogService.info('Studio table already exists, skipping creation');
+        }
+
+        // Create studio_settings table if it doesn't exist
+        if (!tables.contains('studio_settings')) {
+          LogService.info('Creating studio_settings table');
+          await txn.execute('''
+            CREATE TABLE studio_settings (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              openingTime TEXT NOT NULL,
+              closingTime TEXT NOT NULL,
+              minBookingDuration INTEGER NOT NULL,
+              maxBookingDuration INTEGER NOT NULL,
+              minAdvanceBookingTime INTEGER NOT NULL,
+              maxAdvanceBookingTime INTEGER NOT NULL,
+              cleanupTime INTEGER NOT NULL,
+              allowOverlappingBookings INTEGER NOT NULL,
+              enforceStudioHours INTEGER NOT NULL
+            )
+          ''');
+        } else {
+          LogService.info('Studio settings table already exists, skipping creation');
+        }
+
+        // Check if booking table already has the required columns
+        final bookingColumnsResult = await txn.rawQuery('PRAGMA table_info(booking)');
+        final existingBookingColumns = bookingColumnsResult.map((col) => col['name'] as String).toList();
+
+        // Add studioId column if it doesn't exist
+        if (!existingBookingColumns.contains('studioId')) {
+          LogService.info('Adding studioId column to booking table');
+          await txn.execute('ALTER TABLE booking ADD COLUMN studioId INTEGER DEFAULT NULL');
+        } else {
+          LogService.info('studioId column already exists in booking table, skipping');
+        }
+
+        // Add notes column if it doesn't exist
+        if (!existingBookingColumns.contains('notes')) {
+          LogService.info('Adding notes column to booking table');
+          await txn.execute('ALTER TABLE booking ADD COLUMN notes TEXT DEFAULT NULL');
+        } else {
+          LogService.info('notes column already exists in booking table, skipping');
+        }
+
+        // Add foreign key constraint for studioId
+        // SQLite doesn't support adding constraints to existing tables, so we'll handle this in code
+
+        // Check if studio settings already exist
+        final settingsCount = Sqflite.firstIntValue(await txn.rawQuery('SELECT COUNT(*) FROM studio_settings'));
+
+        // Insert default studio settings if none exist
+        if (settingsCount == 0) {
+          LogService.info('Inserting default studio settings');
+          await txn.insert('studio_settings', {
+            'openingTime': '9:0',
+            'closingTime': '22:0',
+            'minBookingDuration': 60,
+            'maxBookingDuration': 480,
+            'minAdvanceBookingTime': 1,
+            'maxAdvanceBookingTime': 90,
+            'cleanupTime': 30,
+            'allowOverlappingBookings': 0,
+            'enforceStudioHours': 1,
+          });
+        } else {
+          LogService.info('Studio settings already exist, skipping insertion');
+        }
+
+        // Check if default studios already exist
+        final studioMaps = await txn.query('studio');
+        bool hasRecordingStudio = false;
+        bool hasProductionStudio = false;
+
+        for (final studioMap in studioMaps) {
+          final type = studioMap['type'] as String;
+          if (type == 'recording') {
+            hasRecordingStudio = true;
+          } else if (type == 'production') {
+            hasProductionStudio = true;
+          }
+        }
+
+        // Create recording studio if it doesn't exist
+        if (!hasRecordingStudio) {
+          LogService.info('Creating default Recording Studio');
+          await txn.insert('studio', {
+            'name': 'Recording Studio',
+            'type': 'recording',
+            'description': 'Main recording studio space',
+            'status': 'available',
+          });
+        } else {
+          LogService.info('Recording Studio already exists, skipping creation');
+        }
+
+        // Create production studio if it doesn't exist
+        if (!hasProductionStudio) {
+          LogService.info('Creating default Production Studio');
+          await txn.insert('studio', {
+            'name': 'Production Studio',
+            'type': 'production',
+            'description': 'Main production studio space',
+            'status': 'available',
+          });
+        } else {
+          LogService.info('Production Studio already exists, skipping creation');
+        }
+
+        // Verify migration success
+        final verifyTableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+        final verifyTables = verifyTableResult.map((t) => t['name'] as String).toList();
+
+        final bookingResult = await txn.rawQuery('PRAGMA table_info(booking)');
+        final bookingColumns = bookingResult.map((col) => col['name'] as String).toList();
+
+        if (!verifyTables.contains('studio') ||
+            !verifyTables.contains('studio_settings') ||
+            !bookingColumns.contains('studioId') ||
+            !bookingColumns.contains('notes')) {
+          throw Exception('Migration v4 to v5 failed: schema changes not applied correctly');
+        }
+
+        LogService.info('Migration v4 to v5 completed successfully');
+      } catch (e, stackTrace) {
+        LogService.error('Error during migration v4 to v5', e, stackTrace);
+        rethrow;
+      }
+    });
+  }
+
+  /// Migration from v5 to v6
+  /// Converts existing bookings to use the studio system
+  static Future<void> _migrateV5ToV6(Database db) async {
+    LogService.info('Running migration v5 to v6');
+
+    await db.transaction((txn) async {
+      try {
+        // Get all studios
+        final studioMaps = await txn.query('studio');
+
+        // Find recording and production studios
+        int? recordingStudioId;
+        int? productionStudioId;
+
+        for (final studioMap in studioMaps) {
+          final type = studioMap['type'] as String;
+          if (type == 'recording') {
+            recordingStudioId = studioMap['id'] as int;
+          } else if (type == 'production') {
+            productionStudioId = studioMap['id'] as int;
+          }
+        }
+
+        // If studios don't exist, create them
+        if (recordingStudioId == null) {
+          recordingStudioId = await txn.insert('studio', {
+            'name': 'Recording Studio',
+            'type': 'recording',
+            'description': 'Main recording studio space',
+            'status': 'available',
+          });
+          LogService.info('Created Recording Studio with ID $recordingStudioId');
+        }
+
+        if (productionStudioId == null) {
+          productionStudioId = await txn.insert('studio', {
+            'name': 'Production Studio',
+            'type': 'production',
+            'description': 'Main production studio space',
+            'status': 'available',
+          });
+          LogService.info('Created Production Studio with ID $productionStudioId');
+        }
+
+        // Get all bookings
+        final bookingMaps = await txn.query('booking');
+
+        // Create a hybrid studio if needed
+        int? hybridStudioId;
+        bool needsHybridStudio = false;
+
+        for (final bookingMap in bookingMaps) {
+          final isRecordingStudio = (bookingMap['isRecordingStudio'] as int?) == 1;
+          final isProductionStudio = (bookingMap['isProductionStudio'] as int?) == 1;
+
+          if (isRecordingStudio == true && isProductionStudio == true) {
+            needsHybridStudio = true;
+            break;
+          }
+        }
+
+        if (needsHybridStudio) {
+          // Check if hybrid studio already exists
+          for (final studioMap in studioMaps) {
+            final type = studioMap['type'] as String;
+            if (type == 'hybrid') {
+              hybridStudioId = studioMap['id'] as int;
+              break;
+            }
+          }
+
+          if (hybridStudioId == null) {
+            hybridStudioId = await txn.insert('studio', {
+              'name': 'Hybrid Studio',
+              'type': 'hybrid',
+              'description': 'Combined recording and production studio space',
+              'status': 'available',
+            });
+            LogService.info('Created Hybrid Studio with ID $hybridStudioId');
+          }
+        }
+
+        // Update each booking with the appropriate studio ID
+        int bookingsUpdated = 0;
+        for (final bookingMap in bookingMaps) {
+          final bookingId = bookingMap['id'] as int;
+          final isRecordingStudio = (bookingMap['isRecordingStudio'] as int?) == 1;
+          final isProductionStudio = (bookingMap['isProductionStudio'] as int?) == 1;
+
+          int? studioId;
+          if (isRecordingStudio == true && isProductionStudio == true) {
+            studioId = hybridStudioId;
+          } else if (isRecordingStudio == true) {
+            studioId = recordingStudioId;
+          } else if (isProductionStudio == true) {
+            studioId = productionStudioId;
+          }
+
+          if (studioId != null) {
+            await txn.update(
+              'booking',
+              {'studioId': studioId},
+              where: 'id = ?',
+              whereArgs: [bookingId],
+            );
+            bookingsUpdated++;
+          }
+        }
+
+        LogService.info('Updated $bookingsUpdated bookings with studio IDs');
+        LogService.info('Migration v5 to v6 completed successfully');
+      } catch (e, stackTrace) {
+        LogService.error('Error during migration v5 to v6', e, stackTrace);
+        rethrow;
+      }
+    });
+  }
   /// Create database tables
   static Future<void> _createTables(Database db, int version) async {
     // Gear table
@@ -1017,6 +1302,329 @@ class DBService {
     );
   }
 
+  // BOOKINGV2 CRUD OPERATIONS
+
+  /// Insert a new booking with gear assignments (V2)
+  static Future<int> insertBookingV2(BookingV2 booking) async {
+    final db = await database;
+
+    // Begin transaction
+    return await db.transaction((txn) async {
+      // Insert booking
+      final bookingId = await txn.insert('booking', booking.toMap());
+
+      // Insert booking-gear associations with optional member assignments
+      for (final gearId in booking.gearIds) {
+        final assignedMemberId = booking.assignedGearToMember?[gearId];
+
+        await txn.insert('booking_gear', {
+          'bookingId': bookingId,
+          'gearId': gearId,
+          'assignedMemberId': assignedMemberId,
+        });
+      }
+
+      return bookingId;
+    });
+  }
+
+  /// Get all bookings with their gear and member assignments (V2)
+  static Future<List<BookingV2>> getAllBookingsV2() async {
+    final db = await database;
+
+    // Get all bookings
+    final List<Map<String, dynamic>> bookingMaps = await db.query('booking');
+
+    // Create BookingV2 objects
+    final List<BookingV2> bookings = [];
+
+    for (final bookingMap in bookingMaps) {
+      final bookingId = bookingMap['id'] as int;
+
+      // Get gear IDs and member assignments for this booking
+      final List<Map<String, dynamic>> gearMaps = await db.query(
+        'booking_gear',
+        where: 'bookingId = ?',
+        whereArgs: [bookingId],
+      );
+
+      final List<int> gearIds = gearMaps.map((m) => m['gearId'] as int).toList();
+
+      final Map<int, int> assignedGearToMember = {};
+      for (final gearMap in gearMaps) {
+        final gearId = gearMap['gearId'] as int;
+        final memberId = gearMap['assignedMemberId'] as int?;
+
+        if (memberId != null) {
+          assignedGearToMember[gearId] = memberId;
+        }
+      }
+
+      // Create BookingV2 with gear IDs and member assignments
+      bookings.add(
+        BookingV2.fromMap(bookingMap).copyWith(
+          gearIds: gearIds,
+          assignedGearToMember: assignedGearToMember,
+        ),
+      );
+    }
+
+    return bookings;
+  }
+
+  /// Get a booking by ID with its gear and member assignments (V2)
+  static Future<BookingV2?> getBookingByIdV2(int id) async {
+    final db = await database;
+
+    // Get booking
+    final List<Map<String, dynamic>> bookingMaps = await db.query(
+      'booking',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (bookingMaps.isEmpty) {
+      return null;
+    }
+
+    // Get gear IDs and member assignments for this booking
+    final List<Map<String, dynamic>> gearMaps = await db.query(
+      'booking_gear',
+      where: 'bookingId = ?',
+      whereArgs: [id],
+    );
+
+    final List<int> gearIds = gearMaps.map((m) => m['gearId'] as int).toList();
+
+    final Map<int, int> assignedGearToMember = {};
+    for (final gearMap in gearMaps) {
+      final gearId = gearMap['gearId'] as int;
+      final memberId = gearMap['assignedMemberId'] as int?;
+
+      if (memberId != null) {
+        assignedGearToMember[gearId] = memberId;
+      }
+    }
+
+    // Create BookingV2 with gear IDs and member assignments
+    return BookingV2.fromMap(bookingMaps.first).copyWith(
+      gearIds: gearIds,
+      assignedGearToMember: assignedGearToMember,
+    );
+  }
+
+  /// Update a booking with gear assignments (V2)
+  static Future<int> updateBookingV2(BookingV2 booking) async {
+    final db = await database;
+
+    // Begin transaction
+    return await db.transaction((txn) async {
+      // Update booking
+      await txn.update(
+        'booking',
+        booking.toMap(),
+        where: 'id = ?',
+        whereArgs: [booking.id],
+      );
+
+      // Delete existing booking-gear associations
+      await txn.delete(
+        'booking_gear',
+        where: 'bookingId = ?',
+        whereArgs: [booking.id],
+      );
+
+      // Insert new booking-gear associations with optional member assignments
+      for (final gearId in booking.gearIds) {
+        final assignedMemberId = booking.assignedGearToMember?[gearId];
+
+        await txn.insert('booking_gear', {
+          'bookingId': booking.id,
+          'gearId': gearId,
+          'assignedMemberId': assignedMemberId,
+        });
+      }
+
+      return booking.id!;
+    });
+  }
+
+  /// Get bookings for a studio
+  static Future<List<BookingV2>> getBookingsForStudio(int studioId) async {
+    final db = await database;
+
+    // Get all bookings for this studio
+    final List<Map<String, dynamic>> bookingMaps = await db.query(
+      'booking',
+      where: 'studioId = ?',
+      whereArgs: [studioId],
+    );
+
+    // Create BookingV2 objects
+    final List<BookingV2> bookings = [];
+
+    for (final bookingMap in bookingMaps) {
+      final bookingId = bookingMap['id'] as int;
+
+      // Get gear IDs and member assignments for this booking
+      final List<Map<String, dynamic>> gearMaps = await db.query(
+        'booking_gear',
+        where: 'bookingId = ?',
+        whereArgs: [bookingId],
+      );
+
+      final List<int> gearIds = gearMaps.map((m) => m['gearId'] as int).toList();
+
+      final Map<int, int> assignedGearToMember = {};
+      for (final gearMap in gearMaps) {
+        final gearId = gearMap['gearId'] as int;
+        final memberId = gearMap['assignedMemberId'] as int?;
+
+        if (memberId != null) {
+          assignedGearToMember[gearId] = memberId;
+        }
+      }
+
+      // Create BookingV2 with gear IDs and member assignments
+      bookings.add(
+        BookingV2.fromMap(bookingMap).copyWith(
+          gearIds: gearIds,
+          assignedGearToMember: assignedGearToMember,
+        ),
+      );
+    }
+
+    return bookings;
+  }
+
+  // STUDIO CRUD OPERATIONS
+
+  /// Insert a new studio
+  static Future<int> insertStudio(Studio studio) async {
+    final db = await database;
+    return await db.insert('studio', studio.toMap());
+  }
+
+  // COMPATIBILITY LAYER FOR BOOKING MIGRATION
+
+  /// Get bookings based on feature flag
+  /// This method will return BookingV2 objects if useStudioSystem is true,
+  /// otherwise it will return Booking objects converted to BookingV2
+  static Future<List<BookingV2>> getBookingsWithStudioSupport() async {
+    if (FeatureFlags.useStudioSystem) {
+      // Use the V2 method directly
+      return await getAllBookingsV2();
+    } else {
+      // Convert from old model to new model
+      final bookings = await getAllBookings();
+      return await BookingConverter.toBookingV2List(bookings);
+    }
+  }
+
+  /// Save a booking with studio support
+  /// This method will use the appropriate save method based on the feature flag
+  static Future<int> saveBookingWithStudioSupport(BookingV2 bookingV2) async {
+    if (FeatureFlags.useStudioSystem) {
+      // Use the V2 method directly
+      if (bookingV2.id != null) {
+        return await updateBookingV2(bookingV2);
+      } else {
+        return await insertBookingV2(bookingV2);
+      }
+    } else {
+      // Convert to old model and save
+      final booking = await BookingConverter.toBooking(bookingV2);
+      if (booking.id != null) {
+        return await updateBooking(booking);
+      } else {
+        return await insertBooking(booking);
+      }
+    }
+  }
+
+  /// Get a booking by ID with studio support
+  /// This method will return a BookingV2 object regardless of the feature flag
+  static Future<BookingV2?> getBookingByIdWithStudioSupport(int id) async {
+    if (FeatureFlags.useStudioSystem) {
+      // Use the V2 method directly
+      return await getBookingByIdV2(id);
+    } else {
+      // Convert from old model to new model
+      final booking = await getBookingById(id);
+      if (booking == null) return null;
+      return await BookingConverter.toBookingV2(booking);
+    }
+  }
+
+  /// Get all studios
+  static Future<List<Studio>> getAllStudios() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('studio');
+    return List.generate(maps.length, (i) => Studio.fromMap(maps[i]));
+  }
+
+  /// Get a studio by ID
+  static Future<Studio?> getStudioById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'studio',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.isNotEmpty) {
+      return Studio.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  /// Update a studio
+  static Future<int> updateStudio(Studio studio) async {
+    final db = await database;
+    return await db.update(
+      'studio',
+      studio.toMap(),
+      where: 'id = ?',
+      whereArgs: [studio.id],
+    );
+  }
+
+  /// Delete a studio
+  static Future<int> deleteStudio(int id) async {
+    final db = await database;
+    return await db.delete(
+      'studio',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // STUDIO SETTINGS OPERATIONS
+
+  /// Get studio settings
+  static Future<StudioSettings?> getStudioSettings() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('studio_settings');
+    if (maps.isNotEmpty) {
+      return StudioSettings.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  /// Update studio settings
+  static Future<int> updateStudioSettings(StudioSettings settings) async {
+    final db = await database;
+    if (settings.id != null) {
+      return await db.update(
+        'studio_settings',
+        settings.toMap(),
+        where: 'id = ?',
+        whereArgs: [settings.id],
+      );
+    } else {
+      // If no settings exist, insert new ones
+      return await db.insert('studio_settings', settings.toMap());
+    }
+  }
   /// Clear all data from the database
   static Future<void> clearAllData() async {
     final db = await database;
