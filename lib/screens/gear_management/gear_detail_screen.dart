@@ -1,0 +1,827 @@
+import 'package:flutter/material.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../../theme/blkwds_colors.dart';
+import '../../theme/blkwds_constants.dart';
+import '../../theme/blkwds_typography.dart';
+import '../../theme/blkwds_animations.dart';
+import '../../widgets/blkwds_widgets.dart';
+import 'gear_form_screen.dart';
+
+/// GearDetailScreen
+/// Displays detailed information about a gear item
+class GearDetailScreen extends StatefulWidget {
+  final Gear gear;
+
+  const GearDetailScreen({
+    super.key,
+    required this.gear,
+  });
+
+  @override
+  State<GearDetailScreen> createState() => _GearDetailScreenState();
+}
+
+class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerProviderStateMixin {
+  // Tab controller for the different sections
+  late TabController _tabController;
+  
+  // Activity logs
+  List<ActivityLog> _activityLogs = [];
+  
+  // Status notes
+  List<StatusNote> _statusNotes = [];
+  
+  // Loading states
+  bool _isLoadingLogs = true;
+  bool _isLoadingNotes = true;
+  
+  // Error messages
+  String? _logsErrorMessage;
+  String? _notesErrorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _loadActivityLogs();
+    _loadStatusNotes();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  // Load activity logs for this gear
+  Future<void> _loadActivityLogs() async {
+    setState(() {
+      _isLoadingLogs = true;
+      _logsErrorMessage = null;
+    });
+
+    try {
+      final logs = await DBService.getActivityLogsForGear(widget.gear.id!);
+      setState(() {
+        _activityLogs = logs;
+        _isLoadingLogs = false;
+      });
+    } catch (e, stackTrace) {
+      LogService.error('Failed to load activity logs', e, stackTrace);
+      setState(() {
+        _logsErrorMessage = ErrorService.getUserFriendlyMessage(
+          ErrorType.database,
+          e.toString(),
+        );
+        _isLoadingLogs = false;
+      });
+    }
+  }
+
+  // Load status notes for this gear
+  Future<void> _loadStatusNotes() async {
+    setState(() {
+      _isLoadingNotes = true;
+      _notesErrorMessage = null;
+    });
+
+    try {
+      final notes = await DBService.getStatusNotesForGear(widget.gear.id!);
+      setState(() {
+        _statusNotes = notes;
+        _isLoadingNotes = false;
+      });
+    } catch (e, stackTrace) {
+      LogService.error('Failed to load status notes', e, stackTrace);
+      setState(() {
+        _notesErrorMessage = ErrorService.getUserFriendlyMessage(
+          ErrorType.database,
+          e.toString(),
+        );
+        _isLoadingNotes = false;
+      });
+    }
+  }
+
+  // Navigate to edit gear screen
+  void _navigateToEditGear() {
+    Navigator.push(
+      context,
+      BLKWDSPageRoute(
+        page: GearFormScreen(gear: widget.gear),
+        transitionType: BLKWDSPageTransitionType.rightToLeft,
+      ),
+    ).then((_) {
+      // Refresh data when returning from edit screen
+      _loadActivityLogs();
+      _loadStatusNotes();
+    });
+  }
+
+  // Delete this gear
+  Future<void> _deleteGear() async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Gear'),
+        content: Text('Are you sure you want to delete ${widget.gear.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await DBService.deleteGear(widget.gear.id!);
+      
+      // Show success snackbar
+      if (mounted) {
+        SnackbarService.showSuccessSnackBar(
+          context,
+          '${widget.gear.name} deleted',
+        );
+        
+        // Navigate back to gear list
+        Navigator.pop(context);
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Failed to delete gear', e, stackTrace);
+      
+      if (mounted) {
+        // Show error snackbar
+        SnackbarService.showErrorSnackBar(
+          context,
+          ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          ),
+        );
+      }
+    }
+  }
+
+  // Check out gear to a member
+  Future<void> _checkoutGear() async {
+    if (widget.gear.isOut) {
+      // Show error snackbar
+      if (mounted) {
+        SnackbarService.showErrorSnackBar(
+          context,
+          'This gear is already checked out',
+        );
+      }
+      return;
+    }
+
+    // Get all members
+    final members = await DBService.getAllMembers();
+    if (members.isEmpty) {
+      // Show error snackbar
+      if (mounted) {
+        SnackbarService.showErrorSnackBar(
+          context,
+          'No members available for checkout',
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    
+    // Show member selection dialog
+    final selectedMember = await showDialog<Member>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Check Out Gear'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Select a member to check out ${widget.gear.name} to:'),
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: members.length,
+                  itemBuilder: (context, index) {
+                    final member = members[index];
+                    return ListTile(
+                      title: Text(member.name),
+                      subtitle: member.role != null ? Text(member.role!) : null,
+                      onTap: () => Navigator.pop(context, member),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+
+    if (selectedMember == null || !mounted) return;
+
+    // Show note dialog
+    final TextEditingController noteController = TextEditingController();
+    final note = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Note (Optional)'),
+        content: TextField(
+          controller: noteController,
+          decoration: const InputDecoration(
+            hintText: 'Enter a note for this checkout',
+          ),
+          maxLines: 3,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, ''),
+            child: const Text('Skip'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, noteController.text),
+            child: const Text('Add Note'),
+          ),
+        ],
+      ),
+    );
+
+    if (!mounted) return;
+    
+    // Check out gear
+    try {
+      final success = await DBService.checkOutGear(
+        widget.gear.id!,
+        selectedMember.id!,
+        note: note?.isNotEmpty == true ? note : null,
+      );
+
+      if (success) {
+        // Show success snackbar
+        if (mounted) {
+          SnackbarService.showSuccessSnackBar(
+            context,
+            '${widget.gear.name} checked out to ${selectedMember.name}',
+          );
+        }
+        
+        // Refresh data
+        _loadActivityLogs();
+        _loadStatusNotes();
+      } else {
+        // Show error snackbar
+        if (mounted) {
+          SnackbarService.showErrorSnackBar(
+            context,
+            'Failed to check out gear',
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Failed to check out gear', e, stackTrace);
+      
+      if (mounted) {
+        // Show error snackbar
+        SnackbarService.showErrorSnackBar(
+          context,
+          ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          ),
+        );
+      }
+    }
+  }
+  
+  // Check in gear
+  Future<void> _checkinGear() async {
+    if (!widget.gear.isOut) {
+      // Show error snackbar
+      if (mounted) {
+        SnackbarService.showErrorSnackBar(
+          context,
+          'This gear is already checked in',
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+    
+    // Show note dialog
+    final TextEditingController noteController = TextEditingController();
+    final note = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Note (Optional)'),
+        content: TextField(
+          controller: noteController,
+          decoration: const InputDecoration(
+            hintText: 'Enter a note for this check-in',
+          ),
+          maxLines: 3,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, ''),
+            child: const Text('Skip'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, noteController.text),
+            child: const Text('Add Note'),
+          ),
+        ],
+      ),
+    );
+
+    if (!mounted) return;
+    
+    // Check in gear
+    try {
+      final success = await DBService.checkInGear(
+        widget.gear.id!,
+        note: note?.isNotEmpty == true ? note : null,
+      );
+
+      if (success) {
+        // Show success snackbar
+        if (mounted) {
+          SnackbarService.showSuccessSnackBar(
+            context,
+            '${widget.gear.name} checked in successfully',
+          );
+        }
+        
+        // Refresh data
+        _loadActivityLogs();
+        _loadStatusNotes();
+      } else {
+        // Show error snackbar
+        if (mounted) {
+          SnackbarService.showErrorSnackBar(
+            context,
+            'Failed to check in gear',
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Failed to check in gear', e, stackTrace);
+      
+      if (mounted) {
+        // Show error snackbar
+        SnackbarService.showErrorSnackBar(
+          context,
+          ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          ),
+        );
+      }
+    }
+  }
+  
+  // Add a status note
+  Future<void> _addStatusNote() async {
+    if (!mounted) return;
+    
+    // Show note dialog
+    final TextEditingController noteController = TextEditingController();
+    final note = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Status Note'),
+        content: TextField(
+          controller: noteController,
+          decoration: const InputDecoration(
+            hintText: 'Enter a status note',
+          ),
+          maxLines: 3,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (noteController.text.isNotEmpty) {
+                Navigator.pop(context, noteController.text);
+              } else {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add Note'),
+          ),
+        ],
+      ),
+    );
+
+    if (note == null || note.isEmpty || !mounted) return;
+    
+    // Add status note
+    try {
+      final success = await DBService.addStatusNote(
+        widget.gear.id!,
+        note,
+      );
+
+      if (success) {
+        // Show success snackbar
+        if (mounted) {
+          SnackbarService.showSuccessSnackBar(
+            context,
+            'Status note added successfully',
+          );
+        }
+        
+        // Refresh data
+        _loadStatusNotes();
+      } else {
+        // Show error snackbar
+        if (mounted) {
+          SnackbarService.showErrorSnackBar(
+            context,
+            'Failed to add status note',
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Failed to add status note', e, stackTrace);
+      
+      if (mounted) {
+        // Show error snackbar
+        SnackbarService.showErrorSnackBar(
+          context,
+          ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          ),
+        );
+      }
+    }
+  }
+  
+  // Build the details tab
+  Widget _buildDetailsTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Gear info card
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Gear name and category
+                  Row(
+                    children: [
+                      // Status indicator
+                      Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: BLKWDSConstants.spacingSmall),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.gear.name,
+                              style: BLKWDSTypography.headlineSmall,
+                            ),
+                            Text(
+                              widget.gear.category,
+                              style: BLKWDSTypography.titleMedium.copyWith(
+                                color: BLKWDSColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const Divider(height: BLKWDSConstants.spacingLarge),
+                  
+                  // Gear ID
+                  _buildInfoRow('Gear ID', '#${widget.gear.id}'),
+                  
+                  // Serial number
+                  if (widget.gear.serialNumber != null && widget.gear.serialNumber!.isNotEmpty)
+                    _buildInfoRow('Serial Number', widget.gear.serialNumber!),
+                  
+                  // Purchase date
+                  if (widget.gear.purchaseDate != null)
+                    _buildInfoRow('Purchase Date', _formatDate(widget.gear.purchaseDate!)),
+                  
+                  // Status
+                  _buildInfoRow(
+                    'Status',
+                    widget.gear.isOut ? 'Checked Out' : 'Available',
+                    valueColor: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                  ),
+                  
+                  // Description
+                  if (widget.gear.description != null && widget.gear.description!.isNotEmpty) ...[  
+                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                    Text(
+                      'Description',
+                      style: BLKWDSTypography.titleMedium,
+                    ),
+                    const SizedBox(height: BLKWDSConstants.spacingSmall),
+                    Text(
+                      widget.gear.description!,
+                      style: BLKWDSTypography.bodyMedium,
+                    ),
+                  ],
+                  
+                  // Last note
+                  if (widget.gear.lastNote != null && widget.gear.lastNote!.isNotEmpty) ...[  
+                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                    Text(
+                      'Last Status Note',
+                      style: BLKWDSTypography.titleMedium,
+                    ),
+                    const SizedBox(height: BLKWDSConstants.spacingSmall),
+                    Text(
+                      widget.gear.lastNote!,
+                      style: BLKWDSTypography.bodyMedium,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+          
+          // Add status note button
+          BLKWDSButton(
+            label: 'Add Status Note',
+            onPressed: _addStatusNote,
+            type: BLKWDSButtonType.secondary,
+            icon: Icons.note_add,
+            isFullWidth: true,
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Build the activity tab
+  Widget _buildActivityTab() {
+    return _isLoadingLogs
+        ? const Center(child: CircularProgressIndicator())
+        : _logsErrorMessage != null
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: BLKWDSColors.errorRed,
+                      size: 48,
+                    ),
+                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                    Text(
+                      'Error Loading Activity Logs',
+                      style: BLKWDSTypography.titleLarge,
+                    ),
+                    const SizedBox(height: BLKWDSConstants.spacingSmall),
+                    Text(
+                      _logsErrorMessage!,
+                      textAlign: TextAlign.center,
+                      style: BLKWDSTypography.bodyMedium,
+                    ),
+                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                    BLKWDSButton(
+                      label: 'Retry',
+                      onPressed: _loadActivityLogs,
+                      type: BLKWDSButtonType.primary,
+                    ),
+                  ],
+                ),
+              )
+            : _activityLogs.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.history,
+                          color: BLKWDSColors.slateGrey,
+                          size: 48,
+                        ),
+                        const SizedBox(height: BLKWDSConstants.spacingMedium),
+                        Text(
+                          'No Activity Logs',
+                          style: BLKWDSTypography.titleLarge,
+                        ),
+                        const SizedBox(height: BLKWDSConstants.spacingSmall),
+                        Text(
+                          'This gear has no activity logs',
+                          style: BLKWDSTypography.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                    itemCount: _activityLogs.length,
+                    itemBuilder: (context, index) {
+                      final log = _activityLogs[index];
+                      return _buildActivityLogCard(log);
+                    },
+                  );
+  }
+  
+  // Build an activity log card
+  Widget _buildActivityLogCard(ActivityLog log) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      child: Padding(
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Log header
+            Row(
+              children: [
+                Icon(
+                  log.checkedOut ? Icons.logout : Icons.login,
+                  color: log.checkedOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingSmall),
+                Expanded(
+                  child: Text(
+                    log.checkedOut ? 'Checked Out' : 'Checked In',
+                    style: BLKWDSTypography.titleMedium.copyWith(
+                      color: log.checkedOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                    ),
+                  ),
+                ),
+                Text(
+                  _formatDate(log.timestamp),
+                  style: BLKWDSTypography.bodySmall.copyWith(
+                    color: BLKWDSColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            
+            // Member info if available
+            if (log.member != null) ...[  
+              const SizedBox(height: BLKWDSConstants.spacingSmall),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.person,
+                    size: 16,
+                    color: BLKWDSColors.textSecondary,
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Text(
+                    log.member!.name,
+                    style: BLKWDSTypography.bodyMedium,
+                  ),
+                ],
+              ),
+            ],
+            
+            // Note if available
+            if (log.note != null && log.note!.isNotEmpty) ...[  
+              const SizedBox(height: BLKWDSConstants.spacingSmall),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.note,
+                    size: 16,
+                    color: BLKWDSColors.textSecondary,
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Expanded(
+                    child: Text(
+                      log.note!,
+                      style: BLKWDSTypography.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // Build an info row with label and value
+  Widget _buildInfoRow(String label, String value, {Color? valueColor}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: BLKWDSTypography.bodyMedium.copyWith(
+                color: BLKWDSColors.textSecondary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: BLKWDSTypography.bodyMedium.copyWith(
+                color: valueColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Format a date for display
+  String _formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} '
+        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.gear.name),
+        actions: [
+          // Check out/in button
+          IconButton(
+            icon: Icon(
+              widget.gear.isOut ? Icons.check_circle : Icons.logout,
+              color: widget.gear.isOut ? BLKWDSColors.statusIn : BLKWDSColors.statusOut,
+            ),
+            tooltip: widget.gear.isOut ? 'Check In' : 'Check Out',
+            onPressed: () => widget.gear.isOut ? _checkinGear() : _checkoutGear(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            tooltip: 'Edit',
+            onPressed: _navigateToEditGear,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            tooltip: 'Delete',
+            onPressed: _deleteGear,
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Details'),
+            Tab(text: 'Activity'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          // Details tab
+          _buildDetailsTab(),
+          
+          // Activity tab
+          _buildActivityTab(),
+        ],
+      ),
+    );
+  }
+}

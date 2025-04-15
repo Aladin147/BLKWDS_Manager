@@ -5,11 +5,18 @@ This directory contains detailed implementation plans for the various features o
 ## Current Implementation Plans
 
 ### Core Features
+
 - [Add Gear Screen](add_gear_screen.md) - Screen for adding new equipment to the inventory
 - [Booking Panel Screen](booking_panel_screen.md) - Screen for managing bookings and assignments
 - [Gear Inventory Screen](gear_inventory_screen.md) - Comprehensive view of all equipment
+- [Error Handling Enhancement](error_handling_enhancement.md) - Comprehensive error handling system
+
+### Enhancement Plans
+
+- [Missing Core Functionalities](missing_core_functionalities.md) - Implementation plan for missing core features
 
 ## Upcoming Implementation Plans
+
 - Calendar View - Visual representation of bookings
 - Member Management - Screen for managing team members
 - Export Functionality - CSV and PDF export for reports

@@ -7,11 +7,11 @@ import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
+import 'booking_detail_screen.dart';
 import 'widgets/booking_filter_bar.dart';
 import 'widgets/booking_form.dart';
 import 'widgets/booking_list_item.dart';
 import 'widgets/calendar_view.dart';
-import 'widgets/booking_details_modal.dart';
 
 /// BookingPanelScreen
 /// Screen for managing bookings
@@ -308,6 +308,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
                     controller: _controller,
                     onEdit: () => _showEditBookingForm(booking),
                     onDelete: () => _deleteBooking(booking),
+                    onTap: _navigateToBookingDetail,
                   );
                 },
               );
@@ -330,6 +331,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             projectId: _controller.projectList.value.isNotEmpty
                 ? _controller.projectList.value.first.id!
                 : 0,
+            title: 'New Booking',
             startDate: DateTime(
               day.year,
               day.month,
@@ -352,8 +354,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         });
       },
       onBookingSelected: (booking) {
-        // When a booking is selected, show the booking details modal
-        _showBookingDetailsModal(booking);
+        // When a booking is selected, navigate to booking detail screen
+        _navigateToBookingDetail(booking);
       },
       onBookingRescheduled: _handleBookingReschedule,
     );
@@ -432,28 +434,21 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
     }
   }
 
-  // Show booking details modal
-  void _showBookingDetailsModal(Booking booking) {
-    final project = _controller.getProjectById(booking.projectId);
-
-    // Get assigned members
-    final members = _controller.memberList.value;
-
-    // Get gear items
-    final gear = _controller.gearList.value
-        .where((g) => booking.gearIds.contains(g.id))
-        .toList();
-
-    showDialog(
-      context: context,
-      builder: (context) => BookingDetailsModal(
-        booking: booking,
-        project: project,
-        members: members,
-        gear: gear,
-        onEdit: () => _showEditBookingForm(booking),
-        onDelete: () => _deleteBooking(booking),
+  // Navigate to booking detail screen
+  void _navigateToBookingDetail(Booking booking) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookingDetailScreen(
+          booking: booking,
+          controller: _controller,
+        ),
       ),
-    );
+    ).then((result) {
+      // Refresh data if booking was updated or deleted
+      if (result == true) {
+        _controller.initialize();
+      }
+    });
   }
 }

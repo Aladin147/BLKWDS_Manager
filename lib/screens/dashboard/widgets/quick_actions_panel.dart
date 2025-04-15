@@ -9,12 +9,18 @@ import '../../../widgets/blkwds_button.dart';
 class QuickActionsPanel extends StatelessWidget {
   final VoidCallback onAddGear;
   final VoidCallback onOpenBookingPanel;
+  final VoidCallback onManageMembers;
+  final VoidCallback onManageProjects;
+  final VoidCallback onManageGear;
   final VoidCallback? onExportLogs;
 
   const QuickActionsPanel({
     super.key,
     required this.onAddGear,
     required this.onOpenBookingPanel,
+    required this.onManageMembers,
+    required this.onManageProjects,
+    required this.onManageGear,
     this.onExportLogs,
   });
 
@@ -61,6 +67,39 @@ class QuickActionsPanel extends StatelessWidget {
             onPressed: onOpenBookingPanel,
             label: 'Open Booking Panel',
             icon: Icons.calendar_today,
+            type: BLKWDSButtonType.primary,
+            isFullWidth: true,
+          ),
+
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+          // Manage Members Button
+          BLKWDSButton(
+            onPressed: onManageMembers,
+            label: 'Manage Members',
+            icon: Icons.people,
+            type: BLKWDSButtonType.primary,
+            isFullWidth: true,
+          ),
+
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+          // Manage Projects Button
+          BLKWDSButton(
+            onPressed: onManageProjects,
+            label: 'Manage Projects',
+            icon: Icons.folder,
+            type: BLKWDSButtonType.primary,
+            isFullWidth: true,
+          ),
+
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+          // Manage Gear Button
+          BLKWDSButton(
+            onPressed: onManageGear,
+            label: 'Manage Gear',
+            icon: Icons.videocam,
             type: BLKWDSButtonType.primary,
             isFullWidth: true,
           ),

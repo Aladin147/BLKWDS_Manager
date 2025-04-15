@@ -14,6 +14,7 @@ class BookingListItem extends StatelessWidget {
   final BookingPanelController controller;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final Function(Booking)? onTap;
 
   const BookingListItem({
     super.key,
@@ -21,6 +22,7 @@ class BookingListItem extends StatelessWidget {
     required this.controller,
     required this.onEdit,
     required this.onDelete,
+    this.onTap,
   });
 
   @override
@@ -59,6 +61,7 @@ class BookingListItem extends StatelessWidget {
 
     return BLKWDSCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      onTap: onTap != null ? () => onTap!(booking) : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -115,11 +115,12 @@ class MockData {
   /// Sample bookings
   static List<Booking> getSampleBookings() {
     final now = DateTime.now();
-    
+
     return [
       Booking(
         id: 1,
         projectId: 1,
+        title: 'Commercial Shoot',
         startDate: DateTime(now.year, now.month, now.day + 3, 9),
         endDate: DateTime(now.year, now.month, now.day + 3, 18),
         isProductionStudio: true,
@@ -132,6 +133,7 @@ class MockData {
       Booking(
         id: 2,
         projectId: 2,
+        title: 'Music Video',
         startDate: DateTime(now.year, now.month, now.day + 5, 10),
         endDate: DateTime(now.year, now.month, now.day + 6, 16),
         isRecordingStudio: true,
@@ -144,6 +146,7 @@ class MockData {
       Booking(
         id: 3,
         projectId: 3,
+        title: 'Documentary Shoot',
         startDate: DateTime(now.year, now.month, now.day + 10, 13),
         endDate: DateTime(now.year, now.month, now.day + 10, 17),
         isRecordingStudio: true,
@@ -155,7 +158,7 @@ class MockData {
   /// Sample activity logs
   static List<ActivityLog> getSampleActivityLogs() {
     final now = DateTime.now();
-    
+
     return [
       ActivityLog(
         id: 1,
@@ -201,7 +204,7 @@ class MockData {
   /// Sample status notes
   static List<StatusNote> getSampleStatusNotes() {
     final now = DateTime.now();
-    
+
     return [
       StatusNote(
         id: 1,

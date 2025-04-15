@@ -6,6 +6,9 @@ import '../../widgets/blkwds_widgets.dart';
 import '../../examples/error_handling_example.dart';
 import '../../examples/recovery_example.dart';
 import '../../examples/error_analytics_example.dart';
+import '../member_management/member_list_screen.dart';
+import '../project_management/project_list_screen.dart';
+import '../gear_management/gear_list_screen.dart';
 import 'settings_controller.dart';
 import 'widgets/settings_section.dart';
 
@@ -248,6 +251,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       type: BLKWDSButtonType.danger,
                       onPressed: _handleResetAppData,
                       isFullWidth: true,
+                    ),
+                  ],
+                ),
+
+                // Management
+                SettingsSection(
+                  title: 'Management',
+                  children: [
+                    ListTile(
+                      title: const Text('Member Management'),
+                      subtitle: const Text('Add, edit, and delete members'),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MemberListScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Project Management'),
+                      subtitle: const Text('Add, edit, and delete projects'),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProjectListScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Gear Management'),
+                      subtitle: const Text('Add, edit, and manage gear inventory'),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GearListScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

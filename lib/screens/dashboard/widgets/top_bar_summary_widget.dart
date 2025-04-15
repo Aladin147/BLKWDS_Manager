@@ -245,6 +245,7 @@ class TopBarSummaryWidget extends StatelessWidget {
       },
       orElse: () => Booking(
         projectId: -1,
+        title: 'No Studio Booking',
         startDate: DateTime.now(),
         endDate: DateTime.now(),
         gearIds: const [],

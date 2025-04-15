@@ -46,13 +46,58 @@ class SnackbarService {
     );
   }
 
+  /// Show an error snackbar with action
+  static void showErrorSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
+    _showSnackbar(
+      context,
+      message,
+      BLKWDSColors.errorRed,
+      Icons.error_outline,
+      action: action,
+    );
+  }
+
+  /// Show a success snackbar with action
+  static void showSuccessSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
+    _showSnackbar(
+      context,
+      message,
+      BLKWDSColors.successGreen,
+      Icons.check_circle_outline,
+      action: action,
+    );
+  }
+
+  /// Show a warning snackbar with action
+  static void showWarningSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
+    _showSnackbar(
+      context,
+      message,
+      BLKWDSColors.warningAmber,
+      Icons.warning_amber_outlined,
+      action: action,
+    );
+  }
+
+  /// Show an info snackbar with action
+  static void showInfoSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
+    _showSnackbar(
+      context,
+      message,
+      BLKWDSColors.accentTeal,
+      Icons.info_outline,
+      action: action,
+    );
+  }
+
   /// Private method to show a snackbar with the given parameters
   static void _showSnackbar(
     BuildContext context,
     String message,
     Color color,
-    IconData icon,
-  ) {
+    IconData icon, {
+    SnackBarAction? action,
+  }) {
     // Dismiss any existing snackbars
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -80,7 +125,7 @@ class SnackbarService {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
         ),
-        action: SnackBarAction(
+        action: action ?? SnackBarAction(
           label: 'Dismiss',
           textColor: Colors.white,
           onPressed: () {

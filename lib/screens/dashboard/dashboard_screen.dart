@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
+import '../../theme/blkwds_animations.dart';
 import '../../utils/constants.dart';
 
 import '../../models/models.dart';
@@ -10,6 +11,9 @@ import '../add_gear/add_gear_screen.dart';
 import '../booking_panel/booking_panel_screen.dart';
 import '../calendar/calendar_screen.dart';
 import '../settings/settings_screen.dart';
+import '../member_management/member_list_screen.dart';
+import '../project_management/project_list_screen.dart';
+import '../gear_management/gear_list_screen.dart';
 import 'dashboard_controller.dart';
 import 'widgets/top_bar_summary_widget.dart';
 import 'widgets/quick_actions_panel.dart';
@@ -322,6 +326,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const BookingPanelScreen(),
+                                  ),
+                                );
+                              },
+                              onManageMembers: () {
+                                Navigator.push(
+                                  context,
+                                  BLKWDSPageRoute(
+                                    page: const MemberListScreen(),
+                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                  ),
+                                );
+                              },
+                              onManageProjects: () {
+                                Navigator.push(
+                                  context,
+                                  BLKWDSPageRoute(
+                                    page: const ProjectListScreen(),
+                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                  ),
+                                );
+                              },
+                              onManageGear: () {
+                                Navigator.push(
+                                  context,
+                                  BLKWDSPageRoute(
+                                    page: const GearListScreen(),
+                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
                                   ),
                                 );
                               },

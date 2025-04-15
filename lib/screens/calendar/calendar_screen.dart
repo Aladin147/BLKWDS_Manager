@@ -51,8 +51,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // Initialize data
   Future<void> _initializeData() async {
-    await _controller.initialize();
-    _updateSelectedDayBookings();
+    try {
+      await _controller.initialize();
+      _updateSelectedDayBookings();
+    } catch (e) {
+      // Handle the case where the controller is disposed
+      if (mounted) {
+        _showSnackBar('Error refreshing calendar data');
+      }
+    }
   }
 
   // Add listeners for filter changes
@@ -66,7 +73,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // Update selected day bookings
   void _updateSelectedDayBookings() {
-    _selectedDayBookings.value = _controller.getBookingsForDay(_selectedDay);
+    try {
+      if (mounted) {
+        _selectedDayBookings.value = _controller.getBookingsForDay(_selectedDay);
+      }
+    } catch (e) {
+      // Handle the case where the notifier is disposed
+    }
   }
 
   // Get bookings for a day (for calendar event loader)

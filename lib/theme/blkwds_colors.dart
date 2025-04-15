@@ -61,6 +61,7 @@ class BLKWDSColors {
   static const Color electricMint = Color(0xFF4ECDC4); // Teal-mint that pops against dark bg
   static const Color alertCoral = Color(0xFFFF6B6B); // Softer, more modern red
   static const Color accentTeal = Color(0xFF00B8D9); // Bright, modern teal
+  static const Color accentPurple = Color(0xFF9F7AEA); // Bright, modern purple
   static const Color errorRed = Color(0xFFFF5252); // Consistent error color
 
   // Additional Accent Colors

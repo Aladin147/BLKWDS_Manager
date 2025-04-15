@@ -20,7 +20,7 @@ class DBService {
     final path = join(await getDatabasesPath(), 'blkwds_manager.db');
     return await openDatabase(
       path,
-      version: 3, // Increment version to trigger migration
+      version: 4, // Increment version to trigger migration
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
     );
@@ -40,9 +40,13 @@ class DBService {
       await _migrateV2ToV3(db);
     }
 
+    if (oldVersion < 4) {
+      await _migrateV3ToV4(db);
+    }
+
     // Add future migrations here as needed
-    // if (oldVersion < 4) {
-    //   await _migrateV3ToV4(db);
+    // if (oldVersion < 5) {
+    //   await _migrateV4ToV5(db);
     // }
   }
 
@@ -115,6 +119,32 @@ class DBService {
     });
   }
 
+  /// Migration from v3 to v4
+  /// Adds title column to booking table
+  static Future<void> _migrateV3ToV4(Database db) async {
+    LogService.info('Running migration v3 to v4');
+
+    await db.transaction((txn) async {
+      try {
+        // Add title column to booking table
+        await txn.execute('ALTER TABLE booking ADD COLUMN title TEXT DEFAULT NULL');
+
+        // Verify migration success
+        final bookingResult = await txn.rawQuery('PRAGMA table_info(booking)');
+        final bookingColumns = bookingResult.map((col) => col['name'] as String).toList();
+
+        if (!bookingColumns.contains('title')) {
+          throw Exception('Migration v3 to v4 failed: title column not added correctly');
+        }
+
+        LogService.info('Migration v3 to v4 completed successfully');
+      } catch (e, stackTrace) {
+        LogService.error('Error during migration v3 to v4', e, stackTrace);
+        rethrow;
+      }
+    });
+  }
+
   /// Create database tables
   static Future<void> _createTables(Database db, int version) async {
     // Gear table
@@ -167,10 +197,12 @@ class DBService {
       CREATE TABLE booking (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         projectId INTEGER NOT NULL,
+        title TEXT,
         startDate TEXT NOT NULL,
         endDate TEXT NOT NULL,
         isRecordingStudio INTEGER NOT NULL DEFAULT 0,
         isProductionStudio INTEGER NOT NULL DEFAULT 0,
+        color TEXT,
         FOREIGN KEY (projectId) REFERENCES project (id) ON DELETE CASCADE
       )
     ''');
@@ -654,12 +686,98 @@ class DBService {
     );
   }
 
+  /// Get bookings for a project
+  static Future<List<Booking>> getBookingsForProject(int projectId) async {
+    final db = await database;
+
+    // Get all bookings for this project
+    final List<Map<String, dynamic>> bookingMaps = await db.query(
+      'booking',
+      where: 'projectId = ?',
+      whereArgs: [projectId],
+    );
+
+    // Create Booking objects
+    final List<Booking> bookings = [];
+
+    for (final bookingMap in bookingMaps) {
+      final bookingId = bookingMap['id'] as int;
+
+      // Get gear IDs and member assignments for this booking
+      final List<Map<String, dynamic>> gearMaps = await db.query(
+        'booking_gear',
+        where: 'bookingId = ?',
+        whereArgs: [bookingId],
+      );
+
+      final List<int> gearIds = gearMaps.map((m) => m['gearId'] as int).toList();
+
+      final Map<int, int> assignedGearToMember = {};
+      for (final gearMap in gearMaps) {
+        final gearId = gearMap['gearId'] as int;
+        final memberId = gearMap['assignedMemberId'] as int?;
+
+        if (memberId != null) {
+          assignedGearToMember[gearId] = memberId;
+        }
+      }
+
+      // Create Booking with gear IDs and member assignments
+      bookings.add(
+        Booking.fromMap(bookingMap).copyWith(
+          gearIds: gearIds,
+          assignedGearToMember: assignedGearToMember,
+        ),
+      );
+    }
+
+    return bookings;
+  }
+
   // STATUS NOTE OPERATIONS
 
   /// Insert a new status note
   static Future<int> insertStatusNote(StatusNote statusNote) async {
     final db = await database;
     return await db.insert('status_note', statusNote.toMap());
+  }
+
+  /// Add a status note to a gear item
+  static Future<bool> addStatusNote(int gearId, String note) async {
+    final db = await database;
+
+    // Begin transaction
+    return await db.transaction((txn) async {
+      // Get gear
+      final List<Map<String, dynamic>> gearMaps = await txn.query(
+        'gear',
+        where: 'id = ?',
+        whereArgs: [gearId],
+      );
+
+      if (gearMaps.isEmpty) {
+        return false;
+      }
+
+      // Update gear's last note
+      await txn.update(
+        'gear',
+        {'lastNote': note},
+        where: 'id = ?',
+        whereArgs: [gearId],
+      );
+
+      // Create status note
+      final statusNote = StatusNote(
+        gearId: gearId,
+        note: note,
+        timestamp: DateTime.now(),
+      );
+
+      await txn.insert('status_note', statusNote.toMap());
+
+      return true;
+    });
   }
 
   /// Get status notes for a gear item
@@ -702,7 +820,33 @@ class DBService {
       whereArgs: [gearId],
       orderBy: 'timestamp DESC',
     );
-    return List.generate(maps.length, (i) => ActivityLog.fromMap(maps[i]));
+
+    // Create activity logs
+    final List<ActivityLog> logs = [];
+
+    for (final map in maps) {
+      final log = ActivityLog.fromMap(map);
+
+      // Load member if available
+      if (log.memberId != null) {
+        final memberMaps = await db.query(
+          'member',
+          where: 'id = ?',
+          whereArgs: [log.memberId],
+        );
+
+        if (memberMaps.isNotEmpty) {
+          final member = Member.fromMap(memberMaps.first);
+          logs.add(log.copyWith(member: member));
+        } else {
+          logs.add(log);
+        }
+      } else {
+        logs.add(log);
+      }
+    }
+
+    return logs;
   }
 
   /// Get activity logs for a member

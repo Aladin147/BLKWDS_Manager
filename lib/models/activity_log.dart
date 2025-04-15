@@ -1,3 +1,5 @@
+import 'member.dart';
+
 /// ActivityLog Model
 /// Represents a log entry for gear check-out or check-in
 class ActivityLog {
@@ -7,6 +9,7 @@ class ActivityLog {
   final bool checkedOut;
   final DateTime timestamp;
   final String? note;
+  final Member? member;
 
   ActivityLog({
     this.id,
@@ -15,6 +18,7 @@ class ActivityLog {
     required this.checkedOut,
     required this.timestamp,
     this.note,
+    this.member,
   });
 
   /// Create an ActivityLog object from a map (for database operations)
@@ -26,6 +30,8 @@ class ActivityLog {
       checkedOut: (map['checkedOut'] as int) == 1,
       timestamp: DateTime.parse(map['timestamp'] as String),
       note: map['note'] as String?,
+      // Member is loaded separately and attached later
+      member: null,
     );
   }
 
@@ -49,6 +55,7 @@ class ActivityLog {
     bool? checkedOut,
     DateTime? timestamp,
     String? note,
+    Member? member,
   }) {
     return ActivityLog(
       id: id ?? this.id,
@@ -57,6 +64,7 @@ class ActivityLog {
       checkedOut: checkedOut ?? this.checkedOut,
       timestamp: timestamp ?? this.timestamp,
       note: note ?? this.note,
+      member: member ?? this.member,
     );
   }
 
@@ -74,7 +82,8 @@ class ActivityLog {
         other.memberId == memberId &&
         other.checkedOut == checkedOut &&
         other.timestamp == timestamp &&
-        other.note == note;
+        other.note == note &&
+        other.member == member;
   }
 
   @override
@@ -84,5 +93,6 @@ class ActivityLog {
       (memberId?.hashCode ?? 0) ^
       checkedOut.hashCode ^
       timestamp.hashCode ^
-      (note?.hashCode ?? 0);
+      (note?.hashCode ?? 0) ^
+      (member?.hashCode ?? 0);
 }

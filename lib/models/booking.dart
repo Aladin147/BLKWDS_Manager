@@ -3,6 +3,7 @@
 class Booking {
   final int? id;
   final int projectId;
+  final String? title;
   final DateTime startDate;
   final DateTime endDate;
   final bool isRecordingStudio;
@@ -14,6 +15,7 @@ class Booking {
   Booking({
     this.id,
     required this.projectId,
+    this.title,
     required this.startDate,
     required this.endDate,
     this.isRecordingStudio = false,
@@ -28,6 +30,7 @@ class Booking {
     return Booking(
       id: map['id'] as int,
       projectId: map['projectId'] as int,
+      title: map['title'] as String?,
       startDate: DateTime.parse(map['startDate'] as String),
       endDate: DateTime.parse(map['endDate'] as String),
       isRecordingStudio: (map['isRecordingStudio'] as int) == 1,
@@ -53,6 +56,7 @@ class Booking {
     return Booking(
       id: json['id'] as int?,
       projectId: json['projectId'] as int,
+      title: json['title'] as String?,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
       isRecordingStudio: json['isRecordingStudio'] as bool,
@@ -69,6 +73,7 @@ class Booking {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
       'projectId': projectId,
+      if (title != null) 'title': title,
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
       'isRecordingStudio': isRecordingStudio ? 1 : 0,
@@ -96,6 +101,7 @@ class Booking {
     return {
       'id': id,
       'projectId': projectId,
+      if (title != null) 'title': title,
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
       'isRecordingStudio': isRecordingStudio,
@@ -110,6 +116,7 @@ class Booking {
   Booking copyWith({
     int? id,
     int? projectId,
+    String? title,
     DateTime? startDate,
     DateTime? endDate,
     bool? isRecordingStudio,
@@ -121,6 +128,7 @@ class Booking {
     return Booking(
       id: id ?? this.id,
       projectId: projectId ?? this.projectId,
+      title: title ?? this.title,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       isRecordingStudio: isRecordingStudio ?? this.isRecordingStudio,
@@ -133,7 +141,7 @@ class Booking {
 
   @override
   String toString() {
-    return 'Booking(id: $id, projectId: $projectId, startDate: $startDate, endDate: $endDate)';
+    return 'Booking(id: $id, projectId: $projectId, title: $title, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -142,6 +150,7 @@ class Booking {
     return other is Booking &&
         other.id == id &&
         other.projectId == projectId &&
+        other.title == title &&
         other.startDate == startDate &&
         other.endDate == endDate &&
         other.isRecordingStudio == isRecordingStudio &&
@@ -153,6 +162,7 @@ class Booking {
   int get hashCode =>
       id.hashCode ^
       projectId.hashCode ^
+      title.hashCode ^
       startDate.hashCode ^
       endDate.hashCode ^
       isRecordingStudio.hashCode ^

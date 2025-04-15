@@ -33,6 +33,7 @@ class _BookingFormState extends State<BookingForm> {
 
   // Form fields
   late int? _selectedProjectId;
+  late String? _title;
   late DateTime _startDate;
   late TimeOfDay _startTime;
   late DateTime _endDate;
@@ -42,6 +43,9 @@ class _BookingFormState extends State<BookingForm> {
   late List<int> _selectedGearIds;
   late Map<int, int> _assignedGearToMember;
 
+  // Text controller for title
+  final _titleController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +54,8 @@ class _BookingFormState extends State<BookingForm> {
     if (widget.booking != null) {
       // Editing existing booking
       _selectedProjectId = widget.booking!.projectId;
+      _title = widget.booking!.title;
+      _titleController.text = _title ?? '';
       _startDate = widget.booking!.startDate;
       _startTime = TimeOfDay.fromDateTime(widget.booking!.startDate);
       _endDate = widget.booking!.endDate;
@@ -62,6 +68,7 @@ class _BookingFormState extends State<BookingForm> {
       // Creating new booking
       _selectedProjectId = widget.controller.projectList.value.isNotEmpty ?
           widget.controller.projectList.value.first.id : null;
+      _title = null;
 
       final now = DateTime.now();
       _startDate = now;
@@ -78,6 +85,12 @@ class _BookingFormState extends State<BookingForm> {
     }
   }
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
   // Combine date and time into a DateTime
   DateTime _combineDateAndTime(DateTime date, TimeOfDay time) {
     return DateTime(
@@ -92,10 +105,16 @@ class _BookingFormState extends State<BookingForm> {
   // Save the booking
   void _saveBooking() {
     if (_formKey.currentState!.validate()) {
+      // Get title from controller or use default
+      final title = _titleController.text.isNotEmpty
+          ? _titleController.text
+          : 'Booking for ${widget.controller.getProjectById(_selectedProjectId!)?.title ?? 'Unknown Project'}';
+
       // Create booking object
       final booking = Booking(
         id: widget.booking?.id,
         projectId: _selectedProjectId!,
+        title: title,
         startDate: _combineDateAndTime(_startDate, _startTime),
         endDate: _combineDateAndTime(_endDate, _endTime),
         isRecordingStudio: _isRecordingStudio,
@@ -194,6 +213,15 @@ class _BookingFormState extends State<BookingForm> {
               }
               return null;
             },
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+          // Title field
+          BLKWDSTextField(
+            controller: _titleController,
+            label: 'Booking Title (Optional)',
+            prefixIcon: Icons.title,
+            hintText: 'Enter a title for this booking',
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 

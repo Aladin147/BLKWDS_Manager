@@ -48,6 +48,7 @@ class MockDBService extends Mock implements DBService {
     Booking(
       id: 1,
       projectId: 1,
+      title: 'Test Booking',
       startDate: DateTime.now(),
       endDate: DateTime.now().add(const Duration(hours: 2)),
       isProductionStudio: true,

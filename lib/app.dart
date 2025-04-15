@@ -55,6 +55,9 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
         '/calendar': (context) => const CalendarScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/add-gear': (context) => const AddGearScreen(),
+        '/member-management': (context) => const MemberListScreen(),
+        '/project-management': (context) => const ProjectListScreen(),
+        '/gear-management': (context) => const GearListScreen(),
       },
       // Add error handling for navigation/routing errors
       onUnknownRoute: (settings) {

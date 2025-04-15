@@ -15,22 +15,24 @@ enum BLKWDSButtonType {
 
 class BLKWDSButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final BLKWDSButtonType type;
   final IconData? icon;
   final bool isFullWidth;
   final bool isSmall;
   final bool isDisabled;
+  final bool isLoading;
 
   const BLKWDSButton({
     super.key,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     this.type = BLKWDSButtonType.primary,
     this.icon,
     this.isFullWidth = false,
     this.isSmall = false,
     this.isDisabled = false,
+    this.isLoading = false,
   });
 
   @override
@@ -77,31 +79,64 @@ class BLKWDSButton extends StatelessWidget {
         : BLKWDSConstants.buttonVerticalPadding;
 
     // Create button content
-    Widget buttonContent = Row(
-      mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (icon != null) ...[
-          Icon(
-            icon,
-            color: textColor,
-            size: isSmall ? 16 : 20,
+    Widget buttonContent;
+
+    if (isLoading) {
+      // Show loading spinner
+      buttonContent = Row(
+        mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: isSmall ? 16 : 20,
+            height: isSmall ? 16 : 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(textColor),
+            ),
           ),
           SizedBox(width: BLKWDSConstants.spacingSmall),
-        ],
-        Flexible(
-          child: Text(
-            label,
-            style: isSmall
-                ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
-                : BLKWDSTypography.labelLarge.copyWith(color: textColor),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+          Flexible(
+            child: Text(
+              'Loading...',
+              style: isSmall
+                  ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
+                  : BLKWDSTypography.labelLarge.copyWith(color: textColor),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      // Show normal button content
+      buttonContent = Row(
+        mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              color: textColor,
+              size: isSmall ? 16 : 20,
+            ),
+            SizedBox(width: BLKWDSConstants.spacingSmall),
+          ],
+          Flexible(
+            child: Text(
+              label,
+              style: isSmall
+                  ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
+                  : BLKWDSTypography.labelLarge.copyWith(color: textColor),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+        ],
+      );
+    }
 
     // Create the button with appropriate styling
     return Material(
@@ -115,7 +150,7 @@ class BLKWDSButton extends StatelessWidget {
               : null,
         ),
         child: InkWell(
-          onTap: isDisabled ? null : onPressed,
+          onTap: (isDisabled || isLoading) ? null : onPressed,
           borderRadius: BorderRadius.circular(BLKWDSConstants.buttonBorderRadius),
           child: Container(
             width: isFullWidth ? double.infinity : null,

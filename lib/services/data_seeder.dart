@@ -163,6 +163,7 @@ class DataSeeder {
     final bookings = [
       Booking(
         projectId: projectIds[0],
+        title: 'Commercial Shoot',
         startDate: DateTime(now.year, now.month, now.day + 3, 9),
         endDate: DateTime(now.year, now.month, now.day + 3, 18),
         isProductionStudio: true,
@@ -174,6 +175,7 @@ class DataSeeder {
       ),
       Booking(
         projectId: projectIds[1],
+        title: 'Music Video',
         startDate: DateTime(now.year, now.month, now.day + 5, 10),
         endDate: DateTime(now.year, now.month, now.day + 6, 16),
         isRecordingStudio: true,
@@ -185,6 +187,7 @@ class DataSeeder {
       ),
       Booking(
         projectId: projectIds[2],
+        title: 'Documentary Shoot',
         startDate: DateTime(now.year, now.month, now.day + 10, 13),
         endDate: DateTime(now.year, now.month, now.day + 10, 17),
         isRecordingStudio: true,

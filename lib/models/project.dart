@@ -5,6 +5,7 @@ class Project {
   final String title;
   final String? client;
   final String? notes;
+  final String? description;
   final List<int> memberIds;
 
   Project({
@@ -12,6 +13,7 @@ class Project {
     required this.title,
     this.client,
     this.notes,
+    this.description,
     this.memberIds = const [],
   });
 
@@ -22,6 +24,7 @@ class Project {
       title: map['title'] as String,
       client: map['client'] as String?,
       notes: map['notes'] as String?,
+      description: map['description'] as String?,
       // Member IDs are stored in a separate table, so they're not in the map
       memberIds: const [],
     );
@@ -34,6 +37,7 @@ class Project {
       title: json['title'] as String,
       client: json['client'] as String?,
       notes: json['notes'] as String?,
+      description: json['description'] as String?,
       memberIds: json['memberIds'] != null
           ? List<int>.from(json['memberIds'] as List)
           : const [],
@@ -47,6 +51,7 @@ class Project {
       'title': title,
       'client': client,
       'notes': notes,
+      'description': description,
       // Member IDs are stored in a separate table, so they're not in the map
     };
   }
@@ -58,6 +63,7 @@ class Project {
       'title': title,
       'client': client,
       'notes': notes,
+      'description': description,
       'memberIds': memberIds,
     };
   }
@@ -68,6 +74,7 @@ class Project {
     String? title,
     String? client,
     String? notes,
+    String? description,
     List<int>? memberIds,
   }) {
     return Project(
@@ -75,13 +82,14 @@ class Project {
       title: title ?? this.title,
       client: client ?? this.client,
       notes: notes ?? this.notes,
+      description: description ?? this.description,
       memberIds: memberIds ?? this.memberIds,
     );
   }
 
   @override
   String toString() {
-    return 'Project(id: $id, title: $title, client: $client, notes: $notes)';
+    return 'Project(id: $id, title: $title, client: $client, notes: $notes, description: $description)';
   }
 
   @override
@@ -92,6 +100,7 @@ class Project {
         other.title == title &&
         other.client == client &&
         other.notes == notes &&
+        other.description == description &&
         _listEquals(other.memberIds, memberIds);
   }
 
@@ -111,6 +120,7 @@ class Project {
       title.hashCode ^
       (client?.hashCode ?? 0) ^
       (notes?.hashCode ?? 0) ^
+      (description?.hashCode ?? 0) ^
       memberIds.fold(0, (hash, id) => hash ^ id.hashCode);
 
 
