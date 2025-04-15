@@ -3,6 +3,7 @@ import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
+import '../../utils/booking_converter.dart';
 import 'models/booking_filter.dart';
 
 /// BookingPanelControllerV2
@@ -95,9 +96,9 @@ class BookingPanelControllerV2 {
         // Search in project notes
         final notesMatch = project != null &&
             project.notes?.toLowerCase().contains(searchLower) == true;
-            
+
         // Search in booking title
-        final bookingTitleMatch = booking.title != null && 
+        final bookingTitleMatch = booking.title != null &&
             booking.title!.toLowerCase().contains(searchLower);
 
         // If no match found, exclude this booking
@@ -360,8 +361,8 @@ class BookingPanelControllerV2 {
           }
 
           // Check if they both use the same studio
-          if (booking.studioId != null && 
-              otherBooking.studioId != null && 
+          if (booking.studioId != null &&
+              otherBooking.studioId != null &&
               booking.studioId == otherBooking.studioId) {
             return true; // Conflict found
           }
@@ -407,7 +408,7 @@ class BookingPanelControllerV2 {
     if (booking.color != null) {
       return Color(int.parse(booking.color!.substring(1, 7), radix: 16) + 0xFF000000);
     }
-    
+
     // If booking has a studio, use the studio color
     if (booking.studioId != null) {
       final studio = getStudioById(booking.studioId!);
@@ -415,14 +416,14 @@ class BookingPanelControllerV2 {
         return Color(int.parse(studio.color!.substring(1, 7), radix: 16) + 0xFF000000);
       }
     }
-    
+
     // Fall back to project-based color
     final project = getProjectById(booking.projectId);
     if (project != null) {
       // Use a hash-based approach to generate a color
       return Color((project.hashCode & 0xFFFFFF) | 0xFF000000);
     }
-    
+
     return BLKWDSColors.slateGrey;
   }
 
@@ -457,7 +458,7 @@ class BookingPanelControllerV2 {
       return null;
     }
   }
-  
+
   // Get studio by ID
   Studio? getStudioById(int id) {
     try {
@@ -465,6 +466,11 @@ class BookingPanelControllerV2 {
     } catch (e) {
       return null;
     }
+  }
+
+  // Convert BookingV2 to Booking for compatibility
+  Future<Booking> convertToBookingV1(BookingV2 bookingV2) async {
+    return await BookingConverter.toBooking(bookingV2);
   }
 
   // Dispose controller

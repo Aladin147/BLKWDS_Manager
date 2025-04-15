@@ -5,24 +5,31 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../utils/feature_flags.dart';
 import '../booking_panel_controller.dart';
+import '../booking_panel_controller_v2.dart';
 import 'calendar_booking_item.dart';
+import 'calendar_view_adapter.dart';
 
 /// CalendarView
 /// Widget for displaying bookings in a calendar format
+/// Works with both Booking and BookingV2 models
 class CalendarView extends StatefulWidget {
-  final BookingPanelController controller;
+  // Either controller or controllerV2 must be provided
+  final BookingPanelController? controller;
+  final BookingPanelControllerV2? controllerV2;
   final Function(DateTime) onDaySelected;
-  final Function(Booking) onBookingSelected;
-  final Function(Booking, DateTime)? onBookingRescheduled;
+  final Function(dynamic) onBookingSelected;
+  final Function(dynamic, DateTime)? onBookingRescheduled;
 
   const CalendarView({
     super.key,
-    required this.controller,
+    this.controller,
+    this.controllerV2,
     required this.onDaySelected,
     required this.onBookingSelected,
     this.onBookingRescheduled,
-  });
+  }) : assert(controller != null || controllerV2 != null, 'Either controller or controllerV2 must be provided');
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -32,7 +39,8 @@ class _CalendarViewState extends State<CalendarView> {
   late CalendarFormat _calendarFormat;
   late DateTime _focusedDay;
   late DateTime _selectedDay;
-  late ValueNotifier<List<Booking>> _selectedBookings;
+  late ValueNotifier<List<dynamic>> _selectedBookings;
+  late CalendarViewAdapter _adapter;
 
   @override
   void initState() {
@@ -40,7 +48,13 @@ class _CalendarViewState extends State<CalendarView> {
     _calendarFormat = CalendarFormat.month;
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
-    _selectedBookings = ValueNotifier<List<Booking>>([]);
+    _selectedBookings = ValueNotifier<List<dynamic>>([]);
+
+    // Initialize adapter
+    _adapter = CalendarViewAdapter(
+      controllerV1: widget.controller,
+      controllerV2: widget.controllerV2,
+    );
 
     // Initialize selected bookings
     _updateSelectedBookings();
@@ -53,17 +67,17 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   // Update selected bookings based on selected day
-  void _updateSelectedBookings() {
-    _selectedBookings.value = widget.controller.getBookingsForDay(_selectedDay);
+  Future<void> _updateSelectedBookings() async {
+    _selectedBookings.value = await _adapter.getBookingsForDay(_selectedDay);
   }
 
   // Get bookings for a specific day
-  List<Booking> _getBookingsForDay(DateTime day) {
-    return widget.controller.getBookingsForDay(day);
+  Future<List<dynamic>> _getBookingsForDay(DateTime day) async {
+    return await _adapter.getBookingsForDay(day);
   }
 
   // Handle booking drop for rescheduling
-  void _handleBookingDrop(Booking booking, DateTime newDay) async {
+  void _handleBookingDrop(dynamic booking, DateTime newDay) async {
     // First check for conflicts
     final noConflicts = await _checkBookingConflicts(booking, newDay);
 
@@ -82,12 +96,13 @@ class _CalendarViewState extends State<CalendarView> {
     }
 
     // Create a new start date with the same time as the original booking
+    final startDate = booking is BookingV2 ? booking.startDate : (booking as Booking).startDate;
     final newStartDate = DateTime(
       newDay.year,
       newDay.month,
       newDay.day,
-      booking.startDate.hour,
-      booking.startDate.minute,
+      startDate.hour,
+      startDate.minute,
     );
 
     // Call the onBookingRescheduled callback if provided
@@ -97,40 +112,47 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   // Check if a booking can be dropped on a specific day
-  bool _canDropBookingOnDay(Booking booking, DateTime day) {
+  bool _canDropBookingOnDay(dynamic booking, DateTime day) {
     // For now, we'll accept all drops and check conflicts in the handler
     // This is because onWillAcceptWithDetails doesn't support async operations
     return true;
   }
 
   // Check for booking conflicts before actually rescheduling
-  Future<bool> _checkBookingConflicts(Booking booking, DateTime day) async {
+  Future<bool> _checkBookingConflicts(dynamic booking, DateTime day) async {
+    // Get start and end dates based on booking type
+    final startDate = booking is BookingV2 ? booking.startDate : (booking as Booking).startDate;
+    final endDate = booking is BookingV2 ? booking.endDate : booking.endDate;
+
     // Create a new start date with the same time as the original booking
     final newStartDate = DateTime(
       day.year,
       day.month,
       day.day,
-      booking.startDate.hour,
-      booking.startDate.minute,
+      startDate.hour,
+      startDate.minute,
     );
 
     // Calculate the duration of the original booking
-    final duration = booking.endDate.difference(booking.startDate);
+    final duration = endDate.difference(startDate);
 
     // Create a new end date based on the new start date and the original duration
     final newEndDate = newStartDate.add(duration);
 
-    // Create a new booking with the updated dates
-    final rescheduledBooking = booking.copyWith(
-      startDate: newStartDate,
-      endDate: newEndDate,
-    );
-
-    // Check for conflicts
-    return !await widget.controller.hasBookingConflicts(
-      rescheduledBooking,
-      excludeBookingId: booking.id,
-    );
+    // Create a new booking with the updated dates or use adapter to check conflicts
+    if (booking is BookingV2) {
+      final rescheduledBooking = booking.copyWith(
+        startDate: newStartDate,
+        endDate: newEndDate,
+      );
+      return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
+    } else {
+      final rescheduledBooking = (booking as Booking).copyWith(
+        startDate: newStartDate,
+        endDate: newEndDate,
+      );
+      return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
+    }
   }
 
   @override
@@ -187,7 +209,7 @@ class _CalendarViewState extends State<CalendarView> {
         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
         // Calendar with enhanced drag-and-drop support
-        TableCalendar<Booking>(
+        TableCalendar<dynamic>(
           firstDay: DateTime.utc(2020, 1, 1),
           lastDay: DateTime.utc(2030, 12, 31),
           focusedDay: _focusedDay,
@@ -195,7 +217,16 @@ class _CalendarViewState extends State<CalendarView> {
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDay, day);
           },
-          eventLoader: _getBookingsForDay,
+          eventLoader: (day) {
+            // We need to return a synchronous result for TableCalendar
+            // So we'll return an empty list and update it later
+            _getBookingsForDay(day).then((bookings) {
+              if (isSameDay(day, _selectedDay)) {
+                _selectedBookings.value = bookings;
+              }
+            });
+            return [];
+          },
           startingDayOfWeek: StartingDayOfWeek.monday,
           calendarStyle: CalendarStyle(
             markersMaxCount: 3,
@@ -240,7 +271,7 @@ class _CalendarViewState extends State<CalendarView> {
           calendarBuilders: CalendarBuilders(
             // Custom day builder to make each day a drop target
             defaultBuilder: (context, day, focusedDay) {
-              return DragTarget<Booking>(
+              return DragTarget<Object>(
                 onAcceptWithDetails: (details) {
                   // Handle the dropped booking
                   _handleBookingDrop(details.data, day);
@@ -276,7 +307,7 @@ class _CalendarViewState extends State<CalendarView> {
             },
             // Custom today builder to make today a drop target
             todayBuilder: (context, day, focusedDay) {
-              return DragTarget<Booking>(
+              return DragTarget<Object>(
                 onAcceptWithDetails: (details) {
                   // Handle the dropped booking
                   _handleBookingDrop(details.data, day);
@@ -315,7 +346,7 @@ class _CalendarViewState extends State<CalendarView> {
             },
             // Custom selected day builder to make selected day a drop target
             selectedBuilder: (context, day, focusedDay) {
-              return DragTarget<Booking>(
+              return DragTarget<Object>(
                 onAcceptWithDetails: (details) {
                   // Handle the dropped booking
                   _handleBookingDrop(details.data, day);
@@ -358,7 +389,7 @@ class _CalendarViewState extends State<CalendarView> {
 
         // Selected day bookings
         Expanded(
-          child: ValueListenableBuilder<List<Booking>>(
+          child: ValueListenableBuilder<List<dynamic>>(
             valueListenable: _selectedBookings,
             builder: (context, bookings, _) {
               if (bookings.isEmpty) {
@@ -392,11 +423,13 @@ class _CalendarViewState extends State<CalendarView> {
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
                   final booking = bookings[index];
-                  final project = widget.controller.getProjectById(booking.projectId);
+                  final projectId = booking is BookingV2 ? booking.projectId : (booking as Booking).projectId;
+                  final project = _adapter.getProjectById(projectId);
 
                   return CalendarBookingItem(
                     booking: booking,
                     project: project,
+                    adapter: _adapter,
                     onTap: () => widget.onBookingSelected(booking),
                     onReschedule: widget.onBookingRescheduled,
                   );

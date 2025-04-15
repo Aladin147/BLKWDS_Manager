@@ -8,6 +8,7 @@ import '../../utils/feature_flags.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
+import 'booking_panel_controller_v2.dart';
 import 'booking_detail_screen.dart';
 import 'booking_list_screen.dart';
 import 'widgets/booking_form.dart';
@@ -24,8 +25,9 @@ class BookingPanelScreen extends StatefulWidget {
 }
 
 class _BookingPanelScreenState extends State<BookingPanelScreen> {
-  // Controller
+  // Controllers
   final _controller = BookingPanelController();
+  BookingPanelControllerV2? _controllerV2;
 
   // View mode
   bool _isCalendarView = false;
@@ -44,6 +46,13 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Initialize data
   Future<void> _initializeData() async {
+    // Initialize the appropriate controller based on feature flags
+    if (FeatureFlags.useStudioSystem) {
+      _controllerV2 = BookingPanelControllerV2();
+      await _controllerV2!.initialize();
+    }
+
+    // Always initialize the V1 controller for compatibility
     await _controller.initialize();
   }
 
@@ -138,6 +147,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   @override
   void dispose() {
     _controller.dispose();
+    _controllerV2?.dispose();
     super.dispose();
   }
 
@@ -229,46 +239,136 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   Widget _buildCalendarView() {
     return CalendarView(
       controller: _controller,
+      controllerV2: _controllerV2,
       onDaySelected: (day) {
         // When a day is selected, show the create booking form
         // with the selected day as the start date
         setState(() {
-          _selectedBooking = Booking(
-            projectId: _controller.projectList.value.isNotEmpty
-                ? _controller.projectList.value.first.id!
-                : 0,
-            title: 'New Booking',
-            startDate: DateTime(
-              day.year,
-              day.month,
-              day.day,
-              DateTime.now().hour,
-              0,
-            ),
-            endDate: DateTime(
-              day.year,
-              day.month,
-              day.day,
-              DateTime.now().hour + 2,
-              0,
-            ),
-            isRecordingStudio: false,
-            isProductionStudio: false,
-            gearIds: [],
-          );
-          _showBookingForm = true;
+          if (FeatureFlags.useStudioSystem && _controllerV2 != null) {
+            // Create a BookingV2 object
+            // This would be handled by the BookingForm
+            _showBookingForm = true;
+          } else {
+            _selectedBooking = Booking(
+              projectId: _controller.projectList.value.isNotEmpty
+                  ? _controller.projectList.value.first.id!
+                  : 0,
+              title: 'New Booking',
+              startDate: DateTime(
+                day.year,
+                day.month,
+                day.day,
+                DateTime.now().hour,
+                0,
+              ),
+              endDate: DateTime(
+                day.year,
+                day.month,
+                day.day,
+                DateTime.now().hour + 2,
+                0,
+              ),
+              isRecordingStudio: false,
+              isProductionStudio: false,
+              gearIds: [],
+            );
+            _showBookingForm = true;
+          }
         });
       },
       onBookingSelected: (booking) {
         // When a booking is selected, navigate to booking detail screen
         _navigateToBookingDetail(booking);
       },
-      onBookingRescheduled: _handleBookingReschedule,
+      onBookingRescheduled: _handleBookingRescheduleGeneric,
     );
   }
 
-  // Handle booking rescheduling
-  void _handleBookingReschedule(Booking booking, DateTime newStartDate) async {
+  // Handle booking rescheduling for both Booking and BookingV2
+  void _handleBookingRescheduleGeneric(dynamic booking, DateTime newStartDate) async {
+    if (booking is BookingV2 && _controllerV2 != null) {
+      await _handleBookingRescheduleV2(booking, newStartDate);
+    } else if (booking is Booking) {
+      await _handleBookingReschedule(booking, newStartDate);
+    }
+  }
+
+  // Handle booking rescheduling for BookingV2
+  Future<void> _handleBookingRescheduleV2(BookingV2 booking, DateTime newStartDate) async {
+    // Show a confirmation dialog
+    final project = _controllerV2!.getProjectById(booking.projectId);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reschedule Booking'),
+        content: Text(
+          'Are you sure you want to reschedule "${project?.title ?? 'Unknown Project'}" to ${DateFormat.yMMMd().format(newStartDate)}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Reschedule'),
+          ),
+        ],
+      ),
+    ) ?? false;
+
+    if (confirmed) {
+      // Show loading indicator
+      setState(() {
+        _controllerV2!.isLoading.value = true;
+      });
+
+      try {
+        // Reschedule the booking
+        final success = await _controllerV2!.rescheduleBooking(booking, newStartDate);
+
+        // Check if the widget is still mounted before showing snackbar
+        if (!mounted) return;
+
+        if (success) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Booking rescheduled successfully'),
+              backgroundColor: BLKWDSColors.blkwdsGreen,
+            ),
+          );
+        } else {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_controllerV2!.errorMessage.value ?? 'Failed to reschedule booking'),
+              backgroundColor: BLKWDSColors.statusOut,
+            ),
+          );
+        }
+      } catch (e) {
+        // Check if the widget is still mounted before showing snackbar
+        if (!mounted) return;
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: BLKWDSColors.statusOut,
+          ),
+        );
+      } finally {
+        // Hide loading indicator
+        setState(() {
+          _controllerV2!.isLoading.value = false;
+        });
+      }
+    }
+  }
+
+  // Handle booking rescheduling for Booking
+  Future<void> _handleBookingReschedule(Booking booking, DateTime newStartDate) async {
     // Show a confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -341,20 +441,29 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   }
 
   // Navigate to booking detail screen
-  void _navigateToBookingDetail(Booking booking) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookingDetailScreen(
-          booking: booking,
-          controller: _controller,
+  void _navigateToBookingDetail(dynamic booking) async {
+    if (booking is BookingV2 && _controllerV2 != null) {
+      // For BookingV2, convert to Booking for now
+      // In a future update, we'll create a BookingDetailScreenV2
+      final bookingV1 = await _controllerV2!.convertToBookingV1(booking);
+      _navigateToBookingDetail(bookingV1);
+    } else if (booking is Booking) {
+      // Handle Booking detail navigation
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookingDetailScreen(
+            booking: booking,
+            controller: _controller,
+          ),
         ),
-      ),
-    ).then((result) {
-      // Refresh data if booking was updated or deleted
-      if (result == true) {
-        _controller.initialize();
-      }
-    });
+      ).then((result) {
+        // Refresh data if booking was updated or deleted
+        if (result == true) {
+          _controller.initialize();
+          _controllerV2?.initialize();
+        }
+      });
+    }
   }
 }

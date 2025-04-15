@@ -5,14 +5,17 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_widgets.dart';
+import 'calendar_view_adapter.dart';
 
 /// CalendarBookingItem
 /// Widget for displaying a booking in the calendar view
+/// Works with both Booking and BookingV2 models
 class CalendarBookingItem extends StatelessWidget {
-  final Booking booking;
+  final dynamic booking;
   final Project? project;
   final VoidCallback onTap;
-  final Function(Booking, DateTime)? onReschedule;
+  final Function(dynamic, DateTime)? onReschedule;
+  final CalendarViewAdapter? adapter;
 
   const CalendarBookingItem({
     super.key,
@@ -20,19 +23,22 @@ class CalendarBookingItem extends StatelessWidget {
     required this.project,
     required this.onTap,
     this.onReschedule,
+    this.adapter,
   });
 
   @override
   Widget build(BuildContext context) {
     // Format times
     final timeFormat = DateFormat.jm();
-    final startTimeStr = timeFormat.format(booking.startDate);
-    final endTimeStr = timeFormat.format(booking.endDate);
+    final startTimeStr = timeFormat.format(booking is BookingV2 ? booking.startDate : (booking as Booking).startDate);
+    final endTimeStr = timeFormat.format(booking is BookingV2 ? booking.endDate : (booking as Booking).endDate);
 
     // Check if booking is in the past, current, or future
     final now = DateTime.now();
-    final isPast = booking.endDate.isBefore(now);
-    final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
+    final endDate = booking is BookingV2 ? booking.endDate : (booking as Booking).endDate;
+    final startDate = booking is BookingV2 ? booking.startDate : (booking as Booking).startDate;
+    final isPast = endDate.isBefore(now);
+    final isCurrent = startDate.isBefore(now) && endDate.isAfter(now);
 
     // Determine status color
     Color statusColor;
@@ -94,8 +100,32 @@ class CalendarBookingItem extends StatelessWidget {
                 const SizedBox(height: BLKWDSConstants.spacingExtraSmall),
                 Row(
                   children: [
-                    if (booking.isRecordingStudio || booking.isProductionStudio)
-                      Padding(
+                    // Display studio information
+                    Builder(builder: (context) {
+                      String? studioText;
+
+                      if (booking is BookingV2 && booking.studioId != null) {
+                        // For BookingV2, get studio info from adapter if available
+                        if (adapter != null) {
+                          studioText = adapter!.getStudioTypeForBooking(booking);
+                        } else {
+                          // Fallback if adapter not provided
+                          // We can't get the studio without the adapter or DBService
+                          // So just show a generic studio label
+                          studioText = 'Studio';
+                        }
+                      } else if (booking is Booking) {
+                        // For Booking, use the boolean flags
+                        final types = <String>[];
+                        if (booking.isRecordingStudio) types.add('Recording');
+                        if (booking.isProductionStudio) types.add('Production');
+                        if (types.isNotEmpty) {
+                          studioText = types.join(', ');
+                        }
+                      }
+
+                      // Only show if there's studio information
+                      return studioText != null ? Padding(
                         padding: const EdgeInsets.only(right: BLKWDSConstants.spacingSmall),
                         child: Row(
                           children: [
@@ -106,15 +136,13 @@ class CalendarBookingItem extends StatelessWidget {
                             ),
                             const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
                             Text(
-                              [
-                                if (booking.isRecordingStudio) 'Recording',
-                                if (booking.isProductionStudio) 'Production',
-                              ].join(', '),
+                              studioText,
                               style: BLKWDSTypography.bodySmall,
                             ),
                           ],
                         ),
-                      ),
+                      ) : const SizedBox.shrink();
+                    }),
                     Row(
                       children: [
                         BLKWDSIcon(
@@ -124,7 +152,7 @@ class CalendarBookingItem extends StatelessWidget {
                         ),
                         const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
                         Text(
-                          '${booking.gearIds.length} gear',
+                          '${booking is BookingV2 ? booking.gearIds.length : (booking as Booking).gearIds.length} gear',
                           style: BLKWDSTypography.bodySmall,
                         ),
                       ],
