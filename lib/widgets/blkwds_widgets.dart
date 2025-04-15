@@ -3,6 +3,7 @@
 /// This file exports all the standardized components for easy importing
 library;
 
+// Basic UI Components
 export 'blkwds_button.dart';
 export 'blkwds_text_field.dart';
 export 'blkwds_dropdown.dart';
@@ -13,3 +14,8 @@ export 'blkwds_card.dart';
 export 'blkwds_list_item.dart';
 export 'blkwds_icon.dart';
 export 'blkwds_status_badge.dart';
+
+// Animation Components
+export 'blkwds_animated_list.dart';
+export 'blkwds_expandable.dart';
+export 'blkwds_animated_switcher.dart';

@@ -10,34 +10,34 @@ import '../theme/blkwds_gradients.dart';
 ///
 /// Provides consistent styling for all buttons in the app with enhanced
 /// visual effects including shadows, gradients, and animations
-enum BLKWDSButtonType {
+enum BLKWDSButtonTypeEnhanced {
   /// Primary button with high emphasis
   primary,
-  
+
   /// Secondary button with medium emphasis
   secondary,
-  
+
   /// Danger button for destructive actions
   danger,
-  
+
   /// Success button for positive actions
   success,
-  
+
   /// Warning button for cautionary actions
   warning,
-  
+
   /// Text button with minimal styling
   text,
-  
+
   /// Icon button with only an icon
   icon,
 }
 
-class BLKWDSButton extends StatefulWidget {
+class BLKWDSButtonEnhanced extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
-  final BLKWDSButtonType type;
+  final BLKWDSButtonTypeEnhanced type;
   final bool isFullWidth;
   final bool isSmall;
   final bool isDisabled;
@@ -53,12 +53,12 @@ class BLKWDSButton extends StatefulWidget {
   final Color? customColor;
   final Color? customTextColor;
 
-  const BLKWDSButton({
+  const BLKWDSButtonEnhanced({
     super.key,
     required this.label,
     required this.onPressed,
     this.icon,
-    this.type = BLKWDSButtonType.primary,
+    this.type = BLKWDSButtonTypeEnhanced.primary,
     this.isFullWidth = false,
     this.isSmall = false,
     this.isDisabled = false,
@@ -74,13 +74,13 @@ class BLKWDSButton extends StatefulWidget {
     this.customColor,
     this.customTextColor,
   });
-  
+
   /// Creates an icon-only button
-  factory BLKWDSButton.icon({
+  factory BLKWDSButtonEnhanced.icon({
     Key? key,
     required IconData icon,
     required VoidCallback? onPressed,
-    BLKWDSButtonType type = BLKWDSButtonType.primary,
+    BLKWDSButtonTypeEnhanced type = BLKWDSButtonTypeEnhanced.primary,
     bool isSmall = false,
     bool isDisabled = false,
     bool useGradient = true,
@@ -91,12 +91,12 @@ class BLKWDSButton extends StatefulWidget {
     Color? customColor,
     Color? customTextColor,
   }) {
-    return BLKWDSButton(
+    return BLKWDSButtonEnhanced(
       key: key,
       label: '', // Empty label for icon-only button
       onPressed: onPressed,
       icon: icon,
-      type: BLKWDSButtonType.icon,
+      type: BLKWDSButtonTypeEnhanced.icon,
       isSmall: isSmall,
       isDisabled: isDisabled,
       useGradient: useGradient,
@@ -108,9 +108,9 @@ class BLKWDSButton extends StatefulWidget {
       customTextColor: customTextColor,
     );
   }
-  
+
   /// Creates a text-only button with minimal styling
-  factory BLKWDSButton.text({
+  factory BLKWDSButtonEnhanced.text({
     Key? key,
     required String label,
     required VoidCallback? onPressed,
@@ -120,12 +120,12 @@ class BLKWDSButton extends StatefulWidget {
     bool isLoading = false,
     Color? customTextColor,
   }) {
-    return BLKWDSButton(
+    return BLKWDSButtonEnhanced(
       key: key,
       label: label,
       onPressed: onPressed,
       icon: icon,
-      type: BLKWDSButtonType.text,
+      type: BLKWDSButtonTypeEnhanced.text,
       isSmall: isSmall,
       isDisabled: isDisabled,
       useGradient: false,
@@ -137,14 +137,14 @@ class BLKWDSButton extends StatefulWidget {
   }
 
   @override
-  State<BLKWDSButton> createState() => _BLKWDSButtonState();
+  State<BLKWDSButtonEnhanced> createState() => _BLKWDSButtonEnhancedState();
 }
 
-class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderStateMixin {
+class _BLKWDSButtonEnhancedState extends State<BLKWDSButtonEnhanced> with SingleTickerProviderStateMixin {
   bool _isHovered = false;
   bool _isPressed = false;
   late AnimationController _loadingController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -152,16 +152,16 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
       vsync: this,
       duration: BLKWDSAnimations.extraLong,
     );
-    
+
     if (widget.isLoading) {
       _loadingController.repeat();
     }
   }
-  
+
   @override
-  void didUpdateWidget(BLKWDSButton oldWidget) {
+  void didUpdateWidget(BLKWDSButtonEnhanced oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.isLoading != oldWidget.isLoading) {
       if (widget.isLoading) {
         _loadingController.repeat();
@@ -170,7 +170,7 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
       }
     }
   }
-  
+
   @override
   void dispose() {
     _loadingController.dispose();
@@ -187,52 +187,52 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
     List<BoxShadow> shadows = [];
 
     switch (widget.type) {
-      case BLKWDSButtonType.primary:
+      case BLKWDSButtonTypeEnhanced.primary:
         backgroundColor = widget.customColor ?? BLKWDSColors.primaryButtonBackground;
         textColor = widget.customTextColor ?? BLKWDSColors.primaryButtonText;
         borderColor = null;
         gradient = widget.useGradient ? BLKWDSGradients.primaryButtonGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level2) : [];
         break;
-      case BLKWDSButtonType.secondary:
+      case BLKWDSButtonTypeEnhanced.secondary:
         backgroundColor = Colors.transparent;
         textColor = widget.customTextColor ?? BLKWDSColors.slateGrey;
         borderColor = widget.customColor ?? BLKWDSColors.secondaryButtonBorder;
         gradient = widget.useGradient ? BLKWDSGradients.secondaryButtonGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level1) : [];
         break;
-      case BLKWDSButtonType.danger:
+      case BLKWDSButtonTypeEnhanced.danger:
         backgroundColor = widget.customColor ?? BLKWDSColors.errorRed;
         textColor = widget.customTextColor ?? BLKWDSColors.white;
         borderColor = null;
         gradient = widget.useGradient ? BLKWDSGradients.dangerButtonGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getErrorShadow() : [];
         break;
-      case BLKWDSButtonType.success:
+      case BLKWDSButtonTypeEnhanced.success:
         backgroundColor = widget.customColor ?? BLKWDSColors.electricMint;
         textColor = widget.customTextColor ?? BLKWDSColors.deepBlack;
         borderColor = null;
         gradient = widget.useGradient ? BLKWDSGradients.successGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getSuccessShadow() : [];
         break;
-      case BLKWDSButtonType.warning:
+      case BLKWDSButtonTypeEnhanced.warning:
         backgroundColor = widget.customColor ?? BLKWDSColors.mustardOrange;
         textColor = widget.customTextColor ?? BLKWDSColors.deepBlack;
         borderColor = null;
         gradient = widget.useGradient ? BLKWDSGradients.warningGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getWarningShadow() : [];
         break;
-      case BLKWDSButtonType.text:
+      case BLKWDSButtonTypeEnhanced.text:
         backgroundColor = Colors.transparent;
         textColor = widget.customTextColor ?? BLKWDSColors.electricMint;
         borderColor = Colors.transparent;
         gradient = null;
         shadows = [];
         break;
-      case BLKWDSButtonType.icon:
+      case BLKWDSButtonTypeEnhanced.icon:
         backgroundColor = widget.customColor ?? Colors.transparent;
         textColor = widget.customTextColor ?? BLKWDSColors.electricMint;
-        borderColor = widget.type == BLKWDSButtonType.secondary ? textColor : null;
+        borderColor = widget.type == BLKWDSButtonTypeEnhanced.secondary ? textColor : null;
         gradient = null;
         shadows = widget.hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level1) : [];
         break;
@@ -248,35 +248,35 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
       gradient = null;
       shadows = [];
     }
-    
+
     // Override with custom gradient if provided
     if (widget.customGradient != null) {
       gradient = widget.customGradient;
     }
-    
+
     // Apply hover effects if enabled
     if (_isHovered && widget.animateOnHover && !widget.isDisabled) {
       shadows = widget.hasShadow ? BLKWDSShadows.getHoverShadow() : [];
     }
-    
+
     // Apply pressed effects
     if (_isPressed && widget.onPressed != null && !widget.isDisabled) {
       shadows = widget.hasShadow ? BLKWDSShadows.getActiveShadow() : [];
     }
 
     // Determine padding based on size
-    final double horizontalPadding = widget.padding != null 
-        ? 0 
-        : (widget.type == BLKWDSButtonType.icon 
-            ? (widget.isSmall ? 8.0 : 12.0) 
+    final double horizontalPadding = widget.padding != null
+        ? 0
+        : (widget.type == BLKWDSButtonTypeEnhanced.icon
+            ? (widget.isSmall ? 8.0 : 12.0)
             : (widget.isSmall
                 ? BLKWDSConstants.buttonHorizontalPadding / 1.5
                 : BLKWDSConstants.buttonHorizontalPadding));
 
-    final double verticalPadding = widget.padding != null 
-        ? 0 
-        : (widget.type == BLKWDSButtonType.icon 
-            ? (widget.isSmall ? 8.0 : 12.0) 
+    final double verticalPadding = widget.padding != null
+        ? 0
+        : (widget.type == BLKWDSButtonTypeEnhanced.icon
+            ? (widget.isSmall ? 8.0 : 12.0)
             : (widget.isSmall
                 ? BLKWDSConstants.buttonVerticalPadding / 1.5
                 : BLKWDSConstants.buttonVerticalPadding));
@@ -286,10 +286,10 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
 
     if (widget.customChild != null) {
       buttonContent = widget.customChild!;
-    } else if (widget.type == BLKWDSButtonType.icon) {
+    } else if (widget.type == BLKWDSButtonTypeEnhanced.icon) {
       buttonContent = Icon(
-        widget.icon!, 
-        size: widget.isSmall ? 16 : 20, 
+        widget.icon!,
+        size: widget.isSmall ? 16 : 20,
         color: textColor
       );
     } else {
@@ -297,7 +297,7 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
         mainAxisSize: widget.isFullWidth ? MainAxisSize.max : MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (widget.icon != null) ...[          
+          if (widget.icon != null) ...[
             Icon(
               widget.icon!,
               color: textColor,
@@ -314,7 +314,7 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
         ],
       );
     }
-    
+
     // Add loading indicator if button is loading
     if (widget.isLoading) {
       buttonContent = Stack(
@@ -387,11 +387,11 @@ class _BLKWDSButtonState extends State<BLKWDSButton> with SingleTickerProviderSt
               });
             }
           },
-          splashColor: widget.type == BLKWDSButtonType.text 
-              ? Colors.transparent 
+          splashColor: widget.type == BLKWDSButtonTypeEnhanced.text
+              ? Colors.transparent
               : textColor.withValues(alpha: 30),
-          highlightColor: widget.type == BLKWDSButtonType.text 
-              ? Colors.transparent 
+          highlightColor: widget.type == BLKWDSButtonTypeEnhanced.text
+              ? Colors.transparent
               : textColor.withValues(alpha: 20),
           borderRadius: BorderRadius.circular(BLKWDSConstants.buttonBorderRadius),
           child: Padding(

@@ -5,6 +5,8 @@ import 'screens/screens.dart';
 import 'services/error_service.dart';
 import 'services/log_service.dart';
 import 'services/error_type.dart';
+import 'services/navigation_service.dart';
+import 'theme/blkwds_animations.dart';
 
 /// BLKWDSApp
 /// The main application widget
@@ -34,18 +36,31 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
     FlutterError.dumpErrorToConsole(details);
   }
 
+  // Get navigation service instance
+  final NavigationService _navigationService = NavigationService();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: Constants.appName,
       theme: BLKWDSTheme.theme,
       home: const DashboardScreen(),
+      navigatorKey: _navigationService.navigatorKey,
       debugShowCheckedModeBanner: false,
+      // Define named routes
+      routes: {
+        '/dashboard': (context) => const DashboardScreen(),
+        '/booking-panel': (context) => const BookingPanelScreen(),
+        '/calendar': (context) => const CalendarScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/add-gear': (context) => const AddGearScreen(),
+      },
       // Add error handling for navigation/routing errors
       onUnknownRoute: (settings) {
         LogService.error('Unknown route: ${settings.name}');
-        return MaterialPageRoute(
-          builder: (context) => const DashboardScreen(),
+        return BLKWDSPageRoute(
+          page: const DashboardScreen(),
+          transitionType: BLKWDSPageTransitionType.fade,
         );
       },
       // Add error handling for widget errors
@@ -95,9 +110,7 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const DashboardScreen()),
-                  );
+                  _navigationService.navigateToDashboard(clearStack: true);
                 },
                 child: const Text('Return to Dashboard'),
               ),
