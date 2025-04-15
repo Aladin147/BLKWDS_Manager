@@ -261,24 +261,47 @@ class _BookingFilterBarState extends State<BookingFilterBar> {
   // Toggle studio filter
   void _toggleStudioFilter(bool isRecording) {
     final currentFilter = widget.controller.filter.value;
+    int? newStudioId;
+
+    // Determine the current studio type based on studioId
+    bool isCurrentlyRecording = currentFilter.isRecordingStudio == true;
+    bool isCurrentlyProduction = currentFilter.isProductionStudio == true;
 
     if (isRecording) {
-      final newValue = currentFilter.isRecordingStudio == null
-          ? true
-          : (currentFilter.isRecordingStudio == true ? null : true);
-
-      widget.controller.updateFilter(
-        currentFilter.copyWith(isRecordingStudio: newValue),
-      );
+      // Toggle recording studio
+      if (isCurrentlyRecording && isCurrentlyProduction) {
+        // Currently hybrid, change to production only
+        newStudioId = 2; // Production studio
+      } else if (isCurrentlyRecording) {
+        // Currently recording, clear filter
+        newStudioId = null;
+      } else if (isCurrentlyProduction) {
+        // Currently production, change to hybrid
+        newStudioId = 3; // Hybrid studio
+      } else {
+        // No studio selected, set to recording
+        newStudioId = 1; // Recording studio
+      }
     } else {
-      final newValue = currentFilter.isProductionStudio == null
-          ? true
-          : (currentFilter.isProductionStudio == true ? null : true);
-
-      widget.controller.updateFilter(
-        currentFilter.copyWith(isProductionStudio: newValue),
-      );
+      // Toggle production studio
+      if (isCurrentlyRecording && isCurrentlyProduction) {
+        // Currently hybrid, change to recording only
+        newStudioId = 1; // Recording studio
+      } else if (isCurrentlyProduction) {
+        // Currently production, clear filter
+        newStudioId = null;
+      } else if (isCurrentlyRecording) {
+        // Currently recording, change to hybrid
+        newStudioId = 3; // Hybrid studio
+      } else {
+        // No studio selected, set to production
+        newStudioId = 2; // Production studio
+      }
     }
+
+    widget.controller.updateFilter(
+      currentFilter.copyWith(studioId: newStudioId, clearStudioId: newStudioId == null),
+    );
 
     widget.onFilterChanged();
   }
@@ -469,6 +492,14 @@ class _BookingFilterBarState extends State<BookingFilterBar> {
                             onSelected: (_) => _toggleStudioFilter(false),
                             avatar: const Icon(Icons.videocam),
                           ),
+
+                          // Hybrid studio filter (shown when both are selected)
+                          if (filter.isRecordingStudio == true && filter.isProductionStudio == true)
+                            Chip(
+                              label: const Text('Hybrid Studio'),
+                              avatar: const Icon(Icons.all_inclusive),
+                              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            ),
                         ],
                       ),
                     ],
@@ -551,33 +582,30 @@ class _BookingFilterBarState extends State<BookingFilterBar> {
                       ),
 
                     // Studio chips
-                    if (filter.isRecordingStudio == true)
-                      Chip(
-                        label: const Text(
-                          'Recording Studio',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        onDeleted: () {
-                          widget.controller.updateFilter(
-                            filter.copyWith(isRecordingStudio: null),
-                          );
-                          widget.onFilterChanged();
-                        },
-                      ),
+                    if (filter.studioId != null)
+                      Builder(builder: (context) {
+                        String studioLabel = 'Studio';
+                        if (filter.isRecordingStudio == true && filter.isProductionStudio == true) {
+                          studioLabel = 'Hybrid Studio';
+                        } else if (filter.isRecordingStudio == true) {
+                          studioLabel = 'Recording Studio';
+                        } else if (filter.isProductionStudio == true) {
+                          studioLabel = 'Production Studio';
+                        }
 
-                    if (filter.isProductionStudio == true)
-                      Chip(
-                        label: const Text(
-                          'Production Studio',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        onDeleted: () {
-                          widget.controller.updateFilter(
-                            filter.copyWith(isProductionStudio: null),
-                          );
-                          widget.onFilterChanged();
-                        },
-                      ),
+                        return Chip(
+                          label: Text(
+                            studioLabel,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          onDeleted: () {
+                            widget.controller.updateFilter(
+                              filter.copyWith(clearStudioId: true),
+                            );
+                            widget.onFilterChanged();
+                          },
+                        );
+                      }),
 
                     // Reset all button
                     TextButton.icon(

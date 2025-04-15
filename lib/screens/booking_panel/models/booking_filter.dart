@@ -21,6 +21,21 @@ class BookingFilter {
   /// Filter by studio
   final int? studioId;
 
+  // Compatibility properties for migration
+  bool? get isRecordingStudio {
+    if (studioId == null) return null;
+    // This is a simplified approach - in a real implementation, we would
+    // query the database to get the studio type
+    return studioId == 1 || studioId == 3; // Assuming 1 is recording, 3 is hybrid
+  }
+
+  bool? get isProductionStudio {
+    if (studioId == null) return null;
+    // This is a simplified approach - in a real implementation, we would
+    // query the database to get the studio type
+    return studioId == 2 || studioId == 3; // Assuming 2 is production, 3 is hybrid
+  }
+
   /// Sort order for the booking list
   final BookingSortOrder sortOrder;
 
@@ -43,20 +58,40 @@ class BookingFilter {
     int? memberId,
     int? gearId,
     int? studioId,
+    bool? isRecordingStudio,
+    bool? isProductionStudio,
     BookingSortOrder? sortOrder,
     bool clearDateRange = false,
     bool clearProjectId = false,
     bool clearMemberId = false,
     bool clearGearId = false,
     bool clearStudioId = false,
+    bool clearStudioFilters = false,
   }) {
+    // Handle studio type conversion for backward compatibility
+    int? newStudioId = studioId;
+
+    // If we're using the old boolean flags, convert them to a studioId
+    if (isRecordingStudio != null || isProductionStudio != null) {
+      bool isRecording = isRecordingStudio ?? false;
+      bool isProduction = isProductionStudio ?? false;
+
+      if (isRecording && isProduction) {
+        newStudioId = 3; // Hybrid studio
+      } else if (isRecording) {
+        newStudioId = 1; // Recording studio
+      } else if (isProduction) {
+        newStudioId = 2; // Production studio
+      }
+    }
+
     return BookingFilter(
       searchQuery: searchQuery ?? this.searchQuery,
       dateRange: clearDateRange ? null : (dateRange ?? this.dateRange),
       projectId: clearProjectId ? null : (projectId ?? this.projectId),
       memberId: clearMemberId ? null : (memberId ?? this.memberId),
       gearId: clearGearId ? null : (gearId ?? this.gearId),
-      studioId: clearStudioId ? null : (studioId ?? this.studioId),
+      studioId: (clearStudioId || clearStudioFilters) ? null : (newStudioId ?? this.studioId),
       sortOrder: sortOrder ?? this.sortOrder,
     );
   }

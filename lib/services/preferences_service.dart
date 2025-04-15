@@ -13,7 +13,7 @@ class PreferencesService {
   static const String _bookingFilterPresetsKey = 'booking_filter_presets';
   static const String _lastUsedFilterKey = 'last_used_filter';
   static const String _lastUsedViewOptionsKey = 'last_used_view_options';
-  
+
   /// Get theme mode
   static Future<ThemeMode> getThemeMode() async {
     try {
@@ -28,7 +28,7 @@ class PreferencesService {
       return ThemeMode.system;
     }
   }
-  
+
   /// Set theme mode
   static Future<bool> setThemeMode(ThemeMode mode) async {
     try {
@@ -39,7 +39,7 @@ class PreferencesService {
       return false;
     }
   }
-  
+
   /// Get booking filter presets
   static Future<List<SavedFilterPreset>> getBookingFilterPresets() async {
     try {
@@ -57,7 +57,7 @@ class PreferencesService {
       return [];
     }
   }
-  
+
   /// Save booking filter presets
   static Future<bool> saveBookingFilterPresets(List<SavedFilterPreset> presets) async {
     try {
@@ -69,7 +69,7 @@ class PreferencesService {
       return false;
     }
   }
-  
+
   /// Get last used filter
   static Future<BookingFilter?> getLastUsedFilter() async {
     try {
@@ -77,7 +77,7 @@ class PreferencesService {
       final filterJson = prefs.getString(_lastUsedFilterKey);
       if (filterJson != null) {
         final Map<String, dynamic> json = jsonDecode(filterJson);
-        
+
         // Parse date range
         DateTimeRange? dateRange;
         if (json['dateRange'] != null) {
@@ -87,15 +87,32 @@ class PreferencesService {
             end: DateTime.parse(dateRangeJson['end'] as String),
           );
         }
-        
+
+        // Handle both old and new formats
+        final bool? isRecordingStudio = json['isRecordingStudio'] as bool?;
+        final bool? isProductionStudio = json['isProductionStudio'] as bool?;
+        final int? studioId = json['studioId'] as int?;
+
+        // Determine which studio ID to use
+        int? finalStudioId = studioId;
+        if (finalStudioId == null && (isRecordingStudio != null || isProductionStudio != null)) {
+          // Convert old boolean flags to studio ID
+          if (isRecordingStudio == true && isProductionStudio == true) {
+            finalStudioId = 3; // Hybrid studio
+          } else if (isRecordingStudio == true) {
+            finalStudioId = 1; // Recording studio
+          } else if (isProductionStudio == true) {
+            finalStudioId = 2; // Production studio
+          }
+        }
+
         return BookingFilter(
           searchQuery: json['searchQuery'] as String? ?? '',
           dateRange: dateRange,
           projectId: json['projectId'] as int?,
           memberId: json['memberId'] as int?,
           gearId: json['gearId'] as int?,
-          isRecordingStudio: json['isRecordingStudio'] as bool?,
-          isProductionStudio: json['isProductionStudio'] as bool?,
+          studioId: finalStudioId,
           sortOrder: BookingSortOrder.values[json['sortOrder'] as int],
         );
       }
@@ -105,7 +122,7 @@ class PreferencesService {
       return null;
     }
   }
-  
+
   /// Save last used filter
   static Future<bool> saveLastUsedFilter(BookingFilter filter) async {
     try {
@@ -121,6 +138,8 @@ class PreferencesService {
         'projectId': filter.projectId,
         'memberId': filter.memberId,
         'gearId': filter.gearId,
+        'studioId': filter.studioId,
+        // Include old properties for backward compatibility
         'isRecordingStudio': filter.isRecordingStudio,
         'isProductionStudio': filter.isProductionStudio,
         'sortOrder': filter.sortOrder.index,
@@ -131,7 +150,7 @@ class PreferencesService {
       return false;
     }
   }
-  
+
   /// Get last used view options
   static Future<BookingListViewOptions?> getLastUsedViewOptions() async {
     try {
@@ -152,7 +171,7 @@ class PreferencesService {
       return null;
     }
   }
-  
+
   /// Save last used view options
   static Future<bool> saveLastUsedViewOptions(BookingListViewOptions options) async {
     try {
@@ -169,7 +188,7 @@ class PreferencesService {
       return false;
     }
   }
-  
+
   /// Clear all preferences
   static Future<bool> clearAllPreferences() async {
     try {

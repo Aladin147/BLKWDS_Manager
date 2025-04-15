@@ -5,6 +5,7 @@ import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
+import '../../utils/feature_flags.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'booking_detail_screen.dart';
 import 'booking_list_controller.dart';
@@ -13,6 +14,7 @@ import 'models/booking_filter.dart';
 import 'models/booking_list_view_options.dart';
 import 'widgets/booking_filter_bar.dart';
 import 'widgets/booking_form.dart';
+import 'widgets/booking_form_adapter.dart';
 import 'widgets/booking_list_header.dart';
 import 'widgets/booking_list_item.dart';
 
@@ -20,12 +22,12 @@ import 'widgets/booking_list_item.dart';
 /// Enhanced screen for displaying and managing bookings
 class BookingListScreen extends StatefulWidget {
   final BookingPanelController controller;
-  
+
   const BookingListScreen({
     super.key,
     required this.controller,
   });
-  
+
   @override
   State<BookingListScreen> createState() => _BookingListScreenState();
 }
@@ -33,27 +35,27 @@ class BookingListScreen extends StatefulWidget {
 class _BookingListScreenState extends State<BookingListScreen> {
   // Controllers
   late final BookingListController _listController;
-  
+
   // State variables
   bool _showEditForm = false;
   Booking? _selectedBooking;
   bool _isLoading = false;
   String? _errorMessage;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize list controller
     _listController = BookingListController(widget.controller);
   }
-  
+
   @override
   void dispose() {
     _listController.dispose();
     super.dispose();
   }
-  
+
   // Show edit booking form
   void _showEditBookingForm(Booking booking) {
     setState(() {
@@ -61,7 +63,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
       _selectedBooking = booking;
     });
   }
-  
+
   // Hide edit booking form
   void _hideEditBookingForm() {
     setState(() {
@@ -69,24 +71,24 @@ class _BookingListScreenState extends State<BookingListScreen> {
       _selectedBooking = null;
     });
   }
-  
+
   // Save booking
   Future<void> _saveBooking(Booking booking) async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
-    
+
     try {
       final success = await widget.controller.updateBooking(booking);
-      
+
       if (success) {
         setState(() {
           _isLoading = false;
           _showEditForm = false;
           _selectedBooking = null;
         });
-        
+
         if (mounted) {
           SnackbarService.showSuccessSnackBar(
             context,
@@ -98,7 +100,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
           _errorMessage = widget.controller.errorMessage.value ?? 'Failed to update booking';
           _isLoading = false;
         });
-        
+
         if (mounted) {
           SnackbarService.showErrorSnackBar(
             context,
@@ -112,7 +114,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         _errorMessage = 'Error updating booking: $e';
         _isLoading = false;
       });
-      
+
       if (mounted) {
         SnackbarService.showErrorSnackBar(
           context,
@@ -121,7 +123,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
       }
     }
   }
-  
+
   // Delete booking
   Future<void> _deleteBooking(Booking booking) async {
     // Show confirmation dialog
@@ -142,22 +144,22 @@ class _BookingListScreenState extends State<BookingListScreen> {
         ],
       ),
     );
-    
+
     if (confirmed != true) return;
-    
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
-    
+
     try {
       final success = await widget.controller.deleteBooking(booking.id!);
-      
+
       if (success) {
         setState(() {
           _isLoading = false;
         });
-        
+
         if (mounted) {
           SnackbarService.showSuccessSnackBar(
             context,
@@ -169,7 +171,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
           _errorMessage = widget.controller.errorMessage.value ?? 'Failed to delete booking';
           _isLoading = false;
         });
-        
+
         if (mounted) {
           SnackbarService.showErrorSnackBar(
             context,
@@ -183,7 +185,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         _errorMessage = 'Error deleting booking: $e';
         _isLoading = false;
       });
-      
+
       if (mounted) {
         SnackbarService.showErrorSnackBar(
           context,
@@ -192,7 +194,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
       }
     }
   }
-  
+
   // Navigate to booking detail
   void _navigateToBookingDetail(Booking booking) {
     Navigator.push(
@@ -210,7 +212,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
       }
     });
   }
-  
+
   // Show view options dialog
   void _showViewOptionsDialog() {
     showDialog(
@@ -220,7 +222,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         content: StatefulBuilder(
           builder: (context, setState) {
             final viewOptions = _listController.viewOptions.value;
-            
+
             return SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -251,7 +253,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: BLKWDSConstants.spacingMedium),
-                  
+
                   // View density options
                   Text(
                     'View Density',
@@ -277,7 +279,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: BLKWDSConstants.spacingMedium),
-                  
+
                   // Other options
                   SwitchListTile(
                     title: const Text('Show Past Bookings'),
@@ -317,11 +319,11 @@ class _BookingListScreenState extends State<BookingListScreen> {
       ),
     );
   }
-  
+
   // Show save preset dialog
   void _showSavePresetDialog() {
     final textController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -343,10 +345,10 @@ class _BookingListScreenState extends State<BookingListScreen> {
             onPressed: () async {
               if (textController.text.isNotEmpty) {
                 final success = await _listController.savePreset(textController.text);
-                
+
                 if (mounted) {
                   Navigator.pop(context);
-                  
+
                   if (success) {
                     SnackbarService.showSuccessSnackBar(
                       context,
@@ -367,7 +369,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
       ),
     ).then((_) => textController.dispose());
   }
-  
+
   // Show presets dialog
   void _showPresetsDialog() {
     showDialog(
@@ -380,7 +382,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
             if (presets.isEmpty) {
               return const Text('No saved presets');
             }
-            
+
             return SizedBox(
               width: double.maxFinite,
               child: ListView.builder(
@@ -388,14 +390,14 @@ class _BookingListScreenState extends State<BookingListScreen> {
                 itemCount: presets.length,
                 itemBuilder: (context, index) {
                   final preset = presets[index];
-                  
+
                   return ListTile(
                     title: Text(preset.name),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () async {
                         final success = await _listController.deletePreset(preset.id);
-                        
+
                         if (mounted && success) {
                           SnackbarService.showSuccessSnackBar(
                             context,
@@ -423,11 +425,11 @@ class _BookingListScreenState extends State<BookingListScreen> {
       ),
     );
   }
-  
+
   // Bulk delete selected bookings
   Future<void> _bulkDeleteBookings() async {
     final selectedCount = _listController.viewState.value.selectedBookingIds.length;
-    
+
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -446,11 +448,11 @@ class _BookingListScreenState extends State<BookingListScreen> {
         ],
       ),
     );
-    
+
     if (confirmed != true) return;
-    
+
     final success = await _listController.bulkDeleteBookings();
-    
+
     if (mounted) {
       if (success) {
         SnackbarService.showSuccessSnackBar(
@@ -465,7 +467,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -473,7 +475,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         child: CircularProgressIndicator(),
       );
     }
-    
+
     if (_showEditForm) {
       return Scaffold(
         appBar: AppBar(
@@ -485,16 +487,25 @@ class _BookingListScreenState extends State<BookingListScreen> {
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: BookingForm(
-            controller: widget.controller,
-            booking: _selectedBooking,
-            onSave: _saveBooking,
-            onCancel: _hideEditBookingForm,
-          ),
+          child: FeatureFlags.useStudioSystem
+              ? BookingForm(
+                  controller: widget.controller,
+                  booking: null, // This would need to be a BookingV2 object
+                  onSave: (bookingV2) {
+                    // Handle BookingV2 save
+                  },
+                  onCancel: _hideEditBookingForm,
+                )
+              : BookingFormAdapter(
+                  controller: widget.controller,
+                  booking: _selectedBooking,
+                  onSave: _saveBooking,
+                  onCancel: _hideEditBookingForm,
+                ),
         ),
       );
     }
-    
+
     return Column(
       children: [
         // Filter bar
@@ -510,7 +521,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                   setState(() {});
                 },
               ),
-              
+
               // View options and actions bar
               const SizedBox(height: BLKWDSConstants.spacingSmall),
               ValueListenableBuilder<bool>(
@@ -522,7 +533,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                       valueListenable: _listController.viewState,
                       builder: (context, viewState, child) {
                         final selectedCount = viewState.selectedBookingIds.length;
-                        
+
                         return Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: BLKWDSConstants.spacingMedium,
@@ -566,23 +577,23 @@ class _BookingListScreenState extends State<BookingListScreen> {
                           tooltip: 'View Options',
                           onPressed: _showViewOptionsDialog,
                         ),
-                        
+
                         // Save preset button
                         IconButton(
                           icon: const Icon(Icons.save),
                           tooltip: 'Save Preset',
                           onPressed: _showSavePresetDialog,
                         ),
-                        
+
                         // Load preset button
                         IconButton(
                           icon: const Icon(Icons.bookmark),
                           tooltip: 'Load Preset',
                           onPressed: _showPresetsDialog,
                         ),
-                        
+
                         const Spacer(),
-                        
+
                         // Select all button
                         TextButton.icon(
                           icon: const Icon(Icons.select_all),
@@ -597,7 +608,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
             ],
           ),
         ),
-        
+
         // Booking list
         Expanded(
           child: ValueListenableBuilder<List<BookingGroup>>(
@@ -608,7 +619,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                   child: Text('No bookings found'),
                 );
               }
-              
+
               return ValueListenableBuilder<BookingListViewState>(
                 valueListenable: _listController.viewState,
                 builder: (context, viewState, child) {
@@ -621,7 +632,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                         itemBuilder: (context, groupIndex) {
                           final group = groups[groupIndex];
                           final isExpanded = viewState.expandedGroups.contains(group.id);
-                          
+
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -645,12 +656,12 @@ class _BookingListScreenState extends State<BookingListScreen> {
                                         }
                                       : null,
                                 ),
-                              
+
                               // Bookings in group
                               if (isExpanded || viewOptions.groupBy == BookingGroupBy.none)
                                 ...group.bookings.map((booking) {
                                   final isSelected = viewState.selectedBookingIds.contains(booking.id);
-                                  
+
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
                                     child: BookingListItem(

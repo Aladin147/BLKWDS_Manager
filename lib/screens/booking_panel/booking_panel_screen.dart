@@ -4,12 +4,14 @@ import '../../models/models.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
+import '../../utils/feature_flags.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
 import 'booking_detail_screen.dart';
 import 'booking_list_screen.dart';
 import 'widgets/booking_form.dart';
+import 'widgets/booking_form_adapter.dart';
 import 'widgets/calendar_view.dart';
 
 /// BookingPanelScreen
@@ -196,12 +198,21 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             style: BLKWDSTypography.titleLarge,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          BookingForm(
-            controller: _controller,
-            booking: _selectedBooking,
-            onSave: _saveBooking,
-            onCancel: _hideBookingForm,
-          ),
+          FeatureFlags.useStudioSystem
+              ? BookingForm(
+                  controller: _controller,
+                  booking: null, // This would need to be a BookingV2 object
+                  onSave: (bookingV2) {
+                    // Handle BookingV2 save
+                  },
+                  onCancel: _hideBookingForm,
+                )
+              : BookingFormAdapter(
+                  controller: _controller,
+                  booking: _selectedBooking,
+                  onSave: _saveBooking,
+                  onCancel: _hideBookingForm,
+                ),
         ],
       ),
     );
