@@ -14,7 +14,6 @@ import '../settings/settings_screen.dart';
 import '../member_management/member_list_screen.dart';
 import '../project_management/project_list_screen.dart';
 import '../gear_management/gear_list_screen.dart';
-import '../studio_management/studio_management_screen.dart';
 import 'dashboard_controller.dart';
 import 'widgets/top_bar_summary_widget.dart';
 import 'widgets/quick_actions_panel.dart';
@@ -241,33 +240,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
               }
 
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Top summary bar
-                      TopBarSummaryWidget(controller: _controller),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Top summary bar
+                  TopBarSummaryWidget(controller: _controller),
 
-                      // Member selector
-                      Container(
-                        color: BLKWDSColors.backgroundDark,
-                        padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
-                        child: Row(
-                          children: [
-                            // Member dropdown
-                            Expanded(
-                              child: DropdownButtonFormField<Member>(
-                                decoration: InputDecoration(
-                                  labelText: 'Select Member',
-                                  labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                                    borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                                  ),
+                  // Member selector
+                  Container(
+                    color: BLKWDSColors.backgroundDark,
+                    padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+                    child: Row(
+                      children: [
+                        // Member dropdown
+                        Expanded(
+                          child: DropdownButtonFormField<Member>(
+                            decoration: InputDecoration(
+                              labelText: 'Select Member',
+                              labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                                borderSide: BorderSide(color: BLKWDSColors.inputBorder),
+                              ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
                                 borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
@@ -359,15 +356,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 );
                               },
-                              onManageStudios: () {
-                                Navigator.push(
-                                  context,
-                                  BLKWDSPageRoute(
-                                    page: const StudioManagementScreen(),
-                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                  ),
-                                );
-                              },
                             ),
                           ),
 
@@ -384,40 +372,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
 
                   // Bottom section - Gear preview and activity
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Gear preview list
-                          Expanded(
-                            flex: 3,
-                            child: GearPreviewListWidget(
-                              controller: _controller,
-                              onCheckout: _handleCheckout,
-                              onReturn: _handleReturn,
-                              onViewAllGear: () {
-                                // Show search bar and full gear list
-                                _showSearchAndFullGearList(context);
-                              },
-                            ),
+                  Container(
+                    height: 280,
+                    padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Gear preview list
+                        Expanded(
+                          flex: 3,
+                          child: GearPreviewListWidget(
+                            controller: _controller,
+                            onCheckout: _handleCheckout,
+                            onReturn: _handleReturn,
+                            onViewAllGear: () {
+                              // Show search bar and full gear list
+                              _showSearchAndFullGearList(context);
+                            },
                           ),
+                        ),
 
-                          const SizedBox(width: BLKWDSConstants.spacingMedium),
+                        const SizedBox(width: BLKWDSConstants.spacingMedium),
 
-                          // Recent activity
-                          Expanded(
-                            flex: 2,
-                            child: RecentActivityWidget(controller: _controller),
-                          ),
-                        ],
-                      ),
+                        // Recent activity
+                        Expanded(
+                          flex: 2,
+                          child: RecentActivityWidget(controller: _controller),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              );
-                },
               );
             },
           );

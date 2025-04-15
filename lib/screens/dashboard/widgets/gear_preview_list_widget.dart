@@ -37,7 +37,9 @@ class GearPreviewListWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header with title and view all button
@@ -60,46 +62,31 @@ class GearPreviewListWidget extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
-
-          // Filter tabs
-          Row(
-            children: [
-              _buildFilterChip('All Gear', true),
-              const SizedBox(width: BLKWDSConstants.spacingSmall),
-              _buildFilterChip('Checked Out', false),
-              const SizedBox(width: BLKWDSConstants.spacingSmall),
-              _buildFilterChip('Available', false),
-            ],
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
 
           // Gear list
-          Expanded(
-            child: ValueListenableBuilder<List<Gear>>(
-              valueListenable: controller.gearList,
-              builder: (context, gearList, _) {
-                final recentGear = _getRecentGear(gearList);
+          ValueListenableBuilder<List<Gear>>(
+            valueListenable: controller.gearList,
+            builder: (context, gearList, _) {
+              final recentGear = _getRecentGear(gearList);
 
-                if (recentGear.isEmpty) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                      child: Text('No recent gear activity'),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: recentGear.length,
-                  itemBuilder: (context, index) {
-                    return _buildGearItem(recentGear[index]);
-                  },
+              if (recentGear.isEmpty) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                    child: Text('No recent gear activity'),
+                  ),
                 );
-              },
-            ),
+              }
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: recentGear.take(3).map((gear) => _buildGearItem(gear)).toList(),
+              );
+            },
           ),
         ],
+      ),
       ),
     );
   }
@@ -128,29 +115,6 @@ class GearPreviewListWidget extends StatelessWidget {
     }
 
     return result;
-  }
-
-  // Build a filter chip
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return InkWell(
-      onTap: () {
-        // In a real app, this would filter the gear list
-      },
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? BLKWDSColors.accentTeal : BLKWDSColors.backgroundLight,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-          label,
-          style: BLKWDSTypography.labelSmall.copyWith(
-            color: isSelected ? Colors.white : BLKWDSColors.textSecondary,
-          ),
-        ),
-      ),
-    );
   }
 
   // Build a gear item

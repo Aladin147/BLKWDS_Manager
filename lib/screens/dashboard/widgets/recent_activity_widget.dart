@@ -31,56 +31,36 @@ class RecentActivityWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with view all button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Recent Activity',
-                style: BLKWDSTypography.titleMedium.copyWith(
-                  color: BLKWDSColors.textPrimary,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // This would navigate to a full activity log screen in a real app
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('View all activity would open here'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                },
-                child: const Text('View All'),
-              ),
-            ],
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
-
-          // Activity list
-          Expanded(
-            child: ValueListenableBuilder<List<ActivityLog>>(
-              valueListenable: controller.recentActivity,
-              builder: (context, activities, _) {
-                if (activities.isEmpty) {
-                  return const Center(
-                    child: Text('No recent activity'),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: activities.length,
-                  itemBuilder: (context, index) {
-                    return _buildActivityItem(activities[index]);
-                  },
-                );
-              },
+          Text(
+            'Recent Activity',
+            style: BLKWDSTypography.titleMedium.copyWith(
+              color: BLKWDSColors.textPrimary,
             ),
           ),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+          ValueListenableBuilder<List<ActivityLog>>(
+            valueListenable: controller.recentActivity,
+            builder: (context, activities, _) {
+              if (activities.isEmpty) {
+                return const Center(
+                  child: Text('No recent activity'),
+                );
+              }
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: activities.take(5).map((activity) => _buildActivityItem(activity)).toList(),
+              );
+            },
+          ),
         ],
+      ),
       ),
     );
   }

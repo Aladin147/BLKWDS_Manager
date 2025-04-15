@@ -6,11 +6,10 @@ import 'migrations/migration_v2.dart';
 import 'migrations/migration_v3.dart';
 import 'migrations/migration_v4.dart';
 import 'migrations/migration_v5.dart';
-import 'migrations/migration_v6.dart';
 
 /// Service to handle database migrations
 class MigrationService {
-  static const int currentVersion = 6;
+  static const int currentVersion = 5;
 
   /// Run migrations if needed
   static Future<void> runMigrations(Database db, int oldVersion, int newVersion) async {
@@ -31,13 +30,9 @@ class MigrationService {
     if (oldVersion < 4) {
       await MigrationV4.migrate(db);
     }
-
+    
     if (oldVersion < 5) {
       await MigrationV5.migrate(db);
-    }
-
-    if (oldVersion < 6) {
-      await MigrationV6.migrate(db);
     }
 
     LogService.info('Migrations completed successfully');
