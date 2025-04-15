@@ -38,13 +38,30 @@ class RecentActivityWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Recent Activity',
-                style: BLKWDSTypography.titleMedium.copyWith(
-                  color: BLKWDSColors.textPrimary,
-                ),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.history,
+                      color: BLKWDSColors.accentTeal,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Text(
+                    'Recent Activity',
+                    style: BLKWDSTypography.titleMedium.copyWith(
+                      color: BLKWDSColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
-              TextButton(
+              TextButton.icon(
                 onPressed: () {
                   // This would navigate to a full activity log screen in a real app
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -54,7 +71,11 @@ class RecentActivityWidget extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('View All'),
+                icon: const Icon(Icons.visibility),
+                label: const Text('View All'),
+                style: TextButton.styleFrom(
+                  foregroundColor: BLKWDSColors.accentTeal,
+                ),
               ),
             ],
           ),
@@ -100,44 +121,91 @@ class RecentActivityWidget extends StatelessWidget {
           )
         : null;
 
-    final String actionText = activity.checkedOut
-        ? '${gear.name} checked out to ${member?.name ?? 'Unknown'}'
-        : '${gear.name} returned';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+    return Container(
+      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+      decoration: BoxDecoration(
+        color: BLKWDSColors.backgroundLight,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        border: Border.all(
+          color: activity.checkedOut
+              ? BLKWDSColors.warningAmber.withValues(alpha: 30)
+              : BLKWDSColors.successGreen.withValues(alpha: 30),
+          width: 1,
+        ),
+      ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Activity icon
           Container(
-            width: 28,
-            height: 28,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               color: activity.checkedOut
                   ? BLKWDSColors.warningAmber.withValues(alpha: 30)
                   : BLKWDSColors.successGreen.withValues(alpha: 30),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(18),
             ),
             child: Icon(
               activity.checkedOut ? Icons.logout : Icons.login,
               color: activity.checkedOut
                   ? BLKWDSColors.warningAmber
                   : BLKWDSColors.successGreen,
-              size: 16,
+              size: 20,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: BLKWDSConstants.spacingSmall),
+
+          // Activity details
           Expanded(
-            child: Text(
-              actionText,
-              style: BLKWDSTypography.bodyMedium.copyWith(
-                color: BLKWDSColors.textPrimary,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Gear name
+                Text(
+                  gear.name,
+                  style: BLKWDSTypography.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                const SizedBox(height: 2),
+
+                // Action text
+                Text(
+                  activity.checkedOut
+                      ? 'Checked out to ${member?.name ?? 'Unknown'}'
+                      : 'Returned to inventory',
+                  style: BLKWDSTypography.bodySmall.copyWith(
+                    color: BLKWDSColors.textSecondary,
+                  ),
+                ),
+
+                // Note if available
+                if (activity.note != null && activity.note!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Note: ${activity.note}',
+                    style: BLKWDSTypography.bodySmall.copyWith(
+                      color: BLKWDSColors.textSecondary,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
             ),
           ),
-          Text(
-            _formatTimestamp(activity.timestamp),
-            style: BLKWDSTypography.bodySmall.copyWith(
-              color: BLKWDSColors.textSecondary,
+
+          // Timestamp
+          Padding(
+            padding: const EdgeInsets.only(left: BLKWDSConstants.spacingSmall),
+            child: Text(
+              _formatTimestamp(activity.timestamp),
+              style: BLKWDSTypography.labelSmall.copyWith(
+                color: BLKWDSColors.textSecondary,
+              ),
             ),
           ),
         ],

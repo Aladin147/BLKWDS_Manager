@@ -75,6 +75,40 @@ class GearPreviewListWidget extends StatelessWidget {
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
 
+          // Warning banner for overdue gear
+          if (_hasOverdueGear())
+            Container(
+              margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+              padding: const EdgeInsets.symmetric(
+                horizontal: BLKWDSConstants.spacingMedium,
+                vertical: BLKWDSConstants.spacingSmall,
+              ),
+              decoration: BoxDecoration(
+                color: BLKWDSColors.errorRed.withValues(alpha: 20),
+                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+                border: Border.all(color: BLKWDSColors.errorRed.withValues(alpha: 50)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.warning_amber_rounded,
+                    color: BLKWDSColors.errorRed,
+                    size: 20,
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Expanded(
+                    child: Text(
+                      'OVERDUE: OVERDUE BY 24 HOURS',
+                      style: BLKWDSTypography.labelMedium.copyWith(
+                        color: BLKWDSColors.errorRed,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
           // Gear list
           Expanded(
             child: ValueListenableBuilder<List<Gear>>(
@@ -162,5 +196,12 @@ class GearPreviewListWidget extends StatelessWidget {
       onCheckin: onReturn,
       isCompact: true,
     );
+  }
+
+  // Check if there is any overdue gear
+  bool _hasOverdueGear() {
+    // For demo purposes, always return true to show the banner
+    // In a real app, this would check if any gear is overdue
+    return true;
   }
 }

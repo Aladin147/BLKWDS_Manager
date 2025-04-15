@@ -20,7 +20,8 @@ class TopBarSummaryWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
-        vertical: BLKWDSConstants.spacingSmall,
+        vertical: BLKWDSConstants.spacingMedium,
+        horizontal: BLKWDSConstants.spacingMedium,
       ),
       decoration: const BoxDecoration(
         color: BLKWDSColors.backgroundDark,
@@ -67,10 +68,10 @@ class TopBarSummaryWidget extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      width: 170,
-      padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+      width: 200,
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundLight,
+        color: BLKWDSColors.backgroundMedium,
         borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
@@ -82,14 +83,21 @@ class TopBarSummaryWidget extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            child: Row(
+          Row(
             children: [
-              Icon(
-                icon,
-                color: BLKWDSColors.accentTeal,
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  color: BLKWDSColors.accentTeal,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
               Text(
@@ -99,11 +107,11 @@ class TopBarSummaryWidget extends StatelessWidget {
                 ),
               ),
             ],
-            ),
           ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
                 value,
@@ -129,12 +137,13 @@ class TopBarSummaryWidget extends StatelessWidget {
   // Build studio booking info
   Widget _buildStudioBookingInfo() {
     final studioBooking = _getStudioBookingToday();
+    final isBooked = studioBooking != null && studioBooking.projectId != -1;
 
     return Container(
-      width: 170,
-      padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+      width: 200,
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundLight,
+        color: BLKWDSColors.backgroundMedium,
         borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
@@ -148,13 +157,19 @@ class TopBarSummaryWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            child: Row(
+          Row(
             children: [
-              const Icon(
-                Icons.business,
-                color: BLKWDSColors.accentTeal,
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.business,
+                  color: BLKWDSColors.accentTeal,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
               Text(
@@ -164,19 +179,18 @@ class TopBarSummaryWidget extends StatelessWidget {
                 ),
               ),
             ],
-            ),
           ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
           Text(
-            studioBooking != null ? 'Booked' : 'Available',
+            isBooked ? 'Booked' : 'Available',
             style: BLKWDSTypography.bodyMedium.copyWith(
-              color: studioBooking != null
+              color: isBooked
                   ? BLKWDSColors.warningAmber
                   : BLKWDSColors.successGreen,
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (studioBooking != null)
+          if (isBooked)
             Text(
               _formatStudioTime(studioBooking),
               style: BLKWDSTypography.bodySmall.copyWith(

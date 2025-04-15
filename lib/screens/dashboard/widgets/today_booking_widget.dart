@@ -4,7 +4,6 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../utils/feature_flags.dart';
-import '../../../widgets/blkwds_widgets.dart';
 
 import '../dashboard_adapter.dart';
 import '../dashboard_controller.dart';
@@ -191,64 +190,127 @@ class TodayBookingWidget extends StatelessWidget {
       }
     }
 
-    return BLKWDSCard(
-      padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
-      child: Row(
-        children: [
-          // Gear or booking type icon
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: BLKWDSColors.backgroundLight,
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
-            ),
-            child: BLKWDSIcon(
-              icon: _getBookingIcon(booking, firstGear),
-              color: BLKWDSColors.accentTeal,
-              size: BLKWDSIconSize.medium,
-            ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      decoration: BoxDecoration(
+        color: BLKWDSColors.backgroundLight,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: BLKWDSColors.deepBlack.withValues(alpha: 20),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-          const SizedBox(width: BLKWDSConstants.spacingSmall),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        child: Row(
+          children: [
+            // Booking icon with colored background
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: BLKWDSColors.accentTeal.withValues(alpha: 20),
+                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              ),
+              child: Icon(
+                _getBookingIcon(booking, firstGear),
+                color: BLKWDSColors.accentTeal,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: BLKWDSConstants.spacingMedium),
 
-          // Booking details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Project name
-                Text(
-                  project?.title ?? 'Unknown Project',
-                  style: BLKWDSTypography.titleSmall,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                // Member name
-                if (primaryMember != null)
+            // Booking details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Project name
                   Text(
-                    primaryMember.name,
-                    style: BLKWDSTypography.bodyMedium,
+                    project?.title ?? 'Unknown Project',
+                    style: BLKWDSTypography.titleSmall,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                // Time
-                Text(
-                  _formatBookingTime(booking),
-                  style: BLKWDSTypography.bodySmall.copyWith(
-                    color: BLKWDSColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
+                  const SizedBox(height: 4),
 
-          // Gear count badge
-          if (gearIds.isNotEmpty)
-            BLKWDSStatusBadge(
-              text: '${gearIds.length} items',
-              color: BLKWDSColors.accentTeal,
+                  // Member name
+                  if (primaryMember != null)
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          size: 14,
+                          color: BLKWDSColors.textSecondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          primaryMember.name,
+                          style: BLKWDSTypography.bodyMedium.copyWith(
+                            color: BLKWDSColors.textSecondary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+
+                  const SizedBox(height: 4),
+
+                  // Time
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 14,
+                        color: BLKWDSColors.textSecondary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatBookingTime(booking),
+                        style: BLKWDSTypography.bodySmall.copyWith(
+                          color: BLKWDSColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-        ],
+
+            // Gear count badge
+            if (gearIds.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: BLKWDSColors.accentTeal.withValues(alpha: 20),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.camera_alt,
+                      size: 14,
+                      color: BLKWDSColors.accentTeal,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${gearIds.length}',
+                      style: BLKWDSTypography.labelMedium.copyWith(
+                        color: BLKWDSColors.accentTeal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
