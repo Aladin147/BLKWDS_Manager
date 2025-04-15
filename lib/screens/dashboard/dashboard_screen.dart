@@ -234,184 +234,283 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               return LayoutBuilder(
                 builder: (context, constraints) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Top summary bar
-                      TopBarSummaryWidget(controller: _controller),
-
-                      // Member selector
-                      Container(
-                        color: BLKWDSColors.backgroundDark,
-                        padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
-                        child: Row(
+                  // Use a SingleChildScrollView to ensure the layout works on all screen sizes
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // Member dropdown
-                            Expanded(
-                              child: DropdownButtonFormField<Member>(
-                                decoration: InputDecoration(
-                                  labelText: 'Select Member',
-                                  labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                            // Top summary bar
+                            TopBarSummaryWidget(controller: _controller),
+
+                            // Member selector
+                            Container(
+                              color: BLKWDSColors.backgroundDark,
+                              padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+                              child: Row(
+                                children: [
+                                  // Member dropdown
+                                  Expanded(
+                                    child: DropdownButtonFormField<Member>(
+                                      decoration: InputDecoration(
+                                        labelText: 'Select Member',
+                                        labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                                          borderSide: BorderSide(color: BLKWDSColors.inputBorder),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                                          borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                                        ),
+                                        contentPadding: const EdgeInsets.symmetric(
+                                          horizontal: BLKWDSConstants.inputHorizontalPadding,
+                                          vertical: BLKWDSConstants.inputVerticalPadding / 2,
+                                        ),
+                                        filled: true,
+                                        fillColor: BLKWDSColors.inputBackground,
+                                      ),
+                                      dropdownColor: BLKWDSColors.backgroundMedium,
+                                      style: TextStyle(color: BLKWDSColors.textPrimary),
+                                      value: _selectedMember,
+                                      items: _controller.memberList.value.map((member) {
+                                        return DropdownMenuItem<Member>(
+                                          value: member,
+                                          child: Text(member.name),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedMember = value;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                                    borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                                  ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                                borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                                ],
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: BLKWDSConstants.inputHorizontalPadding,
-                                vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                              ),
-                              filled: true,
-                              fillColor: BLKWDSColors.inputBackground,
                             ),
-                            dropdownColor: BLKWDSColors.backgroundMedium,
-                            style: TextStyle(color: BLKWDSColors.textPrimary),
-                            value: _selectedMember,
-                            items: _controller.memberList.value.map((member) {
-                              return DropdownMenuItem<Member>(
-                                value: member,
-                                child: Text(member.name),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedMember = value;
-                              });
-                            },
-                          ),
+
+                            // Main content area - Quick Actions and Recent Activity
+                            Padding(
+                              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                              child: constraints.maxWidth > 800
+                                  ? Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Left side - Quick actions
+                                        Expanded(
+                                          flex: 1,
+                                          child: QuickActionsPanel(
+                                            onAddGear: () async {
+                                              final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const AddGearScreen(),
+                                                ),
+                                              );
+
+                                              if (result == true) {
+                                                // Refresh data when returning from add gear screen
+                                                await _controller.initialize();
+                                                _updateFilteredGear();
+                                              }
+                                            },
+                                            onOpenBookingPanel: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const BookingPanelScreen(),
+                                                ),
+                                              );
+                                            },
+                                            onManageMembers: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const MemberListScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                            onManageProjects: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const ProjectListScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                            onManageGear: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const GearListScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                            onManageStudios: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const StudioManagementScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+
+                                        const SizedBox(width: BLKWDSConstants.spacingMedium),
+
+                                        // Right side - Gear preview list
+                                        Expanded(
+                                          flex: 2,
+                                          child: SizedBox(
+                                            height: 400,
+                                            child: GearPreviewListWidget(
+                                              controller: _controller,
+                                              onCheckout: _handleCheckout,
+                                              onReturn: _handleReturn,
+                                              onViewAllGear: () {
+                                                // Show search bar and full gear list
+                                                _showSearchAndFullGearList(context);
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        // Quick actions panel
+                                        SizedBox(
+                                          height: 300,
+                                          child: QuickActionsPanel(
+                                            onAddGear: () async {
+                                              final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const AddGearScreen(),
+                                                ),
+                                              );
+
+                                              if (result == true) {
+                                                // Refresh data when returning from add gear screen
+                                                await _controller.initialize();
+                                                _updateFilteredGear();
+                                              }
+                                            },
+                                            onOpenBookingPanel: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const BookingPanelScreen(),
+                                                ),
+                                              );
+                                            },
+                                            onManageMembers: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const MemberListScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                            onManageProjects: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const ProjectListScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                            onManageGear: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const GearListScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                            onManageStudios: () {
+                                              Navigator.push(
+                                                context,
+                                                BLKWDSPageRoute(
+                                                  page: const StudioManagementScreen(),
+                                                  transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+                                        // Gear preview list
+                                        SizedBox(
+                                          height: 400,
+                                          child: GearPreviewListWidget(
+                                            controller: _controller,
+                                            onCheckout: _handleCheckout,
+                                            onReturn: _handleReturn,
+                                            onViewAllGear: () {
+                                              // Show search bar and full gear list
+                                              _showSearchAndFullGearList(context);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ),
+
+                            // Today's bookings section
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: BLKWDSConstants.spacingMedium,
+                              ),
+                              child: SizedBox(
+                                height: 250, // Fixed height for today's bookings
+                                child: TodayBookingWidget(
+                                  controller: _controller,
+                                  controllerV2: _controllerV2,
+                                  adapter: _adapter,
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+                            // Recent activity section
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: BLKWDSConstants.spacingMedium,
+                                vertical: 0,
+                              ),
+                              child: SizedBox(
+                                height: 300, // Fixed height for recent activity
+                                child: RecentActivityWidget(controller: _controller),
+                              ),
+                            ),
+
+                            const SizedBox(height: BLKWDSConstants.spacingMedium),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-
-                  // Main content area - Quick Actions and Recent Activity
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Left side - Quick actions
-                          Expanded(
-                            flex: 1,
-                            child: QuickActionsPanel(
-                              onAddGear: () async {
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const AddGearScreen(),
-                                  ),
-                                );
-
-                                if (result == true) {
-                                  // Refresh data when returning from add gear screen
-                                  await _controller.initialize();
-                                  _updateFilteredGear();
-                                }
-                              },
-                              onOpenBookingPanel: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const BookingPanelScreen(),
-                                  ),
-                                );
-                              },
-                              onManageMembers: () {
-                                Navigator.push(
-                                  context,
-                                  BLKWDSPageRoute(
-                                    page: const MemberListScreen(),
-                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                  ),
-                                );
-                              },
-                              onManageProjects: () {
-                                Navigator.push(
-                                  context,
-                                  BLKWDSPageRoute(
-                                    page: const ProjectListScreen(),
-                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                  ),
-                                );
-                              },
-                              onManageGear: () {
-                                Navigator.push(
-                                  context,
-                                  BLKWDSPageRoute(
-                                    page: const GearListScreen(),
-                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                  ),
-                                );
-                              },
-                              onManageStudios: () {
-                                Navigator.push(
-                                  context,
-                                  BLKWDSPageRoute(
-                                    page: const StudioManagementScreen(),
-                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(width: BLKWDSConstants.spacingMedium),
-
-                          // Right side - Gear preview list (moved from bottom)
-                          Expanded(
-                            flex: 2,
-                            child: GearPreviewListWidget(
-                              controller: _controller,
-                              onCheckout: _handleCheckout,
-                              onReturn: _handleReturn,
-                              onViewAllGear: () {
-                                // Show search bar and full gear list
-                                _showSearchAndFullGearList(context);
-                              },
-                            ),
-                          ),
-                        ],
                       ),
                     ),
-                  ),
-
-                  // Middle section - Today's bookings (moved from top right)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: BLKWDSConstants.spacingMedium,
-                    ),
-                    child: SizedBox(
-                      height: 220, // Fixed height for today's bookings
-                      child: TodayBookingWidget(
-                        controller: _controller,
-                        controllerV2: _controllerV2,
-                        adapter: _adapter,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: BLKWDSConstants.spacingMedium),
-
-                  // Bottom section - Recent activity (full width)
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: BLKWDSConstants.spacingMedium,
-                        vertical: 0,
-                      ),
-                      child: RecentActivityWidget(controller: _controller),
-                    ),
-                  ),
-                ],
+                  );
+                },
               );
                 },
               );
