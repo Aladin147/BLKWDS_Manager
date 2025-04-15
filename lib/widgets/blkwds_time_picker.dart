@@ -16,14 +16,14 @@ class BLKWDSTimePicker extends StatelessWidget {
   final String hintText;
 
   const BLKWDSTimePicker({
-    Key? key,
+    super.key,
     required this.label,
     required this.selectedTime,
     required this.onTimeSelected,
     this.isRequired = false,
     this.errorText,
     this.hintText = 'Select time',
-  }) : super(key: key);
+  });
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay initialTime = selectedTime ?? TimeOfDay.now();

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'log_service.dart';
 
 /// ImageService
 /// Handles image operations for gear thumbnails
@@ -25,8 +26,7 @@ class ImageService {
 
       return File(file.path);
     } catch (e) {
-      // Use a logger in production code instead of print
-      // print('Error picking image: $e');
+      LogService.error('Error picking image', e);
       return null;
     }
   }
@@ -55,8 +55,7 @@ class ImageService {
 
       return destPath;
     } catch (e) {
-      // Use a logger in production code instead of print
-      // print('Error saving image: $e');
+      LogService.error('Error saving image', e);
       return null;
     }
   }
@@ -73,8 +72,7 @@ class ImageService {
 
       return false;
     } catch (e) {
-      // Use a logger in production code instead of print
-      // print('Error deleting image: $e');
+      LogService.error('Error deleting image', e);
       return false;
     }
   }

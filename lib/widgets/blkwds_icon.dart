@@ -5,19 +5,19 @@ import '../theme/blkwds_colors.dart';
 enum BLKWDSIconSize {
   /// Extra small icon (16px)
   extraSmall(16),
-  
+
   /// Small icon (20px)
   small(20),
-  
+
   /// Medium icon (24px)
   medium(24),
-  
+
   /// Large icon (32px)
   large(32),
-  
+
   /// Extra large icon (48px)
   extraLarge(48);
-  
+
   final double size;
   const BLKWDSIconSize(this.size);
 }
@@ -35,7 +35,7 @@ class BLKWDSIcon extends StatelessWidget {
   final Color? badgeColor;
 
   const BLKWDSIcon({
-    Key? key,
+    super.key,
     required this.icon,
     this.size = BLKWDSIconSize.medium,
     this.color,
@@ -43,7 +43,7 @@ class BLKWDSIcon extends StatelessWidget {
     this.tooltip,
     this.hasBadge = false,
     this.badgeColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +52,9 @@ class BLKWDSIcon extends StatelessWidget {
       size: size.size,
       color: color ?? BLKWDSColors.electricMint,
     );
-    
+
     Widget result = iconWidget;
-    
+
     // Add tooltip if provided
     if (tooltip != null) {
       result = Tooltip(
@@ -62,7 +62,7 @@ class BLKWDSIcon extends StatelessWidget {
         child: result,
       );
     }
-    
+
     // Add tap functionality if provided
     if (onTap != null) {
       result = InkWell(
@@ -71,7 +71,7 @@ class BLKWDSIcon extends StatelessWidget {
         child: result,
       );
     }
-    
+
     // Add badge if requested
     if (hasBadge) {
       result = Stack(
@@ -97,7 +97,7 @@ class BLKWDSIcon extends StatelessWidget {
         ],
       );
     }
-    
+
     return result;
   }
 }

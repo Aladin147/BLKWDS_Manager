@@ -13,12 +13,12 @@ class BLKWDSCheckbox extends StatelessWidget {
   final bool isDisabled;
 
   const BLKWDSCheckbox({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     required this.onChanged,
     this.isDisabled = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

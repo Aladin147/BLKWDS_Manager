@@ -13,13 +13,13 @@ class BLKWDSStatusBadge extends StatelessWidget {
   final double? borderRadius;
 
   const BLKWDSStatusBadge({
-    Key? key,
+    super.key,
     required this.text,
     required this.color,
     this.fontSize,
     this.padding,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   /// Create a status badge with a predefined status
   factory BLKWDSStatusBadge.status({

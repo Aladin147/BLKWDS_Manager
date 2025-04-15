@@ -16,7 +16,7 @@ class BLKWDSDropdown<T> extends StatelessWidget {
   final String hintText;
 
   const BLKWDSDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     required this.items,
@@ -24,7 +24,7 @@ class BLKWDSDropdown<T> extends StatelessWidget {
     this.isRequired = false,
     this.errorText,
     this.hintText = 'Select an option',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

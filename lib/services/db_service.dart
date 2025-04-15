@@ -883,7 +883,7 @@ class DBService {
       await txn.delete('project');
       await txn.delete('booking');
       await txn.delete('booking_gear');
-      await txn.delete('booking_gear_member');
+      // booking_gear_member table was removed in a schema update
       await txn.delete('project_member');
       await txn.delete('activity_log');
       await txn.delete('status_note');

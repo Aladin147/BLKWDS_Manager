@@ -18,7 +18,7 @@ class BLKWDSDatePicker extends StatelessWidget {
   final DateTime? lastDate;
 
   const BLKWDSDatePicker({
-    Key? key,
+    super.key,
     required this.label,
     required this.selectedDate,
     required this.onDateSelected,
@@ -27,7 +27,7 @@ class BLKWDSDatePicker extends StatelessWidget {
     this.hintText = 'Select date',
     this.firstDate,
     this.lastDate,
-  }) : super(key: key);
+  });
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();

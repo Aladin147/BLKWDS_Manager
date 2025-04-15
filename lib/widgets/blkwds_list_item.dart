@@ -7,13 +7,13 @@ import '../theme/blkwds_typography.dart';
 enum BLKWDSListItemType {
   /// Standard list item with title and optional subtitle
   standard,
-  
+
   /// List item with leading icon
   withIcon,
-  
+
   /// List item with leading avatar
   withAvatar,
-  
+
   /// List item with trailing status indicator
   withStatus,
 }
@@ -36,7 +36,7 @@ class BLKWDSListItem extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
 
   const BLKWDSListItem({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.description,
@@ -49,13 +49,13 @@ class BLKWDSListItem extends StatelessWidget {
     this.statusText,
     this.hasBorder = true,
     this.contentPadding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     // Build the leading widget based on type
     Widget? leading;
-    
+
     if (leadingWidget != null) {
       leading = leadingWidget;
     } else if (leadingIcon != null) {
@@ -68,7 +68,7 @@ class BLKWDSListItem extends StatelessWidget {
 
     // Build the trailing widget
     Widget? trailingWidget = trailing;
-    
+
     // If status is provided and no custom trailing widget, create a status indicator
     if (trailing == null && statusColor != null && statusText != null) {
       trailingWidget = Container(
@@ -97,7 +97,7 @@ class BLKWDSListItem extends StatelessWidget {
     );
 
     List<Widget> contentWidgets = [titleWidget];
-    
+
     if (subtitle != null) {
       contentWidgets.add(
         const SizedBox(height: BLKWDSConstants.spacingExtraSmall),
@@ -110,7 +110,7 @@ class BLKWDSListItem extends StatelessWidget {
         ),
       );
     }
-    
+
     if (description != null) {
       contentWidgets.add(
         const SizedBox(height: BLKWDSConstants.spacingExtraSmall),
@@ -140,7 +140,7 @@ class BLKWDSListItem extends StatelessWidget {
             : null,
       ),
       child: ListTile(
-        contentPadding: contentPadding ?? 
+        contentPadding: contentPadding ??
             const EdgeInsets.symmetric(
               horizontal: BLKWDSConstants.spacingMedium,
               vertical: BLKWDSConstants.spacingSmall,

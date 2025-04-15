@@ -23,7 +23,7 @@ class BLKWDSTextField extends StatelessWidget {
   final String? initialValue;
 
   const BLKWDSTextField({
-    Key? key,
+    super.key,
     required this.label,
     this.hintText,
     this.controller,
@@ -38,7 +38,7 @@ class BLKWDSTextField extends StatelessWidget {
     this.focusNode,
     this.maxLength,
     this.initialValue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
