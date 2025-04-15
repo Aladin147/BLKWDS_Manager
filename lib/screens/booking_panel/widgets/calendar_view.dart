@@ -256,6 +256,11 @@ class _CalendarViewState extends State<CalendarView> {
               color: BLKWDSColors.slateGrey,
             ),
           ),
+          onFormatChanged: (format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          },
           onDaySelected: (selectedDay, focusedDay) {
             setState(() {
               _selectedDay = selectedDay;
