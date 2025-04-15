@@ -2,17 +2,19 @@ import 'package:flutter/foundation.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
-import '../../utils/booking_converter.dart';
 import '../../utils/constants.dart';
+import '../../utils/booking_converter.dart';
 
-/// DashboardController
+/// DashboardControllerV2
 /// Handles business logic and database operations for the dashboard screen
-class DashboardController {
+/// This version supports the new BookingV2 model with studio system
+class DashboardControllerV2 {
   // State notifiers
   final ValueNotifier<List<Gear>> gearList = ValueNotifier<List<Gear>>([]);
   final ValueNotifier<List<Member>> memberList = ValueNotifier<List<Member>>([]);
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
-  final ValueNotifier<List<Booking>> bookingList = ValueNotifier<List<Booking>>([]);
+  final ValueNotifier<List<BookingV2>> bookingList = ValueNotifier<List<BookingV2>>([]);
+  final ValueNotifier<List<Studio>> studioList = ValueNotifier<List<Studio>>([]);
   final ValueNotifier<List<ActivityLog>> recentActivity = ValueNotifier<List<ActivityLog>>([]);
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
@@ -29,6 +31,7 @@ class DashboardController {
         _loadMembers(),
         _loadProjects(),
         _loadBookings(),
+        _loadStudios(),
         _loadRecentActivity(),
       ]);
     } catch (e) {
@@ -75,10 +78,21 @@ class DashboardController {
   // Load bookings from database
   Future<void> _loadBookings() async {
     try {
-      final bookings = await DBService.getAllBookings();
+      final bookings = await DBService.getAllBookingsV2();
       bookingList.value = bookings;
     } catch (e) {
       LogService.error('Error loading bookings', e);
+      rethrow;
+    }
+  }
+
+  // Load studios from database
+  Future<void> _loadStudios() async {
+    try {
+      final studios = await DBService.getAllStudios();
+      studioList.value = studios;
+    } catch (e) {
+      LogService.error('Error loading studios', e);
       rethrow;
     }
   }
@@ -180,8 +194,17 @@ class DashboardController {
     }).toList();
   }
 
+  // Get studio by ID
+  Studio? getStudioById(int id) {
+    try {
+      return studioList.value.firstWhere((studio) => studio.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Get bookings for today
-  List<Booking> getTodayBookings() {
+  List<BookingV2> getTodayBookings() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
@@ -195,14 +218,14 @@ class DashboardController {
     }).toList();
   }
 
-  // Convert Booking to BookingV2 for compatibility
-  Future<BookingV2> convertToBookingV2(Booking booking) async {
-    return await BookingConverter.toBookingV2(booking);
+  // Convert BookingV2 to Booking for compatibility
+  Future<Booking> convertToBookingV1(BookingV2 bookingV2) async {
+    return await BookingConverter.toBooking(bookingV2);
   }
 
-  // Convert a list of Booking to a list of BookingV2 for compatibility
-  Future<List<BookingV2>> convertToBookingV2List(List<Booking> bookings) async {
-    return await BookingConverter.toBookingV2List(bookings);
+  // Convert a list of BookingV2 to a list of Booking for compatibility
+  Future<List<Booking>> convertToBookingV1List(List<BookingV2> bookingsV2) async {
+    return await BookingConverter.toBookingList(bookingsV2);
   }
 
   // Dispose resources
@@ -211,6 +234,7 @@ class DashboardController {
     memberList.dispose();
     projectList.dispose();
     bookingList.dispose();
+    studioList.dispose();
     recentActivity.dispose();
     isLoading.dispose();
     errorMessage.dispose();

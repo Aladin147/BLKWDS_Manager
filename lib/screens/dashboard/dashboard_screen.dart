@@ -4,6 +4,7 @@ import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../utils/constants.dart';
+import '../../utils/feature_flags.dart';
 
 import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -15,7 +16,9 @@ import '../member_management/member_list_screen.dart';
 import '../project_management/project_list_screen.dart';
 import '../gear_management/gear_list_screen.dart';
 import '../studio_management/studio_management_screen.dart';
+import 'dashboard_adapter.dart';
 import 'dashboard_controller.dart';
+import 'dashboard_controller_v2.dart';
 import 'widgets/top_bar_summary_widget.dart';
 import 'widgets/quick_actions_panel.dart';
 import 'widgets/today_booking_widget.dart';
@@ -32,8 +35,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Controller for database operations and state management
-  final _controller = DashboardController();
+  // Controllers for database operations and state management
+  late DashboardController _controller;
+  DashboardControllerV2? _controllerV2;
+  late DashboardAdapter _adapter;
 
   // Selected member for checkout
   Member? _selectedMember;
@@ -48,7 +53,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
-    // Initialize controller and load data
+    // Initialize controllers based on feature flags
+    _initializeControllers();
+
+    // Initialize data and load data
     _initializeData();
 
     // Listen for changes in gear list
@@ -58,9 +66,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _controller.memberList.addListener(_updateSelectedMember);
   }
 
+  // Initialize controllers based on feature flags
+  void _initializeControllers() {
+    _controller = DashboardController();
+
+    if (FeatureFlags.useStudioSystem) {
+      _controllerV2 = DashboardControllerV2();
+      _adapter = DashboardAdapter(controllerV1: _controller, controllerV2: _controllerV2);
+    } else {
+      _adapter = DashboardAdapter(controllerV1: _controller);
+    }
+  }
+
   // Initialize data from database
   Future<void> _initializeData() async {
+    // Initialize controllers
     await _controller.initialize();
+
+    if (_controllerV2 != null) {
+      await _controllerV2!.initialize();
+    }
+
     _updateFilteredGear();
     _updateSelectedMember();
   }
@@ -83,10 +109,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    // Clean up controller
+    // Clean up controllers
     _controller.gearList.removeListener(_updateFilteredGear);
     _controller.memberList.removeListener(_updateSelectedMember);
     _controller.dispose();
+    _controllerV2?.dispose();
     super.dispose();
   }
 
@@ -376,7 +403,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           // Right side - Today's bookings
                           Expanded(
                             flex: 2,
-                            child: TodayBookingWidget(controller: _controller),
+                            child: TodayBookingWidget(
+                              controller: _controller,
+                              controllerV2: _controllerV2,
+                              adapter: _adapter,
+                            ),
                           ),
                         ],
                       ),
