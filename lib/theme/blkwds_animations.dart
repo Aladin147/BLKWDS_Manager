@@ -3,7 +3,7 @@ import 'blkwds_constants.dart';
 import 'blkwds_colors.dart';
 
 /// BLKWDS Manager Animation System
-/// 
+///
 /// Provides standardized animations for consistent motion throughout the app
 class BLKWDSAnimations {
   // Animation Durations
@@ -19,22 +19,22 @@ class BLKWDSAnimations {
   static const Curve decelerate = Curves.easeOutQuint;
   static const Curve accelerate = Curves.easeInQuint;
   static const Curve sharp = Curves.easeInOutQuart;
-  
+
   // Hover Animation Scale Factors
   static const double hoverScaleFactor = 1.02;
   static const double pressScaleFactor = 0.98;
-  
+
   // Elevation Animation Values
   static const double baseElevation = BLKWDSConstants.cardElevation;
   static const double hoverElevation = BLKWDSConstants.cardElevation + 2;
   static const double activeElevation = BLKWDSConstants.cardElevation + 4;
-  
+
   // Opacity Animation Values
   static const double fadeInStart = 0.0;
   static const double fadeInEnd = 1.0;
   static const double fadeOutStart = 1.0;
   static const double fadeOutEnd = 0.0;
-  
+
   /// Creates a standard fade transition
   static Widget fadeTransition({
     required Widget child,
@@ -49,7 +49,7 @@ class BLKWDSAnimations {
       child: child,
     );
   }
-  
+
   /// Creates a standard slide transition
   static Widget slideTransition({
     required Widget child,
@@ -69,7 +69,7 @@ class BLKWDSAnimations {
       child: child,
     );
   }
-  
+
   /// Creates a standard scale transition
   static Widget scaleTransition({
     required Widget child,
@@ -89,7 +89,7 @@ class BLKWDSAnimations {
       child: child,
     );
   }
-  
+
   /// Creates a combined fade and slide transition
   static Widget fadeSlideTransition({
     required Widget child,
@@ -115,7 +115,7 @@ class BLKWDSAnimations {
       ),
     );
   }
-  
+
   /// Creates a hover animation container
   static Widget hoverAnimationContainer({
     required Widget child,
@@ -143,7 +143,7 @@ class BLKWDSAnimations {
       child: child,
     );
   }
-  
+
   /// Creates a press animation container
   static Widget pressAnimationContainer({
     required Widget child,
@@ -159,7 +159,7 @@ class BLKWDSAnimations {
       child: child,
     );
   }
-  
+
   /// Creates a shimmer loading effect
   static Widget shimmerLoading({
     required Widget child,
@@ -186,7 +186,7 @@ class BLKWDSAnimations {
 class BLKWDSPageRoute<T> extends PageRouteBuilder<T> {
   final Widget page;
   final BLKWDSPageTransitionType transitionType;
-  
+
   BLKWDSPageRoute({
     required this.page,
     this.transitionType = BLKWDSPageTransitionType.rightToLeft,
@@ -255,13 +255,13 @@ extension AnimatedColorExtension on Color {
     List<double>? stops,
   }) {
     return LinearGradient(
-      colors: [this, endColor ?? this.withValues(alpha: 200)],
+      colors: [this, endColor ?? withValues(alpha: 200)],
       begin: begin,
       end: end,
       stops: stops,
     );
   }
-  
+
   /// Creates a radial gradient with this color
   Gradient toRadialGradient({
     Color? endColor,
@@ -270,7 +270,7 @@ extension AnimatedColorExtension on Color {
     List<double>? stops,
   }) {
     return RadialGradient(
-      colors: [this, endColor ?? this.withValues(alpha: 200)],
+      colors: [this, endColor ?? withValues(alpha: 200)],
       center: center,
       radius: radius,
       stops: stops,
@@ -284,22 +284,22 @@ class BLKWDSLoadingSpinner extends StatefulWidget {
   final Color color;
   final Duration duration;
   final double strokeWidth;
-  
+
   const BLKWDSLoadingSpinner({
-    Key? key,
+    super.key,
     this.size = 40.0,
     this.color = BLKWDSColors.electricMint,
     this.duration = const Duration(milliseconds: 1200),
     this.strokeWidth = 3.0,
-  }) : super(key: key);
-  
+  });
+
   @override
   State<BLKWDSLoadingSpinner> createState() => _BLKWDSLoadingSpinnerState();
 }
 
 class _BLKWDSLoadingSpinnerState extends State<BLKWDSLoadingSpinner> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  
+
   @override
   void initState() {
     super.initState();
@@ -308,13 +308,13 @@ class _BLKWDSLoadingSpinnerState extends State<BLKWDSLoadingSpinner> with Single
       duration: widget.duration,
     )..repeat();
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -340,34 +340,34 @@ class _SpinnerPainter extends CustomPainter {
   final Animation<double> animation;
   final Color color;
   final double strokeWidth;
-  
+
   _SpinnerPainter({
     required this.animation,
     required this.color,
     required this.strokeWidth,
   });
-  
+
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    // Calculate center and radius for the circular progress indicator
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - strokeWidth;
-    
+
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
-    
+
     // Draw background circle with lower opacity
     paint.color = color.withValues(alpha: 50);
     canvas.drawCircle(center, radius, paint);
-    
+
     // Draw animated arc
     paint.color = color;
     final startAngle = -0.5 * 3.14; // Start from top
     final sweepAngle = 1.75 * 3.14 * animation.value;
-    
+
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       startAngle + (animation.value * 4 * 3.14), // Rotate as we animate
@@ -376,7 +376,7 @@ class _SpinnerPainter extends CustomPainter {
       paint,
     );
   }
-  
+
   @override
   bool shouldRepaint(_SpinnerPainter oldDelegate) {
     return animation.value != oldDelegate.animation.value ||
@@ -394,9 +394,9 @@ class BLKWDSProgressIndicator extends StatelessWidget {
   final bool isAnimated;
   final Duration animationDuration;
   final Curve animationCurve;
-  
+
   const BLKWDSProgressIndicator({
-    Key? key,
+    super.key,
     required this.value,
     this.backgroundColor = const Color(0xFF2A2A2A),
     this.progressColor = BLKWDSColors.electricMint,
@@ -404,8 +404,8 @@ class BLKWDSProgressIndicator extends StatelessWidget {
     this.isAnimated = true,
     this.animationDuration = BLKWDSAnimations.medium,
     this.animationCurve = BLKWDSAnimations.emphasized,
-  }) : super(key: key);
-  
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -418,7 +418,7 @@ class BLKWDSProgressIndicator extends StatelessWidget {
         builder: (context, constraints) {
           final maxWidth = constraints.maxWidth;
           final progressWidth = maxWidth * value.clamp(0.0, 1.0);
-          
+
           return Stack(
             children: [
               // Progress bar

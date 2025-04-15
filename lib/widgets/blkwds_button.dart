@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
-import '../theme/blkwds_animations.dart';
-import '../theme/blkwds_shadows.dart';
-import '../theme/blkwds_gradients.dart';
 
 /// Standardized button component for BLKWDS Manager
 ///
@@ -26,7 +23,7 @@ class BLKWDSButton extends StatelessWidget {
   final bool isDisabled;
 
   const BLKWDSButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
     this.type = BLKWDSButtonType.primary,
@@ -34,7 +31,7 @@ class BLKWDSButton extends StatelessWidget {
     this.isFullWidth = false,
     this.isSmall = false,
     this.isDisabled = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class BLKWDSAnimatedList extends StatefulWidget {
   final BLKWDSListAnimationType animationType;
 
   const BLKWDSAnimatedList({
-    Key? key,
+    super.key,
     required this.children,
     this.staggerDuration = const Duration(milliseconds: 50),
     this.itemDuration = BLKWDSAnimations.medium,
@@ -34,7 +34,7 @@ class BLKWDSAnimatedList extends StatefulWidget {
     this.emptyWidget,
     this.animateOnlyOnce = true,
     this.animationType = BLKWDSListAnimationType.fadeSlide,
-  }) : super(key: key);
+  });
 
   @override
   State<BLKWDSAnimatedList> createState() => _BLKWDSAnimatedListState();
@@ -63,7 +63,7 @@ class _BLKWDSAnimatedListState extends State<BLKWDSAnimatedList> with SingleTick
       widget.children.length,
       (index) => GlobalKey<_AnimatedListItemState>(),
     );
-    
+
     // Trigger animations
     if (!_hasAnimatedOnce || !widget.animateOnlyOnce) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -89,12 +89,12 @@ class _BLKWDSAnimatedListState extends State<BLKWDSAnimatedList> with SingleTick
       widget.children.length,
       (index) => _AnimatedListItem(
         key: _itemKeys[index],
-        child: widget.children[index],
         duration: widget.itemDuration,
         curve: widget.curve,
         direction: widget.direction,
         animationType: widget.animationType,
         skipAnimation: _hasAnimatedOnce && widget.animateOnlyOnce,
+        child: widget.children[index],
       ),
     );
 
@@ -106,7 +106,7 @@ class _BLKWDSAnimatedListState extends State<BLKWDSAnimatedList> with SingleTick
           separatedItems.add(widget.separator!);
         }
       }
-      
+
       return _buildList(separatedItems);
     }
 
@@ -154,14 +154,14 @@ class _AnimatedListItem extends StatefulWidget {
   final bool skipAnimation;
 
   const _AnimatedListItem({
-    Key? key,
+    super.key,
     required this.child,
     required this.duration,
     required this.curve,
     required this.direction,
     required this.animationType,
     this.skipAnimation = false,
-  }) : super(key: key);
+  });
 
   @override
   State<_AnimatedListItem> createState() => _AnimatedListItemState();
@@ -298,7 +298,7 @@ class BLKWDSAnimatedGrid extends StatefulWidget {
   final double childAspectRatio;
 
   const BLKWDSAnimatedGrid({
-    Key? key,
+    super.key,
     required this.children,
     required this.crossAxisCount,
     this.staggerDuration = const Duration(milliseconds: 50),
@@ -314,7 +314,7 @@ class BLKWDSAnimatedGrid extends StatefulWidget {
     this.mainAxisSpacing = 10.0,
     this.crossAxisSpacing = 10.0,
     this.childAspectRatio = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   State<BLKWDSAnimatedGrid> createState() => _BLKWDSAnimatedGridState();
@@ -343,7 +343,7 @@ class _BLKWDSAnimatedGridState extends State<BLKWDSAnimatedGrid> with SingleTick
       widget.children.length,
       (index) => GlobalKey<_AnimatedListItemState>(),
     );
-    
+
     // Trigger animations
     if (!_hasAnimatedOnce || !widget.animateOnlyOnce) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -369,12 +369,12 @@ class _BLKWDSAnimatedGridState extends State<BLKWDSAnimatedGrid> with SingleTick
       widget.children.length,
       (index) => _AnimatedListItem(
         key: _itemKeys[index],
-        child: widget.children[index],
         duration: widget.itemDuration,
         curve: widget.curve,
         direction: Axis.vertical,
         animationType: widget.animationType,
         skipAnimation: _hasAnimatedOnce && widget.animateOnlyOnce,
+        child: widget.children[index],
       ),
     );
 

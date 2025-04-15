@@ -28,7 +28,7 @@ class BLKWDSExpandable extends StatefulWidget {
   final Widget? headerTrailing;
 
   const BLKWDSExpandable({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.initiallyExpanded = false,
@@ -47,7 +47,7 @@ class BLKWDSExpandable extends StatefulWidget {
     this.onCollapse,
     this.animateOnExpand = true,
     this.headerTrailing,
-  }) : super(key: key);
+  });
 
   @override
   State<BLKWDSExpandable> createState() => _BLKWDSExpandableState();
@@ -65,12 +65,12 @@ class _BLKWDSExpandableState extends State<BLKWDSExpandable> with SingleTickerPr
   void initState() {
     super.initState();
     _isExpanded = widget.initiallyExpanded;
-    
+
     _controller = AnimationController(
       duration: widget.animationDuration,
       vsync: this,
     );
-    
+
     _heightFactor = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -78,7 +78,7 @@ class _BLKWDSExpandableState extends State<BLKWDSExpandable> with SingleTickerPr
       parent: _controller,
       curve: widget.animationCurve,
     ));
-    
+
     _iconRotation = Tween<double>(
       begin: 0.0,
       end: 0.5,
@@ -86,7 +86,7 @@ class _BLKWDSExpandableState extends State<BLKWDSExpandable> with SingleTickerPr
       parent: _controller,
       curve: widget.animationCurve,
     ));
-    
+
     _contentOpacity = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -97,7 +97,7 @@ class _BLKWDSExpandableState extends State<BLKWDSExpandable> with SingleTickerPr
         curve: widget.animationCurve,
       ),
     ));
-    
+
     if (_isExpanded) {
       _controller.value = 1.0;
     }
@@ -132,7 +132,7 @@ class _BLKWDSExpandableState extends State<BLKWDSExpandable> with SingleTickerPr
     final headerTextColor = widget.headerTextColor ?? BLKWDSColors.white;
     final iconColor = widget.iconColor ?? BLKWDSColors.electricMint;
     final borderRadius = widget.borderRadius ?? BorderRadius.circular(BLKWDSConstants.borderRadius);
-    
+
     return Container(
       padding: widget.padding,
       decoration: widget.hasBorder
@@ -190,13 +190,13 @@ class _BLKWDSExpandableState extends State<BLKWDSExpandable> with SingleTickerPr
               ),
             ),
           ),
-          
+
           // Animated content
           ClipRect(
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
-                return Container(
+                return SizedBox(
                   height: _heightFactor.value * _getChildHeight(),
                   child: child,
                 );
@@ -249,7 +249,7 @@ class BLKWDSExpandableGroup extends StatefulWidget {
   final BorderRadius? borderRadius;
 
   const BLKWDSExpandableGroup({
-    Key? key,
+    super.key,
     required this.panels,
     this.allowMultipleOpen = false,
     this.animationDuration = BLKWDSAnimations.medium,
@@ -257,7 +257,7 @@ class BLKWDSExpandableGroup extends StatefulWidget {
     this.padding,
     this.hasBorder = true,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   @override
   State<BLKWDSExpandableGroup> createState() => _BLKWDSExpandableGroupState();
@@ -323,7 +323,6 @@ class _BLKWDSExpandableGroupState extends State<BLKWDSExpandableGroup> {
               ),
               child: BLKWDSExpandable(
                 title: panel.title,
-                child: panel.child,
                 initiallyExpanded: _expandedStates[index],
                 animationDuration: widget.animationDuration,
                 animationCurve: widget.animationCurve,
@@ -337,6 +336,7 @@ class _BLKWDSExpandableGroupState extends State<BLKWDSExpandableGroup> {
                 borderRadius: widget.borderRadius,
                 animateOnExpand: panel.animateOnExpand,
                 headerTrailing: panel.headerTrailing,
+                child: panel.child,
                 onExpand: () {
                   _handlePanelExpand(index);
                   if (panel.onExpand != null) {
