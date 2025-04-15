@@ -43,20 +43,19 @@ class TodayBookingWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Today\'s Bookings',
-              style: BLKWDSTypography.titleMedium.copyWith(
-                color: BLKWDSColors.textPrimary,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Today\'s Bookings',
+            style: BLKWDSTypography.titleMedium.copyWith(
+              color: BLKWDSColors.textPrimary,
             ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-            FutureBuilder<List<dynamic>>(
+          Expanded(
+            child: FutureBuilder<List<dynamic>>(
               future: _getTodayBookings(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -85,14 +84,13 @@ class TodayBookingWidget extends StatelessWidget {
                   );
                 }
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
+                return ListView(
                   children: todayBookings.take(3).map((booking) => _buildBookingItem(context, booking)).toList(),
                 );
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

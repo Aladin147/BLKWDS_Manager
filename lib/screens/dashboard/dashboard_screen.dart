@@ -290,8 +290,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
 
-                  // Main content area
+                  // Main content area - Quick Actions and Recent Activity
                   Expanded(
+                    flex: 1,
                     child: Padding(
                       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
                       child: Row(
@@ -364,49 +365,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                           const SizedBox(width: BLKWDSConstants.spacingMedium),
 
-                          // Right side - Today's bookings
+                          // Right side - Recent activity (moved from bottom)
                           Expanded(
                             flex: 2,
-                            child: TodayBookingWidget(
-                              controller: _controller,
-                              controllerV2: _controllerV2,
-                              adapter: _adapter,
-                            ),
+                            child: RecentActivityWidget(controller: _controller),
                           ),
                         ],
                       ),
                     ),
                   ),
 
-                  // Bottom section - Gear preview and activity
+                  // Middle section - Today's bookings (moved from top right)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: BLKWDSConstants.spacingMedium,
+                    ),
+                    child: SizedBox(
+                      height: 220, // Fixed height for today's bookings
+                      child: TodayBookingWidget(
+                        controller: _controller,
+                        controllerV2: _controllerV2,
+                        adapter: _adapter,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+                  // Bottom section - Gear preview list (full width)
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Gear preview list
-                          Expanded(
-                            flex: 3,
-                            child: GearPreviewListWidget(
-                              controller: _controller,
-                              onCheckout: _handleCheckout,
-                              onReturn: _handleReturn,
-                              onViewAllGear: () {
-                                // Show search bar and full gear list
-                                _showSearchAndFullGearList(context);
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(width: BLKWDSConstants.spacingMedium),
-
-                          // Recent activity
-                          Expanded(
-                            flex: 2,
-                            child: RecentActivityWidget(controller: _controller),
-                          ),
-                        ],
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: BLKWDSConstants.spacingMedium,
+                        vertical: 0,
+                      ),
+                      child: GearPreviewListWidget(
+                        controller: _controller,
+                        onCheckout: _handleCheckout,
+                        onReturn: _handleReturn,
+                        onViewAllGear: () {
+                          // Show search bar and full gear list
+                          _showSearchAndFullGearList(context);
+                        },
                       ),
                     ),
                   ),
