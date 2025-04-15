@@ -3,15 +3,16 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../../../widgets/blkwds_button.dart';
+
+import '../../gear_management/widgets/gear_card_with_note.dart';
 import '../dashboard_controller.dart';
 
 /// GearPreviewListWidget
 /// Displays a preview of recently used gear items
 class GearPreviewListWidget extends StatelessWidget {
   final DashboardController controller;
-  final Function(Gear) onCheckout;
-  final Function(Gear) onReturn;
+  final Function(Gear, String?) onCheckout;
+  final Function(Gear, String?) onReturn;
   final VoidCallback onViewAllGear;
 
   const GearPreviewListWidget({
@@ -155,97 +156,11 @@ class GearPreviewListWidget extends StatelessWidget {
 
   // Build a gear item
   Widget _buildGearItem(Gear gear) {
-    // For a real app, we would find the member who has the gear checked out
-    // This would require additional data in the Gear model or a lookup table
-    Member? assignedMember;
-    // For demo purposes, just use the first member if gear is checked out
-    if (gear.isOut && controller.memberList.value.isNotEmpty) {
-      assignedMember = controller.memberList.value.first;
-    }
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
-        child: Row(
-          children: [
-            // Gear thumbnail
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: BLKWDSColors.backgroundLight,
-                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
-              ),
-              child: const Icon(Icons.camera_alt),
-            ),
-            const SizedBox(width: BLKWDSConstants.spacingMedium),
-
-            // Gear info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    gear.name,
-                    style: BLKWDSTypography.titleSmall,
-                  ),
-                  Text(
-                    gear.category,
-                    style: BLKWDSTypography.bodySmall,
-                  ),
-                  if (assignedMember != null)
-                    Text(
-                      'Checked out to: ${assignedMember.name}',
-                      style: BLKWDSTypography.bodySmall.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
-            // Status badge
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
-              decoration: BoxDecoration(
-                color: gear.isOut
-                    ? BLKWDSColors.warningAmber.withValues(alpha: 25)
-                    : BLKWDSColors.successGreen.withValues(alpha: 25),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                gear.isOut ? 'OUT' : 'IN',
-                style: BLKWDSTypography.labelMedium.copyWith(
-                  color: gear.isOut
-                      ? BLKWDSColors.warningAmber
-                      : BLKWDSColors.successGreen,
-                ),
-              ),
-            ),
-
-            const SizedBox(width: BLKWDSConstants.spacingSmall),
-
-            // Action button
-            gear.isOut
-                ? BLKWDSButton(
-                    label: 'Return',
-                    onPressed: () => onReturn(gear),
-                    type: BLKWDSButtonType.secondary,
-                    isSmall: true,
-                  )
-                : BLKWDSButton(
-                    label: 'Check Out',
-                    onPressed: () => onCheckout(gear),
-                    type: BLKWDSButtonType.primary,
-                    isSmall: true,
-                  ),
-          ],
-        ),
-      ),
+    return GearCardWithNote(
+      gear: gear,
+      onCheckout: onCheckout,
+      onCheckin: onReturn,
+      isCompact: true,
     );
   }
 }

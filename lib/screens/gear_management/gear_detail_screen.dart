@@ -7,6 +7,7 @@ import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'gear_form_screen.dart';
+import 'widgets/gear_card_with_note.dart';
 
 /// GearDetailScreen
 /// Displays detailed information about a gear item
@@ -25,17 +26,17 @@ class GearDetailScreen extends StatefulWidget {
 class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerProviderStateMixin {
   // Tab controller for the different sections
   late TabController _tabController;
-  
+
   // Activity logs
   List<ActivityLog> _activityLogs = [];
-  
+
   // Status notes
   List<StatusNote> _statusNotes = [];
-  
+
   // Loading states
   bool _isLoadingLogs = true;
   bool _isLoadingNotes = true;
-  
+
   // Error messages
   String? _logsErrorMessage;
   String? _notesErrorMessage;
@@ -144,20 +145,20 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
     try {
       await DBService.deleteGear(widget.gear.id!);
-      
+
       // Show success snackbar
       if (mounted) {
         SnackbarService.showSuccessSnackBar(
           context,
           '${widget.gear.name} deleted',
         );
-        
+
         // Navigate back to gear list
         Navigator.pop(context);
       }
     } catch (e, stackTrace) {
       LogService.error('Failed to delete gear', e, stackTrace);
-      
+
       if (mounted) {
         // Show error snackbar
         SnackbarService.showErrorSnackBar(
@@ -198,7 +199,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
     }
 
     if (!mounted) return;
-    
+
     // Show member selection dialog
     final selectedMember = await showDialog<Member>(
       context: context,
@@ -240,34 +241,14 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
     if (selectedMember == null || !mounted) return;
 
-    // Show note dialog
+    // Create a note controller for the note dialog
     final TextEditingController noteController = TextEditingController();
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Note (Optional)'),
-        content: TextField(
-          controller: noteController,
-          decoration: const InputDecoration(
-            hintText: 'Enter a note for this checkout',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, ''),
-            child: const Text('Skip'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, noteController.text),
-            child: const Text('Add Note'),
-          ),
-        ],
-      ),
-    );
+
+    // Show an integrated note dialog
+    final note = await _showIntegratedNoteDialog('Checkout Note (Optional)', noteController);
 
     if (!mounted) return;
-    
+
     // Check out gear
     try {
       final success = await DBService.checkOutGear(
@@ -284,7 +265,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
             '${widget.gear.name} checked out to ${selectedMember.name}',
           );
         }
-        
+
         // Refresh data
         _loadActivityLogs();
         _loadStatusNotes();
@@ -299,7 +280,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       }
     } catch (e, stackTrace) {
       LogService.error('Failed to check out gear', e, stackTrace);
-      
+
       if (mounted) {
         // Show error snackbar
         SnackbarService.showErrorSnackBar(
@@ -312,7 +293,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       }
     }
   }
-  
+
   // Check in gear
   Future<void> _checkinGear() async {
     if (!widget.gear.isOut) {
@@ -327,35 +308,15 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
     }
 
     if (!mounted) return;
-    
-    // Show note dialog
+
+    // Create a note controller for the note dialog
     final TextEditingController noteController = TextEditingController();
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Note (Optional)'),
-        content: TextField(
-          controller: noteController,
-          decoration: const InputDecoration(
-            hintText: 'Enter a note for this check-in',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, ''),
-            child: const Text('Skip'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, noteController.text),
-            child: const Text('Add Note'),
-          ),
-        ],
-      ),
-    );
+
+    // Show an integrated note dialog
+    final note = await _showIntegratedNoteDialog('Check-in Note (Optional)', noteController);
 
     if (!mounted) return;
-    
+
     // Check in gear
     try {
       final success = await DBService.checkInGear(
@@ -371,7 +332,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
             '${widget.gear.name} checked in successfully',
           );
         }
-        
+
         // Refresh data
         _loadActivityLogs();
         _loadStatusNotes();
@@ -386,7 +347,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       }
     } catch (e, stackTrace) {
       LogService.error('Failed to check in gear', e, stackTrace);
-      
+
       if (mounted) {
         // Show error snackbar
         SnackbarService.showErrorSnackBar(
@@ -399,45 +360,19 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       }
     }
   }
-  
+
   // Add a status note
   Future<void> _addStatusNote() async {
     if (!mounted) return;
-    
-    // Show note dialog
+
+    // Create a note controller for the note dialog
     final TextEditingController noteController = TextEditingController();
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Status Note'),
-        content: TextField(
-          controller: noteController,
-          decoration: const InputDecoration(
-            hintText: 'Enter a status note',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (noteController.text.isNotEmpty) {
-                Navigator.pop(context, noteController.text);
-              } else {
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add Note'),
-          ),
-        ],
-      ),
-    );
+
+    // Show an integrated note dialog
+    final note = await _showIntegratedNoteDialog('Add Status Note', noteController);
 
     if (note == null || note.isEmpty || !mounted) return;
-    
+
     // Add status note
     try {
       final success = await DBService.addStatusNote(
@@ -453,7 +388,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
             'Status note added successfully',
           );
         }
-        
+
         // Refresh data
         _loadStatusNotes();
       } else {
@@ -467,7 +402,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       }
     } catch (e, stackTrace) {
       LogService.error('Failed to add status note', e, stackTrace);
-      
+
       if (mounted) {
         // Show error snackbar
         SnackbarService.showErrorSnackBar(
@@ -480,7 +415,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       }
     }
   }
-  
+
   // Build the details tab
   Widget _buildDetailsTab() {
     return SingleChildScrollView(
@@ -527,29 +462,29 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                       ),
                     ],
                   ),
-                  
+
                   const Divider(height: BLKWDSConstants.spacingLarge),
-                  
+
                   // Gear ID
                   _buildInfoRow('Gear ID', '#${widget.gear.id}'),
-                  
+
                   // Serial number
                   if (widget.gear.serialNumber != null && widget.gear.serialNumber!.isNotEmpty)
                     _buildInfoRow('Serial Number', widget.gear.serialNumber!),
-                  
+
                   // Purchase date
                   if (widget.gear.purchaseDate != null)
                     _buildInfoRow('Purchase Date', _formatDate(widget.gear.purchaseDate!)),
-                  
+
                   // Status
                   _buildInfoRow(
                     'Status',
                     widget.gear.isOut ? 'Checked Out' : 'Available',
                     valueColor: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
                   ),
-                  
+
                   // Description
-                  if (widget.gear.description != null && widget.gear.description!.isNotEmpty) ...[  
+                  if (widget.gear.description != null && widget.gear.description!.isNotEmpty) ...[
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
                     Text(
                       'Description',
@@ -561,9 +496,9 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                       style: BLKWDSTypography.bodyMedium,
                     ),
                   ],
-                  
+
                   // Last note
-                  if (widget.gear.lastNote != null && widget.gear.lastNote!.isNotEmpty) ...[  
+                  if (widget.gear.lastNote != null && widget.gear.lastNote!.isNotEmpty) ...[
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
                     Text(
                       'Last Status Note',
@@ -579,9 +514,9 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
               ),
             ),
           ),
-          
+
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          
+
           // Add status note button
           BLKWDSButton(
             label: 'Add Status Note',
@@ -594,7 +529,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       ),
     );
   }
-  
+
   // Build the activity tab
   Widget _buildActivityTab() {
     return _isLoadingLogs
@@ -661,7 +596,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                     },
                   );
   }
-  
+
   // Build an activity log card
   Widget _buildActivityLogCard(ActivityLog log) {
     return Card(
@@ -695,9 +630,9 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                 ),
               ],
             ),
-            
+
             // Member info if available
-            if (log.member != null) ...[  
+            if (log.member != null) ...[
               const SizedBox(height: BLKWDSConstants.spacingSmall),
               Row(
                 children: [
@@ -714,9 +649,9 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                 ],
               ),
             ],
-            
+
             // Note if available
-            if (log.note != null && log.note!.isNotEmpty) ...[  
+            if (log.note != null && log.note!.isNotEmpty) ...[
               const SizedBox(height: BLKWDSConstants.spacingSmall),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -741,7 +676,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       ),
     );
   }
-  
+
   // Build an info row with label and value
   Widget _buildInfoRow(String label, String value, {Color? valueColor}) {
     return Padding(
@@ -771,13 +706,50 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       ),
     );
   }
-  
+
   // Format a date for display
   String _formatDate(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} '
         '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
-  
+
+  // Show an integrated note dialog
+  Future<String?> _showIntegratedNoteDialog(String title, TextEditingController controller) async {
+    return await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                hintText: 'Enter a note (optional)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: BLKWDSConstants.spacingMedium),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context, controller.text),
+                  child: const Text('Continue'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -817,7 +789,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         children: [
           // Details tab
           _buildDetailsTab(),
-          
+
           // Activity tab
           _buildActivityTab(),
         ],

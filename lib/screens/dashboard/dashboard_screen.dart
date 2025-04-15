@@ -118,14 +118,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   // Handle gear checkout
-  Future<void> _handleCheckout(Gear gear) async {
+  Future<void> _handleCheckout(Gear gear, [String? note]) async {
     if (_selectedMember == null) {
       _showSnackBar('Please select a member first');
       return;
     }
-
-    // Show note dialog
-    final note = await _showNoteDialog('Checkout Note (Optional)');
 
     // Check out gear using controller
     final success = await _controller.checkOutGear(
@@ -142,10 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   // Handle gear return
-  Future<void> _handleReturn(Gear gear) async {
-    // Show note dialog
-    final note = await _showNoteDialog('Return Note (Optional)');
-
+  Future<void> _handleReturn(Gear gear, [String? note]) async {
     // Check in gear using controller
     final success = await _controller.checkInGear(gear, note: note);
 
@@ -154,36 +148,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (_controller.errorMessage.value != null) {
       _showSnackBar(_controller.errorMessage.value!);
     }
-  }
-
-  // Show a dialog to enter a note
-  Future<String?> _showNoteDialog(String title) async {
-    final controller = TextEditingController();
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'Enter a note (optional)',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-
-    return result?.isNotEmpty == true ? result : null;
   }
 
   // Show a snackbar message
