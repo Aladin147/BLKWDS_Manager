@@ -14,6 +14,7 @@ import '../settings/settings_screen.dart';
 import '../member_management/member_list_screen.dart';
 import '../project_management/project_list_screen.dart';
 import '../gear_management/gear_list_screen.dart';
+import '../studio_management/studio_management_screen.dart';
 import 'dashboard_controller.dart';
 import 'widgets/top_bar_summary_widget.dart';
 import 'widgets/quick_actions_panel.dart';
@@ -352,6 +353,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   context,
                                   BLKWDSPageRoute(
                                     page: const GearListScreen(),
+                                    transitionType: BLKWDSPageTransitionType.rightToLeft,
+                                  ),
+                                );
+                              },
+                              onManageStudios: () {
+                                Navigator.push(
+                                  context,
+                                  BLKWDSPageRoute(
+                                    page: const StudioManagementScreen(),
                                     transitionType: BLKWDSPageTransitionType.rightToLeft,
                                   ),
                                 );

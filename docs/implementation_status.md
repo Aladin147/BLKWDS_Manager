@@ -221,10 +221,10 @@ This document tracks the implementation status of core functionality in the BLKW
 
 ### Enhanced Booking Management
 
-- ⬜ Enhanced Booking List View
+- ✅ Enhanced Booking List View
 - ✅ Booking Detail Screen
 - ✅ Enhanced Booking Creation/Editing
-- ⬜ Studio Management
+- ✅ Studio Management (Basic Implementation)
 - ⬜ Booking Reports
 
 ### Navigation and UI Improvements

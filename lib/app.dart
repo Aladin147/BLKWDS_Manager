@@ -58,6 +58,7 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
         '/member-management': (context) => const MemberListScreen(),
         '/project-management': (context) => const ProjectListScreen(),
         '/gear-management': (context) => const GearListScreen(),
+        '/studio-management': (context) => const StudioManagementScreen(),
       },
       // Add error handling for navigation/routing errors
       onUnknownRoute: (settings) {

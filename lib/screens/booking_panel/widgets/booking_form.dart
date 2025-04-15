@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../models/models.dart';
+import '../../../services/db_service.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
@@ -12,8 +13,8 @@ import '../booking_panel_controller.dart';
 /// Form for creating and editing bookings
 class BookingForm extends StatefulWidget {
   final BookingPanelController controller;
-  final Booking? booking; // Null for new booking, non-null for editing
-  final Function(Booking) onSave;
+  final BookingV2? booking; // Null for new booking, non-null for editing
+  final Function(BookingV2) onSave;
   final VoidCallback onCancel;
 
   const BookingForm({
@@ -38,8 +39,7 @@ class _BookingFormState extends State<BookingForm> {
   late TimeOfDay _startTime;
   late DateTime _endDate;
   late TimeOfDay _endTime;
-  late bool _isRecordingStudio;
-  late bool _isProductionStudio;
+  late int? _selectedStudioId;
   late List<int> _selectedGearIds;
   late Map<int, int> _assignedGearToMember;
 
@@ -60,8 +60,7 @@ class _BookingFormState extends State<BookingForm> {
       _startTime = TimeOfDay.fromDateTime(widget.booking!.startDate);
       _endDate = widget.booking!.endDate;
       _endTime = TimeOfDay.fromDateTime(widget.booking!.endDate);
-      _isRecordingStudio = widget.booking!.isRecordingStudio;
-      _isProductionStudio = widget.booking!.isProductionStudio;
+      _selectedStudioId = widget.booking!.studioId;
       _selectedGearIds = List.from(widget.booking!.gearIds);
       _assignedGearToMember = Map.from(widget.booking!.assignedGearToMember ?? {});
     } else {
@@ -78,8 +77,7 @@ class _BookingFormState extends State<BookingForm> {
       _endDate = tomorrow;
       _endTime = TimeOfDay.fromDateTime(tomorrow);
 
-      _isRecordingStudio = false;
-      _isProductionStudio = false;
+      _selectedStudioId = null;
       _selectedGearIds = [];
       _assignedGearToMember = {};
     }
@@ -111,14 +109,13 @@ class _BookingFormState extends State<BookingForm> {
           : 'Booking for ${widget.controller.getProjectById(_selectedProjectId!)?.title ?? 'Unknown Project'}';
 
       // Create booking object
-      final booking = Booking(
+      final booking = BookingV2(
         id: widget.booking?.id,
         projectId: _selectedProjectId!,
         title: title,
         startDate: _combineDateAndTime(_startDate, _startTime),
         endDate: _combineDateAndTime(_endDate, _endTime),
-        isRecordingStudio: _isRecordingStudio,
-        isProductionStudio: _isProductionStudio,
+        studioId: _selectedStudioId,
         gearIds: _selectedGearIds,
         assignedGearToMember: _assignedGearToMember.isEmpty ? null : _assignedGearToMember,
       );
@@ -326,41 +323,55 @@ class _BookingFormState extends State<BookingForm> {
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-          // Studio checkboxes
+          // Studio dropdown
           Text(
             'Studio Space',
             style: BLKWDSTypography.labelMedium,
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
-          Row(
-            children: [
-              Expanded(
-                child: CheckboxListTile(
-                  title: const Text('Recording Studio'),
-                  value: _isRecordingStudio,
-                  onChanged: (value) {
-                    setState(() {
-                      _isRecordingStudio = value ?? false;
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
+          FutureBuilder<List<Studio>>(
+            future: DBService.getAllStudios(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+
+              if (snapshot.hasError) {
+                return Text('Error loading studios: ${snapshot.error}');
+              }
+
+              final studios = snapshot.data ?? [];
+
+              return DropdownButtonFormField<int?>(
+                decoration: const InputDecoration(
+                  labelText: 'Select Studio (Optional)',
                 ),
-              ),
-              Expanded(
-                child: CheckboxListTile(
-                  title: const Text('Production Studio'),
-                  value: _isProductionStudio,
-                  onChanged: (value) {
-                    setState(() {
-                      _isProductionStudio = value ?? false;
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ),
-            ],
+                value: _selectedStudioId,
+                items: [
+                  const DropdownMenuItem<int?>(
+                    value: null,
+                    child: Text('None'),
+                  ),
+                  ...studios.map((studio) {
+                    return DropdownMenuItem<int?>(
+                      value: studio.id,
+                      child: Row(
+                        children: [
+                          Icon(studio.type.icon, size: 20),
+                          const SizedBox(width: BLKWDSConstants.spacingSmall),
+                          Text(studio.name),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedStudioId = value;
+                  });
+                },
+              );
+            },
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 

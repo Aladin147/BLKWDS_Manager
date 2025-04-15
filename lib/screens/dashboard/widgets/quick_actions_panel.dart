@@ -12,6 +12,7 @@ class QuickActionsPanel extends StatelessWidget {
   final VoidCallback onManageMembers;
   final VoidCallback onManageProjects;
   final VoidCallback onManageGear;
+  final VoidCallback? onManageStudios;
   final VoidCallback? onExportLogs;
 
   const QuickActionsPanel({
@@ -21,6 +22,7 @@ class QuickActionsPanel extends StatelessWidget {
     required this.onManageMembers,
     required this.onManageProjects,
     required this.onManageGear,
+    this.onManageStudios,
     this.onExportLogs,
   });
 
@@ -103,6 +105,19 @@ class QuickActionsPanel extends StatelessWidget {
             type: BLKWDSButtonType.primary,
             isFullWidth: true,
           ),
+
+          if (onManageStudios != null) ...[
+            const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+            // Manage Studios Button
+            BLKWDSButton(
+              onPressed: onManageStudios!,
+              label: 'Manage Studios',
+              icon: Icons.business,
+              type: BLKWDSButtonType.primary,
+              isFullWidth: true,
+            ),
+          ],
 
           if (onExportLogs != null) ...[
             const SizedBox(height: BLKWDSConstants.spacingMedium),
