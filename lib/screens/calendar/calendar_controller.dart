@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
+import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
 
 /// CalendarController
@@ -35,7 +36,7 @@ class CalendarController {
       ]);
     } catch (e) {
       errorMessage.value = 'Error initializing data: $e';
-      print('Error initializing data: $e');
+      LogService.error('Error initializing data', e);
     } finally {
       isLoading.value = false;
     }
@@ -47,7 +48,7 @@ class CalendarController {
       final bookings = await DBService.getAllBookings();
       bookingList.value = bookings;
     } catch (e) {
-      print('Error loading bookings: $e');
+      LogService.error('Error loading bookings', e);
       rethrow;
     }
   }
@@ -58,7 +59,7 @@ class CalendarController {
       final projects = await DBService.getAllProjects();
       projectList.value = projects;
     } catch (e) {
-      print('Error loading projects: $e');
+      LogService.error('Error loading projects', e);
       rethrow;
     }
   }
@@ -69,7 +70,7 @@ class CalendarController {
       final members = await DBService.getAllMembers();
       memberList.value = members;
     } catch (e) {
-      print('Error loading members: $e');
+      LogService.error('Error loading members', e);
       rethrow;
     }
   }
@@ -80,7 +81,7 @@ class CalendarController {
       final gear = await DBService.getAllGear();
       gearList.value = gear;
     } catch (e) {
-      print('Error loading gear: $e');
+      LogService.error('Error loading gear', e);
       rethrow;
     }
   }

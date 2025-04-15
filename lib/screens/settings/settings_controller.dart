@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
-import '../../theme/blkwds_colors.dart';
+import '../../services/log_service.dart';
 
 /// SettingsController
 /// Handles state management and business logic for the Settings screen
@@ -37,7 +36,7 @@ class SettingsController {
       await _loadPreferences();
     } catch (e) {
       errorMessage.value = 'Error initializing settings: $e';
-      print('Error initializing settings: $e');
+      LogService.error('Error initializing settings', e);
     } finally {
       isLoading.value = false;
     }
@@ -54,7 +53,7 @@ class SettingsController {
         themeMode.value = ThemeMode.values[themeModeIndex];
       }
     } catch (e) {
-      print('Error loading preferences: $e');
+      LogService.error('Error loading preferences', e);
       rethrow;
     }
   }
@@ -67,7 +66,7 @@ class SettingsController {
       // Save theme mode
       await prefs.setInt(_themeModeKey, themeMode.value.index);
     } catch (e) {
-      print('Error saving preferences: $e');
+      LogService.error('Error saving preferences', e);
       rethrow;
     }
   }
@@ -114,7 +113,7 @@ class SettingsController {
       return file.path;
     } catch (e) {
       errorMessage.value = 'Error exporting data: $e';
-      print('Error exporting data: $e');
+      LogService.error('Error exporting data', e);
       return null;
     } finally {
       isLoading.value = false;
@@ -180,7 +179,7 @@ class SettingsController {
       return true;
     } catch (e) {
       errorMessage.value = 'Error importing data: $e';
-      print('Error importing data: $e');
+      LogService.error('Error importing data', e);
       return false;
     } finally {
       isLoading.value = false;
@@ -238,7 +237,7 @@ class SettingsController {
       return filePaths;
     } catch (e) {
       errorMessage.value = 'Error exporting to CSV: $e';
-      print('Error exporting to CSV: $e');
+      LogService.error('Error exporting to CSV', e);
       return null;
     } finally {
       isLoading.value = false;
@@ -336,7 +335,7 @@ class SettingsController {
       return true;
     } catch (e) {
       errorMessage.value = 'Error resetting app data: $e';
-      print('Error resetting app data: $e');
+      LogService.error('Error resetting app data', e);
       return false;
     } finally {
       isLoading.value = false;

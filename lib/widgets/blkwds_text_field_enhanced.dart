@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
@@ -44,7 +45,7 @@ class BLKWDSTextFieldEnhanced extends StatefulWidget {
   final bool enabled;
 
   const BLKWDSTextFieldEnhanced({
-    Key? key,
+    super.key,
     required this.label,
     this.hintText,
     this.controller,
@@ -78,7 +79,7 @@ class BLKWDSTextFieldEnhanced extends StatefulWidget {
     this.autovalidateMode,
     this.validator,
     this.enabled = true,
-  }) : super(key: key);
+  });
 
   @override
   State<BLKWDSTextFieldEnhanced> createState() => _BLKWDSTextFieldEnhancedState();
@@ -129,8 +130,8 @@ class _BLKWDSTextFieldEnhancedState extends State<BLKWDSTextFieldEnhanced> with 
       curve: BLKWDSAnimations.standard,
     ));
 
-    _hasText = widget.initialValue?.isNotEmpty ?? false ||
-               widget.controller?.text.isNotEmpty ?? false;
+    _hasText = (widget.initialValue?.isNotEmpty ?? false) ||
+               (widget.controller?.text.isNotEmpty ?? false);
 
     if (_hasText || widget.autofocus) {
       _animationController.value = 1.0;
@@ -298,7 +299,7 @@ class _BLKWDSTextFieldEnhancedState extends State<BLKWDSTextFieldEnhanced> with 
                   borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                   boxShadow: _shadowAnimation.value > 0
                       ? shadows.map((shadow) => BoxShadow(
-                          color: shadow.color.withOpacity(shadow.color.opacity * _shadowAnimation.value),
+                          color: shadow.color.withAlpha((shadow.color.a * _shadowAnimation.value).round()),
                           blurRadius: shadow.blurRadius * _shadowAnimation.value,
                           spreadRadius: shadow.spreadRadius * _shadowAnimation.value,
                           offset: shadow.offset,
@@ -440,5 +441,4 @@ class _BLKWDSTextFieldEnhancedState extends State<BLKWDSTextFieldEnhanced> with 
   }
 }
 
-/// Import for TextInputFormatter
-import 'package:flutter/services.dart';
+

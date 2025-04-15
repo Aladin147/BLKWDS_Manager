@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
+import '../../services/log_service.dart';
 import '../../utils/constants.dart';
 
 /// DashboardController
@@ -31,7 +32,7 @@ class DashboardController {
       ]);
     } catch (e) {
       errorMessage.value = '${Constants.databaseError} ${e.toString()}';
-      print('Error initializing dashboard: $e');
+      LogService.error('Error initializing dashboard', e);
     } finally {
       isLoading.value = false;
     }
@@ -43,7 +44,7 @@ class DashboardController {
       final gear = await DBService.getAllGear();
       gearList.value = gear;
     } catch (e) {
-      print('Error loading gear: $e');
+      LogService.error('Error loading gear', e);
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class DashboardController {
       final members = await DBService.getAllMembers();
       memberList.value = members;
     } catch (e) {
-      print('Error loading members: $e');
+      LogService.error('Error loading members', e);
       rethrow;
     }
   }
@@ -65,7 +66,7 @@ class DashboardController {
       final projects = await DBService.getAllProjects();
       projectList.value = projects;
     } catch (e) {
-      print('Error loading projects: $e');
+      LogService.error('Error loading projects', e);
       rethrow;
     }
   }
@@ -76,7 +77,7 @@ class DashboardController {
       final bookings = await DBService.getAllBookings();
       bookingList.value = bookings;
     } catch (e) {
-      print('Error loading bookings: $e');
+      LogService.error('Error loading bookings', e);
       rethrow;
     }
   }
@@ -87,7 +88,7 @@ class DashboardController {
       final activity = await DBService.getRecentActivityLogs();
       recentActivity.value = activity;
     } catch (e) {
-      print('Error loading activity logs: $e');
+      LogService.error('Error loading activity logs', e);
       rethrow;
     }
   }
@@ -124,7 +125,7 @@ class DashboardController {
       }
     } catch (e) {
       errorMessage.value = '${Constants.generalError} ${e.toString()}';
-      print('Error checking out gear: $e');
+      LogService.error('Error checking out gear', e);
       return false;
     } finally {
       isLoading.value = false;
@@ -158,7 +159,7 @@ class DashboardController {
       }
     } catch (e) {
       errorMessage.value = '${Constants.generalError} ${e.toString()}';
-      print('Error checking in gear: $e');
+      LogService.error('Error checking in gear', e);
       return false;
     } finally {
       isLoading.value = false;

@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
+import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
 import 'models/booking_filter.dart';
 
@@ -35,7 +35,7 @@ class BookingPanelController {
       _applyFilters();
     } catch (e) {
       errorMessage.value = 'Error initializing data: $e';
-      print('Error initializing data: $e');
+      LogService.error('Error initializing data', e);
     } finally {
       isLoading.value = false;
     }
@@ -50,7 +50,7 @@ class BookingPanelController {
       // Update filtered list when bookings change
       _applyFilters();
     } catch (e) {
-      print('Error loading bookings: $e');
+      LogService.error('Error loading bookings', e);
       rethrow;
     }
   }
@@ -203,7 +203,7 @@ class BookingPanelController {
       final projects = await DBService.getAllProjects();
       projectList.value = projects;
     } catch (e) {
-      print('Error loading projects: $e');
+      LogService.error('Error loading projects', e);
       rethrow;
     }
   }
@@ -214,7 +214,7 @@ class BookingPanelController {
       final members = await DBService.getAllMembers();
       memberList.value = members;
     } catch (e) {
-      print('Error loading members: $e');
+      LogService.error('Error loading members', e);
       rethrow;
     }
   }
@@ -225,7 +225,7 @@ class BookingPanelController {
       final gear = await DBService.getAllGear();
       gearList.value = gear;
     } catch (e) {
-      print('Error loading gear: $e');
+      LogService.error('Error loading gear', e);
       rethrow;
     }
   }
@@ -251,7 +251,7 @@ class BookingPanelController {
       return id > 0;
     } catch (e) {
       errorMessage.value = 'Error creating booking: $e';
-      print('Error creating booking: $e');
+      LogService.error('Error creating booking', e);
       return false;
     } finally {
       isLoading.value = false;
@@ -279,7 +279,7 @@ class BookingPanelController {
       return id > 0;
     } catch (e) {
       errorMessage.value = 'Error updating booking: $e';
-      print('Error updating booking: $e');
+      LogService.error('Error updating booking', e);
       return false;
     } finally {
       isLoading.value = false;
@@ -320,7 +320,7 @@ class BookingPanelController {
       return result > 0;
     } catch (e) {
       errorMessage.value = 'Error deleting booking: $e';
-      print('Error deleting booking: $e');
+      LogService.error('Error deleting booking', e);
       return false;
     } finally {
       isLoading.value = false;
@@ -361,7 +361,7 @@ class BookingPanelController {
 
       return false; // No conflicts found
     } catch (e) {
-      print('Error checking booking conflicts: $e');
+      LogService.error('Error checking booking conflicts', e);
       rethrow;
     }
   }

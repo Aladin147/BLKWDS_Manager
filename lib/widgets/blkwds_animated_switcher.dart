@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../theme/blkwds_animations.dart';
 
@@ -13,14 +15,14 @@ class BLKWDSAnimatedSwitcher extends StatelessWidget {
   final bool layoutBuilder;
 
   const BLKWDSAnimatedSwitcher({
-    Key? key,
+    super.key,
     required this.child,
     this.duration = BLKWDSAnimations.medium,
     this.curve = BLKWDSAnimations.standard,
     this.transitionType = BLKWDSSwitcherTransitionType.fade,
     this.alignment = Alignment.center,
     this.layoutBuilder = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class BLKWDSAnimatedSwitcher extends StatelessWidget {
                 ],
               );
             }
-          : null,
+          : AnimatedSwitcher.defaultLayoutBuilder,
       child: child,
     );
   }
@@ -138,7 +140,7 @@ class BLKWDSContentSwitcher extends StatefulWidget {
   final bool pauseAutoPlayOnHover;
 
   const BLKWDSContentSwitcher({
-    Key? key,
+    super.key,
     required this.children,
     this.initialIndex = 0,
     this.duration = BLKWDSAnimations.medium,
@@ -149,10 +151,7 @@ class BLKWDSContentSwitcher extends StatefulWidget {
     this.autoPlay = false,
     this.autoPlayInterval = const Duration(seconds: 5),
     this.pauseAutoPlayOnHover = true,
-  })  : assert(children.isNotEmpty, 'Children cannot be empty'),
-        assert(initialIndex >= 0 && initialIndex < children.length,
-            'Initial index must be within the range of children'),
-        super(key: key);
+  });
 
   @override
   State<BLKWDSContentSwitcher> createState() => _BLKWDSContentSwitcherState();
@@ -178,7 +177,7 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
       _cancelAutoPlay();
       _setupAutoPlay();
     }
-    
+
     if (widget.children.length != oldWidget.children.length) {
       _currentIndex = _currentIndex.clamp(0, widget.children.length - 1);
     }
@@ -212,7 +211,7 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
       } else if (widget.loop) {
         _currentIndex = 0;
       }
-      
+
       if (widget.onIndexChanged != null) {
         widget.onIndexChanged!(_currentIndex);
       }
@@ -226,7 +225,7 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
       } else if (widget.loop) {
         _currentIndex = widget.children.length - 1;
       }
-      
+
       if (widget.onIndexChanged != null) {
         widget.onIndexChanged!(_currentIndex);
       }
@@ -237,7 +236,7 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
     if (index >= 0 && index < widget.children.length && index != _currentIndex) {
       setState(() {
         _currentIndex = index;
-        
+
         if (widget.onIndexChanged != null) {
           widget.onIndexChanged!(_currentIndex);
         }
@@ -262,7 +261,7 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
               child: widget.children[_currentIndex],
             ),
           ),
-          
+
           // Navigation buttons
           if (widget.children.length > 1)
             Positioned.fill(
@@ -275,21 +274,21 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
                     onPressed: _currentIndex > 0 || widget.loop
                         ? _previousContent
                         : null,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 179),
                   ),
-                  
+
                   // Next button
                   IconButton(
                     icon: const Icon(Icons.chevron_right),
                     onPressed: _currentIndex < widget.children.length - 1 || widget.loop
                         ? _nextContent
                         : null,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 179),
                   ),
                 ],
               ),
             ),
-          
+
           // Indicators
           if (widget.children.length > 1)
             Positioned(
@@ -310,7 +309,7 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
                         shape: BoxShape.circle,
                         color: index == _currentIndex
                             ? Colors.white
-                            : Colors.white.withOpacity(0.5),
+                            : Colors.white.withValues(alpha: 128),
                       ),
                     ),
                   ),
@@ -323,5 +322,4 @@ class _BLKWDSContentSwitcherState extends State<BLKWDSContentSwitcher> {
   }
 }
 
-/// Import for Timer
-import 'dart:async';
+

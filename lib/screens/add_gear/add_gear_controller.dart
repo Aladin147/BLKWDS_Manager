@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/image_service.dart';
+import '../../services/log_service.dart';
 import '../../utils/constants.dart';
 
 /// AddGearController
@@ -64,7 +65,7 @@ class AddGearController {
             }
           }
         } catch (e) {
-          print('Error processing image: $e');
+          LogService.error('Error processing image', e);
           // Continue without the image if there's an error
         }
       }

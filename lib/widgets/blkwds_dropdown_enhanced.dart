@@ -32,7 +32,7 @@ class BLKWDSDropdownEnhanced<T> extends StatefulWidget {
   final FocusNode? focusNode;
 
   const BLKWDSDropdownEnhanced({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     required this.items,
@@ -54,7 +54,7 @@ class BLKWDSDropdownEnhanced<T> extends StatefulWidget {
     this.isExpanded = true,
     this.dropdownColor,
     this.focusNode,
-  }) : super(key: key);
+  });
 
   @override
   State<BLKWDSDropdownEnhanced<T>> createState() => _BLKWDSDropdownEnhancedState<T>();
@@ -279,7 +279,7 @@ class _BLKWDSDropdownEnhancedState<T> extends State<BLKWDSDropdownEnhanced<T>> w
                   borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                   boxShadow: _shadowAnimation.value > 0
                       ? shadows.map((shadow) => BoxShadow(
-                          color: shadow.color.withOpacity(shadow.color.opacity * _shadowAnimation.value),
+                          color: shadow.color.withAlpha((shadow.color.a * _shadowAnimation.value).round()),
                           blurRadius: shadow.blurRadius * _shadowAnimation.value,
                           spreadRadius: shadow.spreadRadius * _shadowAnimation.value,
                           offset: shadow.offset,
