@@ -108,9 +108,9 @@ This README is the **master reference** for the entire project lifecycle — fro
 
 ### Upcoming Priorities
 
-- Add comprehensive testing (unit and integration tests)
 - Optimize performance for animations and transitions
-- Implement remaining UI components with enhanced styling
+- Add custom icons and visual assets integration
+- Implement Phase 2 features (undo functionality, bulk gear management, booking templates)
 
 ---
 
