@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/models.dart';
+import '../utils/booking_converter.dart';
+import '../utils/feature_flags.dart';
 import 'log_service.dart';
 
 /// DBService
@@ -1438,6 +1440,57 @@ class DBService {
   static Future<int> insertStudio(Studio studio) async {
     final db = await database;
     return await db.insert('studio', studio.toMap());
+  }
+
+  // COMPATIBILITY LAYER FOR BOOKING MIGRATION
+
+  /// Get bookings based on feature flag
+  /// This method will return BookingV2 objects if useStudioSystem is true,
+  /// otherwise it will return Booking objects converted to BookingV2
+  static Future<List<BookingV2>> getBookingsWithStudioSupport() async {
+    if (FeatureFlags.useStudioSystem) {
+      // Use the V2 method directly
+      return await getAllBookingsV2();
+    } else {
+      // Convert from old model to new model
+      final bookings = await getAllBookings();
+      return await BookingConverter.toBookingV2List(bookings);
+    }
+  }
+
+  /// Save a booking with studio support
+  /// This method will use the appropriate save method based on the feature flag
+  static Future<int> saveBookingWithStudioSupport(BookingV2 bookingV2) async {
+    if (FeatureFlags.useStudioSystem) {
+      // Use the V2 method directly
+      if (bookingV2.id != null) {
+        return await updateBookingV2(bookingV2);
+      } else {
+        return await insertBookingV2(bookingV2);
+      }
+    } else {
+      // Convert to old model and save
+      final booking = await BookingConverter.toBooking(bookingV2);
+      if (booking.id != null) {
+        return await updateBooking(booking);
+      } else {
+        return await insertBooking(booking);
+      }
+    }
+  }
+
+  /// Get a booking by ID with studio support
+  /// This method will return a BookingV2 object regardless of the feature flag
+  static Future<BookingV2?> getBookingByIdWithStudioSupport(int id) async {
+    if (FeatureFlags.useStudioSystem) {
+      // Use the V2 method directly
+      return await getBookingByIdV2(id);
+    } else {
+      // Convert from old model to new model
+      final booking = await getBookingById(id);
+      if (booking == null) return null;
+      return await BookingConverter.toBookingV2(booking);
+    }
   }
 
   /// Get all studios
