@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'theme/blkwds_theme.dart';
 import 'utils/constants.dart';
 import 'screens/screens.dart';
-import 'services/error_service.dart';
-import 'services/log_service.dart';
-import 'services/error_type.dart';
-import 'services/navigation_service.dart';
+import 'services/services.dart';
 import 'theme/blkwds_animations.dart';
-import 'theme/blkwds_constants_enhanced.dart';
+import 'theme/blkwds_constants.dart';
 import 'theme/blkwds_colors.dart';
 import 'theme/blkwds_typography.dart';
+import 'widgets/blkwds_widgets.dart';
 
 /// BLKWDSApp
 /// The main application widget
@@ -81,7 +79,14 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
           return _buildErrorWidget(context, details.exception.toString());
         };
 
-        return errorWidget;
+        // Wrap with ErrorBoundary and BannerService overlay
+        return BannerService.getBannerOverlay(
+          child: ErrorBoundary(
+            errorSource: 'app',
+            fallbackWidget: _buildErrorWidget(context, 'An unexpected error occurred in the application'),
+            child: errorWidget,
+          ),
+        );
       },
     );
   }

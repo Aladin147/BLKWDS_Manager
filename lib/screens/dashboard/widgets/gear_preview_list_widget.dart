@@ -27,12 +27,12 @@ class GearPreviewListWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        color: BLKWDSColors.backgroundMedium,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 25),
-            blurRadius: 4,
+            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -49,7 +49,7 @@ class GearPreviewListWidget extends StatelessWidget {
               Text(
                 'Recent Gear Activity',
                 style: BLKWDSTypography.titleMedium.copyWith(
-                  color: BLKWDSColors.blkwdsGreen,
+                  color: BLKWDSColors.textPrimary,
                 ),
               ),
               TextButton.icon(
@@ -57,7 +57,7 @@ class GearPreviewListWidget extends StatelessWidget {
                 icon: const Icon(Icons.visibility),
                 label: const Text('View All'),
                 style: TextButton.styleFrom(
-                  foregroundColor: BLKWDSColors.blkwdsGreen,
+                  foregroundColor: BLKWDSColors.accentTeal,
                 ),
               ),
             ],
@@ -138,7 +138,7 @@ class GearPreviewListWidget extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: BLKWDSColors.slateGrey.withValues(alpha: 25),
+                color: BLKWDSColors.backgroundLight,
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
               ),
               child: const Icon(Icons.camera_alt),
@@ -177,16 +177,16 @@ class GearPreviewListWidget extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: gear.isOut
-                    ? BLKWDSColors.statusOut.withValues(alpha: 25)
-                    : BLKWDSColors.statusIn.withValues(alpha: 25),
+                    ? BLKWDSColors.warningAmber.withValues(alpha: 25)
+                    : BLKWDSColors.successGreen.withValues(alpha: 25),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 gear.isOut ? 'OUT' : 'IN',
                 style: BLKWDSTypography.labelMedium.copyWith(
                   color: gear.isOut
-                      ? BLKWDSColors.statusOut
-                      : BLKWDSColors.statusIn,
+                      ? BLKWDSColors.warningAmber
+                      : BLKWDSColors.successGreen,
                 ),
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'blkwds_colors.dart';
 import 'blkwds_typography.dart';
-import 'blkwds_constants_enhanced.dart';
+import 'blkwds_constants.dart';
 
 /// BLKWDS Manager Theme
 /// Provides a dark theme for the app with enhanced visual appeal and readability
@@ -11,21 +11,23 @@ class BLKWDSTheme {
     return ThemeData.dark(useMaterial3: true).copyWith(
       // Color Scheme
       colorScheme: const ColorScheme.dark().copyWith(
-        primary: BLKWDSColors.mustardOrange,
+        primary: BLKWDSColors.blkwdsGreen,
         onPrimary: BLKWDSColors.deepBlack,
         secondary: BLKWDSColors.accentTeal,
         onSecondary: BLKWDSColors.deepBlack,
+        tertiary: BLKWDSColors.purpleAccent,
+        onTertiary: BLKWDSColors.deepBlack,
         error: BLKWDSColors.errorRed,
         onError: BLKWDSColors.white,
         surface: BLKWDSColors.backgroundDark,
-        onSurface: BLKWDSColors.white,
+        onSurface: BLKWDSColors.textPrimary,
         surfaceTint: BLKWDSColors.backgroundMedium,
       ),
 
       // Text Theme
       textTheme: BLKWDSTypography.googleFontsTextTheme.apply(
-        bodyColor: BLKWDSColors.white,
-        displayColor: BLKWDSColors.white,
+        bodyColor: BLKWDSColors.textPrimary,
+        displayColor: BLKWDSColors.textPrimary,
       ),
 
       // App Bar Theme
@@ -53,10 +55,10 @@ class BLKWDSTheme {
       // Elevated Button Theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: BLKWDSColors.mustardOrange,
+          backgroundColor: BLKWDSColors.blkwdsGreen,
           foregroundColor: BLKWDSColors.deepBlack,
           elevation: BLKWDSConstants.buttonElevation,
-          shadowColor: BLKWDSColors.mustardOrange.withValues(alpha: 60),
+          shadowColor: BLKWDSColors.blkwdsGreen.withValues(alpha: 60),
           padding: EdgeInsets.symmetric(
             horizontal: BLKWDSConstants.buttonHorizontalPaddingMedium,
             vertical: BLKWDSConstants.buttonVerticalPaddingMedium,
@@ -71,9 +73,9 @@ class BLKWDSTheme {
       // Outlined Button Theme
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: BLKWDSColors.white,
-          side: BorderSide(color: BLKWDSColors.border),
-          backgroundColor: BLKWDSColors.backgroundLight,
+          foregroundColor: BLKWDSColors.textPrimary,
+          side: BorderSide(color: BLKWDSColors.accentTeal, width: 1.5),
+          backgroundColor: Colors.transparent,
           padding: EdgeInsets.symmetric(
             horizontal: BLKWDSConstants.buttonHorizontalPaddingMedium,
             vertical: BLKWDSConstants.buttonVerticalPaddingMedium,
@@ -103,7 +105,7 @@ class BLKWDSTheme {
       // Input Decoration Theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: BLKWDSColors.backgroundLight,
+        fillColor: BLKWDSColors.inputBackground,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
           borderSide: BorderSide(color: BLKWDSColors.inputBorder),
@@ -137,7 +139,10 @@ class BLKWDSTheme {
           horizontal: BLKWDSConstants.inputHorizontalPadding,
           vertical: BLKWDSConstants.inputVerticalPadding,
         ),
-        isDense: false,
+        floatingLabelStyle: BLKWDSTypography.labelMedium.copyWith(
+          color: BLKWDSColors.accentTeal,
+        ),
+        isDense: true,
       ),
 
       // Scaffold Background Color

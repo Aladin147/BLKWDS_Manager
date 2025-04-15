@@ -22,12 +22,12 @@ class TodayBookingWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        color: BLKWDSColors.backgroundMedium,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 25),
-            blurRadius: 4,
+            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -40,7 +40,7 @@ class TodayBookingWidget extends StatelessWidget {
           Text(
             'Today\'s Bookings',
             style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.blkwdsGreen,
+              color: BLKWDSColors.textPrimary,
             ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -128,12 +128,12 @@ class TodayBookingWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: BLKWDSColors.slateGrey.withValues(alpha: 25),
+              color: BLKWDSColors.backgroundLight,
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
             ),
             child: BLKWDSIcon(
               icon: _getBookingIcon(booking, firstGear),
-              color: BLKWDSColors.blkwdsGreen,
+              color: BLKWDSColors.accentTeal,
               size: BLKWDSIconSize.medium,
             ),
           ),
@@ -163,7 +163,7 @@ class TodayBookingWidget extends StatelessWidget {
                 Text(
                   _formatBookingTime(booking),
                   style: BLKWDSTypography.bodySmall.copyWith(
-                    color: BLKWDSColors.slateGrey,
+                    color: BLKWDSColors.textSecondary,
                   ),
                 ),
               ],
@@ -174,7 +174,7 @@ class TodayBookingWidget extends StatelessWidget {
           if (booking.gearIds.isNotEmpty)
             BLKWDSStatusBadge(
               text: '${booking.gearIds.length} items',
-              color: BLKWDSColors.slateGrey,
+              color: BLKWDSColors.accentTeal,
             ),
         ],
       ),

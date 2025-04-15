@@ -44,13 +44,13 @@ class BLKWDSDatePicker extends StatelessWidget {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: BLKWDSColors.blkwdsGreen,
+              primary: BLKWDSColors.accentTeal,
               onPrimary: BLKWDSColors.white,
-              onSurface: BLKWDSColors.deepBlack,
+              onSurface: BLKWDSColors.textPrimary,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: BLKWDSColors.blkwdsGreen,
+                foregroundColor: BLKWDSColors.accentTeal,
               ),
             ),
           ),
@@ -83,7 +83,7 @@ class BLKWDSDatePicker extends StatelessWidget {
             text: TextSpan(
               text: label,
               style: BLKWDSTypography.labelMedium.copyWith(
-                color: BLKWDSColors.slateGrey,
+                color: BLKWDSColors.textSecondary,
               ),
               children: isRequired
                   ? [
@@ -102,7 +102,7 @@ class BLKWDSDatePicker extends StatelessWidget {
         // Date picker field with consistent styling
         InkWell(
           onTap: () => _selectDate(context),
-          borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+          borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: BLKWDSConstants.inputHorizontalPadding,
@@ -110,7 +110,7 @@ class BLKWDSDatePicker extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: BLKWDSColors.inputBackground,
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
               border: Border.all(
                 color: errorText != null
                     ? BLKWDSColors.errorRed
@@ -126,13 +126,13 @@ class BLKWDSDatePicker extends StatelessWidget {
                     style: selectedDate != null
                         ? BLKWDSTypography.bodyMedium
                         : BLKWDSTypography.bodyMedium.copyWith(
-                            color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
+                            color: BLKWDSColors.textSecondary.withValues(alpha: 128), // 0.5 * 255 = 128
                           ),
                   ),
                 ),
                 const Icon(
                   Icons.calendar_today,
-                  color: BLKWDSColors.slateGrey,
+                  color: BLKWDSColors.textSecondary,
                 ),
               ],
             ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'log_service.dart';
 import 'error_type.dart';
+import 'snackbar_service.dart';
+import 'error_dialog_service.dart';
+import 'exceptions/exceptions.dart';
 
 /// ErrorService
 /// A centralized error handling service for the application
@@ -18,6 +21,22 @@ class ErrorService {
         return 'Please check your input and try again.';
       case ErrorType.auth:
         return 'Authentication error. Please log in again.';
+      case ErrorType.fileSystem:
+        return 'There was an issue with the file system. Please try again.';
+      case ErrorType.permission:
+        return 'You do not have permission to perform this action.';
+      case ErrorType.format:
+        return 'The data format is invalid. Please try again with a valid format.';
+      case ErrorType.conflict:
+        return 'There is a conflict with existing data. Please resolve the conflict and try again.';
+      case ErrorType.notFound:
+        return 'The requested resource was not found.';
+      case ErrorType.input:
+        return 'Invalid input. Please check your input and try again.';
+      case ErrorType.state:
+        return 'The application is in an invalid state. Please restart the application.';
+      case ErrorType.configuration:
+        return 'There is an issue with the application configuration. Please contact support.';
       case ErrorType.unknown:
         return 'An unexpected error occurred. Please try again.';
     }
@@ -25,49 +44,109 @@ class ErrorService {
 
   /// Handle an error and return a user-friendly message
   static String handleError(Object error, {ErrorType type = ErrorType.unknown, StackTrace? stackTrace}) {
+    // Determine error type if not provided
+    final errorType = type == ErrorType.unknown ? _determineErrorType(error) : type;
+
     // Log the error
     LogService.error('Error occurred', error, stackTrace);
 
     // Return a user-friendly message
-    return getUserFriendlyMessage(type, error);
+    return getUserFriendlyMessage(errorType, error);
+  }
+
+  /// Determine the error type from the error object
+  static ErrorType _determineErrorType(Object error) {
+    if (error is BLKWDSException) {
+      return error.type;
+    } else if (error is FormatException) {
+      return ErrorType.format;
+    } else if (error is ArgumentError) {
+      return ErrorType.input;
+    } else if (error is StateError) {
+      return ErrorType.state;
+    } else if (error is Exception) {
+      // Try to determine the type from the exception class name
+      final className = error.runtimeType.toString().toLowerCase();
+      if (className.contains('database') || className.contains('sql')) {
+        return ErrorType.database;
+      } else if (className.contains('network') || className.contains('socket')) {
+        return ErrorType.network;
+      } else if (className.contains('file') || className.contains('io')) {
+        return ErrorType.fileSystem;
+      } else if (className.contains('permission')) {
+        return ErrorType.permission;
+      } else if (className.contains('format')) {
+        return ErrorType.format;
+      } else if (className.contains('conflict')) {
+        return ErrorType.conflict;
+      } else if (className.contains('notfound') || className.contains('not_found')) {
+        return ErrorType.notFound;
+      } else if (className.contains('validation')) {
+        return ErrorType.validation;
+      } else if (className.contains('auth')) {
+        return ErrorType.auth;
+      }
+    }
+
+    return ErrorType.unknown;
   }
 
   /// Show an error dialog
-  static Future<void> showErrorDialog(BuildContext context, String message) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+  static Future<ErrorAction?> showErrorDialog(BuildContext context, String message) async {
+    return ErrorDialogService.showErrorDialog(
+      context,
+      'Error',
+      message,
+    );
+  }
+
+  /// Show an error dialog with custom title and actions
+  static Future<ErrorAction?> showCustomErrorDialog(
+    BuildContext context,
+    String title,
+    String message, {
+    List<ErrorAction> actions = const [ErrorAction.ok],
+  }) async {
+    return ErrorDialogService.showErrorDialog(
+      context,
+      title,
+      message,
+      actions: actions,
+    );
+  }
+
+  /// Show a warning dialog
+  static Future<ErrorAction?> showWarningDialog(
+    BuildContext context,
+    String title,
+    String message, {
+    List<ErrorAction> actions = const [ErrorAction.ok, ErrorAction.cancel],
+  }) async {
+    return ErrorDialogService.showWarningDialog(
+      context,
+      title,
+      message,
+      actions: actions,
     );
   }
 
   /// Show an error snackbar
   static void showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    SnackbarService.showError(context, message);
+  }
+
+  /// Show a success snackbar
+  static void showSuccessSnackBar(BuildContext context, String message) {
+    SnackbarService.showSuccess(context, message);
+  }
+
+  /// Show a warning snackbar
+  static void showWarningSnackBar(BuildContext context, String message) {
+    SnackbarService.showWarning(context, message);
+  }
+
+  /// Show an info snackbar
+  static void showInfoSnackBar(BuildContext context, String message) {
+    SnackbarService.showInfo(context, message);
   }
 }

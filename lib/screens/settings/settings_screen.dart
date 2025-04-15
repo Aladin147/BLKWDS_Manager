@@ -3,6 +3,9 @@ import 'package:file_selector/file_selector.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
+import '../../examples/error_handling_example.dart';
+import '../../examples/recovery_example.dart';
+import '../../examples/error_analytics_example.dart';
 import 'settings_controller.dart';
 import 'widgets/settings_section.dart';
 
@@ -270,6 +273,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
+
+                // Debug menu (only in debug mode)
+                if (true) // TODO: Replace with a proper debug mode check
+                  SettingsSection(
+                    title: 'Debug',
+                    children: [
+                      ListTile(
+                        title: const Text('Error Handling Example'),
+                        subtitle: const Text('Test the error handling system'),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ErrorHandlingExample(),
+                            ),
+                          );
+                        },
+                      ),
+                      const Divider(),
+                      ListTile(
+                        title: const Text('Recovery Mechanisms Example'),
+                        subtitle: const Text('Test the retry and recovery systems'),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RecoveryExample(),
+                            ),
+                          );
+                        },
+                      ),
+                      const Divider(),
+                      ListTile(
+                        title: const Text('Error Analytics & Boundaries'),
+                        subtitle: const Text('Test error analytics and boundaries'),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ErrorAnalyticsExample(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
               ],
             ),
           );

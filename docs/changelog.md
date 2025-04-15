@@ -2,9 +2,67 @@
 
 ---
 
+## 🟢 v0.14.0 – Error Handling Enhancement (2025-05-25)
+
+### ✨ Features
+
+- Implemented comprehensive error handling system with multiple phases:
+  - **Phase 1: Core Feedback Mechanisms**
+    - Created `SnackbarService` for consistent error messages
+    - Implemented `ErrorDialogService` for error dialogs with actions
+    - Created `BLKWDSFormField` with error display
+    - Updated existing error handling to use new services
+  - **Phase 2: Advanced Error Handling**
+    - Expanded `ErrorType` enum with more specific error types
+    - Created custom exception classes for different error scenarios
+    - Implemented `ContextualErrorHandler` for context-aware errors
+    - Created `FormErrorHandler` for form validation
+    - Implemented error banners for critical system issues
+    - Added toast notifications for non-critical messages
+  - **Phase 3: Recovery Mechanisms**
+    - Implemented retry logic for operations that might fail
+    - Created recovery services for error handling
+    - Implemented fallback mechanisms for critical operations
+    - Created recovery strategies for different error types
+    - Implemented graceful degradation for unavailable features
+    - Added error analytics and reporting
+    - Created error boundaries for UI components
+    - Created fallback widgets for error states
+- Created comprehensive documentation for the error handling system
+  - Added error handling guidelines with best practices
+  - Created error handling summary with system architecture
+  - Updated implementation plans and journal entries
+
+### 🐛 Fixes
+
+- Fixed context-related issues in async operations
+- Improved error handling in database operations
+- Enhanced user feedback for error scenarios
+- Fixed UI issues related to error states
+
+---
+
 ## 🟢 v0.13.0 – UI/UX Enhancement Phase 2 (2025-05-15)
 
 ### ✨ Features
+
+- Implemented consistent dark theme across all screens
+- Updated color palette with improved contrast (accentTeal, warningAmber, successGreen)
+- Enhanced card styling with proper shadows and borders
+- Improved form elements with consistent styling and focus states
+- Updated button styling with better visual feedback
+- Enhanced icons and status indicators with appropriate colors
+- Fixed layout and spacing issues for better visual hierarchy
+- Improved scrolling behavior and fixed overflow issues
+- Enhanced visual feedback for different states (available, booked, etc.)
+
+### 🐛 Fixes
+
+- Fixed overflow issues in Calendar screen
+- Fixed inconsistent styling in dropdown menus
+- Fixed text contrast issues for better readability
+- Fixed inconsistent card styling across screens
+- Fixed button styling inconsistencies
 
 - Implemented screen transition system with NavigationService
   - Created centralized navigation service for consistent animations

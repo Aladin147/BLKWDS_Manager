@@ -167,6 +167,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BLKWDSColors.backgroundDark,
       appBar: AppBar(
         title: const Text(Constants.appName),
         actions: [
@@ -243,21 +244,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   // Member selector
                   Container(
-                    color: BLKWDSColors.white,
-                    padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                    color: BLKWDSColors.backgroundDark,
+                    padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
                     child: Row(
                       children: [
                         // Member dropdown
                         Expanded(
                           child: DropdownButtonFormField<Member>(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Select Member',
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: BLKWDSConstants.inputHorizontalPadding,
-                                vertical: BLKWDSConstants.inputVerticalPadding,
+                              labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
                               ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                                borderSide: BorderSide(color: BLKWDSColors.inputBorder),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                                borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: BLKWDSConstants.inputHorizontalPadding,
+                                vertical: BLKWDSConstants.inputVerticalPadding / 2,
+                              ),
+                              filled: true,
+                              fillColor: BLKWDSColors.inputBackground,
                             ),
+                            dropdownColor: BLKWDSColors.backgroundMedium,
+                            style: TextStyle(color: BLKWDSColors.textPrimary),
                             value: _selectedMember,
                             items: _controller.memberList.value.map((member) {
                               return DropdownMenuItem<Member>(
@@ -326,7 +342,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   // Bottom section - Gear preview and activity
                   Container(
-                    height: 250,
+                    height: 280,
                     padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

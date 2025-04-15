@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
@@ -21,6 +22,13 @@ class BLKWDSTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final int? maxLength;
   final String? initialValue;
+  final bool enabled;
+  final TextInputAction? textInputAction;
+  final Function(String)? onSubmitted;
+  final bool obscureText;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
+  final bool autofocus;
 
   const BLKWDSTextField({
     super.key,
@@ -38,6 +46,13 @@ class BLKWDSTextField extends StatelessWidget {
     this.focusNode,
     this.maxLength,
     this.initialValue,
+    this.enabled = true,
+    this.textInputAction,
+    this.onSubmitted,
+    this.obscureText = false,
+    this.inputFormatters,
+    this.textCapitalization = TextCapitalization.none,
+    this.autofocus = false,
   });
 
   @override
@@ -83,10 +98,17 @@ class BLKWDSTextField extends StatelessWidget {
           maxLength: maxLength,
           style: BLKWDSTypography.bodyMedium,
           onChanged: onChanged,
+          enabled: enabled,
+          textInputAction: textInputAction,
+          onFieldSubmitted: onSubmitted,
+          obscureText: obscureText,
+          inputFormatters: inputFormatters,
+          textCapitalization: textCapitalization,
+          autofocus: autofocus,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: BLKWDSTypography.bodyMedium.copyWith(
-              color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
+              color: BLKWDSColors.textHint,
             ),
             errorText: errorText,
             errorStyle: BLKWDSTypography.bodySmall.copyWith(
@@ -99,35 +121,35 @@ class BLKWDSTextField extends StatelessWidget {
               vertical: BLKWDSConstants.inputVerticalPadding,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
               borderSide: const BorderSide(
                 color: BLKWDSColors.inputBorder,
                 width: 1.0,
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
               borderSide: const BorderSide(
                 color: BLKWDSColors.inputBorder,
                 width: 1.0,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
               borderSide: const BorderSide(
-                color: BLKWDSColors.blkwdsGreen,
+                color: BLKWDSColors.accentTeal,
                 width: 2.0,
               ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
               borderSide: const BorderSide(
                 color: BLKWDSColors.errorRed,
                 width: 1.0,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
               borderSide: const BorderSide(
                 color: BLKWDSColors.errorRed,
                 width: 2.0,

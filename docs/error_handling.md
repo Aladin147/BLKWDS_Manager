@@ -1,5 +1,9 @@
 # BLKWDS Manager - Error Handling System
 
+> **Note:** This document has been replaced by more comprehensive documentation. Please refer to the following documents for up-to-date information:
+> - [Error Handling Guidelines](./development/error_handling_guidelines.md)
+> - [Error Handling Summary](./development/error_handling_summary.md)
+
 ## Overview
 
 The BLKWDS Manager application implements a comprehensive error handling system to improve reliability, maintainability, and user experience. This document outlines the key components and usage patterns of the error handling system.
@@ -82,9 +86,13 @@ The error handling system includes mechanisms for error recovery:
 2. **Navigation Recovery**: Users can return to the dashboard from error screens
 3. **State Preservation**: Application state is preserved when possible
 
-## Future Improvements
+## Implemented Improvements
 
-1. **Remote Logging**: Add optional remote logging for critical errors
-2. **Error Analytics**: Track error frequency and patterns
-3. **Automated Recovery**: Implement more sophisticated recovery mechanisms
-4. **Error Boundary Widgets**: Add error boundaries to isolate failures
+The following improvements have been implemented in v0.14.0:
+
+1. **Error Analytics**: Track error frequency and patterns
+2. **Automated Recovery**: Implemented retry and recovery mechanisms
+3. **Error Boundary Widgets**: Added error boundaries to isolate failures
+4. **Fallback Widgets**: Added fallback widgets for error states
+
+For detailed information, please refer to the [Error Handling Guidelines](./development/error_handling_guidelines.md) and [Error Handling Summary](./development/error_handling_summary.md).

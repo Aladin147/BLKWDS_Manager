@@ -21,12 +21,12 @@ class RecentActivityWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        color: BLKWDSColors.backgroundMedium,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 25),
-            blurRadius: 4,
+            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -39,7 +39,7 @@ class RecentActivityWidget extends StatelessWidget {
           Text(
             'Recent Activity',
             style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.blkwdsGreen,
+              color: BLKWDSColors.textPrimary,
             ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -85,27 +85,39 @@ class RecentActivityWidget extends StatelessWidget {
         : '${gear.name} returned';
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(
-            activity.checkedOut ? Icons.logout : Icons.login,
-            color: activity.checkedOut
-                ? BLKWDSColors.statusOut
-                : BLKWDSColors.statusIn,
-            size: 16,
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: activity.checkedOut
+                  ? BLKWDSColors.warningAmber.withValues(alpha: 30)
+                  : BLKWDSColors.successGreen.withValues(alpha: 30),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(
+              activity.checkedOut ? Icons.logout : Icons.login,
+              color: activity.checkedOut
+                  ? BLKWDSColors.warningAmber
+                  : BLKWDSColors.successGreen,
+              size: 16,
+            ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               actionText,
-              style: BLKWDSTypography.bodyMedium,
+              style: BLKWDSTypography.bodyMedium.copyWith(
+                color: BLKWDSColors.textPrimary,
+              ),
             ),
           ),
           Text(
             _formatTimestamp(activity.timestamp),
             style: BLKWDSTypography.bodySmall.copyWith(
-              color: BLKWDSColors.slateGrey,
+              color: BLKWDSColors.textSecondary,
             ),
           ),
         ],

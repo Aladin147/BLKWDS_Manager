@@ -41,10 +41,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
     _selectedDayBookings = ValueNotifier<List<Booking>>([]);
-    
+
     // Initialize data
     _initializeData();
-    
+
     // Add listeners for filter changes
     _addFilterListeners();
   }
@@ -138,6 +138,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BLKWDSColors.backgroundDark,
       appBar: AppBar(
         title: const Text('Calendar'),
         actions: [
@@ -188,7 +189,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     _controller.resetFilters();
                   },
                 ),
-              
+
               // Calendar header with view toggle
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -241,7 +242,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ],
                 ),
               ),
-              
+
               // Calendar
               TableCalendar<Booking>(
                 firstDay: DateTime.utc(2020, 1, 1),
@@ -256,29 +257,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 calendarStyle: CalendarStyle(
                   markersMaxCount: 3,
                   markerDecoration: const BoxDecoration(
-                    color: BLKWDSColors.electricMint,
+                    color: BLKWDSColors.successGreen,
                     shape: BoxShape.circle,
                   ),
                   todayDecoration: const BoxDecoration(
-                    color: BLKWDSColors.blkwdsGreen,
+                    color: BLKWDSColors.accentTeal,
                     shape: BoxShape.circle,
                   ),
                   selectedDecoration: const BoxDecoration(
-                    color: BLKWDSColors.mustardOrange,
+                    color: BLKWDSColors.warningAmber,
                     shape: BoxShape.circle,
                   ),
                 ),
                 headerStyle: HeaderStyle(
                   formatButtonVisible: false,
                   titleCentered: true,
-                  titleTextStyle: BLKWDSTypography.titleMedium,
+                  titleTextStyle: BLKWDSTypography.titleMedium.copyWith(
+                    color: BLKWDSColors.textPrimary,
+                  ),
                   leftChevronIcon: const Icon(
                     Icons.chevron_left,
-                    color: BLKWDSColors.slateGrey,
+                    color: BLKWDSColors.textSecondary,
                   ),
                   rightChevronIcon: const Icon(
                     Icons.chevron_right,
-                    color: BLKWDSColors.slateGrey,
+                    color: BLKWDSColors.textSecondary,
                   ),
                 ),
                 onDaySelected: (selectedDay, focusedDay) {
@@ -292,7 +295,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   _focusedDay = focusedDay;
                 },
               ),
-              
+
               // Selected day header
               Padding(
                 padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
@@ -300,7 +303,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   children: [
                     Text(
                       DateFormat.yMMMMd().format(_selectedDay),
-                      style: BLKWDSTypography.titleMedium,
+                      style: BLKWDSTypography.titleMedium.copyWith(
+                      color: BLKWDSColors.textPrimary,
+                    ),
                     ),
                     const Spacer(),
                     ValueListenableBuilder<List<Booking>>(
@@ -308,14 +313,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       builder: (context, bookings, _) {
                         return Text(
                           '${bookings.length} booking${bookings.length != 1 ? 's' : ''}',
-                          style: BLKWDSTypography.bodyMedium,
+                          style: BLKWDSTypography.bodyMedium.copyWith(
+                            color: BLKWDSColors.textSecondary,
+                          ),
                         );
                       },
                     ),
                   ],
                 ),
               ),
-              
+
               // Bookings for selected day
               Expanded(
                 child: CalendarBookingList(

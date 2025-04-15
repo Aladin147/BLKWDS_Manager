@@ -23,7 +23,7 @@ class TopBarSummaryWidget extends StatelessWidget {
         vertical: BLKWDSConstants.spacingSmall,
       ),
       decoration: const BoxDecoration(
-        color: BLKWDSColors.blkwdsGreen,
+        color: BLKWDSColors.backgroundDark,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -35,7 +35,7 @@ class TopBarSummaryWidget extends StatelessWidget {
             subtitle: 'Bookings Today',
             icon: Icons.camera_alt,
           ),
-          
+
           // Bookings Today Count
           _buildSummaryCard(
             title: 'Bookings Today',
@@ -43,7 +43,7 @@ class TopBarSummaryWidget extends StatelessWidget {
             subtitle: 'Today',
             icon: Icons.event,
           ),
-          
+
           // Gear Returning Soon Count
           _buildSummaryCard(
             title: 'Gear Returning',
@@ -51,7 +51,7 @@ class TopBarSummaryWidget extends StatelessWidget {
             subtitle: 'Soon',
             icon: Icons.assignment_return,
           ),
-          
+
           // Studio Booking Info
           _buildStudioBookingInfo(),
         ],
@@ -67,11 +67,11 @@ class TopBarSummaryWidget extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      width: 160,
+      width: 170,
       padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        color: BLKWDSColors.backgroundLight,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
             color: BLKWDSColors.deepBlack.withValues(alpha: 50),
@@ -83,19 +83,23 @@ class TopBarSummaryWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
+          Flexible(
+            child: Row(
             children: [
               Icon(
                 icon,
-                color: BLKWDSColors.blkwdsGreen,
+                color: BLKWDSColors.accentTeal,
                 size: 20,
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
               Text(
                 title,
-                style: BLKWDSTypography.labelMedium,
+                style: BLKWDSTypography.labelMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
               ),
             ],
+            ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
           Row(
@@ -104,14 +108,16 @@ class TopBarSummaryWidget extends StatelessWidget {
               Text(
                 value,
                 style: BLKWDSTypography.headlineLarge.copyWith(
-                  color: BLKWDSColors.blkwdsGreen,
+                  color: BLKWDSColors.accentTeal,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
               Text(
                 subtitle,
-                style: BLKWDSTypography.bodySmall,
+                style: BLKWDSTypography.bodySmall.copyWith(
+                  color: BLKWDSColors.textSecondary,
+                ),
               ),
             ],
           ),
@@ -123,13 +129,13 @@ class TopBarSummaryWidget extends StatelessWidget {
   // Build studio booking info
   Widget _buildStudioBookingInfo() {
     final studioBooking = _getStudioBookingToday();
-    
+
     return Container(
-      width: 160,
+      width: 170,
       padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        color: BLKWDSColors.backgroundLight,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
             color: BLKWDSColors.deepBlack.withValues(alpha: 50),
@@ -142,34 +148,40 @@ class TopBarSummaryWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Flexible(
+            child: Row(
             children: [
               const Icon(
                 Icons.business,
-                color: BLKWDSColors.blkwdsGreen,
+                color: BLKWDSColors.accentTeal,
                 size: 20,
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
               Text(
                 'Studio:',
-                style: BLKWDSTypography.labelMedium,
+                style: BLKWDSTypography.labelMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
               ),
             ],
+            ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
           Text(
             studioBooking != null ? 'Booked' : 'Available',
             style: BLKWDSTypography.bodyMedium.copyWith(
-              color: studioBooking != null 
-                  ? BLKWDSColors.mustardOrange 
-                  : BLKWDSColors.electricMint,
+              color: studioBooking != null
+                  ? BLKWDSColors.warningAmber
+                  : BLKWDSColors.successGreen,
               fontWeight: FontWeight.bold,
             ),
           ),
           if (studioBooking != null)
             Text(
               _formatStudioTime(studioBooking),
-              style: BLKWDSTypography.bodySmall,
+              style: BLKWDSTypography.bodySmall.copyWith(
+                color: BLKWDSColors.textSecondary,
+              ),
             ),
         ],
       ),
@@ -185,7 +197,7 @@ class TopBarSummaryWidget extends StatelessWidget {
   int _getBookingsTodayCount() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    
+
     return controller.bookingList.value.where((booking) {
       final bookingDate = DateTime(
         booking.startDate.year,
@@ -200,18 +212,18 @@ class TopBarSummaryWidget extends StatelessWidget {
   int _getGearReturningCount() {
     final now = DateTime.now();
     final tomorrow = now.add(const Duration(days: 1));
-    
+
     // Get bookings ending in the next 24 hours
     final returningBookings = controller.bookingList.value.where((booking) {
       return booking.endDate.isAfter(now) && booking.endDate.isBefore(tomorrow);
     }).toList();
-    
+
     // Count unique gear IDs in these bookings
     final returningGearIds = <int>{};
     for (final booking in returningBookings) {
       returningGearIds.addAll(booking.gearIds);
     }
-    
+
     return returningGearIds.length;
   }
 
@@ -219,7 +231,7 @@ class TopBarSummaryWidget extends StatelessWidget {
   Booking? _getStudioBookingToday() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    
+
     // Find the first booking today that uses a studio
     return controller.bookingList.value.firstWhere(
       (booking) {
@@ -228,7 +240,7 @@ class TopBarSummaryWidget extends StatelessWidget {
           booking.startDate.month,
           booking.startDate.day,
         );
-        return bookingDate.isAtSameMomentAs(today) && 
+        return bookingDate.isAtSameMomentAs(today) &&
                (booking.isRecordingStudio || booking.isProductionStudio);
       },
       orElse: () => Booking(
@@ -244,7 +256,7 @@ class TopBarSummaryWidget extends StatelessWidget {
   String _formatStudioTime(Booking booking) {
     final startTime = TimeOfDay.fromDateTime(booking.startDate);
     final endTime = TimeOfDay.fromDateTime(booking.endDate);
-    
+
     return '${_formatTimeOfDay(startTime)} – ${_formatTimeOfDay(endTime)}';
   }
 

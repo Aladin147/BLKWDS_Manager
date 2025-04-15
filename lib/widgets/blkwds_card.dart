@@ -113,37 +113,37 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
     // Set base styling based on card type
     switch (widget.type) {
       case BLKWDSCardType.standard:
-        backgroundColor = BLKWDSColors.deepBlack;
+        backgroundColor = BLKWDSColors.backgroundMedium;
         gradient = widget.useGradient ? BLKWDSGradients.cardGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level2) : [];
         break;
       case BLKWDSCardType.primary:
-        backgroundColor = BLKWDSColors.deepBlack;
+        backgroundColor = BLKWDSColors.backgroundMedium;
         gradient = widget.useGradient ? BLKWDSGradients.primaryCardGradient : null;
-        borderColor ??= BLKWDSColors.mustardOrange.withValues(alpha: 100);
-        shadows = widget.hasShadow ? BLKWDSShadows.getColoredShadow(BLKWDSShadows.level3, BLKWDSColors.mustardOrange) : [];
+        borderColor ??= BLKWDSColors.blkwdsGreen.withValues(alpha: 100);
+        shadows = widget.hasShadow ? BLKWDSShadows.getColoredShadow(BLKWDSShadows.level3, BLKWDSColors.blkwdsGreen) : [];
         break;
       case BLKWDSCardType.secondary:
-        backgroundColor = BLKWDSColors.deepBlack.withValues(alpha: 200);
+        backgroundColor = BLKWDSColors.backgroundLight;
         gradient = widget.useGradient ? BLKWDSGradients.secondaryButtonGradient : null;
         shadows = widget.hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level1) : [];
         break;
       case BLKWDSCardType.success:
-        backgroundColor = BLKWDSColors.deepBlack;
+        backgroundColor = BLKWDSColors.backgroundMedium;
         gradient = widget.useGradient ? BLKWDSGradients.cardGradient : null;
-        borderColor ??= BLKWDSColors.electricMint.withValues(alpha: 100);
+        borderColor ??= BLKWDSColors.successGreen.withValues(alpha: 100);
         shadows = widget.hasShadow ? BLKWDSShadows.getSuccessShadow() : [];
         break;
       case BLKWDSCardType.warning:
-        backgroundColor = BLKWDSColors.deepBlack;
+        backgroundColor = BLKWDSColors.backgroundMedium;
         gradient = widget.useGradient ? BLKWDSGradients.cardGradient : null;
-        borderColor ??= BLKWDSColors.mustardOrange.withValues(alpha: 100);
+        borderColor ??= BLKWDSColors.warningAmber.withValues(alpha: 100);
         shadows = widget.hasShadow ? BLKWDSShadows.getWarningShadow() : [];
         break;
       case BLKWDSCardType.error:
-        backgroundColor = BLKWDSColors.deepBlack;
+        backgroundColor = BLKWDSColors.backgroundMedium;
         gradient = widget.useGradient ? BLKWDSGradients.cardGradient : null;
-        borderColor ??= BLKWDSColors.alertCoral.withValues(alpha: 100);
+        borderColor ??= BLKWDSColors.errorRed.withValues(alpha: 100);
         shadows = widget.hasShadow ? BLKWDSShadows.getErrorShadow() : [];
         break;
     }
@@ -170,7 +170,7 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
 
     // Create the card content
     final cardContent = Padding(
-      padding: widget.padding ?? const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      padding: widget.padding ?? const EdgeInsets.all(BLKWDSConstants.spacingSmall),
       child: widget.isLoading
           ? Stack(
               children: [
@@ -194,11 +194,11 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
     return AnimatedContainer(
       duration: BLKWDSAnimations.short,
       curve: BLKWDSAnimations.standard,
-      margin: widget.margin ?? const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
+      margin: widget.margin ?? const EdgeInsets.only(bottom: BLKWDSConstants.spacingXSmall),
       decoration: BoxDecoration(
         color: backgroundColor,
         gradient: gradient,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         border: borderColor != null
             ? Border.all(color: borderColor, width: 1.0)
             : null,
@@ -208,7 +208,7 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
         ..scale(_isHovered && widget.animateOnHover ? 1.01 : 1.0)
         ..scale(_isPressed && widget.onTap != null ? 0.98 : 1.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         child: Material(
           color: Colors.transparent,
           child: widget.onTap != null
@@ -234,15 +234,15 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
     switch (widget.type) {
       case BLKWDSCardType.standard:
       case BLKWDSCardType.secondary:
-        return BLKWDSColors.electricMint;
+        return BLKWDSColors.accentTeal;
       case BLKWDSCardType.primary:
-        return BLKWDSColors.mustardOrange;
+        return BLKWDSColors.blkwdsGreen;
       case BLKWDSCardType.success:
-        return BLKWDSColors.electricMint;
+        return BLKWDSColors.successGreen;
       case BLKWDSCardType.warning:
-        return BLKWDSColors.mustardOrange;
+        return BLKWDSColors.warningAmber;
       case BLKWDSCardType.error:
-        return BLKWDSColors.alertCoral;
+        return BLKWDSColors.errorRed;
     }
   }
 }

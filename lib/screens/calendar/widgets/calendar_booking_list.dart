@@ -53,18 +53,21 @@ class CalendarBookingList extends StatelessWidget {
   // Build empty state
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
             Icons.event_available,
             size: 64,
-            color: BLKWDSColors.slateGrey,
+            color: BLKWDSColors.textSecondary,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
           Text(
             'No bookings on ${DateFormat.yMMMMd().format(selectedDay)}',
-            style: BLKWDSTypography.titleMedium,
+            style: BLKWDSTypography.titleMedium.copyWith(
+              color: BLKWDSColors.textPrimary,
+            ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
           BLKWDSButton(
@@ -74,6 +77,7 @@ class CalendarBookingList extends StatelessWidget {
             onPressed: onCreateBooking,
           ),
         ],
+        ),
       ),
     );
   }
@@ -82,40 +86,40 @@ class CalendarBookingList extends StatelessWidget {
   Widget _buildBookingItem(Booking booking) {
     // Get project
     final project = controller.getProjectById(booking.projectId);
-    
+
     // Format times
     final startTimeStr = DateFormat.jm().format(booking.startDate);
     final endTimeStr = DateFormat.jm().format(booking.endDate);
-    
+
     // Determine status
     final now = DateTime.now();
     final isPast = booking.endDate.isBefore(now);
     final isCurrent = booking.startDate.isBefore(now) && booking.endDate.isAfter(now);
-    
+
     // Determine status text and color
     String statusText;
     Color statusColor;
-    
+
     if (isPast) {
       statusText = 'Completed';
-      statusColor = BLKWDSColors.slateGrey;
+      statusColor = BLKWDSColors.textSecondary;
     } else if (isCurrent) {
       statusText = 'In Progress';
-      statusColor = BLKWDSColors.mustardOrange;
+      statusColor = BLKWDSColors.warningAmber;
     } else {
       statusText = 'Upcoming';
-      statusColor = BLKWDSColors.electricMint;
+      statusColor = BLKWDSColors.successGreen;
     }
-    
+
     // Get studio spaces
     final List<String> spaces = [];
     if (booking.isRecordingStudio) spaces.add('Recording Studio');
     if (booking.isProductionStudio) spaces.add('Production Studio');
     final String spaceText = spaces.isEmpty ? 'No studio space' : spaces.join(', ');
-    
+
     // Get gear count
     final gearCount = booking.gearIds.length;
-    
+
     return BLKWDSCard(
       onTap: () => onBookingTap(booking),
       child: Column(
@@ -150,53 +154,59 @@ class CalendarBookingList extends StatelessWidget {
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
-          
+
           // Time
           Row(
             children: [
               const Icon(
                 Icons.access_time,
                 size: 16,
-                color: BLKWDSColors.slateGrey,
+                color: BLKWDSColors.textSecondary,
               ),
               const SizedBox(width: 8),
               Text(
                 '$startTimeStr - $endTimeStr',
-                style: BLKWDSTypography.bodyMedium,
+                style: BLKWDSTypography.bodyMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
               ),
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
-          
+
           // Studio space
           Row(
             children: [
               const Icon(
                 Icons.room,
                 size: 16,
-                color: BLKWDSColors.slateGrey,
+                color: BLKWDSColors.textSecondary,
               ),
               const SizedBox(width: 8),
               Text(
                 spaceText,
-                style: BLKWDSTypography.bodyMedium,
+                style: BLKWDSTypography.bodyMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
               ),
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
-          
+
           // Gear count
           Row(
             children: [
               const Icon(
                 Icons.camera_alt,
                 size: 16,
-                color: BLKWDSColors.slateGrey,
+                color: BLKWDSColors.textSecondary,
               ),
               const SizedBox(width: 8),
               Text(
                 '$gearCount gear item${gearCount != 1 ? 's' : ''}',
-                style: BLKWDSTypography.bodyMedium,
+                style: BLKWDSTypography.bodyMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
               ),
             ],
           ),

@@ -43,30 +43,32 @@ extension ColorExtension on Color {
 }
 
 /// BLKWDS Manager Color Palette
-/// Based on the visual guidelines document with enhanced contrast and readability
+/// Modern, high-contrast color system with improved readability
 class BLKWDSColors {
   // Primary Colors
-  static const Color blkwdsGreen = Color(0xFF2F6846);
+  static const Color blkwdsGreen = Color(0xFF1DB954); // Brighter, more modern green
   static const Color white = Color(0xFFFFFFFF);
-  static const Color deepBlack = Color(0xFF121212); // Darker for better contrast
-  static const Color slateGrey = Color(0xFF9E9E9E); // Lighter for better readability
+  static const Color deepBlack = Color(0xFF121212); // Rich black for backgrounds
+  static const Color slateGrey = Color(0xFFADBBCC); // Softer, more modern grey
 
   // Background Colors
-  static const Color backgroundDark = Color(0xFF121212); // Main background
-  static const Color backgroundMedium = Color(0xFF1E1E1E); // Card backgrounds
-  static const Color backgroundLight = Color(0xFF2C2C2C); // Elevated surfaces
+  static const Color backgroundDark = Color(0xFF191919); // Slightly lighter than pure black
+  static const Color backgroundMedium = Color(0xFF222222); // Card backgrounds
+  static const Color backgroundLight = Color(0xFF2A2A2A); // Elevated surfaces
 
   // Accent Colors
-  static const Color mustardOrange = Color(0xFFFFB74D); // Brighter for better visibility
-  static const Color electricMint = Color(0xFF69F0AE); // Adjusted for better contrast
-  static const Color alertCoral = Color(0xFFFF5252); // Brighter for better visibility
-  static const Color accentTeal = Color(0xFF64FFDA); // Adjusted for better contrast
-  static const Color errorRed = Color(0xFFFF5252); // Consistent with alertCoral
+  static const Color mustardOrange = Color(0xFFFFC857); // Vibrant, modern yellow-orange
+  static const Color electricMint = Color(0xFF4ECDC4); // Teal-mint that pops against dark bg
+  static const Color alertCoral = Color(0xFFFF6B6B); // Softer, more modern red
+  static const Color accentTeal = Color(0xFF00B8D9); // Bright, modern teal
+  static const Color errorRed = Color(0xFFFF5252); // Consistent error color
 
   // Additional Accent Colors
-  static const Color successGreen = Color(0xFF4CAF50); // For success states
-  static const Color warningAmber = Color(0xFFFFD740); // For warning states
-  static const Color infoBlue = Color(0xFF448AFF); // For information states
+  static const Color successGreen = Color(0xFF36B37E); // Modern success green
+  static const Color warningAmber = Color(0xFFFFAB00); // Vibrant warning amber
+  static const Color infoBlue = Color(0xFF2684FF); // Bright info blue
+  static const Color purpleAccent = Color(0xFF9F7AEA); // Additional accent color
+  static const Color pinkAccent = Color(0xFFED64A6); // Additional accent color
 
   // Status Colors
   static const Color statusIn = successGreen;
@@ -75,32 +77,40 @@ class BLKWDSColors {
   static const Color statusBooked = infoBlue;
 
   // Text Colors
-  static const Color textPrimary = white; // Primary text color
-  static const Color textSecondary = Color(0xFFBDBDBD); // Secondary text color
-  static const Color textDisabled = Color(0xFF757575); // Disabled text color
-  static const Color textHint = Color(0xFF9E9E9E); // Hint text color
+  static const Color textPrimary = Color(0xFFEDF2F7); // Slightly off-white for better eye comfort
+  static const Color textSecondary = Color(0xFFA0AEC0); // Medium contrast secondary text
+  static const Color textDisabled = Color(0xFF718096); // Disabled text with sufficient contrast
+  static const Color textHint = Color(0xFF8A94A6); // Hint text with better visibility
 
   // UI Element Colors
   static const Color cardBackground = backgroundMedium;
   static const Color appBackground = backgroundDark;
-  static const Color primaryButtonBackground = mustardOrange;
+  static const Color primaryButtonBackground = blkwdsGreen;
   static const Color primaryButtonText = deepBlack;
   static const Color secondaryButtonBackground = backgroundLight;
   static const Color secondaryButtonText = white;
   static const Color secondaryButtonBorder = slateGrey;
 
   // Input Colors
-  static const Color inputBackground = backgroundLight;
-  static const Color inputBorder = slateGrey;
+  static const Color inputBackground = Color(0xFF2D3748); // Slightly lighter for better contrast
+  static const Color inputBorder = Color(0xFF4A5568); // More visible border
   static const Color inputFocusBorder = accentTeal;
   static const Color inputErrorBorder = errorRed;
   static const Color inputSuccessBorder = successGreen;
 
   // Divider and Border Colors
-  static const Color divider = Color(0xFF424242); // Subtle divider color
-  static const Color border = Color(0xFF616161); // Standard border color
+  static const Color divider = Color(0xFF2D3748); // More subtle divider
+  static const Color border = Color(0xFF4A5568); // More visible border
 
   // Overlay Colors
   static const Color overlay = Color(0x80000000); // 50% black for overlays
   static const Color scrim = Color(0xCC000000); // 80% black for modal backgrounds
+
+  // Gradient Colors
+  static const Color gradientStart = Color(0xFF1A202C);
+  static const Color gradientEnd = Color(0xFF2D3748);
+
+  // Focus and Selection Colors
+  static const Color focusRing = accentTeal;
+  static const Color selection = Color(0xFF2C5282);
 }

@@ -23,12 +23,12 @@ class QuickActionsPanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        color: BLKWDSColors.backgroundMedium,
+        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 20),
-            blurRadius: 4,
+            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -40,7 +40,7 @@ class QuickActionsPanel extends StatelessWidget {
           Text(
             'Quick Actions',
             style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.blkwdsGreen,
+              color: BLKWDSColors.textPrimary,
             ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),

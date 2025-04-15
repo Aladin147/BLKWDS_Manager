@@ -23,11 +23,11 @@ class CalendarFilterPanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.white,
+        color: BLKWDSColors.backgroundMedium,
         boxShadow: [
           BoxShadow(
-            color: BLKWDSColors.slateGrey.withValues(alpha: 50),
-            blurRadius: 4,
+            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -40,7 +40,9 @@ class CalendarFilterPanel extends StatelessWidget {
             children: [
               Text(
                 'Filter Bookings',
-                style: BLKWDSTypography.titleMedium,
+                style: BLKWDSTypography.titleMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
               ),
               const Spacer(),
               BLKWDSButton(
@@ -103,14 +105,29 @@ class CalendarFilterPanel extends StatelessWidget {
           valueListenable: controller.projectList,
           builder: (context, projects, _) {
             return DropdownButtonFormField<int?>(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Project',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+                labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                  borderSide: BorderSide(color: BLKWDSColors.inputBorder),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                  borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: BLKWDSConstants.inputHorizontalPadding,
                   vertical: BLKWDSConstants.inputVerticalPadding / 2,
                 ),
+                filled: true,
+                fillColor: BLKWDSColors.inputBackground,
               ),
+              dropdownColor: BLKWDSColors.backgroundMedium,
+              style: TextStyle(color: BLKWDSColors.textPrimary),
               value: selectedProjectId,
               items: [
                 const DropdownMenuItem<int?>(
@@ -143,14 +160,29 @@ class CalendarFilterPanel extends StatelessWidget {
           valueListenable: controller.memberList,
           builder: (context, members, _) {
             return DropdownButtonFormField<int?>(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Member',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+                labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                  borderSide: BorderSide(color: BLKWDSColors.inputBorder),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                  borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: BLKWDSConstants.inputHorizontalPadding,
                   vertical: BLKWDSConstants.inputVerticalPadding / 2,
                 ),
+                filled: true,
+                fillColor: BLKWDSColors.inputBackground,
               ),
+              dropdownColor: BLKWDSColors.backgroundMedium,
+              style: TextStyle(color: BLKWDSColors.textPrimary),
               value: selectedMemberId,
               items: [
                 const DropdownMenuItem<int?>(
@@ -183,15 +215,30 @@ class CalendarFilterPanel extends StatelessWidget {
           valueListenable: controller.gearList,
           builder: (context, gear, _) {
             return DropdownButtonFormField<int?>(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Gear',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+                labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                  borderSide: BorderSide(color: BLKWDSColors.inputBorder),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                  borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: BLKWDSConstants.inputHorizontalPadding,
                   vertical: BLKWDSConstants.inputVerticalPadding / 2,
                 ),
                 isDense: true,
+                filled: true,
+                fillColor: BLKWDSColors.inputBackground,
               ),
+              dropdownColor: BLKWDSColors.backgroundMedium,
+              style: TextStyle(color: BLKWDSColors.textPrimary),
               isExpanded: true,
               value: selectedGearId,
               items: [
