@@ -365,10 +365,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                           const SizedBox(width: BLKWDSConstants.spacingMedium),
 
-                          // Right side - Recent activity (moved from bottom)
+                          // Right side - Gear preview list (moved from bottom)
                           Expanded(
                             flex: 2,
-                            child: RecentActivityWidget(controller: _controller),
+                            child: GearPreviewListWidget(
+                              controller: _controller,
+                              onCheckout: _handleCheckout,
+                              onReturn: _handleReturn,
+                              onViewAllGear: () {
+                                // Show search bar and full gear list
+                                _showSearchAndFullGearList(context);
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -392,7 +400,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-                  // Bottom section - Gear preview list (full width)
+                  // Bottom section - Recent activity (full width)
                   Expanded(
                     flex: 1,
                     child: Padding(
@@ -400,15 +408,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         horizontal: BLKWDSConstants.spacingMedium,
                         vertical: 0,
                       ),
-                      child: GearPreviewListWidget(
-                        controller: _controller,
-                        onCheckout: _handleCheckout,
-                        onReturn: _handleReturn,
-                        onViewAllGear: () {
-                          // Show search bar and full gear list
-                          _showSearchAndFullGearList(context);
-                        },
-                      ),
+                      child: RecentActivityWidget(controller: _controller),
                     ),
                   ),
                 ],
