@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../theme/blkwds_animations.dart';
 
 /// Animated switcher component for BLKWDS Manager
@@ -139,7 +138,7 @@ class BLKWDSContentSwitcher extends StatefulWidget {
   final Duration autoPlayInterval;
   final bool pauseAutoPlayOnHover;
 
-  const BLKWDSContentSwitcher({
+  BLKWDSContentSwitcher({
     super.key,
     required this.children,
     this.initialIndex = 0,
@@ -151,7 +150,11 @@ class BLKWDSContentSwitcher extends StatefulWidget {
     this.autoPlay = false,
     this.autoPlayInterval = const Duration(seconds: 5),
     this.pauseAutoPlayOnHover = true,
-  });
+  }) {
+    assert(children.isNotEmpty, 'Children cannot be empty');
+    assert(initialIndex >= 0 && initialIndex < children.length,
+        'Initial index must be within the range of children');
+  }
 
   @override
   State<BLKWDSContentSwitcher> createState() => _BLKWDSContentSwitcherState();
