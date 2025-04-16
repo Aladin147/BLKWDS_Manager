@@ -55,7 +55,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [ ] Ensure consistent typography usage across all screens
    - [ ] Standardize component usage (buttons, text fields, etc.)
    - [ ] Standardize navigation patterns and transitions
-   - [ ] Remove all references to light mode/theme switching (dark mode only)
+   - [x] Remove all references to light mode/theme switching (dark mode only)
    - [ ] Create consistent card styling across the application
 
 ## Feature Status
@@ -110,7 +110,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 20. Inconsistent shadow styles for cards and elevated surfaces (IDENTIFIED in v0.31.0)
 21. Inconsistent typography usage across screens (IDENTIFIED in v0.31.0)
 22. Inconsistent component usage (buttons, text fields, etc.) (IDENTIFIED in v0.31.0)
-23. Remnant references to light mode/theme switching (IDENTIFIED in v0.31.0)
+23. ~~Remnant references to light mode/theme switching~~ (FIXED in v0.32.0)
 24. Inconsistent card styling across the application (IDENTIFIED in v0.31.0)
 
 ## Next Steps
@@ -174,6 +174,19 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.32.0 - Dark Mode Standardization (2025-06-13)
+
+**Fixed:**
+
+- Removed all references to light mode/theme switching
+
+**Changed:**
+
+- Removed theme mode selection from settings screen
+- Removed theme mode preferences from settings controller
+- Removed theme mode methods from preferences service
+- Added clarifying comment in BLKWDSTheme class about dark mode exclusivity
 
 ### v0.31.0 - Style Audit (2025-06-13)
 

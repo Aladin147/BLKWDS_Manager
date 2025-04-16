@@ -1,5 +1,18 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Dark Mode Standardization
+
+Today we completed the removal of all references to light mode and theme switching from the codebase. This was an important step in our style unification plan, as we had previously decided to focus exclusively on dark mode for the application.
+
+Key changes included:
+
+1. **Settings Screen**: Removed the theme mode selection UI from the settings screen
+2. **Settings Controller**: Removed theme mode preferences and related methods
+3. **Preferences Service**: Removed theme mode methods and preferences keys
+4. **Theme Documentation**: Added clarifying comments in the BLKWDSTheme class about dark mode exclusivity
+
+This change simplifies our codebase and ensures a consistent user experience. It also removes potential confusion for developers who might otherwise think that light mode is supported.
+
 ## 2025-06-13: Style Audit
 
 Today we conducted a comprehensive style audit to identify inconsistencies across the application. Our goal is to create a unified, consistent UI experience for users. Here are our key findings:
