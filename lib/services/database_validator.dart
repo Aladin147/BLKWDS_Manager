@@ -173,25 +173,25 @@ class DatabaseValidator {
   /// Returns a list of missing tables
   static Future<List<String>> validateSchema(Database db) async {
     LogService.info('Validating database schema');
-    
+
     // Get all tables in the database
     final tableResult = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
     final existingTables = tableResult.map((t) => t['name'] as String).toList();
-    
+
     // Filter out SQLite system tables
     final filteredTables = existingTables.where((t) => !t.startsWith('sqlite_')).toList();
-    
+
     LogService.info('Found tables: $filteredTables');
-    
+
     // Check for missing tables
     final missingTables = requiredTables.where((t) => !filteredTables.contains(t)).toList();
-    
+
     if (missingTables.isEmpty) {
       LogService.info('All required tables exist');
     } else {
       LogService.warning('Missing tables: $missingTables');
     }
-    
+
     return missingTables;
   }
 
@@ -199,7 +199,7 @@ class DatabaseValidator {
   /// Creates missing tables and adds default data
   static Future<void> repairSchema(Database db, List<String> missingTables) async {
     LogService.info('Repairing database schema');
-    
+
     // Begin transaction for atomicity
     await db.transaction((txn) async {
       try {
@@ -212,20 +212,20 @@ class DatabaseValidator {
             LogService.error('No definition found for table: $tableName');
           }
         }
-        
+
         // Add default data if needed
         if (missingTables.contains('studio_settings')) {
           LogService.info('Adding default studio settings');
           await txn.insert('studio_settings', defaultStudioSettings);
         }
-        
+
         if (missingTables.contains('studio')) {
           LogService.info('Adding default studios');
           for (final studio in defaultStudios) {
             await txn.insert('studio', studio);
           }
         }
-        
+
         LogService.info('Schema repair completed successfully');
       } catch (e, stackTrace) {
         LogService.error('Error during schema repair', e, stackTrace);
@@ -238,17 +238,32 @@ class DatabaseValidator {
   /// This is the main method that should be called during app initialization
   static Future<bool> validateAndRepair(Database db) async {
     try {
+      bool repairPerformed = false;
+
       // Validate schema
       final missingTables = await validateSchema(db);
-      
+
       // Repair schema if needed
       if (missingTables.isNotEmpty) {
         await repairSchema(db, missingTables);
-        LogService.info('Database schema repaired successfully');
-        return true;
+        LogService.info('Database tables repaired successfully');
+        repairPerformed = true;
       }
-      
-      return false; // No repair needed
+
+      // Validate columns
+      final validationResults = await validateComprehensive(db);
+
+      // Remove missing_tables entry since we already handled it
+      validationResults.remove('missing_tables');
+
+      // Repair missing columns if needed
+      if (validationResults.isNotEmpty) {
+        await repairAllColumns(db, validationResults);
+        LogService.info('Database columns repaired successfully');
+        repairPerformed = true;
+      }
+
+      return repairPerformed;
     } catch (e, stackTrace) {
       LogService.error('Error during schema validation and repair', e, stackTrace);
       return false;
@@ -258,24 +273,24 @@ class DatabaseValidator {
   /// Validate column structure for a specific table
   /// Returns a list of missing columns
   static Future<List<String>> validateTableColumns(
-    Database db, 
-    String tableName, 
+    Database db,
+    String tableName,
     List<String> requiredColumns
   ) async {
     try {
       // Get columns for the table
       final result = await db.rawQuery('PRAGMA table_info($tableName)');
       final existingColumns = result.map((col) => col['name'] as String).toList();
-      
+
       // Check for missing columns
       final missingColumns = requiredColumns.where((c) => !existingColumns.contains(c)).toList();
-      
+
       if (missingColumns.isEmpty) {
         LogService.info('All required columns exist in table: $tableName');
       } else {
         LogService.warning('Missing columns in table $tableName: $missingColumns');
       }
-      
+
       return missingColumns;
     } catch (e, stackTrace) {
       LogService.error('Error validating columns for table: $tableName', e, stackTrace);
@@ -283,45 +298,98 @@ class DatabaseValidator {
     }
   }
 
+  /// Column definitions for automatic repair
+  static final Map<String, Map<String, String>> columnDefinitions = {
+    'booking': {
+      'studioId': 'ALTER TABLE booking ADD COLUMN studioId INTEGER DEFAULT NULL',
+      'notes': 'ALTER TABLE booking ADD COLUMN notes TEXT DEFAULT NULL',
+    },
+    // Add more tables and their column definitions as needed
+  };
+
+  /// Repair missing columns in a table
+  static Future<void> repairTableColumns(Database db, String tableName, List<String> missingColumns) async {
+    LogService.info('Repairing columns in table: $tableName');
+
+    // Begin transaction for atomicity
+    await db.transaction((txn) async {
+      try {
+        // Check if we have definitions for this table
+        if (!columnDefinitions.containsKey(tableName)) {
+          LogService.warning('No column definitions found for table: $tableName');
+          return;
+        }
+
+        // Add missing columns
+        for (final columnName in missingColumns) {
+          if (columnDefinitions[tableName]!.containsKey(columnName)) {
+            LogService.info('Adding missing column: $columnName to table: $tableName');
+            await txn.execute(columnDefinitions[tableName]![columnName]!);
+          } else {
+            LogService.warning('No definition found for column: $columnName in table: $tableName');
+          }
+        }
+
+        LogService.info('Column repair completed successfully for table: $tableName');
+      } catch (e, stackTrace) {
+        LogService.error('Error during column repair for table: $tableName', e, stackTrace);
+        rethrow; // This will roll back the transaction
+      }
+    });
+  }
+
+  /// Repair all missing columns identified in validation
+  static Future<void> repairAllColumns(Database db, Map<String, List<String>> missingColumnsMap) async {
+    for (final entry in missingColumnsMap.entries) {
+      final tableName = entry.key;
+      final missingColumns = entry.value;
+
+      // Skip missing_tables entry
+      if (tableName == 'missing_tables') continue;
+
+      await repairTableColumns(db, tableName, missingColumns);
+    }
+  }
+
   /// Perform a comprehensive validation of the database
   /// Checks all tables and their required columns
   static Future<Map<String, List<String>>> validateComprehensive(Database db) async {
     final Map<String, List<String>> validationResults = {};
-    
+
     // Define required columns for each table
     final Map<String, List<String>> requiredColumns = {
       'studio': ['id', 'name', 'type', 'status'],
       'studio_settings': [
-        'id', 'openingTime', 'closingTime', 'minBookingDuration', 
+        'id', 'openingTime', 'closingTime', 'minBookingDuration',
         'maxBookingDuration', 'minAdvanceBookingTime', 'maxAdvanceBookingTime',
         'cleanupTime', 'allowOverlappingBookings', 'enforceStudioHours'
       ],
       'booking': ['id', 'projectId', 'startDate', 'endDate', 'studioId'],
       // Add more tables and their required columns as needed
     };
-    
+
     // Validate schema first
     final missingTables = await validateSchema(db);
     if (missingTables.isNotEmpty) {
       validationResults['missing_tables'] = missingTables;
     }
-    
+
     // Validate columns for each table
     for (final entry in requiredColumns.entries) {
       final tableName = entry.key;
       final columns = entry.value;
-      
+
       // Skip tables that don't exist
       if (missingTables.contains(tableName)) {
         continue;
       }
-      
+
       final missingColumns = await validateTableColumns(db, tableName, columns);
       if (missingColumns.isNotEmpty) {
         validationResults[tableName] = missingColumns;
       }
     }
-    
+
     return validationResults;
   }
 }

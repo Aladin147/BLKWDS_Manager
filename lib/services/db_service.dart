@@ -364,8 +364,15 @@ class DBService {
 
       // Perform comprehensive validation
       final validationResults = await DatabaseValidator.validateComprehensive(db);
+
+      // Remove missing_tables entry since we already handled it
+      validationResults.remove('missing_tables');
+
+      // Repair missing columns if needed
       if (validationResults.isNotEmpty) {
         LogService.warning('Comprehensive validation found issues during migration: $validationResults');
+        await DatabaseValidator.repairAllColumns(db, validationResults);
+        LogService.info('Repaired missing columns during migration');
       }
 
       LogService.info('Migration v6 to v7 completed successfully');
