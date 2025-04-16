@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
@@ -22,16 +21,10 @@ class SettingsController {
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
   final ValueNotifier<String?> successMessage = ValueNotifier<String?>(null);
 
-  // Theme settings
-  final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
-
   // App information
-  final String appVersion = '1.0.0-rc1';
+  final String appVersion = '1.0.0-rc10';
   final String appBuildNumber = '1';
   final String appCopyright = '© ${DateTime.now().year} BLKWDS Studios';
-
-  // Shared preferences keys
-  static const String _themeModeKey = 'theme_mode';
 
   // Set the context for error handling
   void setContext(BuildContext context) {
@@ -69,13 +62,7 @@ class SettingsController {
   // Load preferences from shared preferences
   Future<void> _loadPreferences() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-
-      // Load theme mode
-      final themeModeIndex = prefs.getInt(_themeModeKey);
-      if (themeModeIndex != null) {
-        themeMode.value = ThemeMode.values[themeModeIndex];
-      }
+      // No preferences to load - app uses dark mode only
     } catch (e, stackTrace) {
       LogService.error('Error loading preferences', e, stackTrace);
 
@@ -92,37 +79,6 @@ class SettingsController {
 
       rethrow;
     }
-  }
-
-  // Save preferences to shared preferences
-  Future<void> _savePreferences() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-
-      // Save theme mode
-      await prefs.setInt(_themeModeKey, themeMode.value.index);
-    } catch (e, stackTrace) {
-      LogService.error('Error saving preferences', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          stackTrace: stackTrace,
-          type: ErrorType.state,
-          feedbackLevel: ErrorFeedbackLevel.snackbar,
-        );
-      }
-
-      rethrow;
-    }
-  }
-
-  // Set theme mode
-  Future<void> setThemeMode(ThemeMode mode) async {
-    themeMode.value = mode;
-    await _savePreferences();
   }
 
   // Export data to JSON
@@ -637,6 +593,5 @@ class SettingsController {
     isLoading.dispose();
     errorMessage.dispose();
     successMessage.dispose();
-    themeMode.dispose();
   }
 }

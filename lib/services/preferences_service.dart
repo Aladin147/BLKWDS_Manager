@@ -9,36 +9,11 @@ import 'log_service.dart';
 /// Service for managing user preferences
 class PreferencesService {
   // Shared preferences keys
-  static const String _themeModeKey = 'theme_mode';
   static const String _bookingFilterPresetsKey = 'booking_filter_presets';
   static const String _lastUsedFilterKey = 'last_used_filter';
   static const String _lastUsedViewOptionsKey = 'last_used_view_options';
 
-  /// Get theme mode
-  static Future<ThemeMode> getThemeMode() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final themeModeIndex = prefs.getInt(_themeModeKey);
-      if (themeModeIndex != null) {
-        return ThemeMode.values[themeModeIndex];
-      }
-      return ThemeMode.system;
-    } catch (e, stackTrace) {
-      LogService.error('Error getting theme mode', e, stackTrace);
-      return ThemeMode.system;
-    }
-  }
-
-  /// Set theme mode
-  static Future<bool> setThemeMode(ThemeMode mode) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return await prefs.setInt(_themeModeKey, mode.index);
-    } catch (e, stackTrace) {
-      LogService.error('Error setting theme mode', e, stackTrace);
-      return false;
-    }
-  }
+  // Theme mode methods removed - app uses dark mode only
 
   /// Get booking filter presets
   static Future<List<SavedFilterPreset>> getBookingFilterPresets() async {

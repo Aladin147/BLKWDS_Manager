@@ -5,6 +5,7 @@ import 'blkwds_constants.dart';
 
 /// BLKWDS Manager Theme
 /// Provides a dark theme for the app with enhanced visual appeal and readability
+/// Note: The application uses dark mode exclusively - there is no light mode or theme switching
 class BLKWDSTheme {
   // App Theme (Dark Mode Only)
   static ThemeData get theme {

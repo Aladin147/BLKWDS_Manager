@@ -45,12 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
-  // Handle theme mode change
-  void _handleThemeModeChange(ThemeMode? mode) {
-    if (mode != null) {
-      _controller.setThemeMode(mode);
-    }
-  }
+  // Theme mode is fixed to dark mode
 
   // Handle export data
   Future<void> _handleExportData() async {
@@ -173,50 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Theme settings
-                SettingsSection(
-                  title: 'Appearance',
-                  children: [
-                    ValueListenableBuilder<ThemeMode>(
-                      valueListenable: _controller.themeMode,
-                      builder: (context, themeMode, _) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Theme Mode',
-                              style: BLKWDSTypography.labelMedium,
-                            ),
-                            const SizedBox(height: BLKWDSConstants.spacingSmall),
-                            SegmentedButton<ThemeMode>(
-                              segments: const [
-                                ButtonSegment<ThemeMode>(
-                                  value: ThemeMode.light,
-                                  label: Text('Light'),
-                                  icon: Icon(Icons.light_mode),
-                                ),
-                                ButtonSegment<ThemeMode>(
-                                  value: ThemeMode.dark,
-                                  label: Text('Dark'),
-                                  icon: Icon(Icons.dark_mode),
-                                ),
-                                ButtonSegment<ThemeMode>(
-                                  value: ThemeMode.system,
-                                  label: Text('System'),
-                                  icon: Icon(Icons.settings_suggest),
-                                ),
-                              ],
-                              selected: {themeMode},
-                              onSelectionChanged: (Set<ThemeMode> modes) {
-                                _handleThemeModeChange(modes.first);
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                // Appearance section removed - app uses dark mode only
 
                 // Data management
                 SettingsSection(
