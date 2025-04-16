@@ -14,6 +14,7 @@ export 'blkwds_checkbox.dart';
 export 'blkwds_card.dart';
 export 'blkwds_list_item.dart';
 export 'blkwds_icon.dart';
+export 'blkwds_icon_container.dart';
 export 'blkwds_status_badge.dart';
 export 'blkwds_error_banner.dart';
 export 'blkwds_snackbar.dart';

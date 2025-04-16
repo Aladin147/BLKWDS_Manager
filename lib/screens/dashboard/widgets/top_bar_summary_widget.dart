@@ -4,6 +4,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_card.dart';
+import '../../../widgets/blkwds_icon_container.dart';
 import '../../../widgets/blkwds_status_badge.dart';
 import '../dashboard_controller.dart';
 
@@ -81,17 +82,13 @@ class TopBarSummaryWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: BLKWDSColors.accentTeal,
-                    size: 20,
-                  ),
+                BLKWDSIconContainer(
+                  icon: icon,
+                  size: BLKWDSIconContainerSize.small,
+                  backgroundColor: BLKWDSColors.accentTeal,
+                  backgroundAlpha: 50,
+                  iconColor: BLKWDSColors.accentTeal,
+                  iconSize: 20,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(
@@ -153,17 +150,13 @@ class TopBarSummaryWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.business,
-                    color: BLKWDSColors.accentTeal,
-                    size: 20,
-                  ),
+                const BLKWDSIconContainer(
+                  icon: Icons.business,
+                  size: BLKWDSIconContainerSize.small,
+                  backgroundColor: BLKWDSColors.accentTeal,
+                  backgroundAlpha: 50,
+                  iconColor: BLKWDSColors.accentTeal,
+                  iconSize: 20,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(

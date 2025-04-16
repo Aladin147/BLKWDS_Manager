@@ -7,6 +7,7 @@ import '../../../theme/blkwds_animations.dart';
 
 import '../../../widgets/blkwds_button.dart';
 import '../../../widgets/blkwds_card.dart';
+import '../../../widgets/blkwds_icon_container.dart';
 import '../../../widgets/blkwds_status_badge.dart';
 
 import '../dashboard_adapter.dart';
@@ -227,18 +228,13 @@ class TodayBookingWidget extends StatelessWidget {
         child: Row(
           children: [
             // Booking icon with colored background
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: BLKWDSColors.accentTeal.withValues(alpha: 20),
-                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-              ),
-              child: Icon(
-                _getBookingIcon(booking, firstGear),
-                color: BLKWDSColors.accentTeal,
-                size: 24,
-              ),
+            BLKWDSIconContainer(
+              icon: _getBookingIcon(booking, firstGear),
+              size: BLKWDSIconContainerSize.large,
+              backgroundColor: BLKWDSColors.accentTeal,
+              backgroundAlpha: 20,
+              iconColor: BLKWDSColors.accentTeal,
+              iconSize: 24,
             ),
             const SizedBox(width: BLKWDSConstants.spacingMedium),
 

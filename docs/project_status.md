@@ -160,7 +160,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Replace TextButton.icon with BLKWDSButton
      - [x] Replace CircularProgressIndicator with BLKWDSLoadingSpinner
      - [x] Replace Card with BLKWDSCard
-     - [ ] Create a BLKWDSIconContainer component for the repeated icon container pattern
+     - [x] Create a BLKWDSIconContainer component for the repeated icon container pattern
      - [ ] Create a BLKWDSBottomSheet component for the modal bottom sheet
    - Standardize Styles
      - [ ] Standardize alpha values for similar elements
