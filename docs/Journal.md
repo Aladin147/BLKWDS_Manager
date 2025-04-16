@@ -889,12 +889,40 @@ During our work, we identified a concerning trend of increasing complexity in th
 
 We've decided to prioritize code cleanup and architecture simplification before adding more features or UI polish. This will involve removing the compatibility layer, consolidating models, flattening the architecture, and cleaning up unused code.
 
+## 2025-06-07: Studio Migration Cleanup - Phase 1
+
+Today we made significant progress on the studio migration cleanup, focusing on consolidating the booking models and removing the compatibility layer. This is the first phase of our architecture simplification plan.
+
+Key accomplishments:
+
+1. **Booking Model Consolidation**:
+   - Renamed BookingV2 to Booking, making it the primary booking model
+   - Added a typedef to make BookingV2 an alias for Booking for backward compatibility
+   - Added compatibility getters for isRecordingStudio and isProductionStudio in the Booking class
+   - Updated all references to BookingV2 throughout the codebase
+
+2. **Controller Compatibility**:
+   - Created adapter classes (BookingDetailScreenAdapter and BookingListScreenAdapter) to handle different controller types
+   - Updated the booking_panel_screen.dart to use these adapters
+   - Fixed the booking form submission to properly handle both new bookings and updates
+
+3. **UI Improvements**:
+   - Implemented a proper booking list display in the BookingListScreenAdapter
+   - Fixed overflow issues in the studio_availability_calendar.dart
+   - Ensured consistent UI behavior across the application
+
+4. **Bug Fixes**:
+   - Fixed issues with the booking panel not displaying bookings
+   - Resolved problems with new bookings not appearing in the list
+   - Fixed layout issues in various screens
+
+These changes have significantly improved the codebase by reducing complexity and removing unnecessary duplication. The application now uses a single Booking model throughout, which makes the code more maintainable and easier to understand.
+
 ## Next Steps
 
-1. **Complete Studio Migration** (1-2 days)
+1. **Complete Studio Migration** (In progress)
    - Remove all feature flags
-   - Consolidate models (remove V2 suffix)
-   - Delete compatibility layer
+   - Delete remaining compatibility layer components
    - Update UI components to work directly with the new models
 
 2. **Flatten Architecture** (2-3 days)

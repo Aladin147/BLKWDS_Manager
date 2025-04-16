@@ -4,13 +4,13 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc1 (Release Candidate 1)
-**Last Updated:** 2025-06-04
+**Version:** 1.0.0-rc2 (Release Candidate 2)
+**Last Updated:** 2025-06-07
 
 ## Project Phase
 
 **Current Phase:** Phase 1 (MVP) - Final Steps
-**Completion:** 95%
+**Completion:** 97%
 
 ### Remaining Phase 1 Tasks
 
@@ -20,9 +20,9 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Create migration path from old booking system
    - [x] Enable studio system feature flag
    - [x] Test with various scenarios
+   - [x] Consolidate models (remove V2 suffix)
    - [ ] Remove compatibility layer
    - [ ] Simplify architecture by removing adapters
-   - [ ] Consolidate models (remove V2 suffix)
    - [ ] Clean up unused code
 
 2. **Dashboard Improvements**
@@ -31,8 +31,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Ensure proper display on initial launch
 
 3. **Documentation**
-   - [ ] Consolidate documentation into single source of truth
-   - [ ] Update all version references
+   - [x] Consolidate documentation into single source of truth
+   - [x] Update all version references
    - [ ] Create comprehensive testing checklist
 
 ## Feature Status
@@ -45,8 +45,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 | Member Management | ✅ Complete | v0.15.0 | CRUD operations for members |
 | Project Management | ✅ Complete | v0.16.0 | CRUD operations for projects |
 | Gear Management | ✅ Complete | v0.17.0 | CRUD operations for gear |
-| Booking System | ⚠️ In Transition | v0.1.0 | Migrating to studio-based system |
-| Studio Management | 🔄 In Progress | v0.18.0 | UI complete, migration in progress |
+| Booking System | ✅ Complete | v0.22.0 | Migrated to studio-based system |
+| Studio Management | ✅ Complete | v0.18.0 | UI and functionality complete |
 | Error Handling | ✅ Basic Complete | v0.14.0 | Needs refactoring for new components |
 | Responsive Layout | ✅ Complete | v0.19.0 | Dashboard layout fixed |
 
@@ -55,8 +55,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 | Component | Status | Version Added | Notes |
 |-----------|--------|---------------|-------|
 | Dashboard | ✅ Complete | v0.19.0 | Responsive layout implemented |
-| Booking Panel | ⚠️ In Transition | v0.1.0 | Needs update for studio system |
-| Calendar View | ⚠️ In Transition | v0.11.0 | Needs update for studio system |
+| Booking Panel | ✅ Complete | v0.22.0 | Updated for studio system |
+| Calendar View | ✅ Complete | v0.22.0 | Updated for studio system |
 | Member List | ✅ Complete | v0.15.0 | |
 | Project List | ✅ Complete | v0.16.0 | |
 | Gear List | ✅ Complete | v0.17.0 | |
@@ -135,6 +135,27 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.22.0 - Studio Migration Cleanup - Phase 1 (2025-06-07)
+
+**Added:**
+
+- Typedef to make BookingV2 an alias for Booking for backward compatibility
+- Compatibility getters for isRecordingStudio and isProductionStudio in the Booking class
+- Adapter classes (BookingDetailScreenAdapter and BookingListScreenAdapter) for controller compatibility
+
+**Changed:**
+
+- Renamed BookingV2 to Booking, making it the primary booking model
+- Updated all references to BookingV2 throughout the codebase
+- Fixed the booking form submission to properly handle both new bookings and updates
+
+**Fixed:**
+
+- Issues with the booking panel not displaying bookings
+- Problems with new bookings not appearing in the list
+- Overflow issues in the studio_availability_calendar.dart
+- Layout issues in various screens
 
 ### v0.21.0 - Studio System Fixes and Architecture Planning (2025-06-06)
 
@@ -222,4 +243,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: [Developer Name]
-Date: 2025-06-04
+Date: 2025-06-07
