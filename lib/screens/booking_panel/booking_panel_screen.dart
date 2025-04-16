@@ -7,12 +7,11 @@ import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
-import 'booking_panel_controller_v2.dart';
 import 'booking_detail_screen_adapter.dart';
 import 'booking_list_screen_adapter.dart';
 
 import 'widgets/booking_form_adapter_v2.dart';
-import 'widgets/booking_form_v2.dart';
+
 import 'widgets/calendar_view_fixed.dart';
 
 /// BookingPanelScreen
@@ -25,9 +24,8 @@ class BookingPanelScreen extends StatefulWidget {
 }
 
 class _BookingPanelScreenState extends State<BookingPanelScreen> {
-  // Controllers
+  // Controller
   final _controller = BookingPanelController();
-  BookingPanelControllerV2? _controllerV2;
 
   // View mode
   bool _isCalendarView = false;
@@ -47,11 +45,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Initialize data
   Future<void> _initializeData() async {
-    // Initialize the V2 controller
-    _controllerV2 = BookingPanelControllerV2();
-    await _controllerV2!.initialize();
-
-    // Initialize the V1 controller for compatibility
+    // Initialize the controller
     await _controller.initialize();
   }
 
@@ -63,14 +57,6 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
     });
   }
 
-  // Show edit booking form
-  void _showEditBookingForm(Booking booking) {
-    setState(() {
-      _selectedBooking = booking;
-      _showBookingForm = true;
-    });
-  }
-
   // Hide booking form
   void _hideBookingForm() {
     setState(() {
@@ -78,61 +64,6 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
       _selectedBooking = null;
       _tempBookingV2 = null;
     });
-  }
-
-  // Save booking
-  Future<void> _saveBooking(Booking booking) async {
-    bool success;
-
-    if (booking.id == null) {
-      // Create new booking
-      success = await _controller.createBooking(booking);
-    } else {
-      // Update existing booking
-      success = await _controller.updateBooking(booking);
-    }
-
-    if (success) {
-      _hideBookingForm();
-      _showSnackBar(booking.id == null ? 'Booking created' : 'Booking updated');
-    } else if (_controller.errorMessage.value != null) {
-      _showSnackBar(_controller.errorMessage.value!);
-    }
-  }
-
-  // Delete booking
-  Future<void> _deleteBooking(Booking booking) async {
-    // Show confirmation dialog
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Booking'),
-        content: const Text('Are you sure you want to delete this booking?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(
-              foregroundColor: BLKWDSColors.errorRed,
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      final success = await _controller.deleteBooking(booking.id!);
-
-      if (success) {
-        _showSnackBar('Booking deleted');
-      } else if (_controller.errorMessage.value != null) {
-        _showSnackBar(_controller.errorMessage.value!);
-      }
-    }
   }
 
   // Show a snackbar message
@@ -148,7 +79,6 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   @override
   void dispose() {
     _controller.dispose();
-    _controllerV2?.dispose();
     super.dispose();
   }
 
@@ -210,28 +140,28 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
           BookingFormAdapterV2(
-              controller: _controllerV2!,
+              controller: _controller,
               booking: _tempBookingV2,
               onSave: (booking) async {
                 // Handle booking save
                 bool success;
                 if (booking.id == null) {
                   // Create new booking
-                  success = await _controllerV2!.createBooking(booking);
+                  success = await _controller.createBooking(booking);
                   if (success) {
                     _hideBookingForm();
                     _showSnackBar('Booking created successfully');
                   } else {
-                    _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to create booking');
+                    _showSnackBar(_controller.errorMessage.value ?? 'Failed to create booking');
                   }
                 } else {
                   // Update existing booking
-                  success = await _controllerV2!.updateBooking(booking);
+                  success = await _controller.updateBooking(booking);
                   if (success) {
                     _hideBookingForm();
                     _showSnackBar('Booking updated successfully');
                   } else {
-                    _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to update booking');
+                    _showSnackBar(_controller.errorMessage.value ?? 'Failed to update booking');
                   }
                 }
               },
@@ -245,7 +175,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   // Build list view
   Widget _buildListView() {
     return BookingListScreenAdapter(
-      controller: _controllerV2 ?? _controller,
+      controller: _controller,
     );
   }
 
@@ -253,14 +183,13 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   Widget _buildCalendarView() {
     return CalendarView(
       controller: _controller,
-      controllerV2: _controllerV2,
       onDaySelected: (day) {
         // When a day is selected, show the create booking form
         // with the selected day as the start date
         setState(() {
           // Create a BookingV2 object with default values
-          final defaultProject = _controllerV2!.projectList.value.isNotEmpty
-              ? _controllerV2!.projectList.value.first.id!
+          final defaultProject = _controller.projectList.value.isNotEmpty
+              ? _controller.projectList.value.first.id!
               : 0;
 
           final defaultStartDate = DateTime(
@@ -296,88 +225,12 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Handle booking rescheduling
   void _handleBookingRescheduleGeneric(dynamic booking, DateTime newStartDate) async {
-    if (_controllerV2 != null) {
-      await _handleBookingRescheduleV2(booking, newStartDate);
-    } else {
-      await _handleBookingReschedule(booking, newStartDate);
-    }
+    await _handleBookingReschedule(booking, newStartDate);
   }
 
-  // Handle booking rescheduling for BookingV2
-  Future<void> _handleBookingRescheduleV2(Booking booking, DateTime newStartDate) async {
-    // Show a confirmation dialog
-    final project = _controllerV2!.getProjectById(booking.projectId);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reschedule Booking'),
-        content: Text(
-          'Are you sure you want to reschedule "${project?.title ?? 'Unknown Project'}" to ${DateFormat.yMMMd().format(newStartDate)}?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Reschedule'),
-          ),
-        ],
-      ),
-    ) ?? false;
 
-    if (confirmed) {
-      // Show loading indicator
-      setState(() {
-        _controllerV2!.isLoading.value = true;
-      });
 
-      try {
-        // Reschedule the booking
-        final success = await _controllerV2!.rescheduleBooking(booking, newStartDate);
-
-        // Check if the widget is still mounted before showing snackbar
-        if (!mounted) return;
-
-        if (success) {
-          // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Booking rescheduled successfully'),
-              backgroundColor: BLKWDSColors.blkwdsGreen,
-            ),
-          );
-        } else {
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(_controllerV2!.errorMessage.value ?? 'Failed to reschedule booking'),
-              backgroundColor: BLKWDSColors.statusOut,
-            ),
-          );
-        }
-      } catch (e) {
-        // Check if the widget is still mounted before showing snackbar
-        if (!mounted) return;
-
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: BLKWDSColors.statusOut,
-          ),
-        );
-      } finally {
-        // Hide loading indicator
-        setState(() {
-          _controllerV2!.isLoading.value = false;
-        });
-      }
-    }
-  }
-
-  // Handle booking rescheduling for Booking
+  // Handle booking rescheduling
   Future<void> _handleBookingReschedule(Booking booking, DateTime newStartDate) async {
     // Show a confirmation dialog
     final confirmed = await showDialog<bool>(
@@ -457,14 +310,13 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
       MaterialPageRoute(
         builder: (context) => BookingDetailScreenAdapter(
           booking: booking,
-          controller: _controllerV2 ?? _controller,
+          controller: _controller,
         ),
       ),
     ).then((result) {
       // Refresh data if booking was updated or deleted
       if (result == true) {
         _controller.initialize();
-        _controllerV2?.initialize();
       }
     });
   }

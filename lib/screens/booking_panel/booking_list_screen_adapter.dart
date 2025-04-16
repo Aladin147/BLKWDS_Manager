@@ -5,13 +5,12 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import 'booking_detail_screen_adapter.dart';
-import 'booking_panel_controller_v2.dart';
+import 'booking_panel_controller.dart';
 
-/// BookingListScreenAdapter
-/// Adapter component that routes to the appropriate booking list screen
-/// based on the controller type
+/// BookingListScreen
+/// Displays a list of bookings
 class BookingListScreenAdapter extends StatelessWidget {
-  final dynamic controller;
+  final BookingPanelController controller;
 
   const BookingListScreenAdapter({
     super.key,
@@ -20,20 +19,11 @@ class BookingListScreenAdapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We'll use the V2 controller for now
-    if (controller is BookingPanelControllerV2) {
-      final v2Controller = controller as BookingPanelControllerV2;
-      return _buildBookingList(context, v2Controller);
-    } else {
-      // For other controller types, show a placeholder
-      return const Center(
-        child: Text('Unsupported controller type'),
-      );
-    }
+    return _buildBookingList(context, controller);
   }
 
-  // Build the booking list using the V2 controller
-  Widget _buildBookingList(BuildContext context, BookingPanelControllerV2 controller) {
+  // Build the booking list
+  Widget _buildBookingList(BuildContext context, BookingPanelController controller) {
     return ValueListenableBuilder<List<Booking>>(
       valueListenable: controller.bookingList,
       builder: (context, bookings, _) {

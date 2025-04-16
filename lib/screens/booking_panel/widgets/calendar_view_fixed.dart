@@ -5,31 +5,25 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../../../utils/feature_flags.dart';
 import '../booking_panel_controller.dart';
-import '../booking_panel_controller_v2.dart';
 import 'calendar_booking_item.dart';
 import 'calendar_view_adapter.dart';
 
 /// CalendarView
 /// Widget for displaying bookings in a calendar format
-/// Works with both Booking and BookingV2 models
 class CalendarView extends StatefulWidget {
-  // Either controller or controllerV2 must be provided
-  final BookingPanelController? controller;
-  final BookingPanelControllerV2? controllerV2;
+  final BookingPanelController controller;
   final Function(DateTime) onDaySelected;
   final Function(dynamic) onBookingSelected;
   final Function(dynamic, DateTime)? onBookingRescheduled;
 
   const CalendarView({
     super.key,
-    this.controller,
-    this.controllerV2,
+    required this.controller,
     required this.onDaySelected,
     required this.onBookingSelected,
     this.onBookingRescheduled,
-  }) : assert(controller != null || controllerV2 != null, 'Either controller or controllerV2 must be provided');
+  });
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -52,8 +46,7 @@ class _CalendarViewState extends State<CalendarView> {
 
     // Initialize adapter
     _adapter = CalendarViewAdapter(
-      controllerV1: widget.controller,
-      controllerV2: widget.controllerV2,
+      controller: widget.controller,
     );
 
     // Initialize selected bookings
@@ -89,64 +82,33 @@ class _CalendarViewState extends State<CalendarView> {
 
   /// Check if a booking can be dropped on a day
   Future<bool> _canDropBookingOnDay(dynamic booking, DateTime day) async {
-    if (booking is Booking) {
-      // Calculate the new start and end dates
-      final duration = booking.endDate.difference(booking.startDate);
-      final newStartDate = DateTime(
-        day.year,
-        day.month,
-        day.day,
-        booking.startDate.hour,
-        booking.startDate.minute,
-      );
-      final newEndDate = newStartDate.add(duration);
+    // Calculate the new start and end dates
+    final duration = booking.endDate.difference(booking.startDate);
+    final newStartDate = DateTime(
+      day.year,
+      day.month,
+      day.day,
+      booking.startDate.hour,
+      booking.startDate.minute,
+    );
+    final newEndDate = newStartDate.add(duration);
 
-      // Create a new booking with the new dates
-      final rescheduledBooking = Booking(
-        id: booking.id,
-        projectId: booking.projectId,
-        title: booking.title,
-        startDate: newStartDate,
-        endDate: newEndDate,
-        studioId: booking.studioId,
-        gearIds: booking.gearIds,
-        assignedGearToMember: booking.assignedGearToMember,
-        color: booking.color,
-      );
+    // Create a new booking with the new dates
+    final rescheduledBooking = Booking(
+      id: booking.id,
+      projectId: booking.projectId,
+      title: booking.title,
+      startDate: newStartDate,
+      endDate: newEndDate,
+      studioId: booking.studioId,
+      gearIds: booking.gearIds,
+      assignedGearToMember: booking.assignedGearToMember,
+      color: booking.color,
+      notes: booking.notes,
+    );
 
-      // Check for conflicts
-      return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
-    } else if (widget.controllerV2 != null) {
-      // Calculate the new start and end dates
-      final duration = booking.endDate.difference(booking.startDate);
-      final newStartDate = DateTime(
-        day.year,
-        day.month,
-        day.day,
-        booking.startDate.hour,
-        booking.startDate.minute,
-      );
-      final newEndDate = newStartDate.add(duration);
-
-      // Create a new booking with the new dates
-      final rescheduledBooking = Booking(
-        id: booking.id,
-        projectId: booking.projectId,
-        title: booking.title,
-        startDate: newStartDate,
-        endDate: newEndDate,
-        studioId: booking.studioId,
-        gearIds: booking.gearIds,
-        assignedGearToMember: booking.assignedGearToMember,
-        color: booking.color,
-        notes: booking.notes,
-      );
-
-      // Check for conflicts
-      return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
-    }
-
-    return false;
+    // Check for conflicts
+    return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
   }
 
   @override

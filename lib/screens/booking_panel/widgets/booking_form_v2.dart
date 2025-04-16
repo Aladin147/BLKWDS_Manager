@@ -4,12 +4,12 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_widgets.dart';
-import '../booking_panel_controller_v2.dart';
+import '../booking_panel_controller.dart';
 
 /// BookingFormV2
 /// Form for creating and editing Booking objects
 class BookingFormV2 extends StatefulWidget {
-  final BookingPanelControllerV2 controller;
+  final BookingPanelController controller;
   final Booking? booking;
   final Function(Booking) onSave;
   final VoidCallback onCancel;

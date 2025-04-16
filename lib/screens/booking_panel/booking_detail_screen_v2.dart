@@ -7,14 +7,14 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
-import 'booking_panel_controller_v2.dart';
+import 'booking_panel_controller.dart';
 import 'widgets/booking_form_v2.dart';
 
 /// BookingDetailScreenV2
 /// Displays detailed information about a Booking with tabs for different sections
 class BookingDetailScreenV2 extends StatefulWidget {
   final Booking booking;
-  final BookingPanelControllerV2 controller;
+  final BookingPanelController controller;
 
   const BookingDetailScreenV2({
     super.key,

@@ -3,8 +3,6 @@ import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
-
-import '../../utils/date_utils.dart';
 import 'models/booking_filter.dart';
 
 /// BookingPanelController
@@ -15,7 +13,6 @@ class BookingPanelController {
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
   final ValueNotifier<List<Member>> memberList = ValueNotifier<List<Member>>([]);
   final ValueNotifier<List<Gear>> gearList = ValueNotifier<List<Gear>>([]);
-  final ValueNotifier<List<Studio>> studioList = ValueNotifier<List<Studio>>([]);
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
 
@@ -33,7 +30,6 @@ class BookingPanelController {
       await _loadProjects();
       await _loadMembers();
       await _loadGear();
-      await _loadStudios();
 
       // Initialize filtered list with all bookings
       _applyFilters();
@@ -55,17 +51,6 @@ class BookingPanelController {
       _applyFilters();
     } catch (e) {
       LogService.error('Error loading bookings', e);
-      rethrow;
-    }
-  }
-
-  // Load studios from database
-  Future<void> _loadStudios() async {
-    try {
-      final studios = await DBService.getAllStudios();
-      studioList.value = studios;
-    } catch (e) {
-      LogService.error('Error loading studios', e);
       rethrow;
     }
   }
@@ -97,12 +82,8 @@ class BookingPanelController {
         final notesMatch = project != null &&
             project.notes?.toLowerCase().contains(searchLower) == true;
 
-        // Search in booking title
-        final bookingTitleMatch = booking.title != null &&
-            booking.title!.toLowerCase().contains(searchLower);
-
         // If no match found, exclude this booking
-        if (!projectMatch && !notesMatch && !bookingTitleMatch) {
+        if (!projectMatch && !notesMatch) {
           return false;
         }
       }
@@ -147,8 +128,14 @@ class BookingPanelController {
         return false;
       }
 
-      // Studio filter
-      if (currentFilter.studioId != null && booking.studioId != currentFilter.studioId) {
+      // Studio filters
+      if (currentFilter.isRecordingStudio != null &&
+          booking.isRecordingStudio != currentFilter.isRecordingStudio) {
+        return false;
+      }
+
+      if (currentFilter.isProductionStudio != null &&
+          booking.isProductionStudio != currentFilter.isProductionStudio) {
         return false;
       }
 
@@ -357,17 +344,16 @@ class BookingPanelController {
           final sharedGear = booking.gearIds.where((id) => otherBooking.gearIds.contains(id)).toList();
 
           if (sharedGear.isNotEmpty) {
-            errorMessage.value = 'Conflict: Gear is already booked during this time';
             return true; // Conflict found
           }
 
-          // Check if they both use the same studio
-          if (booking.studioId != null &&
-              otherBooking.studioId != null &&
-              booking.studioId == otherBooking.studioId) {
-            // Get studio name for better error message
-            final studio = getStudioById(booking.studioId!);
-            errorMessage.value = 'Conflict: ${studio?.name ?? 'Studio'} is already booked during this time';
+          // Check if they both use the recording studio
+          if (booking.isRecordingStudio && otherBooking.isRecordingStudio) {
+            return true; // Conflict found
+          }
+
+          // Check if they both use the production studio
+          if (booking.isProductionStudio && otherBooking.isProductionStudio) {
             return true; // Conflict found
           }
         }
@@ -376,8 +362,7 @@ class BookingPanelController {
       return false; // No conflicts found
     } catch (e) {
       LogService.error('Error checking booking conflicts', e);
-      errorMessage.value = 'Error checking booking conflicts: $e';
-      return true; // Assume conflict on error to be safe
+      rethrow;
     }
   }
 
@@ -409,26 +394,11 @@ class BookingPanelController {
 
   // Get color for a booking based on project
   Color getColorForBooking(Booking booking) {
-    // If booking has a custom color, use it
-    if (booking.color != null) {
-      return Color(int.parse(booking.color!.substring(1, 7), radix: 16) + 0xFF000000);
-    }
-
-    // If booking has a studio, use the studio color
-    if (booking.studioId != null) {
-      final studio = getStudioById(booking.studioId!);
-      if (studio != null && studio.color != null) {
-        return Color(int.parse(studio.color!.substring(1, 7), radix: 16) + 0xFF000000);
-      }
-    }
-
-    // Fall back to project-based color
     final project = getProjectById(booking.projectId);
     if (project != null) {
       // Use a hash-based approach to generate a color
       return Color((project.hashCode & 0xFFFFFF) | 0xFF000000);
     }
-
     return BLKWDSColors.slateGrey;
   }
 
@@ -464,27 +434,12 @@ class BookingPanelController {
     }
   }
 
-  // Get studio by ID
-  Studio? getStudioById(int id) {
-    try {
-      return studioList.value.firstWhere((studio) => studio.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Get color for booking based on its status
-  Color getStatusColorForBooking(Booking booking) {
-    return BLKWDSDateUtils.getColorForBooking(booking);
-  }
-
   // Dispose controller
   void dispose() {
     bookingList.dispose();
     projectList.dispose();
     memberList.dispose();
     gearList.dispose();
-    studioList.dispose();
     isLoading.dispose();
     errorMessage.dispose();
     filter.dispose();
