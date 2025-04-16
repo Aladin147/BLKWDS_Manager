@@ -556,7 +556,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Build a gear card
   Widget _buildGearCard(Gear gear) {
-    return Card(
+    return BLKWDSCard(
       margin: const EdgeInsets.symmetric(
         horizontal: BLKWDSConstants.spacingMedium,
         vertical: BLKWDSConstants.spacingSmall,
