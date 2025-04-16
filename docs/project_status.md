@@ -95,6 +95,25 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Known Issues
 
+### Critical Issues (Highest Priority)
+
+1. **Database Issues**
+   - Studio table missing or not properly created (IDENTIFIED in v0.40.0)
+   - Database schema validation incomplete (IDENTIFIED in v0.40.0)
+   - No automatic schema repair mechanism (IDENTIFIED in v0.40.0)
+   - Inconsistent error handling for database operations (IDENTIFIED in v0.40.0)
+
+2. **Non-functional UI Elements**
+   - "View All" buttons only show snackbars instead of navigating (IDENTIFIED in v0.40.0)
+   - Placeholder icons and demo content in production code (IDENTIFIED in v0.40.0)
+   - Mixed navigation patterns (NavigationService vs direct Navigator.push) (IDENTIFIED in v0.40.0)
+
+3. **Error Handling Inconsistencies**
+   - Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (IDENTIFIED in v0.40.0)
+   - Inconsistent error feedback levels (IDENTIFIED in v0.40.0)
+
+### UI Standardization Issues (Secondary Priority)
+
 1. ~~Member dropdown in Dashboard has potential equality comparison issues~~ (FIXED in v0.9.0)
 2. ~~Some screens may still have deprecated `withOpacity` calls that should be replaced with `withValues`~~ (FIXED in v0.11.1)
 3. Calendar screen filtering needs optimization
@@ -147,7 +166,22 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✓ Add missing documentation
    - ✓ Standardize naming conventions
 
-5. **Dashboard UI Standardization** (In Progress)
+5. **Critical Issues Resolution** (Highest Priority)
+   - Database Functionality
+     - [ ] Create a comprehensive database schema validation system
+     - [ ] Implement automatic schema repair for missing tables
+     - [ ] Add graceful fallbacks for all database operations
+     - [ ] Verify all migrations work correctly
+   - Functional UI Elements
+     - [ ] Implement proper functionality for "View All" buttons
+     - [ ] Replace placeholder content with actual functionality
+     - [ ] Disable or remove UI elements that aren't fully implemented
+   - Error Handling Standardization
+     - [ ] Standardize on SnackbarService for all error notifications
+     - [ ] Replace all direct ScaffoldMessenger calls
+     - [ ] Ensure consistent error feedback levels
+
+6. **Dashboard UI Standardization** (Secondary Priority)
    - Fix Layout Issues
      - [x] Fix indentation in top_bar_summary_widget.dart
      - [x] Make summary cards responsive by using Flexible or FractionallySizedBox
@@ -176,16 +210,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [ ] Increase minimum icon sizes to 18px
      - [ ] Ensure text is readable even when truncated
 
-6. **Testing** (1-2 days)
+7. **Testing** (1-2 days)
    - Comprehensive testing of all features
    - Fix any regressions
    - Performance optimization
 
-7. **Declare Phase 1 Complete**
+8. **Declare Phase 1 Complete**
    - Tag codebase as v1.0.0
    - Update all documentation
 
-8. **Begin Phase 2**
+9. **Begin Phase 2**
    - Implement undo functionality
    - Add bulk gear management
    - Create booking templates
