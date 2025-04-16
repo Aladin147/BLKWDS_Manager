@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc8 (Release Candidate 8)
-**Last Updated:** 2025-06-12
+**Version:** 1.0.0-rc9 (Release Candidate 9)
+**Last Updated:** 2025-06-13
 
 ## Project Phase
 
@@ -35,6 +35,18 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Consolidate documentation into single source of truth
    - [x] Update all version references
    - [ ] Create comprehensive testing checklist
+
+4. **UI/UX Improvements**
+   - [ ] Fix non-functional filter chips in Gear Preview List
+   - [ ] Hide debug menu in production builds
+   - [ ] Standardize button styles across the app
+   - [ ] Verify and complete Export to CSV functionality
+   - [ ] Improve dashboard layout responsiveness
+   - [ ] Standardize navigation patterns
+   - [ ] Update placeholder data in Settings
+   - [ ] Make demo data in Reset function configurable
+   - [ ] Clean up unused controllers and adapters
+   - [ ] Enhance error handling in UI components
 
 ## Feature Status
 
@@ -80,6 +92,10 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 12. No consistent navigation system (IDENTIFIED in v0.14.0)
 13. Limited data management and reporting capabilities (IDENTIFIED in v0.14.0)
 14. ~~Dashboard layout issues where the app appears incorrectly formatted on initial launch but improves after manual window resizing~~ (FIXED in v0.19.0)
+15. Non-functional filter chips in Gear Preview List (IDENTIFIED in v0.29.0)
+16. Debug menu always visible in Settings screen (IDENTIFIED in v0.29.0)
+17. Inconsistent button styles across the application (IDENTIFIED in v0.29.0)
+18. Hardcoded heights in dashboard layout affecting responsiveness (IDENTIFIED in v0.29.0)
 
 ## Next Steps
 
@@ -142,6 +158,31 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.29.0 - UI/UX Audit (2025-06-13)
+
+**Added:**
+
+- Comprehensive UI/UX audit to identify remaining issues
+- Detailed implementation plan for UI/UX improvements
+
+**Identified Issues:**
+
+- Non-functional filter chips in Gear Preview List
+- Debug menu always visible in Settings screen
+- Inconsistent button styles across the application
+- Potentially incomplete Export to CSV functionality
+- Hardcoded heights in dashboard layout
+- Inconsistent navigation patterns
+- Placeholder data in Settings Controller
+- Hardcoded demo data in Reset App function
+- Unused controllers and adapters
+- Incomplete error handling in some UI components
+
+**Changed:**
+
+- Prioritized UI/UX issues based on user impact
+- Updated project status document with new findings
 
 ### v0.28.0 - UI Consistency Improvements (2025-06-12)
 
@@ -364,4 +405,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-12
+Date: 2025-06-13

@@ -1,5 +1,27 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: UI/UX Audit
+
+Today we conducted a comprehensive UI/UX audit to identify remaining issues before the final release:
+
+1. **High Priority Issues**:
+   - Non-functional filter chips in Gear Preview List that don't actually filter the content
+   - Debug menu always visible in Settings screen (should be hidden in production)
+   - Inconsistent button styles across the application
+
+2. **Medium Priority Issues**:
+   - Potentially incomplete Export to CSV functionality
+   - Hardcoded heights in dashboard layout affecting responsiveness
+   - Inconsistent navigation patterns (mix of MaterialPageRoute and BLKWDSPageRoute)
+
+3. **Lower Priority Issues**:
+   - Placeholder data in Settings Controller (version, build number)
+   - Hardcoded demo data in Reset App function
+   - Unused controllers and adapters (legacy code)
+   - Incomplete error handling in some UI components
+
+We've documented all these issues in the project status document and created a detailed implementation plan. We'll start addressing the high-priority issues first, as they have the most direct impact on user experience.
+
 ## 2025-06-12: UI Consistency Improvements
 
 Today we conducted a comprehensive UI audit to identify and fix inconsistencies across the application:
