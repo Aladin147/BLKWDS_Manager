@@ -49,7 +49,7 @@ class BookingPanelControllerV2 {
   // Load bookings from database
   Future<void> _loadBookings() async {
     try {
-      final bookings = await DBService.getAllBookingsV2();
+      final bookings = await DBService.getAllBookings();
       bookingList.value = bookings;
 
       // Update filtered list when bookings change
@@ -257,7 +257,7 @@ class BookingPanelControllerV2 {
       }
 
       // Insert booking
-      final id = await DBService.insertBookingV2(booking);
+      final id = await DBService.insertBooking(booking);
 
       // Reload bookings
       await _loadBookings();
@@ -285,7 +285,7 @@ class BookingPanelControllerV2 {
       }
 
       // Update booking
-      final id = await DBService.updateBookingV2(booking);
+      final id = await DBService.updateBooking(booking);
 
       // Reload bookings
       await _loadBookings();
@@ -345,7 +345,7 @@ class BookingPanelControllerV2 {
   Future<bool> hasBookingConflicts(Booking booking, {int? excludeBookingId}) async {
     try {
       // Get all bookings
-      final bookings = await DBService.getAllBookingsV2();
+      final bookings = await DBService.getAllBookings();
 
       // Filter out the booking being updated
       final otherBookings = bookings.where((b) => b.id != excludeBookingId).toList();

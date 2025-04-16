@@ -78,7 +78,7 @@ class DashboardControllerV2 {
   // Load bookings from database
   Future<void> _loadBookings() async {
     try {
-      final bookings = await DBService.getAllBookingsV2();
+      final bookings = await DBService.getAllBookings();
       bookingList.value = bookings;
     } catch (e) {
       LogService.error('Error loading bookings', e);

@@ -204,7 +204,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
         );
 
         // Update the booking in the database
-        await DBService.updateBookingV2(updatedBooking);
+        await DBService.updateBooking(updatedBooking);
 
         setState(() {
           _migratedBookings++;

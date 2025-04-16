@@ -1305,7 +1305,7 @@ class DBService {
   // BOOKING CRUD OPERATIONS
 
   /// Insert a new booking with gear assignments
-  static Future<int> insertBookingV2(Booking booking) async {
+  static Future<int> insertBooking(Booking booking) async {
     final db = await database;
 
     // Begin transaction
@@ -1329,7 +1329,7 @@ class DBService {
   }
 
   /// Get all bookings with their gear and member assignments
-  static Future<List<Booking>> getAllBookingsV2() async {
+  static Future<List<Booking>> getAllBookings() async {
     final db = await database;
 
     // Get all bookings
@@ -1373,7 +1373,7 @@ class DBService {
   }
 
   /// Get a booking by ID with its gear and member assignments
-  static Future<Booking?> getBookingByIdV2(int id) async {
+  static Future<Booking?> getBookingById(int id) async {
     final db = await database;
 
     // Get booking
@@ -1414,7 +1414,7 @@ class DBService {
   }
 
   /// Update a booking with gear assignments
-  static Future<int> updateBookingV2(Booking booking) async {
+  static Future<int> updateBooking(Booking booking) async {
     final db = await database;
 
     // Begin transaction
@@ -1506,27 +1506,28 @@ class DBService {
   }
 
   // COMPATIBILITY LAYER FOR BOOKING MIGRATION
+  // These methods are now just aliases to the standard methods
 
   /// Get bookings with studio support
   /// This method will return Booking objects
   static Future<List<Booking>> getBookingsWithStudioSupport() async {
-    return await getAllBookingsV2();
+    return await getAllBookings();
   }
 
   /// Save a booking with studio support
   /// This method will use the appropriate save method
   static Future<int> saveBookingWithStudioSupport(Booking booking) async {
     if (booking.id != null) {
-      return await updateBookingV2(booking);
+      return await updateBooking(booking);
     } else {
-      return await insertBookingV2(booking);
+      return await insertBooking(booking);
     }
   }
 
   /// Get a booking by ID with studio support
   /// This method will return a Booking object
   static Future<Booking?> getBookingByIdWithStudioSupport(int id) async {
-    return await getBookingByIdV2(id);
+    return await getBookingById(id);
   }
 
   /// Get all studios
