@@ -9,10 +9,10 @@ import 'models/booking_filter.dart';
 
 /// BookingPanelControllerV2
 /// Handles state management and business logic for the Booking Panel screen
-/// This is an updated version that uses BookingV2 with studio support
+/// This is an updated version that uses Booking with studio support
 class BookingPanelControllerV2 {
   // Value notifiers for reactive UI updates
-  final ValueNotifier<List<BookingV2>> bookingList = ValueNotifier<List<BookingV2>>([]);
+  final ValueNotifier<List<Booking>> bookingList = ValueNotifier<List<Booking>>([]);
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
   final ValueNotifier<List<Member>> memberList = ValueNotifier<List<Member>>([]);
   final ValueNotifier<List<Gear>> gearList = ValueNotifier<List<Gear>>([]);
@@ -22,7 +22,7 @@ class BookingPanelControllerV2 {
 
   // Filter-related notifiers
   final ValueNotifier<BookingFilter> filter = ValueNotifier<BookingFilter>(const BookingFilter());
-  final ValueNotifier<List<BookingV2>> filteredBookingList = ValueNotifier<List<BookingV2>>([]);
+  final ValueNotifier<List<Booking>> filteredBookingList = ValueNotifier<List<Booking>>([]);
 
   // Initialize controller
   Future<void> initialize() async {
@@ -78,7 +78,7 @@ class BookingPanelControllerV2 {
 
     // If no filter is active, show all bookings
     if (!currentFilter.isActive && currentFilter.sortOrder == BookingSortOrder.dateDesc) {
-      filteredBookingList.value = List<BookingV2>.from(allBookings)
+      filteredBookingList.value = List<Booking>.from(allBookings)
         ..sort((a, b) => b.startDate.compareTo(a.startDate));
       return;
     }
@@ -245,7 +245,7 @@ class BookingPanelControllerV2 {
   }
 
   // Create a new booking
-  Future<bool> createBooking(BookingV2 booking) async {
+  Future<bool> createBooking(Booking booking) async {
     isLoading.value = true;
     errorMessage.value = null;
 
@@ -273,7 +273,7 @@ class BookingPanelControllerV2 {
   }
 
   // Update an existing booking
-  Future<bool> updateBooking(BookingV2 booking) async {
+  Future<bool> updateBooking(Booking booking) async {
     isLoading.value = true;
     errorMessage.value = null;
 
@@ -302,7 +302,7 @@ class BookingPanelControllerV2 {
 
   /// Reschedule a booking to a new date/time
   /// This moves the booking while preserving its duration
-  Future<bool> rescheduleBooking(BookingV2 booking, DateTime newStartDate) async {
+  Future<bool> rescheduleBooking(Booking booking, DateTime newStartDate) async {
     // Calculate the duration of the original booking
     final duration = booking.endDate.difference(booking.startDate);
 
@@ -342,7 +342,7 @@ class BookingPanelControllerV2 {
   }
 
   // Check if a booking conflicts with existing bookings
-  Future<bool> hasBookingConflicts(BookingV2 booking, {int? excludeBookingId}) async {
+  Future<bool> hasBookingConflicts(Booking booking, {int? excludeBookingId}) async {
     try {
       // Get all bookings
       final bookings = await DBService.getAllBookingsV2();
@@ -383,13 +383,13 @@ class BookingPanelControllerV2 {
   }
 
   // Check if two bookings overlap in time
-  bool _bookingsOverlap(BookingV2 a, BookingV2 b) {
+  bool _bookingsOverlap(Booking a, Booking b) {
     // a starts before b ends AND a ends after b starts
     return a.startDate.isBefore(b.endDate) && a.endDate.isAfter(b.startDate);
   }
 
   // Get bookings for a specific date range
-  List<BookingV2> getBookingsInRange(DateTime start, DateTime end) {
+  List<Booking> getBookingsInRange(DateTime start, DateTime end) {
     return bookingList.value.where((booking) {
       // booking starts before range ends AND booking ends after range starts
       return booking.startDate.isBefore(end) && booking.endDate.isAfter(start);
@@ -397,7 +397,7 @@ class BookingPanelControllerV2 {
   }
 
   // Get bookings for a specific day
-  List<BookingV2> getBookingsForDay(DateTime day) {
+  List<Booking> getBookingsForDay(DateTime day) {
     final startOfDay = DateTime(day.year, day.month, day.day);
     final endOfDay = DateTime(day.year, day.month, day.day, 23, 59, 59);
     return getBookingsInRange(startOfDay, endOfDay);
@@ -409,7 +409,7 @@ class BookingPanelControllerV2 {
   }
 
   // Get color for a booking based on project
-  Color getColorForBooking(BookingV2 booking) {
+  Color getColorForBooking(Booking booking) {
     // If booking has a custom color, use it
     if (booking.color != null) {
       return Color(int.parse(booking.color!.substring(1, 7), radix: 16) + 0xFF000000);
@@ -434,7 +434,7 @@ class BookingPanelControllerV2 {
   }
 
   // Get bookings for a specific project
-  List<BookingV2> getBookingsForProject(int projectId) {
+  List<Booking> getBookingsForProject(int projectId) {
     return bookingList.value.where((booking) => booking.projectId == projectId).toList();
   }
 
@@ -475,7 +475,7 @@ class BookingPanelControllerV2 {
   }
 
   // Get color for booking based on its status
-  Color getStatusColorForBooking(BookingV2 booking) {
+  Color getStatusColorForBooking(Booking booking) {
     return BLKWDSDateUtils.getColorForBooking(booking);
   }
 

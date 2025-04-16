@@ -1302,10 +1302,10 @@ class DBService {
     );
   }
 
-  // BOOKINGV2 CRUD OPERATIONS
+  // BOOKING CRUD OPERATIONS
 
-  /// Insert a new booking with gear assignments (V2)
-  static Future<int> insertBookingV2(BookingV2 booking) async {
+  /// Insert a new booking with gear assignments
+  static Future<int> insertBookingV2(Booking booking) async {
     final db = await database;
 
     // Begin transaction
@@ -1328,8 +1328,8 @@ class DBService {
     });
   }
 
-  /// Get all bookings with their gear and member assignments (V2)
-  static Future<List<BookingV2>> getAllBookingsV2() async {
+  /// Get all bookings with their gear and member assignments
+  static Future<List<Booking>> getAllBookingsV2() async {
     final db = await database;
 
     // Get all bookings
@@ -1360,9 +1360,9 @@ class DBService {
         }
       }
 
-      // Create BookingV2 with gear IDs and member assignments
+      // Create Booking with gear IDs and member assignments
       bookings.add(
-        BookingV2.fromMap(bookingMap).copyWith(
+        Booking.fromMap(bookingMap).copyWith(
           gearIds: gearIds,
           assignedGearToMember: assignedGearToMember,
         ),
@@ -1372,8 +1372,8 @@ class DBService {
     return bookings;
   }
 
-  /// Get a booking by ID with its gear and member assignments (V2)
-  static Future<BookingV2?> getBookingByIdV2(int id) async {
+  /// Get a booking by ID with its gear and member assignments
+  static Future<Booking?> getBookingByIdV2(int id) async {
     final db = await database;
 
     // Get booking
@@ -1406,15 +1406,15 @@ class DBService {
       }
     }
 
-    // Create BookingV2 with gear IDs and member assignments
-    return BookingV2.fromMap(bookingMaps.first).copyWith(
+    // Create Booking with gear IDs and member assignments
+    return Booking.fromMap(bookingMaps.first).copyWith(
       gearIds: gearIds,
       assignedGearToMember: assignedGearToMember,
     );
   }
 
-  /// Update a booking with gear assignments (V2)
-  static Future<int> updateBookingV2(BookingV2 booking) async {
+  /// Update a booking with gear assignments
+  static Future<int> updateBookingV2(Booking booking) async {
     final db = await database;
 
     // Begin transaction
@@ -1450,7 +1450,7 @@ class DBService {
   }
 
   /// Get bookings for a studio
-  static Future<List<BookingV2>> getBookingsForStudio(int studioId) async {
+  static Future<List<Booking>> getBookingsForStudio(int studioId) async {
     final db = await database;
 
     // Get all bookings for this studio
@@ -1460,8 +1460,8 @@ class DBService {
       whereArgs: [studioId],
     );
 
-    // Create BookingV2 objects
-    final List<BookingV2> bookings = [];
+    // Create Booking objects
+    final List<Booking> bookings = [];
 
     for (final bookingMap in bookingMaps) {
       final bookingId = bookingMap['id'] as int;
@@ -1485,9 +1485,9 @@ class DBService {
         }
       }
 
-      // Create BookingV2 with gear IDs and member assignments
+      // Create Booking with gear IDs and member assignments
       bookings.add(
-        BookingV2.fromMap(bookingMap).copyWith(
+        Booking.fromMap(bookingMap).copyWith(
           gearIds: gearIds,
           assignedGearToMember: assignedGearToMember,
         ),
@@ -1508,24 +1508,24 @@ class DBService {
   // COMPATIBILITY LAYER FOR BOOKING MIGRATION
 
   /// Get bookings with studio support
-  /// This method will return BookingV2 objects
-  static Future<List<BookingV2>> getBookingsWithStudioSupport() async {
+  /// This method will return Booking objects
+  static Future<List<Booking>> getBookingsWithStudioSupport() async {
     return await getAllBookingsV2();
   }
 
   /// Save a booking with studio support
   /// This method will use the appropriate save method
-  static Future<int> saveBookingWithStudioSupport(BookingV2 bookingV2) async {
-    if (bookingV2.id != null) {
-      return await updateBookingV2(bookingV2);
+  static Future<int> saveBookingWithStudioSupport(Booking booking) async {
+    if (booking.id != null) {
+      return await updateBookingV2(booking);
     } else {
-      return await insertBookingV2(bookingV2);
+      return await insertBookingV2(booking);
     }
   }
 
   /// Get a booking by ID with studio support
-  /// This method will return a BookingV2 object
-  static Future<BookingV2?> getBookingByIdWithStudioSupport(int id) async {
+  /// This method will return a Booking object
+  static Future<Booking?> getBookingByIdWithStudioSupport(int id) async {
     return await getBookingByIdV2(id);
   }
 
