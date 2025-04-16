@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../services/image_service.dart';
+import '../../services/contextual_error_handler.dart';
+import '../../services/error_type.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
@@ -35,6 +37,11 @@ class _AddGearScreenState extends State<AddGearScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Set the context for error handling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.setContext(context);
+    });
 
     // Listen for changes in form values
     _controller.name.addListener(_updateNameField);
@@ -80,14 +87,16 @@ class _AddGearScreenState extends State<AddGearScreen> {
           _controller.setThumbnailPath(imageFile.path);
         });
       }
-    } catch (e) {
-      // Use a logger in production code instead of print
+    } catch (e, stackTrace) {
+      // Log the error
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error selecting image: ${e.toString()}'),
-            backgroundColor: BLKWDSColors.statusOut,
-          ),
+        // Use contextual error handler
+        ContextualErrorHandler.handleError(
+          context,
+          e,
+          type: ErrorType.fileSystem,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
         );
       }
     }
@@ -101,21 +110,12 @@ class _AddGearScreenState extends State<AddGearScreen> {
       final success = await _controller.saveGear();
 
       if (success) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Gear added successfully'),
-              backgroundColor: BLKWDSColors.statusIn,
-            ),
-          );
-
-          // Return to previous screen after a short delay
-          Future.delayed(const Duration(seconds: 1), () {
-            if (mounted) {
-              Navigator.pop(context, true);
-            }
-          });
-        }
+        // Return to previous screen after a short delay
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) {
+            Navigator.pop(context, true);
+          }
+        });
       }
     }
   }

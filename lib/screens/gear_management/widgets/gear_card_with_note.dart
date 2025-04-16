@@ -82,9 +82,9 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                             color: BLKWDSColors.textSecondary,
                           ),
                   ),
-                  
+
                   const SizedBox(width: BLKWDSConstants.spacingMedium),
-                  
+
                   // Gear details
                   Expanded(
                     child: Column(
@@ -111,44 +111,18 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                       ],
                     ),
                   ),
-                  
+
                   // Status indicator
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: widget.gear.isOut
-                          ? BLKWDSColors.statusOut.withOpacity(0.1)
-                          : BLKWDSColors.statusIn.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          widget.gear.isOut ? Icons.logout : Icons.check_circle,
-                          size: 16,
-                          color: widget.gear.isOut
-                              ? BLKWDSColors.statusOut
-                              : BLKWDSColors.statusIn,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          widget.gear.isOut ? 'Out' : 'In',
-                          style: BLKWDSTypography.labelSmall.copyWith(
-                            color: widget.gear.isOut
-                                ? BLKWDSColors.statusOut
-                                : BLKWDSColors.statusIn,
-                          ),
-                        ),
-                      ],
-                    ),
+                  BLKWDSStatusBadge(
+                    text: widget.gear.isOut ? 'OUT' : 'IN',
+                    color: widget.gear.isOut
+                        ? BLKWDSColors.statusOut
+                        : BLKWDSColors.statusIn,
+                    icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
                   ),
                 ],
               ),
-              
+
               // Last note (if any)
               if (widget.gear.lastNote != null && widget.gear.lastNote!.isNotEmpty && !_isExpanded) ...[
                 const SizedBox(height: BLKWDSConstants.spacingSmall),
@@ -174,7 +148,7 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                   ],
                 ),
               ],
-              
+
               // Note field and actions
               if (widget.showNote && _isExpanded) ...[
                 const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -188,7 +162,7 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                   maxLines: 3,
                 ),
               ],
-              
+
               // Action buttons
               if (widget.showActions) ...[
                 const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -208,9 +182,9 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                         });
                       },
                     ),
-                    
+
                     const Spacer(),
-                    
+
                     // Edit button
                     if (widget.onEdit != null)
                       IconButton(
@@ -218,7 +192,7 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                         tooltip: 'Edit',
                         onPressed: () => widget.onEdit!(widget.gear),
                       ),
-                    
+
                     // Delete button
                     if (widget.onDelete != null)
                       IconButton(
@@ -226,9 +200,9 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                         tooltip: 'Delete',
                         onPressed: () => widget.onDelete!(widget.gear),
                       ),
-                    
+
                     const SizedBox(width: BLKWDSConstants.spacingSmall),
-                    
+
                     // Check in/out button
                     widget.gear.isOut
                         ? BLKWDSButton(
@@ -268,7 +242,7 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
       ),
     );
   }
-  
+
   // Get icon for gear category
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {

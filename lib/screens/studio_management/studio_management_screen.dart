@@ -59,7 +59,7 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
       setState(() {
         _isLoading = false;
       });
-      
+
       if (mounted) {
         BLKWDSSnackbar.show(
           context: context,
@@ -313,21 +313,9 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Status badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: studio.status.color.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    studio.status.label,
-                    style: BLKWDSTypography.labelSmall.copyWith(
-                      color: studio.status.color,
-                    ),
-                  ),
+                BLKWDSStatusBadge(
+                  text: studio.status.label,
+                  color: studio.status.color,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 // Edit button

@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
+import '../../services/contextual_error_handler.dart';
+import '../../services/error_service.dart';
+import '../../services/error_type.dart';
+import '../../services/retry_service.dart';
+import '../../services/retry_strategy.dart';
 import '../../theme/blkwds_colors.dart';
 
 /// CalendarController
 /// Handles state management and business logic for the Calendar screen
 class CalendarController {
+  // Build context for error handling
+  BuildContext? context;
   // Value notifiers for reactive UI updates
   final ValueNotifier<List<Booking>> bookingList = ValueNotifier<List<Booking>>([]);
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
@@ -22,6 +29,11 @@ class CalendarController {
   final ValueNotifier<DateTime?> filterStartDate = ValueNotifier<DateTime?>(null);
   final ValueNotifier<DateTime?> filterEndDate = ValueNotifier<DateTime?>(null);
 
+  // Set the context for error handling
+  void setContext(BuildContext context) {
+    this.context = context;
+  }
+
   // Initialize controller
   Future<void> initialize() async {
     isLoading.value = true;
@@ -34,9 +46,21 @@ class CalendarController {
         _loadMembers(),
         _loadGear(),
       ]);
-    } catch (e) {
-      errorMessage.value = 'Error initializing data: $e';
-      LogService.error('Error initializing data', e);
+    } catch (e, stackTrace) {
+      errorMessage.value = ErrorService.handleError(e, stackTrace: stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          stackTrace: stackTrace,
+          type: ErrorType.database,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error initializing data', e, stackTrace);
+      }
     } finally {
       isLoading.value = false;
     }
@@ -45,10 +69,31 @@ class CalendarController {
   // Load bookings from database
   Future<void> _loadBookings() async {
     try {
-      final bookings = await DBService.getAllBookings();
+      // Use retry logic for database operations
+      final bookings = await RetryService.retry<List<Booking>>(
+        operation: () => DBService.getAllBookings(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       bookingList.value = bookings;
-    } catch (e) {
-      LogService.error('Error loading bookings', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading bookings', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -56,10 +101,31 @@ class CalendarController {
   // Load projects from database
   Future<void> _loadProjects() async {
     try {
-      final projects = await DBService.getAllProjects();
+      // Use retry logic for database operations
+      final projects = await RetryService.retry<List<Project>>(
+        operation: () => DBService.getAllProjects(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       projectList.value = projects;
-    } catch (e) {
-      LogService.error('Error loading projects', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading projects', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -67,10 +133,31 @@ class CalendarController {
   // Load members from database
   Future<void> _loadMembers() async {
     try {
-      final members = await DBService.getAllMembers();
+      // Use retry logic for database operations
+      final members = await RetryService.retry<List<Member>>(
+        operation: () => DBService.getAllMembers(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       memberList.value = members;
-    } catch (e) {
-      LogService.error('Error loading members', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading members', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -78,10 +165,31 @@ class CalendarController {
   // Load gear from database
   Future<void> _loadGear() async {
     try {
-      final gear = await DBService.getAllGear();
+      // Use retry logic for database operations
+      final gear = await RetryService.retry<List<Gear>>(
+        operation: () => DBService.getAllGear(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       gearList.value = gear;
-    } catch (e) {
-      LogService.error('Error loading gear', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading gear', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }

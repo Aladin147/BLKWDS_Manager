@@ -1,14 +1,22 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/image_service.dart';
 import '../../services/log_service.dart';
+import '../../services/contextual_error_handler.dart';
+import '../../services/error_service.dart';
+import '../../services/error_type.dart';
+import '../../services/retry_service.dart';
+import '../../services/retry_strategy.dart';
 import '../../utils/constants.dart';
 
 /// AddGearController
 /// Handles business logic and database operations for the add gear screen
 class AddGearController {
+  // Build context for error handling
+  BuildContext? context;
   // State notifiers
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
@@ -22,6 +30,11 @@ class AddGearController {
   final ValueNotifier<DateTime?> purchaseDate = ValueNotifier<DateTime?>(null);
   final ValueNotifier<String?> thumbnailPath = ValueNotifier<String?>(null);
 
+  // Set the context for error handling
+  void setContext(BuildContext context) {
+    this.context = context;
+  }
+
   // Validation
   bool validateForm() {
     // Reset error message
@@ -30,12 +43,34 @@ class AddGearController {
     // Validate name
     if (name.value.trim().isEmpty) {
       errorMessage.value = 'Name is required';
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          'Name is required',
+          type: ErrorType.validation,
+          feedbackLevel: ErrorFeedbackLevel.toast,
+        );
+      }
+
       return false;
     }
 
     // Validate category
     if (category.value.trim().isEmpty) {
       errorMessage.value = 'Category is required';
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          'Category is required',
+          type: ErrorType.validation,
+          feedbackLevel: ErrorFeedbackLevel.toast,
+        );
+      }
+
       return false;
     }
 
@@ -64,8 +99,20 @@ class AddGearController {
               finalImagePath = savedPath;
             }
           }
-        } catch (e) {
-          LogService.error('Error processing image', e);
+        } catch (e, stackTrace) {
+          LogService.error('Error processing image', e, stackTrace);
+
+          // Use contextual error handler if context is available
+          if (context != null) {
+            ContextualErrorHandler.handleError(
+              context!,
+              e,
+              type: ErrorType.fileSystem,
+              stackTrace: stackTrace,
+              feedbackLevel: ErrorFeedbackLevel.toast,
+            );
+          }
+
           // Continue without the image if there's an error
         }
       }
@@ -82,20 +129,56 @@ class AddGearController {
         lastNote: null,
       );
 
-      // Save to database
-      final id = await DBService.insertGear(gear);
+      // Save to database with retry logic
+      final id = await RetryService.retry<int>(
+        operation: () => DBService.insertGear(gear),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
 
       if (id > 0) {
         isSuccess.value = true;
+
+        // Show success message if context is available
+        if (context != null) {
+          ErrorService.showSuccessSnackBar(context!, 'Gear added successfully');
+        }
+
         return true;
       } else {
         errorMessage.value = 'Failed to save gear';
+
+        // Use contextual error handler if context is available
+        if (context != null) {
+          ContextualErrorHandler.handleError(
+            context!,
+            'Failed to save gear',
+            type: ErrorType.database,
+            feedbackLevel: ErrorFeedbackLevel.snackbar,
+          );
+        }
+
         return false;
       }
-    } catch (e) {
-      errorMessage.value = 'Error: ${e.toString()}';
-      // Use a logger in production code instead of print
-      // print('Error saving gear: $e');
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error: ${e.toString()}';
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error saving gear', e, stackTrace);
+      }
+
       return false;
     } finally {
       isLoading.value = false;

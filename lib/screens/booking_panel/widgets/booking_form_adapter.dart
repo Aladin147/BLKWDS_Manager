@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../booking_panel_controller.dart';
-import 'booking_form_v2.dart';
+import 'booking_form.dart';
 
 /// BookingFormAdapter
-/// Adapter component that connects Booking models with the BookingFormV2 component
+/// Adapter component that connects Booking models with the BookingForm component
 class BookingFormAdapter extends StatelessWidget {
   final BookingPanelController controller;
   final Booking? booking; // Null for new booking, non-null for editing
@@ -21,7 +21,7 @@ class BookingFormAdapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BookingFormV2(
+    return BookingForm(
       controller: controller,
       booking: booking,
       onSave: onSave,

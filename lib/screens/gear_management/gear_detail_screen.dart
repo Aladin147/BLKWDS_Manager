@@ -434,13 +434,10 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                   Row(
                     children: [
                       // Status indicator
-                      Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
-                          shape: BoxShape.circle,
-                        ),
+                      BLKWDSStatusBadge(
+                        text: widget.gear.isOut ? 'OUT' : 'IN',
+                        color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                        icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
                       ),
                       const SizedBox(width: BLKWDSConstants.spacingSmall),
                       Expanded(
@@ -477,10 +474,22 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                     _buildInfoRow('Purchase Date', _formatDate(widget.gear.purchaseDate!)),
 
                   // Status
-                  _buildInfoRow(
-                    'Status',
-                    widget.gear.isOut ? 'Checked Out' : 'Available',
-                    valueColor: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: BLKWDSConstants.spacingSmall),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Status:',
+                          style: BLKWDSTypography.titleSmall,
+                        ),
+                        const SizedBox(width: BLKWDSConstants.spacingMedium),
+                        BLKWDSStatusBadge(
+                          text: widget.gear.isOut ? 'CHECKED OUT' : 'AVAILABLE',
+                          color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                          icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
+                        ),
+                      ],
+                    ),
                   ),
 
                   // Description
@@ -609,17 +618,16 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
             // Log header
             Row(
               children: [
-                Icon(
-                  log.checkedOut ? Icons.logout : Icons.login,
+                BLKWDSStatusBadge(
+                  text: log.checkedOut ? 'CHECKED OUT' : 'CHECKED IN',
                   color: log.checkedOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                  icon: log.checkedOut ? Icons.logout : Icons.login,
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingSmall),
+                const SizedBox(width: BLKWDSConstants.spacingMedium),
                 Expanded(
                   child: Text(
-                    log.checkedOut ? 'Checked Out' : 'Checked In',
-                    style: BLKWDSTypography.titleMedium.copyWith(
-                      color: log.checkedOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
-                    ),
+                    log.checkedOut ? 'Gear was checked out' : 'Gear was returned',
+                    style: BLKWDSTypography.bodyMedium,
                   ),
                 ),
                 Text(

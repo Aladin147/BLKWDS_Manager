@@ -4,6 +4,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../utils/feature_flags.dart';
+import '../../../widgets/blkwds_status_badge.dart';
 
 import '../dashboard_adapter.dart';
 import '../dashboard_controller.dart';
@@ -177,7 +178,7 @@ class TodayBookingWidget extends StatelessWidget {
 
     // Get assigned members
     final assignedMembers = <Member>[];
-    final assignedGearToMember = booking is BookingV2 ? booking.assignedGearToMember : (booking as Booking).assignedGearToMember;
+    final assignedGearToMember = booking.assignedGearToMember;
 
     if (assignedGearToMember != null) {
       final memberIds = assignedGearToMember.values.toSet();
@@ -208,7 +209,7 @@ class TodayBookingWidget extends StatelessWidget {
     final primaryMember = assignedMembers.isNotEmpty ? assignedMembers.first : null;
 
     // Get first gear item for icon
-    final gearIds = booking is BookingV2 ? booking.gearIds : (booking as Booking).gearIds;
+    final gearIds = booking.gearIds;
     final firstGearId = gearIds.isNotEmpty ? gearIds.first : null;
 
     Gear? firstGear;
@@ -320,32 +321,11 @@ class TodayBookingWidget extends StatelessWidget {
 
             // Gear count badge
             if (gearIds.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: BLKWDSColors.accentTeal.withValues(alpha: 20),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.camera_alt,
-                      size: 14,
-                      color: BLKWDSColors.accentTeal,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${gearIds.length}',
-                      style: BLKWDSTypography.labelMedium.copyWith(
-                        color: BLKWDSColors.accentTeal,
-                      ),
-                    ),
-                  ],
-                ),
+              BLKWDSStatusBadge(
+                text: '${gearIds.length}',
+                color: BLKWDSColors.accentTeal,
+                icon: Icons.camera_alt,
+                iconSize: 14,
               ),
           ],
         ),
@@ -432,8 +412,10 @@ class TodayBookingWidget extends StatelessWidget {
 
   // Format TimeOfDay to string
   String _formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
+    // Use 12-hour format with AM/PM
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
   }
 }

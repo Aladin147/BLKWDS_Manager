@@ -29,6 +29,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Set the context for error handling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.setContext(context);
+    });
+
     _controller.initialize();
   }
 

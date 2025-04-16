@@ -8,7 +8,7 @@ import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'booking_panel_controller.dart';
-import 'widgets/booking_form_v2.dart';
+import 'widgets/booking_form.dart';
 
 /// BookingDetailScreenV2
 /// Displays detailed information about a Booking with tabs for different sections
@@ -912,7 +912,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: BookingFormV2(
+          child: BookingForm(
             controller: widget.controller,
             booking: _booking,
             onSave: _saveBooking,

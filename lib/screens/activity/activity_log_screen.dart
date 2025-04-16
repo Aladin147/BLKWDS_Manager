@@ -36,22 +36,22 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
   // Update filtered logs based on filters
   void _updateFilteredLogs() {
     final allLogs = widget.controller.recentActivity.value;
-    
+
     setState(() {
       _filteredLogs = allLogs.where((log) {
         // Apply type filter
         if (!_showCheckouts && log.checkedOut) return false;
         if (!_showCheckins && !log.checkedOut) return false;
-        
+
         // Apply search filter if needed
         if (_searchQuery.isEmpty) return true;
-        
+
         // Find gear name
         final gear = widget.controller.gearList.value.firstWhere(
           (g) => g.id == log.gearId,
           orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
         );
-        
+
         // Find member name
         final memberName = log.memberId != null
             ? widget.controller.memberList.value
@@ -61,7 +61,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                 )
                 .name
             : '';
-        
+
         // Check if search query matches gear name or member name
         return gear.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             memberName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -103,9 +103,9 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                     });
                   },
                 ),
-                
+
                 const SizedBox(height: BLKWDSConstants.spacingSmall),
-                
+
                 // Filter chips
                 Row(
                   children: [
@@ -139,7 +139,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
               ],
             ),
           ),
-          
+
           // Activity list
           Expanded(
             child: _filteredLogs.isEmpty
@@ -201,15 +201,15 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           height: 40,
           decoration: BoxDecoration(
             color: activity.checkedOut
-                ? BLKWDSColors.warningAmber.withValues(alpha: 30)
-                : BLKWDSColors.successGreen.withValues(alpha: 30),
+                ? BLKWDSColors.statusOut.withValues(alpha: 30)
+                : BLKWDSColors.statusIn.withValues(alpha: 30),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Icon(
             activity.checkedOut ? Icons.logout : Icons.login,
             color: activity.checkedOut
-                ? BLKWDSColors.warningAmber
-                : BLKWDSColors.successGreen,
+                ? BLKWDSColors.statusOut
+                : BLKWDSColors.statusIn,
             size: 24,
           ),
         ),

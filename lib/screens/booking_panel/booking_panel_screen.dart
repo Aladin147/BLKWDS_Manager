@@ -10,7 +10,7 @@ import 'booking_panel_controller.dart';
 import 'booking_detail_screen_adapter.dart';
 import 'booking_list_screen_adapter.dart';
 
-import 'widgets/booking_form_adapter_v2.dart';
+import 'widgets/booking_form_adapter.dart';
 
 import 'widgets/calendar_view_fixed.dart';
 
@@ -40,6 +40,10 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   @override
   void initState() {
     super.initState();
+    // Set the context for error handling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.setContext(context);
+    });
     _initializeData();
   }
 
@@ -139,7 +143,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             style: BLKWDSTypography.titleLarge,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          BookingFormAdapterV2(
+          BookingFormAdapter(
               controller: _controller,
               booking: _tempBookingV2,
               onSave: (booking) async {

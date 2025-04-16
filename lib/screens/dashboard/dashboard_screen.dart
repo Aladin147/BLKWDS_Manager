@@ -71,6 +71,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _controller = DashboardController();
     _controllerV2 = DashboardControllerV2();
     _adapter = DashboardAdapter(controllerV1: _controller, controllerV2: _controllerV2);
+
+    // Set the context for error handling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.setContext(context);
+      _controllerV2?.setContext(context);
+    });
   }
 
   // Initialize data from database
@@ -637,25 +643,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             // Status badge
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
-              decoration: BoxDecoration(
-                color: gear.isOut
-                    ? BLKWDSColors.statusOut.withValues(alpha: 50)
-                    : BLKWDSColors.statusIn.withValues(alpha: 50),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                gear.isOut ? 'OUT' : 'IN',
-                style: BLKWDSTypography.labelMedium.copyWith(
-                  color: gear.isOut
-                      ? BLKWDSColors.statusOut
-                      : BLKWDSColors.statusIn,
-                ),
-              ),
+            BLKWDSStatusBadge(
+              text: gear.isOut ? 'OUT' : 'IN',
+              color: gear.isOut
+                  ? BLKWDSColors.statusOut
+                  : BLKWDSColors.statusIn,
+              icon: gear.isOut ? Icons.logout : Icons.check_circle,
             ),
             const SizedBox(width: BLKWDSConstants.spacingMedium),
             // Action button

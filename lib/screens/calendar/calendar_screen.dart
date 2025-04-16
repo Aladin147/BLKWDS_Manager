@@ -42,6 +42,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _selectedDay = DateTime.now();
     _selectedDayBookings = ValueNotifier<List<Booking>>([]);
 
+    // Set the context for error handling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.setContext(context);
+    });
+
     // Initialize data
     _initializeData();
 

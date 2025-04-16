@@ -3,6 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_status_badge.dart';
 import '../dashboard_controller.dart';
 
 /// TopBarSummaryWidget
@@ -181,14 +182,12 @@ class TopBarSummaryWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          Text(
-            isBooked ? 'Booked' : 'Available',
-            style: BLKWDSTypography.bodyMedium.copyWith(
-              color: isBooked
-                  ? BLKWDSColors.warningAmber
-                  : BLKWDSColors.successGreen,
-              fontWeight: FontWeight.bold,
-            ),
+          BLKWDSStatusBadge(
+            text: isBooked ? 'BOOKED' : 'AVAILABLE',
+            color: isBooked
+                ? BLKWDSColors.statusOut
+                : BLKWDSColors.statusIn,
+            icon: isBooked ? Icons.event_busy : Icons.event_available,
           ),
           if (isBooked)
             Text(
@@ -277,8 +276,10 @@ class TopBarSummaryWidget extends StatelessWidget {
 
   // Format TimeOfDay to string
   String _formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
+    // Use 12-hour format with AM/PM
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
   }
 }

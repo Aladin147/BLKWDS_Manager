@@ -101,7 +101,7 @@ class GearPreviewListWidget extends StatelessWidget {
                 vertical: BLKWDSConstants.spacingSmall,
               ),
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: BLKWDSColors.warningAmber.withValues(alpha: 25),
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                 border: Border.all(color: BLKWDSColors.warningAmber),
               ),
@@ -113,13 +113,11 @@ class GearPreviewListWidget extends StatelessWidget {
                     size: 20,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Expanded(
-                    child: Text(
-                      'OVERDUE: OVERDUE BY 24 HOURS',
-                      style: BLKWDSTypography.labelMedium.copyWith(
-                        color: BLKWDSColors.warningAmber,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    'OVERDUE GEAR: CHECKED OUT FOR 24+ HOURS',
+                    style: BLKWDSTypography.labelMedium.copyWith(
+                      color: BLKWDSColors.warningAmber,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
@@ -217,8 +215,31 @@ class GearPreviewListWidget extends StatelessWidget {
 
   // Check if there is any overdue gear
   bool _hasOverdueGear() {
-    // For demo purposes, always return true to show the banner
-    // In a real app, this would check if any gear is overdue
-    return true;
+    final now = DateTime.now();
+    final overdueThreshold = now.subtract(const Duration(hours: 24));
+
+    // Get all checked out gear
+    final checkedOutGear = controller.gearList.value.where((gear) => gear.isOut).toList();
+
+    // Check if any gear has been checked out for more than 24 hours
+    for (final gear in checkedOutGear) {
+      // Get the most recent activity log for this gear
+      final activityLogs = controller.recentActivity.value
+          .where((log) => log.gearId == gear.id && log.checkedOut)
+          .toList();
+
+      // Sort by timestamp (most recent first)
+      activityLogs.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+      // Get the most recent activity log
+      final activityLog = activityLogs.isNotEmpty ? activityLogs.first : null;
+
+      // If we found an activity log and it's older than 24 hours, we have overdue gear
+      if (activityLog != null && activityLog.timestamp.isBefore(overdueThreshold)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

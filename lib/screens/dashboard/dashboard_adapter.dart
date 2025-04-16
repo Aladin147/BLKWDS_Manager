@@ -91,7 +91,7 @@ class DashboardAdapter {
 
   /// Get studio type for a booking
   String? getStudioTypeForBooking(dynamic booking) {
-    if (booking is BookingV2 && booking.studioId != null && _controllerV2 != null) {
+    if (booking is Booking && booking.studioId != null && _controllerV2 != null) {
       final studio = _controllerV2.getStudioById(booking.studioId!);
       if (studio != null) {
         switch (studio.type) {
@@ -103,20 +103,13 @@ class DashboardAdapter {
             return 'Hybrid';
         }
       }
-    } else if (booking is Booking) {
-      final types = <String>[];
-      if (booking.isRecordingStudio) types.add('Recording');
-      if (booking.isProductionStudio) types.add('Production');
-      if (types.isNotEmpty) {
-        return types.join(', ');
-      }
     }
     return null;
   }
 
   /// Get icon for booking based on type
   IconData getBookingIcon(dynamic booking, Gear? firstGear) {
-    if (booking is BookingV2 && booking.studioId != null && _controllerV2 != null) {
+    if (booking is Booking && booking.studioId != null && _controllerV2 != null) {
       final studio = _controllerV2.getStudioById(booking.studioId!);
       if (studio != null) {
         switch (studio.type) {
@@ -127,12 +120,6 @@ class DashboardAdapter {
           case StudioType.hybrid:
             return Icons.business;
         }
-      }
-    } else if (booking is Booking) {
-      if (booking.isRecordingStudio) {
-        return Icons.mic;
-      } else if (booking.isProductionStudio) {
-        return Icons.videocam;
       }
     }
 
@@ -158,10 +145,7 @@ class DashboardAdapter {
     DateTime startDate;
     DateTime endDate;
 
-    if (booking is BookingV2) {
-      startDate = booking.startDate;
-      endDate = booking.endDate;
-    } else if (booking is Booking) {
+    if (booking is Booking) {
       startDate = booking.startDate;
       endDate = booking.endDate;
     } else {
@@ -176,13 +160,15 @@ class DashboardAdapter {
 
   /// Format TimeOfDay to string
   String _formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
+    // Use 12-hour format with AM/PM
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
   }
 
-  /// Check if a booking is a V2 booking
+  /// Check if a booking is a V2 booking (legacy method, always returns true)
   bool isBookingV2(dynamic booking) {
-    return booking is BookingV2;
+    return true; // All bookings are now the same type
   }
 }

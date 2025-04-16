@@ -11,6 +11,8 @@ class BLKWDSStatusBadge extends StatelessWidget {
   final double? fontSize;
   final EdgeInsetsGeometry? padding;
   final double? borderRadius;
+  final IconData? icon;
+  final double? iconSize;
 
   const BLKWDSStatusBadge({
     super.key,
@@ -19,6 +21,8 @@ class BLKWDSStatusBadge extends StatelessWidget {
     this.fontSize,
     this.padding,
     this.borderRadius,
+    this.icon,
+    this.iconSize,
   });
 
   /// Create a status badge with a predefined status
@@ -80,15 +84,36 @@ class BLKWDSStatusBadge extends StatelessWidget {
         color: color.withValues(alpha: 50),
         borderRadius: BorderRadius.circular(borderRadius ?? 12),
       ),
-      child: Text(
-        text,
-        style: (fontSize != null
-                ? BLKWDSTypography.labelSmall.copyWith(fontSize: fontSize)
-                : BLKWDSTypography.labelSmall)
-            .copyWith(
-          color: color,
-        ),
-      ),
+      child: icon != null
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon!,
+                  size: iconSize ?? 16,
+                  color: color,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  text,
+                  style: (fontSize != null
+                          ? BLKWDSTypography.labelSmall.copyWith(fontSize: fontSize)
+                          : BLKWDSTypography.labelSmall)
+                      .copyWith(
+                    color: color,
+                  ),
+                ),
+              ],
+            )
+          : Text(
+              text,
+              style: (fontSize != null
+                      ? BLKWDSTypography.labelSmall.copyWith(fontSize: fontSize)
+                      : BLKWDSTypography.labelSmall)
+                  .copyWith(
+                color: color,
+              ),
+            ),
     );
   }
 }

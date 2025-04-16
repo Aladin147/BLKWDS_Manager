@@ -14,5 +14,4 @@ export 'gear_management/gear_list_screen.dart';
 export 'gear_management/gear_detail_screen.dart';
 export 'gear_management/gear_form_screen.dart';
 export 'studio_management/studio_management_screen.dart';
-export 'migration/migration_screen.dart';
 // TODO: Add more screens as they are implemented

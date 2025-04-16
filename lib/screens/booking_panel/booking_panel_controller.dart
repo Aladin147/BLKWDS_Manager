@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
+import '../../services/contextual_error_handler.dart';
+import '../../services/error_service.dart';
+import '../../services/error_type.dart';
+import '../../services/retry_service.dart';
+import '../../services/retry_strategy.dart';
+import '../../services/recovery_service.dart';
 import '../../theme/blkwds_colors.dart';
 
 import '../../utils/date_utils.dart';
@@ -10,6 +16,8 @@ import 'models/booking_filter.dart';
 /// BookingPanelController
 /// Handles state management and business logic for the Booking Panel screen
 class BookingPanelController {
+  // Build context for error handling
+  BuildContext? context;
   // Value notifiers for reactive UI updates
   final ValueNotifier<List<Booking>> bookingList = ValueNotifier<List<Booking>>([]);
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
@@ -22,6 +30,11 @@ class BookingPanelController {
   // Filter-related notifiers
   final ValueNotifier<BookingFilter> filter = ValueNotifier<BookingFilter>(const BookingFilter());
   final ValueNotifier<List<Booking>> filteredBookingList = ValueNotifier<List<Booking>>([]);
+
+  // Set the context for error handling
+  void setContext(BuildContext context) {
+    this.context = context;
+  }
 
   // Initialize controller
   Future<void> initialize() async {
@@ -37,9 +50,20 @@ class BookingPanelController {
 
       // Initialize filtered list with all bookings
       _applyFilters();
-    } catch (e) {
-      errorMessage.value = 'Error initializing data: $e';
-      LogService.error('Error initializing data', e);
+    } catch (e, stackTrace) {
+      errorMessage.value = ErrorService.handleError(e, stackTrace: stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error initializing data', e, stackTrace);
+      }
     } finally {
       isLoading.value = false;
     }
@@ -48,13 +72,34 @@ class BookingPanelController {
   // Load bookings from database
   Future<void> _loadBookings() async {
     try {
-      final bookings = await DBService.getAllBookings();
+      // Use retry logic for database operations
+      final bookings = await RetryService.retry<List<Booking>>(
+        operation: () => DBService.getAllBookings(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       bookingList.value = bookings;
 
       // Update filtered list when bookings change
       _applyFilters();
-    } catch (e) {
-      LogService.error('Error loading bookings', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading bookings', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -62,10 +107,31 @@ class BookingPanelController {
   // Load studios from database
   Future<void> _loadStudios() async {
     try {
-      final studios = await DBService.getAllStudios();
+      // Use retry logic for database operations
+      final studios = await RetryService.retry<List<Studio>>(
+        operation: () => DBService.getAllStudios(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       studioList.value = studios;
-    } catch (e) {
-      LogService.error('Error loading studios', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading studios', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -213,10 +279,31 @@ class BookingPanelController {
   // Load projects from database
   Future<void> _loadProjects() async {
     try {
-      final projects = await DBService.getAllProjects();
+      // Use retry logic for database operations
+      final projects = await RetryService.retry<List<Project>>(
+        operation: () => DBService.getAllProjects(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       projectList.value = projects;
-    } catch (e) {
-      LogService.error('Error loading projects', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading projects', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -224,10 +311,31 @@ class BookingPanelController {
   // Load members from database
   Future<void> _loadMembers() async {
     try {
-      final members = await DBService.getAllMembers();
+      // Use retry logic for database operations
+      final members = await RetryService.retry<List<Member>>(
+        operation: () => DBService.getAllMembers(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       memberList.value = members;
-    } catch (e) {
-      LogService.error('Error loading members', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading members', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -235,10 +343,31 @@ class BookingPanelController {
   // Load gear from database
   Future<void> _loadGear() async {
     try {
-      final gear = await DBService.getAllGear();
+      // Use retry logic for database operations
+      final gear = await RetryService.retry<List<Gear>>(
+        operation: () => DBService.getAllGear(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
       gearList.value = gear;
-    } catch (e) {
-      LogService.error('Error loading gear', e);
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading gear', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
       rethrow;
     }
   }
@@ -252,19 +381,55 @@ class BookingPanelController {
       // Check for booking conflicts
       if (await hasBookingConflicts(booking)) {
         errorMessage.value = 'Booking conflicts with existing bookings';
+
+        // Use contextual error handler if context is available
+        if (context != null) {
+          ContextualErrorHandler.handleError(
+            context!,
+            'Booking conflicts with existing bookings',
+            type: ErrorType.conflict,
+            feedbackLevel: ErrorFeedbackLevel.snackbar,
+          );
+        }
+
         return false;
       }
 
-      // Insert booking
-      final id = await DBService.insertBooking(booking);
+      // Use retry logic for database operations
+      final id = await RetryService.retry<int>(
+        operation: () => DBService.insertBooking(booking),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
 
       // Reload bookings
       await _loadBookings();
 
+      // Show success message if context is available
+      if (context != null && id > 0) {
+        ErrorService.showSuccessSnackBar(context!, 'Booking created successfully');
+      }
+
       return id > 0;
-    } catch (e) {
-      errorMessage.value = 'Error creating booking: $e';
-      LogService.error('Error creating booking', e);
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error creating booking: ${e.toString()}';
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error creating booking', e, stackTrace);
+      }
+
       return false;
     } finally {
       isLoading.value = false;
@@ -280,19 +445,55 @@ class BookingPanelController {
       // Check for booking conflicts (excluding this booking)
       if (await hasBookingConflicts(booking, excludeBookingId: booking.id)) {
         errorMessage.value = 'Booking conflicts with existing bookings';
+
+        // Use contextual error handler if context is available
+        if (context != null) {
+          ContextualErrorHandler.handleError(
+            context!,
+            'Booking conflicts with existing bookings',
+            type: ErrorType.conflict,
+            feedbackLevel: ErrorFeedbackLevel.snackbar,
+          );
+        }
+
         return false;
       }
 
-      // Update booking
-      final id = await DBService.updateBooking(booking);
+      // Use retry logic for database operations
+      final id = await RetryService.retry<int>(
+        operation: () => DBService.updateBooking(booking),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
 
       // Reload bookings
       await _loadBookings();
 
+      // Show success message if context is available
+      if (context != null && id > 0) {
+        ErrorService.showSuccessSnackBar(context!, 'Booking updated successfully');
+      }
+
       return id > 0;
-    } catch (e) {
-      errorMessage.value = 'Error updating booking: $e';
-      LogService.error('Error updating booking', e);
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error updating booking: ${e.toString()}';
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error updating booking', e, stackTrace);
+      }
+
       return false;
     } finally {
       isLoading.value = false;
@@ -324,16 +525,41 @@ class BookingPanelController {
     errorMessage.value = null;
 
     try {
-      // Delete booking
-      final result = await DBService.deleteBooking(id);
+      // Use retry logic for database operations
+      final result = await RetryService.retry<int>(
+        operation: () => DBService.deleteBooking(id),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
 
       // Reload bookings
       await _loadBookings();
 
+      // Show success message if context is available
+      if (context != null && result > 0) {
+        ErrorService.showSuccessSnackBar(context!, 'Booking deleted successfully');
+      }
+
       return result > 0;
-    } catch (e) {
-      errorMessage.value = 'Error deleting booking: $e';
-      LogService.error('Error deleting booking', e);
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error deleting booking: ${e.toString()}';
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error deleting booking', e, stackTrace);
+      }
+
       return false;
     } finally {
       isLoading.value = false;
@@ -343,8 +569,14 @@ class BookingPanelController {
   // Check if a booking conflicts with existing bookings
   Future<bool> hasBookingConflicts(Booking booking, {int? excludeBookingId}) async {
     try {
-      // Get all bookings
-      final bookings = await DBService.getAllBookings();
+      // Use retry logic for database operations
+      final bookings = await RetryService.retry<List<Booking>>(
+        operation: () => DBService.getAllBookings(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
 
       // Filter out the booking being updated
       final otherBookings = bookings.where((b) => b.id != excludeBookingId).toList();
@@ -357,7 +589,19 @@ class BookingPanelController {
           final sharedGear = booking.gearIds.where((id) => otherBooking.gearIds.contains(id)).toList();
 
           if (sharedGear.isNotEmpty) {
-            errorMessage.value = 'Conflict: Gear is already booked during this time';
+            final conflictMsg = 'Conflict: Gear is already booked during this time';
+            errorMessage.value = conflictMsg;
+
+            // Use contextual error handler if context is available
+            if (context != null) {
+              ContextualErrorHandler.handleError(
+                context!,
+                conflictMsg,
+                type: ErrorType.conflict,
+                feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're handling it in the UI
+              );
+            }
+
             return true; // Conflict found
           }
 
@@ -367,16 +611,41 @@ class BookingPanelController {
               booking.studioId == otherBooking.studioId) {
             // Get studio name for better error message
             final studio = getStudioById(booking.studioId!);
-            errorMessage.value = 'Conflict: ${studio?.name ?? 'Studio'} is already booked during this time';
+            final conflictMsg = 'Conflict: ${studio?.name ?? 'Studio'} is already booked during this time';
+            errorMessage.value = conflictMsg;
+
+            // Use contextual error handler if context is available
+            if (context != null) {
+              ContextualErrorHandler.handleError(
+                context!,
+                conflictMsg,
+                type: ErrorType.conflict,
+                feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're handling it in the UI
+              );
+            }
+
             return true; // Conflict found
           }
         }
       }
 
       return false; // No conflicts found
-    } catch (e) {
-      LogService.error('Error checking booking conflicts', e);
-      errorMessage.value = 'Error checking booking conflicts: $e';
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error checking booking conflicts: ${e.toString()}';
+      LogService.error('Error checking booking conflicts', e, stackTrace);
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      }
+
       return true; // Assume conflict on error to be safe
     }
   }
