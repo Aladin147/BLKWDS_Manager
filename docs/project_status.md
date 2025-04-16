@@ -54,9 +54,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Improve layout responsiveness by replacing fixed heights
    - [ ] Ensure consistent typography usage across all screens
    - [ ] Standardize component usage (buttons, text fields, etc.)
+     - [ ] Replace standard TextField/TextFormField with BLKWDSTextField
+     - [ ] Create and implement BLKWDSDropdown for all dropdown fields
+     - [ ] Replace standard dialog buttons with BLKWDSButton
+     - [ ] Clarify usage guidelines for BLKWDSTextField vs. BLKWDSFormField
+     - [ ] Decide on standard vs. enhanced component versions
    - [x] Standardize navigation patterns and transitions
    - [x] Remove all references to light mode/theme switching (dark mode only)
    - [ ] Create consistent card styling across the application
+     - [ ] Replace custom Container decorations with BLKWDSCard
+     - [ ] Ensure consistent border radius, padding, and elevation
 
 ## Feature Status
 

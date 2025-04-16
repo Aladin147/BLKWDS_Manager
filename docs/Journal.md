@@ -1,5 +1,43 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: UI Elements Audit
+
+Today we conducted a comprehensive audit of UI elements across the application to identify inconsistencies and areas for improvement. This audit is a critical step in our style unification plan, as it helps us identify specific components that need standardization.
+
+Key findings from the audit:
+
+1. **Standard Flutter Widgets Still in Use**:
+   - TextField/TextFormField in activity_log_screen.dart and other places
+   - DropdownButtonFormField in booking_form.dart, project_list_screen.dart, and others
+   - Standard dialog buttons (TextButton, ElevatedButton) in some dialogs
+
+2. **Inconsistent Card Styling**:
+   - Mix of BLKWDSCard and custom Containers with manual decoration
+
+3. **Unused or Duplicate Components**:
+   - Enhanced versions of components exist but aren't widely used
+   - BLKWDSTextFieldEnhanced and BLKWDSButtonEnhanced create confusion
+
+4. **Inconsistent Form Field Usage**:
+   - Mix of BLKWDSTextField and BLKWDSFormField without clear guidelines
+
+Based on these findings, we've updated our style unification plan with specific tasks:
+
+1. **Standardize Form Fields**:
+   - Replace all standard TextField/TextFormField with BLKWDSTextField
+   - Create a BLKWDSDropdown component to replace DropdownButtonFormField
+   - Document clear guidelines on when to use each type of form field
+
+2. **Standardize Card Usage**:
+   - Replace all custom Container decorations with BLKWDSCard
+   - Ensure consistent border radius, padding, and elevation
+
+3. **Consolidate Enhanced Components**:
+   - Either fully adopt the enhanced versions or remove them
+   - Document clear guidelines on which component to use
+
+These specific tasks will help us achieve a more consistent UI across the application.
+
 ## 2025-06-13: Navigation Standardization
 
 Today we standardized navigation patterns across the application. This was an important step in our style unification plan, as it ensures a consistent user experience when navigating between screens.
