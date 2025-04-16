@@ -177,6 +177,9 @@ class Booking {
       notes.hashCode;
 }
 
+/// BookingV2 is now an alias for Booking
+typedef BookingV2 = Booking;
+
 /// Legacy Booking Model
 /// This class is kept for reference only and should not be used
 class LegacyBooking {
