@@ -1,7 +1,7 @@
-import '../models/models.dart';
+import 'package:blkwds_manager/models/models.dart';
 
 /// MockData
-/// Provides sample data for development and testing
+/// Provides sample data for testing
 class MockData {
   /// Sample gear items
   static List<Gear> getSampleGear() {

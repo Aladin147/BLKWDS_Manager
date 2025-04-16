@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc10 (Release Candidate 10)
-**Last Updated:** 2025-06-13
+**Version:** 1.0.0-rc13 (Release Candidate 13)
+**Last Updated:** 2025-06-16
 
 ## Project Phase
 
@@ -34,6 +34,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 3. **Documentation**
    - [x] Consolidate documentation into single source of truth
    - [x] Update all version references
+   - [x] Create comprehensive placeholder inventory
    - [ ] Create comprehensive testing checklist
 
 4. **UI/UX Improvements**
@@ -104,11 +105,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - Inconsistent error handling for database operations (IDENTIFIED in v0.40.0)
 
 2. **Non-functional UI Elements**
-   - "View All" buttons only show snackbars instead of navigating (IDENTIFIED in v0.40.0)
+   - ~~"View All" buttons only show snackbars instead of navigating~~ (FIXED in v0.40.0)
    - Placeholder icons and demo content in production code (IDENTIFIED in v0.40.0)
-   - Mixed navigation patterns (NavigationService vs direct Navigator.push) (IDENTIFIED in v0.40.0)
+   - ~~Mixed navigation patterns (NavigationService vs direct Navigator.push)~~ (FIXED in v0.40.0)
 
-3. **Error Handling Inconsistencies**
+3. **Architecture Issues**
+   - ~~Dual controller system for dashboard~~ (FIXED in v0.42.0)
+   - ~~Adapter pattern complexity~~ (FIXED in v0.42.0)
+   - ~~MockData class in production code~~ (FIXED in v0.41.0)
+
+4. **Error Handling Inconsistencies**
    - Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (IDENTIFIED in v0.40.0)
    - Inconsistent error feedback levels (IDENTIFIED in v0.40.0)
 
@@ -173,9 +179,13 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Add graceful fallbacks for all database operations
      - [x] Verify all migrations work correctly
    - Functional UI Elements
-     - [ ] Implement proper functionality for "View All" buttons
+     - [x] Implement proper functionality for "View All" buttons
      - [ ] Replace placeholder contents in the app with actual functionality
      - [ ] Disable or remove UI elements that aren't fully implemented
+   - Architecture Improvements
+     - [x] Consolidate duplicate controllers
+     - [x] Remove adapter patterns where possible
+     - [x] Isolate mock data to test environment
    - Error Handling Standardization
      - [ ] Standardize on SnackbarService for all error notifications
      - [ ] Replace all direct ScaffoldMessenger calls
@@ -244,6 +254,67 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.42.0 - Dashboard Controller Consolidation (2025-06-16)
+
+**Fixed:**
+
+- Consolidated dashboard controllers into a single approach
+- Removed adapter pattern and redundant controller
+- Simplified widget interactions with the controller
+
+**Changed:**
+
+- Updated DashboardController to include all functionality from DashboardControllerV2
+- Added studio-related methods and properties to the consolidated controller
+- Updated TodayBookingWidget to use only the consolidated controller
+
+**Improved:**
+
+- Simplified codebase by eliminating dual controller system
+- Improved maintainability by removing adapter pattern
+- Reduced complexity in widget implementation
+
+### v0.41.0 - MockData Class Isolation (2025-06-16)
+
+**Fixed:**
+
+- Isolated MockData class to test directory
+- Removed MockData from production code
+- Ensured tests continue to work with relocated MockData
+
+**Changed:**
+
+- Moved MockData class from `lib/data/mock_data.dart` to `test/mocks/mock_data.dart`
+
+**Improved:**
+
+- Reduced risk of accidentally using mock data in production
+- Improved code organization by properly separating test and production code
+
+### v0.40.0 - Dashboard Navigation Standardization and Placeholder Inventory (2025-06-16)
+
+**Fixed:**
+
+- Implemented proper functionality for "View All" buttons in dashboard
+- Standardized navigation patterns using NavigationService
+- Created missing ActivityLogScreen to resolve build errors
+- Added initialFilter parameter to BookingPanelScreen
+- Fixed import issues and removed duplicate imports
+
+**Changed:**
+
+- Replaced TextButton.icon with BLKWDSButton for consistent styling
+- Standardized button types and sizes for better visual consistency
+- Removed unused methods and variables to clean up the codebase
+- Improved code organization and readability
+
+**Added:**
+
+- Created comprehensive placeholder inventory document
+- Added progress tracking for placeholder replacement
+- Identified and prioritized remaining placeholder content
+- Documented approach for systematically addressing placeholders
 
 ### v0.39.0 - Card Styling Standardization (2025-06-13)
 
@@ -637,4 +708,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-13
+Date: 2025-06-16 (v0.42.0)

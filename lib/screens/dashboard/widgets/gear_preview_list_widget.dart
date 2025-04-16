@@ -4,6 +4,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_card.dart';
+import '../../../widgets/blkwds_button.dart';
 
 import '../../gear_management/widgets/gear_card_with_note.dart';
 import '../dashboard_controller.dart';
@@ -73,13 +74,12 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
                   ),
                 ],
               ),
-              TextButton.icon(
+              BLKWDSButton(
                 onPressed: widget.onViewAllGear,
-                icon: const Icon(Icons.visibility),
-                label: const Text('View All'),
-                style: TextButton.styleFrom(
-                  foregroundColor: BLKWDSColors.accentTeal,
-                ),
+                label: 'View All',
+                icon: Icons.visibility,
+                type: BLKWDSButtonType.secondary,
+                isSmall: true,
               ),
             ],
           ),

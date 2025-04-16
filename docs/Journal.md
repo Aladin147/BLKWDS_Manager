@@ -1,5 +1,97 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-16: Dashboard Controller Consolidation
+
+Today we successfully consolidated the dashboard controllers into a single approach, eliminating the dual controller system and adapter pattern:
+
+1. **Analysis Phase**:
+   - Examined both dashboard controllers to understand their functionality
+   - Identified that DashboardControllerV2 had more features, including studio support
+   - Analyzed the adapter pattern that was bridging the two controllers
+   - Identified widgets that were using the controllers directly or through the adapter
+
+2. **Implementation Phase**:
+   - Updated the DashboardController class to include all functionality from DashboardControllerV2
+   - Added studio-related methods and properties to the consolidated controller
+   - Updated the dashboard screen to use only the consolidated controller
+   - Updated the TodayBookingWidget to use only the consolidated controller
+   - Removed the adapter pattern and old controller
+   - Verified that the application builds successfully
+
+3. **Documentation Updates**:
+   - Updated the placeholder inventory to mark Controller Architecture Finalization as completed
+   - Documented the changes in the Journal
+
+This consolidation simplifies the codebase, makes it more maintainable, and eliminates the complexity of having multiple controllers and an adapter pattern. The dashboard now uses a single, unified controller for all its functionality.
+
+## 2025-06-16: MockData Class Isolation
+
+Today we successfully isolated the MockData class to the test directory, ensuring it's only used for testing purposes and not in production code:
+
+1. **Analysis Phase**:
+   - Examined the codebase to identify any uses of the MockData class in production code
+   - Confirmed that the MockData class was not being imported or used in any production files
+   - Verified that the DataSeeder class has its own implementation for seeding the database
+
+2. **Implementation Phase**:
+   - Created a new file in the test directory: `test/mocks/mock_data.dart`
+   - Copied the MockData class implementation to the new file
+   - Removed the original `lib/data/mock_data.dart` file
+   - Verified that the application builds successfully
+   - Ran tests to ensure they still pass with the relocated MockData class
+
+3. **Documentation Updates**:
+   - Updated the placeholder inventory to mark MockData Class Isolation as completed
+   - Documented the changes in the Journal
+
+This change ensures that mock data is properly isolated to the test environment, reducing the risk of accidentally using mock data in production. The next priority task is to consolidate the dashboard controllers into a single approach.
+
+## 2025-06-16: Placeholder Inventory and Documentation Updates
+
+Today we conducted a comprehensive inventory of placeholders and demo content in the codebase to better understand our current state and plan future work:
+
+1. **Placeholder Inventory Analysis**:
+   - Conducted a thorough search for placeholder content, demo data, and mock implementations
+   - Identified additional placeholders not previously documented
+   - Categorized placeholders by type (UI elements, hardcoded values, mock data, etc.)
+   - Prioritized items based on impact and implementation complexity
+
+2. **Documentation Updates**:
+   - Updated the placeholder_inventory_comprehensive.md document with new findings
+   - Added progress tracking section to monitor completion status
+   - Marked completed items (navigation standardization and "View All" button functionality)
+   - Updated implementation priorities based on recent progress
+
+3. **Next Steps Planning**:
+   - Identified MockData class isolation as the highest priority task
+   - Planned controller architecture consolidation as a high-impact improvement
+   - Documented approach for replacing hardcoded values with dynamic data
+
+This inventory provides a clear roadmap for systematically addressing placeholders and demo content, ensuring we build on a solid foundation as we move toward the final release.
+
+## 2025-06-16: Dashboard Navigation Standardization and Build Fixes
+
+Today we focused on standardizing navigation in the dashboard and fixing build issues to ensure a stable foundation for future development:
+
+1. **Navigation Standardization**:
+   - Updated all "View All" buttons in the dashboard to use NavigationService instead of direct Navigator calls
+   - Replaced TextButton.icon with BLKWDSButton for consistent styling across the application
+   - Standardized button types and sizes for better visual consistency
+   - Removed unused methods and imports to clean up the codebase
+
+2. **Build Issue Fixes**:
+   - Created missing ActivityLogScreen to resolve build errors
+   - Added initialFilter parameter to BookingPanelScreen for proper navigation
+   - Fixed import issues and removed duplicate imports
+   - Ensured proper navigation between screens
+
+3. **Code Cleanup**:
+   - Removed unused methods like _showSearchAndFullGearList
+   - Cleaned up unused variables and imports
+   - Improved code organization and readability
+
+These changes have fixed critical build issues and improved the navigation consistency throughout the application. The dashboard now uses a standardized approach for all navigation, making the codebase more maintainable and the user experience more consistent.
+
 ## 2025-06-15: Database Schema Validation Implementation
 
 ### Part 1: Database Validator Implementation

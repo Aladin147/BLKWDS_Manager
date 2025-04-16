@@ -8,6 +8,7 @@ import 'theme/blkwds_constants.dart';
 import 'theme/blkwds_colors.dart';
 import 'theme/blkwds_typography.dart';
 import 'widgets/blkwds_widgets.dart';
+import 'routes/app_routes.dart';
 
 /// BLKWDSApp
 /// The main application widget
@@ -45,21 +46,13 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
     return MaterialApp(
       title: Constants.appName,
       theme: BLKWDSTheme.theme,
-      home: const DashboardScreen(),
+      initialRoute: AppRoutes.dashboard,
       navigatorKey: _navigationService.navigatorKey,
       debugShowCheckedModeBanner: false,
       // Define named routes
-      routes: {
-        '/dashboard': (context) => const DashboardScreen(),
-        '/booking-panel': (context) => const BookingPanelScreen(),
-        '/calendar': (context) => const CalendarScreen(),
-        '/settings': (context) => const SettingsScreen(),
-        '/add-gear': (context) => const AddGearScreen(),
-        '/member-management': (context) => const MemberListScreen(),
-        '/project-management': (context) => const ProjectListScreen(),
-        '/gear-management': (context) => const GearListScreen(),
-        '/studio-management': (context) => const StudioManagementScreen(),
-      },
+      routes: AppRoutes.routes,
+      // Generate routes for dynamic routes or routes with parameters
+      onGenerateRoute: AppRoutes.onGenerateRoute,
       // Add error handling for navigation/routing errors
       onUnknownRoute: (settings) {
         LogService.error('Unknown route: ${settings.name}');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/blkwds_animations.dart';
 import '../services/log_service.dart';
+import '../routes/app_routes.dart';
 
 /// Navigation service for BLKWDS Manager
 ///
@@ -105,24 +106,25 @@ class NavigationService {
   /// Navigate to dashboard
   Future<T?> navigateToDashboard<T>({bool clearStack = true}) async {
     return navigateToNamed<T>(
-      '/dashboard',
+      AppRoutes.dashboard,
       transitionType: BLKWDSPageTransitionType.fade,
       clearStack: clearStack,
     );
   }
 
   /// Navigate to booking panel
-  Future<T?> navigateToBookingPanel<T>() async {
+  Future<T?> navigateToBookingPanel<T>({String? filter}) async {
     return navigateToNamed<T>(
-      '/booking-panel',
+      AppRoutes.bookingPanel,
       transitionType: BLKWDSPageTransitionType.bottomToTop,
+      arguments: filter != null ? {'filter': filter} : null,
     );
   }
 
   /// Navigate to calendar
   Future<T?> navigateToCalendar<T>() async {
     return navigateToNamed<T>(
-      '/calendar',
+      AppRoutes.calendar,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
@@ -130,7 +132,7 @@ class NavigationService {
   /// Navigate to settings
   Future<T?> navigateToSettings<T>() async {
     return navigateToNamed<T>(
-      '/settings',
+      AppRoutes.settings,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
@@ -138,7 +140,7 @@ class NavigationService {
   /// Navigate to add gear
   Future<T?> navigateToAddGear<T>() async {
     return navigateToNamed<T>(
-      '/add-gear',
+      AppRoutes.addGear,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
@@ -146,7 +148,7 @@ class NavigationService {
   /// Navigate to member management
   Future<T?> navigateToMemberManagement<T>() async {
     return navigateToNamed<T>(
-      '/member-management',
+      AppRoutes.memberManagement,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
@@ -154,7 +156,7 @@ class NavigationService {
   /// Navigate to project management
   Future<T?> navigateToProjectManagement<T>() async {
     return navigateToNamed<T>(
-      '/project-management',
+      AppRoutes.projectManagement,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
@@ -162,8 +164,25 @@ class NavigationService {
   /// Navigate to gear management
   Future<T?> navigateToGearManagement<T>() async {
     return navigateToNamed<T>(
-      '/gear-management',
+      AppRoutes.gearManagement,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to studio management
+  Future<T?> navigateToStudioManagement<T>() async {
+    return navigateToNamed<T>(
+      AppRoutes.studioManagement,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to activity log
+  Future<T?> navigateToActivityLog<T>({dynamic controller}) async {
+    return navigateToNamed<T>(
+      AppRoutes.activityLog,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+      arguments: controller != null ? {'controller': controller} : null,
     );
   }
 }

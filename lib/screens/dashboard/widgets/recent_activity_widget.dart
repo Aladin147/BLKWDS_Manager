@@ -4,7 +4,8 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../utils/date_formatter.dart';
-import '../../activity/activity_log_screen.dart';
+import '../../../services/navigation_service.dart';
+import '../../../widgets/blkwds_button.dart';
 import '../dashboard_controller.dart';
 
 /// RecentActivityWidget
@@ -62,21 +63,17 @@ class RecentActivityWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              TextButton.icon(
+              BLKWDSButton(
                 onPressed: () {
-                  // Navigate to a full activity log screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ActivityLogScreen(controller: controller),
-                    ),
+                  // Navigate to a full activity log screen using NavigationService
+                  NavigationService().navigateToActivityLog(
+                    controller: controller,
                   );
                 },
-                icon: const Icon(Icons.visibility),
-                label: const Text('View All'),
-                style: TextButton.styleFrom(
-                  foregroundColor: BLKWDSColors.accentTeal,
-                ),
+                label: 'View All',
+                icon: Icons.visibility,
+                type: BLKWDSButtonType.secondary,
+                isSmall: true,
               ),
             ],
           ),

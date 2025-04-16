@@ -5,21 +5,11 @@ import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../utils/constants.dart';
 import '../../services/navigation_service.dart';
-
-
 import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../add_gear/add_gear_screen.dart';
-import '../booking_panel/booking_panel_screen.dart';
 import '../calendar/calendar_screen.dart';
 import '../settings/settings_screen.dart';
-import '../member_management/member_list_screen.dart';
-import '../project_management/project_list_screen.dart';
-import '../gear_management/gear_list_screen.dart';
-import '../studio_management/studio_management_screen.dart';
-import 'dashboard_adapter.dart';
 import 'dashboard_controller.dart';
-import 'dashboard_controller_v2.dart';
 import 'widgets/top_bar_summary_widget.dart';
 import 'widgets/quick_actions_panel.dart';
 import 'widgets/today_booking_widget.dart';
@@ -36,68 +26,41 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Controllers for database operations and state management
+  // Controller for database operations and state management
   late DashboardController _controller;
-  DashboardControllerV2? _controllerV2;
-  late DashboardAdapter _adapter;
 
   // Selected member for checkout
   Member? _selectedMember;
-
-  // Search query
-  String _searchQuery = '';
-
-  // Filtered gear list
-  List<Gear> _filteredGear = [];
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize controllers based on feature flags
-    _initializeControllers();
+    // Initialize controller
+    _initializeController();
 
     // Initialize data and load data
     _initializeData();
-
-    // Listen for changes in gear list
-    _controller.gearList.addListener(_updateFilteredGear);
 
     // Listen for changes in member list
     _controller.memberList.addListener(_updateSelectedMember);
   }
 
-  // Initialize controllers
-  void _initializeControllers() {
+  // Initialize controller
+  void _initializeController() {
     _controller = DashboardController();
-    _controllerV2 = DashboardControllerV2();
-    _adapter = DashboardAdapter(controllerV1: _controller, controllerV2: _controllerV2);
 
     // Set the context for error handling
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.setContext(context);
-      _controllerV2?.setContext(context);
     });
   }
 
   // Initialize data from database
   Future<void> _initializeData() async {
-    // Initialize controllers
+    // Initialize controller
     await _controller.initialize();
-
-    if (_controllerV2 != null) {
-      await _controllerV2!.initialize();
-    }
-
-    _updateFilteredGear();
     _updateSelectedMember();
-  }
-
-  // Update filtered gear list when gear list or search query changes
-  void _updateFilteredGear() {
-    setState(() {
-      _filteredGear = _controller.searchGear(_searchQuery);
-    });
   }
 
   // Update selected member when member list changes
@@ -111,11 +74,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    // Clean up controllers
-    _controller.gearList.removeListener(_updateFilteredGear);
+    // Clean up controller
     _controller.memberList.removeListener(_updateSelectedMember);
     _controller.dispose();
-    _controllerV2?.dispose();
     super.dispose();
   }
 
@@ -173,20 +134,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: const Icon(Icons.calendar_month),
             tooltip: 'Calendar',
             onPressed: () {
-              NavigationService().navigateTo(
-                const CalendarScreen(),
-                transitionType: BLKWDSPageTransitionType.fade,
-              );
+              NavigationService().navigateToCalendar();
             },
           ),
           IconButton(
             icon: const Icon(Icons.settings),
             tooltip: 'Settings',
             onPressed: () {
-              NavigationService().navigateTo(
-                const SettingsScreen(),
-                transitionType: BLKWDSPageTransitionType.fade,
-              );
+              NavigationService().navigateToSettings();
             },
           ),
         ],
@@ -295,62 +250,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 flex: 1,
                                 child: QuickActionsPanel(
                                   onAddGear: () async {
-                                    final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const AddGearScreen(),
-                                      ),
-                                    );
+                                    final result = await NavigationService().navigateToAddGear();
 
                                     if (result == true) {
                                       // Refresh data when returning from add gear screen
                                       await _controller.initialize();
-                                      _updateFilteredGear();
                                     }
                                   },
                                   onOpenBookingPanel: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const BookingPanelScreen(),
-                                      ),
-                                    );
+                                    NavigationService().navigateToBookingPanel();
                                   },
                                   onManageMembers: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const MemberListScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
-                                    );
+                                    NavigationService().navigateToMemberManagement();
                                   },
                                   onManageProjects: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const ProjectListScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
-                                    );
+                                    NavigationService().navigateToProjectManagement();
                                   },
                                   onManageGear: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const GearListScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
-                                    );
+                                    NavigationService().navigateToGearManagement();
                                   },
                                   onManageStudios: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const StudioManagementScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
-                                    );
+                                    NavigationService().navigateToStudioManagement();
                                   },
                                 ),
                               ),
@@ -367,8 +287,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     onCheckout: _handleCheckout,
                                     onReturn: _handleReturn,
                                     onViewAllGear: () {
-                                      // Show search bar and full gear list
-                                      _showSearchAndFullGearList(context);
+                                      // Navigate to gear management screen
+                                      NavigationService().navigateToGearManagement();
                                     },
                                   ),
                                 ),
@@ -382,46 +302,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 height: 300,
                                 child: QuickActionsPanel(
                                   onAddGear: () async {
-                                    final result = await NavigationService().navigateTo(
-                                      const AddGearScreen(),
-                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                    );
+                                    final result = await NavigationService().navigateToAddGear();
 
                                     if (result == true) {
                                       // Refresh data when returning from add gear screen
                                       await _controller.initialize();
-                                      _updateFilteredGear();
                                     }
                                   },
                                   onOpenBookingPanel: () {
-                                    NavigationService().navigateTo(
-                                      const BookingPanelScreen(),
-                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                    );
+                                    NavigationService().navigateToBookingPanel();
                                   },
                                   onManageMembers: () {
-                                    NavigationService().navigateTo(
-                                      const MemberListScreen(),
-                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                    );
+                                    NavigationService().navigateToMemberManagement();
                                   },
                                   onManageProjects: () {
-                                    NavigationService().navigateTo(
-                                      const ProjectListScreen(),
-                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                    );
+                                    NavigationService().navigateToProjectManagement();
                                   },
                                   onManageGear: () {
-                                    NavigationService().navigateTo(
-                                      const GearListScreen(),
-                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                    );
+                                    NavigationService().navigateToGearManagement();
                                   },
                                   onManageStudios: () {
-                                    NavigationService().navigateTo(
-                                      const StudioManagementScreen(),
-                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                    );
+                                    NavigationService().navigateToStudioManagement();
                                   },
                                 ),
                               ),
@@ -436,8 +337,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onCheckout: _handleCheckout,
                                   onReturn: _handleReturn,
                                   onViewAllGear: () {
-                                    // Show search bar and full gear list
-                                    _showSearchAndFullGearList(context);
+                                    // Navigate to gear management screen
+                                    NavigationService().navigateToGearManagement();
                                   },
                                 ),
                               ),
@@ -454,8 +355,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       height: 250, // Fixed height for today's bookings
                       child: TodayBookingWidget(
                         controller: _controller,
-                        controllerV2: _controllerV2,
-                        adapter: _adapter,
                       ),
                     ),
                   ),
@@ -481,131 +380,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         );
       },
-    );
-  }
-
-  // Show search bar and full gear list in a modal bottom sheet
-  void _showSearchAndFullGearList(BuildContext context) {
-    BLKWDSBottomSheet.show(
-      context: context,
-      type: BLKWDSBottomSheetType.fullScreen,
-      initialChildSize: 0.9,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
-      child: Column(
-        children: [
-
-          // Search bar
-          Padding(
-            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-            child: BLKWDSTextField(
-              label: 'Search Gear',
-              prefixIcon: Icons.search,
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                  _updateFilteredGear();
-                });
-              },
-            ),
-          ),
-
-          // Gear list
-          Expanded(
-            child: _filteredGear.isEmpty
-                ? Center(
-                    child: Text(
-                      'No gear found',
-                      style: BLKWDSTypography.bodyLarge,
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _filteredGear.length,
-                    itemBuilder: (context, index) {
-                      final gear = _filteredGear[index];
-                      return _buildGearCard(gear);
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Build a gear card
-  Widget _buildGearCard(Gear gear) {
-    return BLKWDSCard(
-      margin: const EdgeInsets.symmetric(
-        horizontal: BLKWDSConstants.spacingMedium,
-        vertical: BLKWDSConstants.spacingSmall,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Row(
-          children: [
-            // Gear thumbnail placeholder
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: BLKWDSColors.slateGrey.withValues(alpha: BLKWDSColors.alphaVeryLow.toDouble()),
-                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
-              ),
-              child: const Icon(Icons.camera_alt),
-            ),
-            const SizedBox(width: BLKWDSConstants.spacingMedium),
-            // Gear info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    gear.name,
-                    style: BLKWDSTypography.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    gear.category,
-                    style: BLKWDSTypography.bodyMedium,
-                  ),
-                  if (gear.lastNote != null && gear.lastNote!.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'Note: ${gear.lastNote}',
-                      style: BLKWDSTypography.bodyMedium.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            // Status badge
-            BLKWDSStatusBadge(
-              text: gear.isOut ? 'OUT' : 'IN',
-              color: gear.isOut
-                  ? BLKWDSColors.statusOut
-                  : BLKWDSColors.statusIn,
-              icon: gear.isOut ? Icons.logout : Icons.check_circle,
-            ),
-            const SizedBox(width: BLKWDSConstants.spacingMedium),
-            // Action button
-            gear.isOut
-                ? BLKWDSButton(
-                    label: 'Return',
-                    onPressed: () => _handleReturn(gear),
-                    type: BLKWDSButtonType.secondary,
-                    isSmall: true,
-                  )
-                : BLKWDSButton(
-                    label: 'Check Out',
-                    onPressed: () => _handleCheckout(gear),
-                    type: BLKWDSButtonType.primary,
-                    isSmall: true,
-                  ),
-          ],
-        ),
-      ),
     );
   }
 }

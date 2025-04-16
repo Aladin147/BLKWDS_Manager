@@ -10,27 +10,19 @@ import '../../../widgets/blkwds_card.dart';
 import '../../../widgets/blkwds_icon_container.dart';
 import '../../../widgets/blkwds_status_badge.dart';
 
-import '../dashboard_adapter.dart';
+import '../../../services/navigation_service.dart';
+
 import '../dashboard_controller.dart';
-import '../dashboard_controller_v2.dart';
 
 /// TodayBookingWidget
 /// Displays bookings scheduled for today
-/// Works with both DashboardController and DashboardControllerV2
 class TodayBookingWidget extends StatelessWidget {
-  final DashboardController? controller;
-  final DashboardControllerV2? controllerV2;
-  final DashboardAdapter? adapter;
+  final DashboardController controller;
 
   const TodayBookingWidget({
     super.key,
-    this.controller,
-    this.controllerV2,
-    this.adapter,
-  }) : assert(
-          (controller != null) || (controllerV2 != null) || (adapter != null),
-          'At least one of controller, controllerV2, or adapter must be provided',
-        );
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +60,9 @@ class TodayBookingWidget extends StatelessWidget {
               BLKWDSButton(
                 label: 'View All',
                 onPressed: () {
-                  // This would navigate to a full bookings screen in a real app
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('View all bookings would open here'),
-                      duration: Duration(seconds: 2),
-                    ),
+                  // Navigate to booking panel with today's filter
+                  NavigationService().navigateToBookingPanel(
+                    filter: 'today',
                   );
                 },
                 type: BLKWDSButtonType.secondary,
@@ -126,47 +115,17 @@ class TodayBookingWidget extends StatelessWidget {
   }
 
   // Get bookings for today
-  Future<List<dynamic>> _getTodayBookings() async {
-    // If adapter is provided, use it
-    if (adapter != null) {
-      return adapter!.getTodayBookings();
-    }
-
-    // If controllerV2 is provided, use it
-    if (controllerV2 != null) {
-      return controllerV2!.getTodayBookings();
-    }
-
-    // If controller is provided, use it
-    if (controller != null) {
-      return controller!.getTodayBookings();
-    }
-
-    return [];
+  Future<List<Booking>> _getTodayBookings() async {
+    return controller.getTodayBookings();
   }
 
   // Build a booking item
-  Widget _buildBookingItem(BuildContext context, dynamic booking) {
-    // Get project ID based on booking type
-    final projectId = booking is BookingV2 ? booking.projectId : (booking as Booking).projectId;
-
+  Widget _buildBookingItem(BuildContext context, Booking booking) {
     // Get project name
-    Project? project;
-    if (adapter != null) {
-      project = adapter!.getProjectById(projectId);
-    } else if (controllerV2 != null) {
-      project = controllerV2!.projectList.value.firstWhere(
-        (p) => p.id == projectId,
-        orElse: () => Project(id: 0, title: 'Unknown Project'),
-      );
-    } else if (controller != null) {
-      project = controller!.projectList.value.firstWhere(
-        (p) => p.id == projectId,
-        orElse: () => Project(id: 0, title: 'Unknown Project'),
-      );
-    } else {
-      project = Project(id: 0, title: 'Unknown Project');
-    }
+    final project = controller.projectList.value.firstWhere(
+      (p) => p.id == booking.projectId,
+      orElse: () => Project(id: 0, title: 'Unknown Project'),
+    );
 
     // Get assigned members
     final assignedMembers = <Member>[];
@@ -175,25 +134,11 @@ class TodayBookingWidget extends StatelessWidget {
     if (assignedGearToMember != null) {
       final memberIds = assignedGearToMember.values.toSet();
       for (final memberId in memberIds) {
-        Member? member;
-        if (adapter != null) {
-          member = adapter!.getMemberById(memberId);
-        } else if (controllerV2 != null) {
-          member = controllerV2!.memberList.value.firstWhere(
-            (m) => m.id == memberId,
-            orElse: () => Member(id: 0, name: 'Unknown'),
-          );
-        } else if (controller != null) {
-          member = controller!.memberList.value.firstWhere(
-            (m) => m.id == memberId,
-            orElse: () => Member(id: 0, name: 'Unknown'),
-          );
-        } else {
-          member = Member(id: 0, name: 'Unknown');
-        }
-        if (member != null) {
-          assignedMembers.add(member);
-        }
+        final member = controller.memberList.value.firstWhere(
+          (m) => m.id == memberId,
+          orElse: () => Member(id: 0, name: 'Unknown'),
+        );
+        assignedMembers.add(member);
       }
     }
 
@@ -206,19 +151,10 @@ class TodayBookingWidget extends StatelessWidget {
 
     Gear? firstGear;
     if (firstGearId != null) {
-      if (adapter != null) {
-        firstGear = adapter!.getGearById(firstGearId);
-      } else if (controllerV2 != null) {
-        firstGear = controllerV2!.gearList.value.firstWhere(
-          (g) => g.id == firstGearId,
-          orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
-        );
-      } else if (controller != null) {
-        firstGear = controller!.gearList.value.firstWhere(
-          (g) => g.id == firstGearId,
-          orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
-        );
-      }
+      firstGear = controller.gearList.value.firstWhere(
+        (g) => g.id == firstGearId,
+        orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
+      );
     }
 
     return BLKWDSCard(
@@ -245,7 +181,7 @@ class TodayBookingWidget extends StatelessWidget {
                 children: [
                   // Project name
                   Text(
-                    project?.title ?? 'Unknown Project',
+                    project.title,
                     style: BLKWDSTypography.titleSmall,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -310,19 +246,10 @@ class TodayBookingWidget extends StatelessWidget {
   }
 
   // Get icon for booking based on type
-  IconData _getBookingIcon(dynamic booking, Gear? firstGear) {
-    // If adapter is provided, use it
-    if (adapter != null) {
-      return adapter!.getBookingIcon(booking, firstGear);
-    }
-
-    // Handle BookingV2
-    if (booking is BookingV2 && booking.studioId != null) {
-      Studio? studio;
-      if (controllerV2 != null) {
-        studio = controllerV2!.getStudioById(booking.studioId!);
-      }
-
+  IconData _getBookingIcon(Booking booking, Gear? firstGear) {
+    // Check if booking has a studio ID
+    if (booking.studioId != null) {
+      final studio = controller.getStudioById(booking.studioId!);
       if (studio != null) {
         switch (studio.type) {
           case StudioType.recording:
@@ -334,13 +261,11 @@ class TodayBookingWidget extends StatelessWidget {
         }
       }
     }
-    // Handle Booking
-    else if (booking is Booking) {
-      if (booking.isRecordingStudio) {
-        return Icons.mic;
-      } else if (booking.isProductionStudio) {
-        return Icons.videocam;
-      }
+    // Handle legacy studio flags
+    else if (booking.isRecordingStudio) {
+      return Icons.mic;
+    } else if (booking.isProductionStudio) {
+      return Icons.videocam;
     }
 
     if (firstGear != null) {
@@ -361,24 +286,9 @@ class TodayBookingWidget extends StatelessWidget {
   }
 
   // Format booking time
-  String _formatBookingTime(dynamic booking) {
-    // If adapter is provided, use it
-    if (adapter != null) {
-      return adapter!.formatBookingTime(booking);
-    }
-
-    DateTime startDate;
-    DateTime endDate;
-
-    if (booking is BookingV2) {
-      startDate = booking.startDate;
-      endDate = booking.endDate;
-    } else if (booking is Booking) {
-      startDate = booking.startDate;
-      endDate = booking.endDate;
-    } else {
-      return '';
-    }
+  String _formatBookingTime(Booking booking) {
+    final startDate = booking.startDate;
+    final endDate = booking.endDate;
 
     final startTime = TimeOfDay.fromDateTime(startDate);
     final endTime = TimeOfDay.fromDateTime(endDate);

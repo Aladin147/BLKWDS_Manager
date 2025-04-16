@@ -8,12 +8,11 @@ import '../../services/error_service.dart';
 import '../../services/error_type.dart';
 import '../../services/retry_service.dart';
 import '../../services/retry_strategy.dart';
-import '../../services/recovery_service.dart';
-
 import '../../utils/constants.dart';
 
 /// DashboardController
 /// Handles business logic and database operations for the dashboard screen
+/// Consolidated controller that combines functionality from previous versions
 class DashboardController {
   // Build context for error handling
   BuildContext? context;
@@ -22,6 +21,7 @@ class DashboardController {
   final ValueNotifier<List<Member>> memberList = ValueNotifier<List<Member>>([]);
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
   final ValueNotifier<List<Booking>> bookingList = ValueNotifier<List<Booking>>([]);
+  final ValueNotifier<List<Studio>> studioList = ValueNotifier<List<Studio>>([]);
   final ValueNotifier<List<ActivityLog>> recentActivity = ValueNotifier<List<ActivityLog>>([]);
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
@@ -43,6 +43,7 @@ class DashboardController {
         _loadMembers(),
         _loadProjects(),
         _loadBookings(),
+        _loadStudios(),
         _loadRecentActivity(),
       ]);
     } catch (e, stackTrace) {
@@ -190,6 +191,40 @@ class DashboardController {
       }
 
       rethrow;
+    }
+  }
+
+  // Load studios from database
+  Future<void> _loadStudios() async {
+    try {
+      // Use retry logic for database operations
+      final studios = await RetryService.retry<List<Studio>>(
+        operation: () => DBService.getAllStudios(),
+        maxAttempts: 3,
+        strategy: RetryStrategy.exponential,
+        initialDelay: const Duration(milliseconds: 500),
+        retryCondition: RetryService.isRetryableError,
+      );
+
+      studioList.value = studios;
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading studios', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if the studio table doesn't exist
+      studioList.value = [];
     }
   }
 
@@ -433,6 +468,15 @@ class DashboardController {
     }).toList();
   }
 
+  // Get studio by ID
+  Studio? getStudioById(int id) {
+    try {
+      return studioList.value.firstWhere((studio) => studio.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Legacy conversion methods removed
 
   // Dispose resources
@@ -441,6 +485,7 @@ class DashboardController {
     memberList.dispose();
     projectList.dispose();
     bookingList.dispose();
+    studioList.dispose();
     recentActivity.dispose();
     isLoading.dispose();
     errorMessage.dispose();

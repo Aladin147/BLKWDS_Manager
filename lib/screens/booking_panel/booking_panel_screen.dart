@@ -19,7 +19,9 @@ import 'widgets/calendar_view_fixed.dart';
 /// BookingPanelScreen
 /// Screen for managing bookings
 class BookingPanelScreen extends StatefulWidget {
-  const BookingPanelScreen({super.key});
+  final String? initialFilter;
+
+  const BookingPanelScreen({super.key, this.initialFilter});
 
   @override
   State<BookingPanelScreen> createState() => _BookingPanelScreenState();
