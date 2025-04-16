@@ -27,6 +27,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   late int _selectedStudioId;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
   List<BookingV2> _bookings = [];
   bool _isLoading = true;
 
@@ -240,7 +241,12 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
           lastDay: DateTime.now().add(const Duration(days: 365)),
           focusedDay: _focusedDay,
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          calendarFormat: CalendarFormat.month,
+          calendarFormat: _calendarFormat,
+          onFormatChanged: (format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          },
           startingDayOfWeek: StartingDayOfWeek.monday,
           calendarStyle: const CalendarStyle(
             outsideDaysVisible: false,
@@ -302,7 +308,8 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
         ),
 
         // Bookings for selected day
-        Expanded(
+        SizedBox(
+          height: 300, // Fixed height to prevent overflow
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _buildBookingsForSelectedDay(),

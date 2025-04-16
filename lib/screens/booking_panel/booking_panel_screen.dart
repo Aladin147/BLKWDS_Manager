@@ -14,7 +14,7 @@ import 'booking_detail_screen_v2.dart';
 import 'booking_list_screen.dart';
 import 'widgets/booking_form.dart';
 import 'widgets/booking_form_adapter.dart';
-import 'widgets/calendar_view.dart';
+import 'widgets/calendar_view_fixed.dart';
 
 /// BookingPanelScreen
 /// Screen for managing bookings

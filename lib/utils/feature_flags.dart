@@ -5,7 +5,7 @@ class FeatureFlags {
   /// Whether to use the new studio-based booking system
   /// When true, the application will use BookingV2 and Studio models
   /// When false, the application will use the original Booking model with boolean flags
-  static const bool useStudioSystem = false;
+  static const bool useStudioSystem = true;
 
   /// Whether to show the studio management screen in the navigation
   static const bool showStudioManagement = true;
