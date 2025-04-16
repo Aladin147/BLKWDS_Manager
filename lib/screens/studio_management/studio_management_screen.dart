@@ -47,16 +47,40 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
     });
 
     try {
-      final studios = await DBService.getAllStudios();
-      final settings = await DBService.getStudioSettings();
+      // Try to load studios, but handle errors gracefully
+      List<Studio> studios = [];
+      StudioSettings? settings;
+
+      try {
+        studios = await DBService.getAllStudios();
+      } catch (e) {
+        // If studio table doesn't exist, just use an empty list
+        studios = [];
+        if (mounted) {
+          BLKWDSSnackbar.show(
+            context: context,
+            message: 'Studio system not available: $e',
+            type: BLKWDSSnackbarType.warning,
+          );
+        }
+      }
+
+      try {
+        settings = await DBService.getStudioSettings();
+      } catch (e) {
+        // If settings table doesn't exist, use defaults
+        settings = StudioSettings.defaults;
+      }
 
       setState(() {
         _studios = studios;
-        _studioSettings = settings ?? StudioSettings.defaults;
+        _studioSettings = settings;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
+        _studios = [];
+        _studioSettings = StudioSettings.defaults;
         _isLoading = false;
       });
 
@@ -218,10 +242,14 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
               controller: _tabController,
               children: [
                 _buildStudiosTab(),
-                StudioAvailabilityCalendar(
-                  studios: _studios,
-                  settings: _studioSettings!,
-                ),
+                _studioSettings != null
+                    ? StudioAvailabilityCalendar(
+                        studios: _studios,
+                        settings: _studioSettings!,
+                      )
+                    : const Center(
+                        child: Text('Studio settings not available'),
+                      ),
               ],
             ),
       floatingActionButton: _tabController.index == 0
@@ -242,7 +270,7 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
             )
           : _showSettingsForm
               ? StudioSettingsForm(
-                  settings: _studioSettings!,
+                  settings: _studioSettings ?? StudioSettings.defaults,
                   onSave: _saveStudioSettings,
                   onCancel: () => setState(() {
                     _showSettingsForm = false;
