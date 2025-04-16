@@ -147,16 +147,45 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✓ Add missing documentation
    - ✓ Standardize naming conventions
 
-5. **Testing** (1-2 days)
+5. **Dashboard UI Standardization** (In Progress)
+   - Fix Layout Issues
+     - [ ] Fix indentation in top_bar_summary_widget.dart
+     - [ ] Make summary cards responsive by using Flexible or FractionallySizedBox
+     - [ ] Add SizedBox wrapper to studio booking info card for consistency
+     - [ ] Replace fixed heights with Expanded or Flexible widgets
+     - [ ] Standardize padding using BLKWDSConstants
+     - [ ] Improve responsive layout with more breakpoints
+   - Standardize Components
+     - [ ] Replace DropdownButtonFormField with BLKWDSDropdown
+     - [ ] Replace TextButton.icon with BLKWDSButton
+     - [ ] Replace CircularProgressIndicator with BLKWDSLoadingSpinner
+     - [ ] Replace Card with BLKWDSCard
+     - [ ] Create a BLKWDSIconContainer component for the repeated icon container pattern
+     - [ ] Create a BLKWDSBottomSheet component for the modal bottom sheet
+   - Standardize Styles
+     - [ ] Standardize alpha values for similar elements
+     - [ ] Use BLKWDSColors constants consistently
+     - [ ] Create a clear typography hierarchy
+     - [ ] Use predefined text styles instead of direct modifications
+     - [ ] Standardize spacing using BLKWDSConstants
+   - Fix Non-functional Elements
+     - [ ] Standardize navigation using NavigationService().navigateTo()
+     - [ ] Implement proper "View All" functionality or remove the button
+     - [ ] Replace placeholder icons with proper images or standardized icons
+   - Improve Accessibility
+     - [ ] Increase minimum icon sizes to 18px
+     - [ ] Ensure text is readable even when truncated
+
+6. **Testing** (1-2 days)
    - Comprehensive testing of all features
    - Fix any regressions
    - Performance optimization
 
-6. **Declare Phase 1 Complete**
+7. **Declare Phase 1 Complete**
    - Tag codebase as v1.0.0
    - Update all documentation
 
-7. **Begin Phase 2**
+8. **Begin Phase 2**
    - Implement undo functionality
    - Add bulk gear management
    - Create booking templates
