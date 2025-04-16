@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc9 (Release Candidate 9)
+**Version:** 1.0.0-rc10 (Release Candidate 10)
 **Last Updated:** 2025-06-13
 
 ## Project Phase
@@ -37,9 +37,9 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [ ] Create comprehensive testing checklist
 
 4. **UI/UX Improvements**
-   - [ ] Fix non-functional filter chips in Gear Preview List
-   - [ ] Hide debug menu in production builds
-   - [ ] Standardize button styles across the app
+   - [x] Fix non-functional filter chips in Gear Preview List
+   - [x] Hide debug menu in production builds
+   - [x] Standardize button styles across the app
    - [ ] Verify and complete Export to CSV functionality
    - [ ] Improve dashboard layout responsiveness
    - [ ] Standardize navigation patterns
@@ -47,6 +47,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [ ] Make demo data in Reset function configurable
    - [ ] Clean up unused controllers and adapters
    - [ ] Enhance error handling in UI components
+
+5. **Style Unification**
+   - [ ] Standardize background colors across all screens
+   - [ ] Standardize shadow styles for all cards and elevated surfaces
+   - [ ] Improve layout responsiveness by replacing fixed heights
+   - [ ] Ensure consistent typography usage across all screens
+   - [ ] Standardize component usage (buttons, text fields, etc.)
+   - [ ] Standardize navigation patterns and transitions
+   - [ ] Remove all references to light mode/theme switching (dark mode only)
+   - [ ] Create consistent card styling across the application
 
 ## Feature Status
 
@@ -92,10 +102,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 12. No consistent navigation system (IDENTIFIED in v0.14.0)
 13. Limited data management and reporting capabilities (IDENTIFIED in v0.14.0)
 14. ~~Dashboard layout issues where the app appears incorrectly formatted on initial launch but improves after manual window resizing~~ (FIXED in v0.19.0)
-15. Non-functional filter chips in Gear Preview List (IDENTIFIED in v0.29.0)
-16. Debug menu always visible in Settings screen (IDENTIFIED in v0.29.0)
-17. Inconsistent button styles across the application (IDENTIFIED in v0.29.0)
+15. ~~Non-functional filter chips in Gear Preview List~~ (FIXED in v0.30.0)
+16. ~~Debug menu always visible in Settings screen~~ (FIXED in v0.30.0)
+17. ~~Inconsistent button styles across the application~~ (FIXED in v0.30.0)
 18. Hardcoded heights in dashboard layout affecting responsiveness (IDENTIFIED in v0.29.0)
+19. Inconsistent background colors across screens (IDENTIFIED in v0.31.0)
+20. Inconsistent shadow styles for cards and elevated surfaces (IDENTIFIED in v0.31.0)
+21. Inconsistent typography usage across screens (IDENTIFIED in v0.31.0)
+22. Inconsistent component usage (buttons, text fields, etc.) (IDENTIFIED in v0.31.0)
+23. Remnant references to light mode/theme switching (IDENTIFIED in v0.31.0)
+24. Inconsistent card styling across the application (IDENTIFIED in v0.31.0)
 
 ## Next Steps
 
@@ -158,6 +174,43 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.31.0 - Style Audit (2025-06-13)
+
+**Added:**
+
+- Comprehensive style audit to identify inconsistencies across the application
+- Detailed implementation plan for style unification
+
+**Identified Issues:**
+
+- Inconsistent background colors across screens
+- Inconsistent shadow styles for cards and elevated surfaces
+- Fixed heights causing layout issues on different screen sizes
+- Inconsistent typography usage across screens
+- Inconsistent component usage (buttons, text fields, etc.)
+- Mix of MaterialPageRoute and BLKWDSPageRoute for navigation
+- Remnant references to light mode/theme switching
+- Inconsistent card styling across the application
+
+**Changed:**
+
+- Updated project status document with style audit findings
+- Clarified that the application should use dark mode exclusively
+
+### v0.30.0 - UI/UX Improvements (2025-06-13)
+
+**Fixed:**
+
+- Non-functional filter chips in Gear Preview List
+- Debug menu visibility in production builds
+- Inconsistent button styles across the application
+
+**Changed:**
+
+- Converted GearPreviewListWidget to StatefulWidget to support filtering
+- Used kDebugMode to conditionally show debug menu
+- Standardized button styles using BLKWDSButton component
 
 ### v0.29.0 - UI/UX Audit (2025-06-13)
 

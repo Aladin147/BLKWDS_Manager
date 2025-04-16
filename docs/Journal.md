@@ -1,5 +1,34 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Style Audit
+
+Today we conducted a comprehensive style audit to identify inconsistencies across the application. Our goal is to create a unified, consistent UI experience for users. Here are our key findings:
+
+1. **Color Inconsistencies**:
+   - Inconsistent background colors across screens (mix of backgroundDark, backgroundMedium, white, etc.)
+   - Inconsistent shadow styles (different colors, blur radii, and offsets)
+   - Inconsistent status indicator styling
+
+2. **Layout Inconsistencies**:
+   - Inconsistent container padding
+   - Fixed heights causing layout issues on different screen sizes
+   - Inconsistent card styling (some using BLKWDSCard, others using custom Container)
+
+3. **Typography Inconsistencies**:
+   - Inconsistent use of typography styles
+   - Inconsistent font weights for similar UI elements
+
+4. **Component Usage Inconsistencies**:
+   - Inconsistent button sizing and placement
+   - Mix of BLKWDSTextField and standard Flutter TextField
+   - Mix of MaterialPageRoute and BLKWDSPageRoute for navigation
+
+5. **Theme Usage**:
+   - Mix of direct color references and theme properties
+   - Remnant references to light mode/theme switching (we've decided to focus exclusively on dark mode)
+
+We've created a detailed implementation plan to address these issues and will begin implementing the changes immediately, starting with standardizing background colors and removing light mode references.
+
 ## 2025-06-13: UI/UX Audit
 
 Today we conducted a comprehensive UI/UX audit to identify remaining issues before the final release:
