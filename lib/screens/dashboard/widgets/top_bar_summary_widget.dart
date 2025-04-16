@@ -72,8 +72,8 @@ class TopBarSummaryWidget extends StatelessWidget {
     required IconData icon,
   }) {
     return Flexible(
-      child: SizedBox(
-        width: 180,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 150, maxWidth: 220),
         child: BLKWDSCard(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           child: Column(
@@ -144,11 +144,12 @@ class TopBarSummaryWidget extends StatelessWidget {
     final studioBooking = _getStudioBookingToday();
     final isBooked = studioBooking != null && studioBooking.projectId != -1;
 
-    return SizedBox(
-      width: 180,
-      child: BLKWDSCard(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Column(
+    return Flexible(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 150, maxWidth: 220),
+        child: BLKWDSCard(
+          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -195,6 +196,7 @@ class TopBarSummaryWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }
