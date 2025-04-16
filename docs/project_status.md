@@ -152,11 +152,11 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Fix indentation in top_bar_summary_widget.dart
      - [x] Make summary cards responsive by using Flexible or FractionallySizedBox
      - [x] Add SizedBox wrapper to studio booking info card for consistency
-     - [ ] Replace fixed heights with Expanded or Flexible widgets
+     - [ ] Replace fixed heights with Expanded or Flexible widgets (Requires more complex refactoring)
      - [ ] Standardize padding using BLKWDSConstants
      - [ ] Improve responsive layout with more breakpoints
    - Standardize Components
-     - [ ] Replace DropdownButtonFormField with BLKWDSDropdown
+     - [x] Replace DropdownButtonFormField with BLKWDSDropdown
      - [ ] Replace TextButton.icon with BLKWDSButton
      - [ ] Replace CircularProgressIndicator with BLKWDSLoadingSpinner
      - [ ] Replace Card with BLKWDSCard

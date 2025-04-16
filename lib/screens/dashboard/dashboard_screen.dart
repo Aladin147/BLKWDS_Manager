@@ -263,30 +263,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         // Member dropdown
                         Expanded(
-                          child: DropdownButtonFormField<Member>(
-                            decoration: InputDecoration(
-                              labelText: 'Select Member',
-                              labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                                borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                                borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: BLKWDSConstants.inputHorizontalPadding,
-                                vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                              ),
-                              filled: true,
-                              fillColor: BLKWDSColors.inputBackground,
-                            ),
-                            dropdownColor: BLKWDSColors.backgroundMedium,
-                            style: TextStyle(color: BLKWDSColors.textPrimary),
+                          child: BLKWDSDropdown<Member>(
+                            label: 'Select Member',
                             value: _selectedMember,
                             items: _controller.memberList.value.map((member) {
                               return DropdownMenuItem<Member>(
