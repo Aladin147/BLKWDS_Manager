@@ -35,7 +35,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Selected booking for editing
   Booking? _selectedBooking;
-  BookingV2? _tempBookingV2;
+  Booking? _tempBookingV2;
 
   // Show booking form
   bool _showBookingForm = false;
@@ -261,8 +261,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
           final defaultEndDate = defaultStartDate.add(const Duration(hours: 2));
 
-          // We'll create a temporary BookingV2 object and pass it to the form
-          _tempBookingV2 = BookingV2(
+          // We'll create a temporary Booking object and pass it to the form
+          _tempBookingV2 = Booking(
             projectId: defaultProject,
             title: 'New Booking',
             startDate: defaultStartDate,
@@ -282,17 +282,17 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
     );
   }
 
-  // Handle booking rescheduling for both Booking and BookingV2
+  // Handle booking rescheduling
   void _handleBookingRescheduleGeneric(dynamic booking, DateTime newStartDate) async {
-    if (booking is BookingV2 && _controllerV2 != null) {
+    if (_controllerV2 != null) {
       await _handleBookingRescheduleV2(booking, newStartDate);
-    } else if (booking is Booking) {
+    } else {
       await _handleBookingReschedule(booking, newStartDate);
     }
   }
 
   // Handle booking rescheduling for BookingV2
-  Future<void> _handleBookingRescheduleV2(BookingV2 booking, DateTime newStartDate) async {
+  Future<void> _handleBookingRescheduleV2(Booking booking, DateTime newStartDate) async {
     // Show a confirmation dialog
     final project = _controllerV2!.getProjectById(booking.projectId);
     final confirmed = await showDialog<bool>(
@@ -440,8 +440,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
-    if (booking is BookingV2 && _controllerV2 != null) {
-      // Use BookingDetailScreenV2 for BookingV2 objects
+    if (_controllerV2 != null) {
+      // Use BookingDetailScreenV2 for Booking objects with V2 controller
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -457,8 +457,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
           _controllerV2!.initialize();
         }
       });
-    } else if (booking is Booking) {
-      // Handle Booking detail navigation
+    } else {
+      // Handle Booking detail navigation with V1 controller
       Navigator.push(
         context,
         MaterialPageRoute(

@@ -8,12 +8,12 @@ import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'booking_panel_controller_v2.dart';
-import 'widgets/booking_form_v2.dart';
+import 'widgets/booking_form.dart';
 
 /// BookingDetailScreenV2
-/// Displays detailed information about a BookingV2 with tabs for different sections
+/// Displays detailed information about a Booking with tabs for different sections
 class BookingDetailScreenV2 extends StatefulWidget {
-  final BookingV2 booking;
+  final Booking booking;
   final BookingPanelControllerV2 controller;
 
   const BookingDetailScreenV2({
@@ -31,7 +31,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
   late TabController _tabController;
 
   // Booking data
-  late BookingV2 _booking;
+  late Booking _booking;
   late Project? _project;
   late Studio? _studio;
   late List<Gear> _gear;
@@ -116,7 +116,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
   }
 
   // Save booking
-  Future<void> _saveBooking(BookingV2 booking) async {
+  Future<void> _saveBooking(Booking booking) async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -912,7 +912,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: BookingFormV2(
+          child: BookingForm(
             controller: widget.controller,
             booking: _booking,
             onSave: _saveBooking,

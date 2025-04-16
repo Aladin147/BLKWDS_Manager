@@ -3,7 +3,7 @@ import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../utils/constants.dart';
-import '../../utils/booking_converter.dart';
+
 
 /// DashboardControllerV2
 /// Handles business logic and database operations for the dashboard screen
@@ -218,15 +218,7 @@ class DashboardControllerV2 {
     }).toList();
   }
 
-  // Convert BookingV2 to Booking for compatibility
-  Future<Booking> convertToBookingV1(BookingV2 bookingV2) async {
-    return await BookingConverter.toBooking(bookingV2);
-  }
-
-  // Convert a list of BookingV2 to a list of Booking for compatibility
-  Future<List<Booking>> convertToBookingV1List(List<BookingV2> bookingsV2) async {
-    return await BookingConverter.toBookingList(bookingsV2);
-  }
+  // Legacy conversion methods removed
 
   // Dispose resources
   void dispose() {

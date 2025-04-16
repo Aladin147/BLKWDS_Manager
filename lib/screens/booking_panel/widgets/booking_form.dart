@@ -13,8 +13,8 @@ import '../booking_panel_controller.dart';
 /// Form for creating and editing bookings
 class BookingForm extends StatefulWidget {
   final BookingPanelController controller;
-  final BookingV2? booking; // Null for new booking, non-null for editing
-  final Function(BookingV2) onSave;
+  final Booking? booking; // Null for new booking, non-null for editing
+  final Function(Booking) onSave;
   final VoidCallback onCancel;
 
   const BookingForm({
@@ -109,7 +109,7 @@ class _BookingFormState extends State<BookingForm> {
           : 'Booking for ${widget.controller.getProjectById(_selectedProjectId!)?.title ?? 'Unknown Project'}';
 
       // Create booking object
-      final booking = BookingV2(
+      final booking = Booking(
         id: widget.booking?.id,
         projectId: _selectedProjectId!,
         title: title,

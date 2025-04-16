@@ -7,11 +7,11 @@ import '../../../widgets/blkwds_widgets.dart';
 import '../booking_panel_controller_v2.dart';
 
 /// BookingFormV2
-/// Form for creating and editing BookingV2 objects
+/// Form for creating and editing Booking objects
 class BookingFormV2 extends StatefulWidget {
   final BookingPanelControllerV2 controller;
-  final BookingV2? booking;
-  final Function(BookingV2) onSave;
+  final Booking? booking;
+  final Function(Booking) onSave;
   final VoidCallback onCancel;
 
   const BookingFormV2({
@@ -95,7 +95,7 @@ class _BookingFormV2State extends State<BookingFormV2> {
   // Save the booking
   void _saveBooking() {
     if (_formKey.currentState!.validate()) {
-      final booking = BookingV2(
+      final booking = Booking(
         id: widget.booking?.id,
         projectId: _projectId,
         title: _titleController.text,

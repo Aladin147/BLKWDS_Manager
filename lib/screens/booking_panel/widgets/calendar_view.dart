@@ -157,7 +157,8 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       children: [
         // Calendar header with view toggle
         Padding(
@@ -444,6 +445,7 @@ class _CalendarViewState extends State<CalendarView> {
           ),
         ),
       ],
+    ),
     );
   }
 }

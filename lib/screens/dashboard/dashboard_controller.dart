@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
-import '../../utils/booking_converter.dart';
+
 import '../../utils/constants.dart';
 
 /// DashboardController
@@ -195,15 +195,7 @@ class DashboardController {
     }).toList();
   }
 
-  // Convert Booking to BookingV2 for compatibility
-  Future<BookingV2> convertToBookingV2(Booking booking) async {
-    return await BookingConverter.toBookingV2(booking);
-  }
-
-  // Convert a list of Booking to a list of BookingV2 for compatibility
-  Future<List<BookingV2>> convertToBookingV2List(List<Booking> bookings) async {
-    return await BookingConverter.toBookingV2List(bookings);
-  }
+  // Legacy conversion methods removed
 
   // Dispose resources
   void dispose() {

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../models/models.dart';
-import '../../../utils/booking_converter.dart';
-import '../../../utils/feature_flags.dart';
-import '../booking_panel_controller.dart';
+import '../booking_panel_controller_v2.dart';
 import 'booking_form.dart';
 
 /// BookingFormAdapter
-/// Adapter component that converts between Booking and BookingV2 models
-/// for use with the BookingForm component
+/// Adapter component that connects Booking models with the BookingFormV2 component
 class BookingFormAdapter extends StatelessWidget {
-  final BookingPanelController controller;
+  final BookingPanelControllerV2 controller;
   final Booking? booking; // Null for new booking, non-null for editing
   final Function(Booking) onSave;
   final VoidCallback onCancel;
@@ -24,24 +21,11 @@ class BookingFormAdapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<BookingV2?>(
-      future: booking != null ? BookingConverter.toBookingV2(booking!) : Future.value(null),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        
-        return BookingForm(
-          controller: controller,
-          booking: snapshot.data,
-          onSave: (bookingV2) async {
-            // Convert BookingV2 back to Booking
-            final oldBooking = await BookingConverter.toBooking(bookingV2);
-            onSave(oldBooking);
-          },
-          onCancel: onCancel,
-        );
-      },
+    return BookingForm(
+      controller: controller,
+      booking: booking,
+      onSave: onSave,
+      onCancel: onCancel,
     );
   }
 }

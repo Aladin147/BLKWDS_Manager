@@ -4,11 +4,11 @@ import '../booking_panel_controller_v2.dart';
 import 'booking_form_v2.dart';
 
 /// BookingFormAdapterV2
-/// Adapter component that connects BookingV2 models with the BookingFormV2 component
+/// Adapter component that connects Booking models with the BookingFormV2 component
 class BookingFormAdapterV2 extends StatelessWidget {
   final BookingPanelControllerV2 controller;
-  final BookingV2? booking; // Null for new booking, non-null for editing
-  final Function(BookingV2) onSave;
+  final Booking? booking; // Null for new booking, non-null for editing
+  final Function(Booking) onSave;
   final VoidCallback onCancel;
 
   const BookingFormAdapterV2({

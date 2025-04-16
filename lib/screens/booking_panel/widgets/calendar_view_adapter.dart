@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../models/models.dart';
-import '../../../utils/booking_converter.dart';
+
 import '../booking_panel_controller.dart';
 import '../booking_panel_controller_v2.dart';
 
@@ -31,18 +31,10 @@ class CalendarViewAdapter {
 
   /// Check if a booking has conflicts
   Future<bool> hasBookingConflicts(dynamic booking, {int? excludeBookingId}) async {
-    if (booking is BookingV2 && _controllerV2 != null) {
+    if (_controllerV2 != null) {
       return _controllerV2.hasBookingConflicts(booking, excludeBookingId: excludeBookingId);
-    } else if (booking is Booking && _controllerV1 != null) {
+    } else if (_controllerV1 != null) {
       return _controllerV1.hasBookingConflicts(booking, excludeBookingId: excludeBookingId);
-    } else if (booking is Booking && _controllerV2 != null) {
-      // Convert Booking to BookingV2 and check conflicts
-      final bookingV2 = await BookingConverter.toBookingV2(booking);
-      return _controllerV2.hasBookingConflicts(bookingV2, excludeBookingId: excludeBookingId);
-    } else if (booking is BookingV2 && _controllerV1 != null) {
-      // Convert BookingV2 to Booking and check conflicts
-      final bookingV1 = await BookingConverter.toBooking(booking);
-      return _controllerV1.hasBookingConflicts(bookingV1, excludeBookingId: excludeBookingId);
     }
     return false;
   }
@@ -67,27 +59,19 @@ class CalendarViewAdapter {
 
   /// Reschedule a booking
   Future<bool> rescheduleBooking(dynamic booking, DateTime newStartDate) async {
-    if (booking is BookingV2 && _controllerV2 != null) {
+    if (_controllerV2 != null) {
       return _controllerV2.rescheduleBooking(booking, newStartDate);
-    } else if (booking is Booking && _controllerV1 != null) {
+    } else if (_controllerV1 != null) {
       return _controllerV1.rescheduleBooking(booking, newStartDate);
-    } else if (booking is Booking && _controllerV2 != null) {
-      // Convert Booking to BookingV2, reschedule, and convert back
-      final bookingV2 = await BookingConverter.toBookingV2(booking);
-      return _controllerV2.rescheduleBooking(bookingV2, newStartDate);
-    } else if (booking is BookingV2 && _controllerV1 != null) {
-      // Convert BookingV2 to Booking, reschedule, and convert back
-      final bookingV1 = await BookingConverter.toBooking(booking);
-      return _controllerV1.rescheduleBooking(bookingV1, newStartDate);
     }
     return false;
   }
 
   /// Get color for a booking
   Color getColorForBooking(dynamic booking) {
-    if (booking is BookingV2 && _controllerV2 != null) {
+    if (_controllerV2 != null) {
       return _controllerV2.getColorForBooking(booking);
-    } else if (booking is Booking && _controllerV1 != null) {
+    } else if (_controllerV1 != null) {
       return _controllerV1.getColorForBooking(booking);
     }
     return Colors.grey;
@@ -95,12 +79,13 @@ class CalendarViewAdapter {
 
   /// Check if a booking is a V2 booking
   bool isBookingV2(dynamic booking) {
-    return booking is BookingV2;
+    // Legacy method - always return true now that we only have one booking type
+    return true;
   }
 
   /// Get studio type for a booking
   String? getStudioTypeForBooking(dynamic booking) {
-    if (booking is BookingV2 && booking.studioId != null && _controllerV2 != null) {
+    if (_controllerV2 != null && booking.studioId != null) {
       final studio = _controllerV2.getStudioById(booking.studioId!);
       if (studio != null) {
         switch (studio.type) {
@@ -111,13 +96,6 @@ class CalendarViewAdapter {
           case StudioType.hybrid:
             return 'Hybrid';
         }
-      }
-    } else if (booking is Booking) {
-      final types = <String>[];
-      if (booking.isRecordingStudio) types.add('Recording');
-      if (booking.isProductionStudio) types.add('Production');
-      if (types.isNotEmpty) {
-        return types.join(', ');
       }
     }
     return null;

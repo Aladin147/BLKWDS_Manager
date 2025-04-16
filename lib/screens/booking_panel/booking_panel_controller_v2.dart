@@ -3,7 +3,7 @@ import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
-import '../../utils/booking_converter.dart';
+
 import '../../utils/date_utils.dart';
 import 'models/booking_filter.dart';
 
@@ -479,10 +479,7 @@ class BookingPanelControllerV2 {
     return BLKWDSDateUtils.getColorForBooking(booking);
   }
 
-  // Convert BookingV2 to Booking for compatibility
-  Future<Booking> convertToBookingV1(BookingV2 bookingV2) async {
-    return await BookingConverter.toBooking(bookingV2);
-  }
+  // Legacy conversion methods removed
 
   // Dispose controller
   void dispose() {
