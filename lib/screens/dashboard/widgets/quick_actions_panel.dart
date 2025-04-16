@@ -3,6 +3,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_button.dart';
+import '../../../widgets/blkwds_card.dart';
 
 /// QuickActionsPanel
 /// Displays quick action buttons for common tasks
@@ -28,19 +29,8 @@ class QuickActionsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BLKWDSCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundMedium,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: SingleChildScrollView(
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

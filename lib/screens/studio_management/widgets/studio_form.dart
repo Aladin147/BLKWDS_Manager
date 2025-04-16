@@ -3,6 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+
 import '../../../widgets/blkwds_widgets.dart';
 
 /// StudioForm
@@ -97,19 +98,10 @@ class _StudioFormState extends State<StudioForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundMedium,
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.8,
+      child: BLKWDSCard(
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -317,6 +309,7 @@ class _StudioFormState extends State<StudioForm> {
         ),
         ),
       ),
+    ),
     );
   }
 

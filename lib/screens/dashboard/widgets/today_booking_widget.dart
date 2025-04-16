@@ -3,7 +3,8 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../../../utils/feature_flags.dart';
+
+import '../../../widgets/blkwds_card.dart';
 import '../../../widgets/blkwds_status_badge.dart';
 
 import '../dashboard_adapter.dart';
@@ -30,19 +31,8 @@ class TodayBookingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BLKWDSCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundMedium,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -229,19 +219,8 @@ class TodayBookingWidget extends StatelessWidget {
       }
     }
 
-    return Container(
+    return BLKWDSCard(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundLight,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 20),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Padding(
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
         child: Row(

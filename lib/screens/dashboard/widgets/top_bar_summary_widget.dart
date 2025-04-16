@@ -3,6 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_card.dart';
 import '../../../widgets/blkwds_status_badge.dart';
 import '../dashboard_controller.dart';
 
@@ -70,20 +71,10 @@ class TopBarSummaryWidget extends StatelessWidget {
     required String subtitle,
     required IconData icon,
   }) {
-    return Container(
+    return SizedBox(
       width: 180,
-      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundMedium,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 50),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      child: BLKWDSCard(
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,6 +134,7 @@ class TopBarSummaryWidget extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -151,20 +143,8 @@ class TopBarSummaryWidget extends StatelessWidget {
     final studioBooking = _getStudioBookingToday();
     final isBooked = studioBooking != null && studioBooking.projectId != -1;
 
-    return Container(
-      width: 180,
+    return BLKWDSCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundMedium,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 50),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
