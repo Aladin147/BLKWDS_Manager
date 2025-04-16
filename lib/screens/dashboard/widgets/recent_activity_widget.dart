@@ -4,6 +4,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../utils/date_formatter.dart';
+import '../../activity/activity_log_screen.dart';
 import '../dashboard_controller.dart';
 
 /// RecentActivityWidget
@@ -63,11 +64,11 @@ class RecentActivityWidget extends StatelessWidget {
               ),
               TextButton.icon(
                 onPressed: () {
-                  // This would navigate to a full activity log screen in a real app
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('View all activity would open here'),
-                      duration: Duration(seconds: 2),
+                  // Navigate to a full activity log screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityLogScreen(controller: controller),
                     ),
                   );
                 },

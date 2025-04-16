@@ -29,15 +29,15 @@ class _StudioFormState extends State<StudioForm> {
   final _descriptionController = TextEditingController();
   final _featuresController = TextEditingController();
   final _hourlyRateController = TextEditingController();
-  
+
   late StudioType _selectedType;
   late StudioStatus _selectedStatus;
   String? _selectedColor;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize form fields with studio data if editing
     if (widget.studio != null) {
       _nameController.text = widget.studio!.name;
@@ -54,7 +54,7 @@ class _StudioFormState extends State<StudioForm> {
       _selectedColor = null;
     }
   }
-  
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -63,7 +63,7 @@ class _StudioFormState extends State<StudioForm> {
     _hourlyRateController.dispose();
     super.dispose();
   }
-  
+
   /// Save the studio
   void _saveStudio() {
     if (_formKey.currentState!.validate()) {
@@ -71,13 +71,13 @@ class _StudioFormState extends State<StudioForm> {
       final features = _featuresController.text.isEmpty
           ? <String>[]
           : _featuresController.text.split(',').map((e) => e.trim()).toList();
-      
+
       // Parse hourly rate
       double? hourlyRate;
       if (_hourlyRateController.text.isNotEmpty) {
         hourlyRate = double.tryParse(_hourlyRateController.text);
       }
-      
+
       // Create studio object
       final studio = Studio(
         id: widget.studio?.id,
@@ -89,18 +89,18 @@ class _StudioFormState extends State<StudioForm> {
         status: _selectedStatus,
         color: _selectedColor,
       );
-      
+
       // Call onSave callback
       widget.onSave(studio);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -109,9 +109,11 @@ class _StudioFormState extends State<StudioForm> {
           ),
         ],
       ),
+      height: MediaQuery.of(context).size.height * 0.8,
       child: Form(
         key: _formKey,
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -121,7 +123,7 @@ class _StudioFormState extends State<StudioForm> {
               style: BLKWDSTypography.titleMedium,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Name field
             BLKWDSTextField(
               controller: _nameController,
@@ -134,7 +136,7 @@ class _StudioFormState extends State<StudioForm> {
               },
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Type dropdown
             DropdownButtonFormField<StudioType>(
               value: _selectedType,
@@ -160,7 +162,7 @@ class _StudioFormState extends State<StudioForm> {
               },
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Description field
             BLKWDSTextField(
               controller: _descriptionController,
@@ -168,7 +170,7 @@ class _StudioFormState extends State<StudioForm> {
               maxLines: 3,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Features field
             BLKWDSTextField(
               controller: _featuresController,
@@ -176,7 +178,7 @@ class _StudioFormState extends State<StudioForm> {
               helperText: 'e.g. Soundproof, 4K Camera, Green Screen',
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Hourly rate field
             BLKWDSTextField(
               controller: _hourlyRateController,
@@ -186,7 +188,7 @@ class _StudioFormState extends State<StudioForm> {
               helperText: 'Leave empty if not applicable',
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Status dropdown
             DropdownButtonFormField<StudioStatus>(
               value: _selectedStatus,
@@ -219,7 +221,7 @@ class _StudioFormState extends State<StudioForm> {
               },
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Color picker
             Row(
               children: [
@@ -297,7 +299,7 @@ class _StudioFormState extends State<StudioForm> {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingLarge),
-            
+
             // Form actions
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -317,10 +319,11 @@ class _StudioFormState extends State<StudioForm> {
             ),
           ],
         ),
+        ),
       ),
     );
   }
-  
+
   // Color options for studios
   static const List<String> _colorOptions = [
     '#4CAF50', // Green

@@ -24,7 +24,7 @@ class StudioSettingsForm extends StatefulWidget {
 
 class _StudioSettingsFormState extends State<StudioSettingsForm> {
   final _formKey = GlobalKey<FormState>();
-  
+
   late TimeOfDay _openingTime;
   late TimeOfDay _closingTime;
   late int _minBookingDuration;
@@ -34,11 +34,11 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
   late int _cleanupTime;
   late bool _allowOverlappingBookings;
   late bool _enforceStudioHours;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize form fields with settings
     _openingTime = widget.settings.openingTime;
     _closingTime = widget.settings.closingTime;
@@ -50,35 +50,35 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
     _allowOverlappingBookings = widget.settings.allowOverlappingBookings;
     _enforceStudioHours = widget.settings.enforceStudioHours;
   }
-  
+
   /// Pick opening time
   Future<void> _pickOpeningTime() async {
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: _openingTime,
     );
-    
+
     if (pickedTime != null) {
       setState(() {
         _openingTime = pickedTime;
       });
     }
   }
-  
+
   /// Pick closing time
   Future<void> _pickClosingTime() async {
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: _closingTime,
     );
-    
+
     if (pickedTime != null) {
       setState(() {
         _closingTime = pickedTime;
       });
     }
   }
-  
+
   /// Save settings
   void _saveSettings() {
     if (_formKey.currentState!.validate()) {
@@ -93,17 +93,17 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
         allowOverlappingBookings: _allowOverlappingBookings,
         enforceStudioHours: _enforceStudioHours,
       );
-      
+
       widget.onSave(settings);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -112,9 +112,11 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
           ),
         ],
       ),
+      height: MediaQuery.of(context).size.height * 0.8,
       child: Form(
         key: _formKey,
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -124,7 +126,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               style: BLKWDSTypography.titleMedium,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Operating hours
             Text(
               'Operating Hours',
@@ -167,7 +169,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Booking duration limits
             Text(
               'Booking Duration Limits',
@@ -230,7 +232,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Advance booking limits
             Text(
               'Advance Booking Limits',
@@ -293,7 +295,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               ],
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Cleanup time
             TextFormField(
               initialValue: _cleanupTime.toString(),
@@ -319,7 +321,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               },
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Booking rules
             Text(
               'Booking Rules',
@@ -349,7 +351,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               contentPadding: EdgeInsets.zero,
             ),
             const SizedBox(height: BLKWDSConstants.spacingLarge),
-            
+
             // Form actions
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -368,6 +370,7 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
               ],
             ),
           ],
+        ),
         ),
       ),
     );

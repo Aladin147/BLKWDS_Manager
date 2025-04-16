@@ -35,6 +35,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Selected booking for editing
   Booking? _selectedBooking;
+  BookingV2? _tempBookingV2;
 
   // Show booking form
   bool _showBookingForm = false;
@@ -77,6 +78,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
   void _hideBookingForm() {
     setState(() {
       _showBookingForm = false;
+      _selectedBooking = null;
+      _tempBookingV2 = null;
     });
   }
 
@@ -209,12 +212,19 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             style: BLKWDSTypography.titleLarge,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          FeatureFlags.useStudioSystem
+          FeatureFlags.useStudioSystem && _controllerV2 != null
               ? BookingForm(
                   controller: _controller,
-                  booking: null, // This would need to be a BookingV2 object
-                  onSave: (bookingV2) {
+                  booking: _tempBookingV2,
+                  onSave: (bookingV2) async {
                     // Handle BookingV2 save
+                    final success = await _controllerV2!.createBooking(bookingV2);
+                    if (success) {
+                      _hideBookingForm();
+                      _showSnackBar('Booking created successfully');
+                    } else {
+                      _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to create booking');
+                    }
                   },
                   onCancel: _hideBookingForm,
                 )
@@ -246,8 +256,31 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         // with the selected day as the start date
         setState(() {
           if (FeatureFlags.useStudioSystem && _controllerV2 != null) {
-            // Create a BookingV2 object
-            // This would be handled by the BookingForm
+            // Create a BookingV2 object with default values
+            final defaultProject = _controllerV2!.projectList.value.isNotEmpty
+                ? _controllerV2!.projectList.value.first.id!
+                : 0;
+
+            final defaultStartDate = DateTime(
+              day.year,
+              day.month,
+              day.day,
+              DateTime.now().hour,
+              0,
+            );
+
+            final defaultEndDate = defaultStartDate.add(const Duration(hours: 2));
+
+            // We'll create a temporary BookingV2 object and pass it to the form
+            _tempBookingV2 = BookingV2(
+              projectId: defaultProject,
+              title: 'New Booking',
+              startDate: defaultStartDate,
+              endDate: defaultEndDate,
+              studioId: null, // No studio selected by default
+              gearIds: [],
+            );
+
             _showBookingForm = true;
           } else {
             _selectedBooking = Booking(

@@ -535,9 +535,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         maxChildSize: 0.95,
         builder: (_, scrollController) {
           return Container(
-            decoration: const BoxDecoration(
-              color: BLKWDSColors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
               children: [
