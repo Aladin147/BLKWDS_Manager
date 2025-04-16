@@ -385,7 +385,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               // Right side - Gear preview list
                               Expanded(
                                 flex: 2,
-                                child: GearPreviewListWidget(
+                                child: SizedBox(
+                                  height: 400,
+                                  child: GearPreviewListWidget(
                                     controller: _controller,
                                     onCheckout: _handleCheckout,
                                     onReturn: _handleReturn,
@@ -401,8 +403,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         : Column(
                             children: [
                               // Quick actions panel
-                              Expanded(
-                                flex: 1,
+                              SizedBox(
+                                height: 300,
                                 child: QuickActionsPanel(
                                   onAddGear: () async {
                                     final result = await Navigator.push(
@@ -468,7 +470,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                               // Gear preview list
-                              Expanded(
+                              SizedBox(
+                                height: 400,
                                 child: GearPreviewListWidget(
                                   controller: _controller,
                                   onCheckout: _handleCheckout,
@@ -489,7 +492,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       horizontal: BLKWDSConstants.spacingMedium,
                     ),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.25, // Responsive height for today's bookings
+                      height: 250, // Fixed height for today's bookings
                       child: TodayBookingWidget(
                         controller: _controller,
                         controllerV2: _controllerV2,
@@ -507,7 +510,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       vertical: 0,
                     ),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.3, // Responsive height for recent activity
+                      height: 300, // Fixed height for recent activity
                       child: RecentActivityWidget(controller: _controller),
                     ),
                   ),

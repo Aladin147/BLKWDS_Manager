@@ -27,8 +27,10 @@ class TopBarSummaryWidget extends StatelessWidget {
       decoration: const BoxDecoration(
         color: BLKWDSColors.backgroundDark,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        spacing: BLKWDSConstants.spacingMedium,
+        runSpacing: BLKWDSConstants.spacingMedium,
         children: [
           // Gear Out Count
           _buildSummaryCard(
@@ -69,7 +71,7 @@ class TopBarSummaryWidget extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      width: 200,
+      width: 180,
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
         color: BLKWDSColors.backgroundMedium,
@@ -101,10 +103,13 @@ class TopBarSummaryWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
-              Text(
-                title,
-                style: BLKWDSTypography.labelMedium.copyWith(
-                  color: BLKWDSColors.textPrimary,
+              Flexible(
+                child: Text(
+                  title,
+                  style: BLKWDSTypography.labelMedium.copyWith(
+                    color: BLKWDSColors.textPrimary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -114,18 +119,24 @@ class TopBarSummaryWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                value,
-                style: BLKWDSTypography.headlineLarge.copyWith(
-                  color: BLKWDSColors.accentTeal,
-                  fontWeight: FontWeight.bold,
+              Flexible(
+                child: Text(
+                  value,
+                  style: BLKWDSTypography.headlineLarge.copyWith(
+                    color: BLKWDSColors.accentTeal,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
-              Text(
-                subtitle,
-                style: BLKWDSTypography.bodySmall.copyWith(
-                  color: BLKWDSColors.textSecondary,
+              Flexible(
+                child: Text(
+                  subtitle,
+                  style: BLKWDSTypography.bodySmall.copyWith(
+                    color: BLKWDSColors.textSecondary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -141,7 +152,7 @@ class TopBarSummaryWidget extends StatelessWidget {
     final isBooked = studioBooking != null && studioBooking.projectId != -1;
 
     return Container(
-      width: 200,
+      width: 180,
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
         color: BLKWDSColors.backgroundMedium,
@@ -173,10 +184,13 @@ class TopBarSummaryWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
-              Text(
-                'Studio:',
-                style: BLKWDSTypography.labelMedium.copyWith(
-                  color: BLKWDSColors.textPrimary,
+              Flexible(
+                child: Text(
+                  'Studio:',
+                  style: BLKWDSTypography.labelMedium.copyWith(
+                    color: BLKWDSColors.textPrimary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
