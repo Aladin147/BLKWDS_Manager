@@ -9,8 +9,7 @@ import '../../examples/error_analytics_example.dart';
 import '../member_management/member_list_screen.dart';
 import '../project_management/project_list_screen.dart';
 import '../gear_management/gear_list_screen.dart';
-import '../migration/migration_screen.dart';
-import '../../utils/feature_flags.dart';
+// Migration imports removed - migration is complete
 import 'settings_controller.dart';
 import 'widgets/settings_section.dart';
 
@@ -300,20 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
-                    if (FeatureFlags.showMigrationUI)
-                      ListTile(
-                        title: const Text('Studio System Migration'),
-                        subtitle: const Text('Migrate to the new studio-based booking system'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MigrationScreen(),
-                            ),
-                          );
-                        },
-                      ),
+                    // Migration UI removed - migration is complete
                   ],
                 ),
 
