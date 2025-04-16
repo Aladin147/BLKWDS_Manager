@@ -859,24 +859,65 @@ We encountered some layout issues after enabling the studio system, particularly
 
 The application now uses the new studio-based booking system, which provides more flexibility and better organization for studio management.
 
+## 2025-06-06: Studio System Fixes and Architecture Planning
+
+Today we focused on fixing issues with the studio management system and planning a comprehensive architecture simplification. After enabling the studio system, we encountered several UI and functional issues that needed to be addressed.
+
+Key accomplishments:
+
+1. **Fixed Calendar View Issues**:
+   - Resolved RenderFlex overflow errors in the calendar view
+   - Added proper scrolling to prevent layout issues
+   - Fixed booking display in the calendar
+
+2. **Improved Booking Functionality**:
+   - Enhanced conflict detection for studio bookings
+   - Added more descriptive error messages
+   - Fixed the booking form to properly handle studio selection
+
+3. **Created Architecture Simplification Plan**:
+   - Identified issues with the current adapter-heavy architecture
+   - Planned a comprehensive cleanup of the codebase
+   - Created a timeline for simplifying the architecture
+
+4. **Updated Documentation**:
+   - Updated project status document with new plans
+   - Added detailed implementation timeline
+   - Documented the architecture simplification approach
+
+During our work, we identified a concerning trend of increasing complexity in the codebase. The studio system migration has introduced multiple layers of adapters, parallel controller hierarchies, and feature flag conditionals throughout the code. This complexity makes the code harder to maintain and extend.
+
+We've decided to prioritize code cleanup and architecture simplification before adding more features or UI polish. This will involve removing the compatibility layer, consolidating models, flattening the architecture, and cleaning up unused code.
+
 ## Next Steps
 
-1. **Complete Studio Management System Testing**
-   - Test thoroughly using the testing checklist
-   - Fix any issues that arise during testing
-   - Remove compatibility layer once testing is complete
+1. **Complete Studio Migration** (1-2 days)
+   - Remove all feature flags
+   - Consolidate models (remove V2 suffix)
+   - Delete compatibility layer
+   - Update UI components to work directly with the new models
 
-2. **Finalize Phase 1 (MVP)**
+2. **Flatten Architecture** (2-3 days)
+   - Simplify controller hierarchy
+   - Remove unnecessary adapters
+   - Standardize component interfaces
+   - Reduce indirection between UI and business logic
+
+3. **Code Cleanup** (1-2 days)
+   - Remove unused code
+   - Fix remaining UI issues
+   - Add missing documentation
+   - Standardize naming conventions
+
+4. **Testing** (1-2 days)
+   - Comprehensive testing of all features
+   - Fix any regressions
+   - Performance optimization
+
+5. **Finalize Phase 1 (MVP)**
    - Update documentation to reflect completion
    - Tag codebase as v1.0.0
    - Conduct final review of all features
-
-3. **Begin Phase 2**
-   - Refactor error handling for new components
-   - Implement undo functionality
-   - Add bulk gear management
-   - Create booking templates
-   - Implement backup/export manager
 
 ## 2025-06-02: Studio Management Migration Plan - Phase 7
 

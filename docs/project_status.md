@@ -19,8 +19,11 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Implement Studio Management UI
    - [x] Create migration path from old booking system
    - [x] Enable studio system feature flag
-   - [ ] Test with various scenarios
+   - [x] Test with various scenarios
    - [ ] Remove compatibility layer
+   - [ ] Simplify architecture by removing adapters
+   - [ ] Consolidate models (remove V2 suffix)
+   - [ ] Clean up unused code
 
 2. **Dashboard Improvements**
    - [x] Fix layout responsiveness issues
@@ -79,16 +82,34 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Next Steps
 
-1. **Complete Studio Management System**
-   - Enable feature flag
-   - Test thoroughly
-   - Remove compatibility layer
+1. **Complete Studio Migration** (1-2 days)
+   - Remove all feature flags
+   - Consolidate models (remove V2 suffix)
+   - Delete compatibility layer
+   - Update UI components to work directly with the new models
 
-2. **Declare Phase 1 Complete**
+2. **Flatten Architecture** (2-3 days)
+   - Simplify controller hierarchy
+   - Remove unnecessary adapters
+   - Standardize component interfaces
+   - Reduce indirection between UI and business logic
+
+3. **Code Cleanup** (1-2 days)
+   - Remove unused code
+   - Fix remaining UI issues
+   - Add missing documentation
+   - Standardize naming conventions
+
+4. **Testing** (1-2 days)
+   - Comprehensive testing of all features
+   - Fix any regressions
+   - Performance optimization
+
+5. **Declare Phase 1 Complete**
    - Tag codebase as v1.0.0
    - Update all documentation
 
-3. **Begin Phase 2**
+6. **Begin Phase 2**
    - Refactor error handling for new components
    - Implement undo functionality
    - Add bulk gear management
@@ -114,6 +135,27 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.21.0 - Studio System Fixes and Architecture Planning (2025-06-06)
+
+**Fixed:**
+
+- Calendar view layout issues and RenderFlex overflow errors
+- Booking form integration with studio system
+- Booking conflict detection for studios
+- UI issues in various dialogs and forms
+
+**Changed:**
+
+- Improved error messages for booking conflicts
+- Enhanced studio selection in booking forms
+- Updated project plans to prioritize code cleanup and architecture simplification
+
+**Added:**
+
+- New adapter for BookingV2 to work with existing forms
+- Comprehensive architecture simplification plan
+- Detailed implementation timeline for code cleanup
 
 ### v0.20.0 - Studio Management System Enablement (2025-06-05)
 
