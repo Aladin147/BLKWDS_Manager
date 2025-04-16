@@ -35,31 +35,51 @@ class TopBarSummaryWidget extends StatelessWidget {
         runSpacing: BLKWDSConstants.spacingMedium,
         children: [
           // Gear Out Count
-          _buildSummaryCard(
-            title: 'Gear Out',
-            value: _getGearOutCount().toString(),
-            subtitle: 'Bookings Today',
-            icon: Icons.camera_alt,
+          ValueListenableBuilder<int>(
+            valueListenable: controller.gearOutCount,
+            builder: (context, count, _) {
+              return _buildSummaryCard(
+                title: 'Gear Out',
+                value: count.toString(),
+                subtitle: 'Items',
+                icon: Icons.camera_alt,
+              );
+            },
           ),
 
           // Bookings Today Count
-          _buildSummaryCard(
-            title: 'Bookings Today',
-            value: _getBookingsTodayCount().toString(),
-            subtitle: 'Today',
-            icon: Icons.event,
+          ValueListenableBuilder<int>(
+            valueListenable: controller.bookingsTodayCount,
+            builder: (context, count, _) {
+              return _buildSummaryCard(
+                title: 'Bookings Today',
+                value: count.toString(),
+                subtitle: 'Today',
+                icon: Icons.event,
+              );
+            },
           ),
 
           // Gear Returning Soon Count
-          _buildSummaryCard(
-            title: 'Gear Returning',
-            value: _getGearReturningCount().toString(),
-            subtitle: 'Soon',
-            icon: Icons.assignment_return,
+          ValueListenableBuilder<int>(
+            valueListenable: controller.gearReturningCount,
+            builder: (context, count, _) {
+              return _buildSummaryCard(
+                title: 'Gear Returning',
+                value: count.toString(),
+                subtitle: 'Soon',
+                icon: Icons.assignment_return,
+              );
+            },
           ),
 
           // Studio Booking Info
-          _buildStudioBookingInfo(),
+          ValueListenableBuilder<Booking?>(
+            valueListenable: controller.studioBookingToday,
+            builder: (context, booking, _) {
+              return _buildStudioBookingInfo(booking);
+            },
+          ),
         ],
       ),
     );
@@ -136,8 +156,7 @@ class TopBarSummaryWidget extends StatelessWidget {
   }
 
   // Build studio booking info
-  Widget _buildStudioBookingInfo() {
-    final studioBooking = _getStudioBookingToday();
+  Widget _buildStudioBookingInfo(Booking? studioBooking) {
     final isBooked = studioBooking != null && studioBooking.projectId != -1;
 
     return ConstrainedBox(
@@ -187,71 +206,6 @@ class TopBarSummaryWidget extends StatelessWidget {
               ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Get count of gear that is currently checked out
-  int _getGearOutCount() {
-    return controller.gearList.value.where((gear) => gear.isOut).length;
-  }
-
-  // Get count of bookings for today
-  int _getBookingsTodayCount() {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    return controller.bookingList.value.where((booking) {
-      final bookingDate = DateTime(
-        booking.startDate.year,
-        booking.startDate.month,
-        booking.startDate.day,
-      );
-      return bookingDate.isAtSameMomentAs(today);
-    }).length;
-  }
-
-  // Get count of gear that is returning soon (within the next 24 hours)
-  int _getGearReturningCount() {
-    final now = DateTime.now();
-    final tomorrow = now.add(const Duration(days: 1));
-
-    // Get bookings ending in the next 24 hours
-    final returningBookings = controller.bookingList.value.where((booking) {
-      return booking.endDate.isAfter(now) && booking.endDate.isBefore(tomorrow);
-    }).toList();
-
-    // Count unique gear IDs in these bookings
-    final returningGearIds = <int>{};
-    for (final booking in returningBookings) {
-      returningGearIds.addAll(booking.gearIds);
-    }
-
-    return returningGearIds.length;
-  }
-
-  // Get studio booking for today
-  Booking? _getStudioBookingToday() {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    // Find the first booking today that uses a studio
-    return controller.bookingList.value.firstWhere(
-      (booking) {
-        final bookingDate = DateTime(
-          booking.startDate.year,
-          booking.startDate.month,
-          booking.startDate.day,
-        );
-        return bookingDate.isAtSameMomentAs(today) &&
-               (booking.isRecordingStudio || booking.isProductionStudio);
-      },
-      orElse: () => Booking(
-        projectId: -1,
-        title: 'No Studio Booking',
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        gearIds: const [],
       ),
     );
   }

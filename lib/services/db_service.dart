@@ -1167,6 +1167,82 @@ class DBService {
     return List.generate(maps.length, (i) => ActivityLog.fromMap(maps[i]));
   }
 
+  // DASHBOARD STATISTICS OPERATIONS
+
+  /// Get count of gear that is currently checked out
+  /// Uses a direct SQL query for efficiency
+  static Future<int> getGearOutCount() async {
+    final db = await database;
+    final result = await db.rawQuery('SELECT COUNT(*) as count FROM gear WHERE isOut = 1');
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  /// Get count of bookings for today
+  /// Uses a direct SQL query for efficiency
+  static Future<int> getBookingsTodayCount() async {
+    final db = await database;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day).toIso8601String();
+    final tomorrow = DateTime(now.year, now.month, now.day + 1).toIso8601String();
+
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM booking WHERE startDate >= ? AND startDate < ?',
+      [today, tomorrow]
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  /// Get count of gear that is returning soon (within the next 24 hours)
+  /// Uses a direct SQL query for efficiency
+  static Future<int> getGearReturningSoonCount() async {
+    final db = await database;
+    final now = DateTime.now().toIso8601String();
+    final tomorrow = DateTime.now().add(const Duration(days: 1)).toIso8601String();
+
+    // First get bookings ending in the next 24 hours
+    final bookingMaps = await db.rawQuery(
+      'SELECT id FROM booking WHERE endDate > ? AND endDate < ?',
+      [now, tomorrow]
+    );
+
+    if (bookingMaps.isEmpty) {
+      return 0;
+    }
+
+    // Extract booking IDs
+    final bookingIds = bookingMaps.map((m) => m['id'] as int).toList();
+    final bookingIdsStr = bookingIds.join(',');
+
+    // Count unique gear IDs in these bookings
+    final result = await db.rawQuery(
+      'SELECT COUNT(DISTINCT gearId) as count FROM booking_gear WHERE bookingId IN ($bookingIdsStr)'
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  /// Get studio booking for today
+  /// Returns the first booking today that uses a studio
+  static Future<Booking?> getStudioBookingToday() async {
+    final db = await database;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day).toIso8601String();
+    final tomorrow = DateTime(now.year, now.month, now.day + 1).toIso8601String();
+
+    // Find the first booking today that uses a studio
+    final bookingMaps = await db.rawQuery(
+      'SELECT * FROM booking WHERE startDate >= ? AND startDate < ? AND (studioId IS NOT NULL OR isRecordingStudio = 1 OR isProductionStudio = 1) LIMIT 1',
+      [today, tomorrow]
+    );
+
+    if (bookingMaps.isEmpty) {
+      return null;
+    }
+
+    // Get the booking with its gear and member assignments
+    final bookingId = bookingMaps.first['id'] as int;
+    return await getBookingById(bookingId);
+  }
+
   /// Get activity logs for a gear item
   static Future<List<ActivityLog>> getActivityLogsForGear(int gearId) async {
     final db = await database;

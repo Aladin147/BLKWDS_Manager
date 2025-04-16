@@ -26,6 +26,12 @@ class DashboardController {
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
 
+  // Dashboard statistics
+  final ValueNotifier<int> gearOutCount = ValueNotifier<int>(0);
+  final ValueNotifier<int> bookingsTodayCount = ValueNotifier<int>(0);
+  final ValueNotifier<int> gearReturningCount = ValueNotifier<int>(0);
+  final ValueNotifier<Booking?> studioBookingToday = ValueNotifier<Booking?>(null);
+
   // Set the context for error handling
   void setContext(BuildContext context) {
     this.context = context;
@@ -45,6 +51,7 @@ class DashboardController {
         _loadBookings(),
         _loadStudios(),
         _loadRecentActivity(),
+        _loadDashboardStatistics(),
       ]);
     } catch (e, stackTrace) {
       errorMessage.value = ErrorService.handleError(e, stackTrace: stackTrace);
@@ -257,6 +264,70 @@ class DashboardController {
       }
 
       rethrow;
+    }
+  }
+
+  // Load dashboard statistics from database
+  Future<void> _loadDashboardStatistics() async {
+    try {
+      // Load all statistics in parallel for efficiency
+      final results = await Future.wait([
+        RetryService.retry<int>(
+          operation: () => DBService.getGearOutCount(),
+          maxAttempts: 3,
+          strategy: RetryStrategy.exponential,
+          initialDelay: const Duration(milliseconds: 500),
+          retryCondition: RetryService.isRetryableError,
+        ),
+        RetryService.retry<int>(
+          operation: () => DBService.getBookingsTodayCount(),
+          maxAttempts: 3,
+          strategy: RetryStrategy.exponential,
+          initialDelay: const Duration(milliseconds: 500),
+          retryCondition: RetryService.isRetryableError,
+        ),
+        RetryService.retry<int>(
+          operation: () => DBService.getGearReturningSoonCount(),
+          maxAttempts: 3,
+          strategy: RetryStrategy.exponential,
+          initialDelay: const Duration(milliseconds: 500),
+          retryCondition: RetryService.isRetryableError,
+        ),
+        RetryService.retry<Booking?>(
+          operation: () => DBService.getStudioBookingToday(),
+          maxAttempts: 3,
+          strategy: RetryStrategy.exponential,
+          initialDelay: const Duration(milliseconds: 500),
+          retryCondition: RetryService.isRetryableError,
+        ),
+      ]);
+
+      // Update the value notifiers
+      gearOutCount.value = results[0] as int;
+      bookingsTodayCount.value = results[1] as int;
+      gearReturningCount.value = results[2] as int;
+      studioBookingToday.value = results[3] as Booking?;
+    } catch (e, stackTrace) {
+      // Log the error
+      LogService.error('Error loading dashboard statistics', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
+        );
+      }
+
+      // Set default values instead of rethrowing
+      // This allows the dashboard to continue functioning even if statistics fail to load
+      gearOutCount.value = 0;
+      bookingsTodayCount.value = 0;
+      gearReturningCount.value = 0;
+      studioBookingToday.value = null;
     }
   }
 
@@ -479,6 +550,64 @@ class DashboardController {
 
   // Legacy conversion methods removed
 
+  // Refresh dashboard statistics only
+  Future<void> refreshDashboardStatistics() async {
+    try {
+      await _loadDashboardStatistics();
+    } catch (e, stackTrace) {
+      LogService.error('Error refreshing dashboard statistics', e, stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          type: ErrorType.database,
+          stackTrace: stackTrace,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      }
+    }
+  }
+
+  // Refresh only essential dashboard data (faster than full initialize)
+  Future<void> refreshEssentialData() async {
+    try {
+      // Show loading indicator
+      isLoading.value = true;
+      errorMessage.value = null;
+
+      // Load only the essential data for the dashboard
+      await Future.wait([
+        _loadGear(),         // For gear status
+        _loadBookings(),    // For bookings today
+        _loadDashboardStatistics(), // For summary statistics
+      ]);
+
+      // Show success message if context is available
+      if (context != null) {
+        ErrorService.showSuccessSnackBar(context!, 'Dashboard refreshed');
+      }
+    } catch (e, stackTrace) {
+      errorMessage.value = ErrorService.handleError(e, stackTrace: stackTrace);
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          stackTrace: stackTrace,
+          type: ErrorType.database,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error refreshing dashboard data', e, stackTrace);
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // Dispose resources
   void dispose() {
     gearList.dispose();
@@ -489,5 +618,9 @@ class DashboardController {
     recentActivity.dispose();
     isLoading.dispose();
     errorMessage.dispose();
+    gearOutCount.dispose();
+    bookingsTodayCount.dispose();
+    gearReturningCount.dispose();
+    studioBookingToday.dispose();
   }
 }

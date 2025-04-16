@@ -197,8 +197,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildDashboardContent(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Use a SingleChildScrollView to ensure the layout works on all screen sizes
-        return SingleChildScrollView(
+        // Use a RefreshIndicator with SingleChildScrollView to enable pull-to-refresh
+        return RefreshIndicator(
+          onRefresh: () async {
+            // Refresh only essential data for better performance
+            await _controller.refreshEssentialData();
+          },
+          child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: constraints.maxHeight,
@@ -378,7 +383,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }

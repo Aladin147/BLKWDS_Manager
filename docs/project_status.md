@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc13 (Release Candidate 13)
+**Version:** 1.0.0-rc14 (Release Candidate 14)
 **Last Updated:** 2025-06-16
 
 ## Project Phase
@@ -254,6 +254,27 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.43.0 - Real-Time Dashboard Statistics (2025-06-16)
+
+**Added:**
+
+- Dedicated database methods for efficient statistics calculations
+- Real-time dashboard statistics using direct SQL queries
+- Pull-to-refresh functionality for the dashboard
+- Optimized refresh methods for better performance
+
+**Changed:**
+
+- Updated TopBarSummaryWidget to use ValueListenableBuilder for real-time updates
+- Replaced in-memory calculations with database queries
+- Improved error handling for statistics loading
+
+**Improved:**
+
+- Dashboard performance by using optimized database queries
+- User experience with pull-to-refresh functionality
+- Accuracy of dashboard statistics
 
 ### v0.42.0 - Dashboard Controller Consolidation (2025-06-16)
 
@@ -708,4 +729,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-16 (v0.42.0)
+Date: 2025-06-16 (v0.43.0)
