@@ -49,8 +49,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [ ] Enhance error handling in UI components
 
 5. **Style Unification**
-   - [ ] Standardize background colors across all screens
-   - [ ] Standardize shadow styles for all cards and elevated surfaces
+   - [x] Standardize background colors across all screens
+   - [x] Standardize shadow styles for all cards and elevated surfaces
    - [ ] Improve layout responsiveness by replacing fixed heights
    - [ ] Ensure consistent typography usage across all screens
    - [ ] Standardize component usage (buttons, text fields, etc.)
@@ -106,8 +106,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 16. ~~Debug menu always visible in Settings screen~~ (FIXED in v0.30.0)
 17. ~~Inconsistent button styles across the application~~ (FIXED in v0.30.0)
 18. Hardcoded heights in dashboard layout affecting responsiveness (IDENTIFIED in v0.29.0)
-19. Inconsistent background colors across screens (IDENTIFIED in v0.31.0)
-20. Inconsistent shadow styles for cards and elevated surfaces (IDENTIFIED in v0.31.0)
+19. ~~Inconsistent background colors across screens~~ (FIXED in v0.33.0)
+20. ~~Inconsistent shadow styles for cards and elevated surfaces~~ (FIXED in v0.33.0)
 21. Inconsistent typography usage across screens (IDENTIFIED in v0.31.0)
 22. Inconsistent component usage (buttons, text fields, etc.) (IDENTIFIED in v0.31.0)
 23. ~~Remnant references to light mode/theme switching~~ (FIXED in v0.32.0)
@@ -174,6 +174,19 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.33.0 - Background and Shadow Standardization (2025-06-13)
+
+**Fixed:**
+
+- Standardized background colors across all screens
+- Standardized shadow styles for all cards and elevated surfaces
+
+**Changed:**
+
+- Updated settings section to use backgroundMedium instead of white
+- Updated studio forms to use consistent background colors and shadow styles
+- Standardized shadow blur radius (6) and alpha values (40%) across the app
 
 ### v0.32.0 - Dark Mode Standardization (2025-06-13)
 

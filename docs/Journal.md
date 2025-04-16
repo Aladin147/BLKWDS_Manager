@@ -1,5 +1,17 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Background and Shadow Standardization
+
+Today we standardized background colors and shadow styles across the application. This was an important step in our style unification plan, as it ensures a consistent visual appearance throughout the app.
+
+Key changes included:
+
+1. **Settings Section**: Updated to use backgroundMedium instead of white
+2. **Studio Forms**: Updated to use consistent background colors and shadow styles
+3. **Shadow Standardization**: Standardized shadow blur radius (6) and alpha values (40%) across the app
+
+These changes significantly improve the visual consistency of the application and create a more cohesive user experience.
+
 ## 2025-06-13: Dark Mode Standardization
 
 Today we completed the removal of all references to light mode and theme switching from the codebase. This was an important step in our style unification plan, as we had previously decided to focus exclusively on dark mode for the application.
