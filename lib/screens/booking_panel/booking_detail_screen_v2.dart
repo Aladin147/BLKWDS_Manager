@@ -182,16 +182,17 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
         title: const Text('Delete Booking'),
         content: const Text('Are you sure you want to delete this booking? This action cannot be undone.'),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
+            isSmall: true,
           ),
-          TextButton(
+          BLKWDSButton(
+            label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(
-              foregroundColor: BLKWDSColors.errorRed,
-            ),
-            child: const Text('Delete'),
+            type: BLKWDSButtonType.danger,
+            isSmall: true,
           ),
         ],
       ),
@@ -257,7 +258,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Booking info card
-          Card(
+          BLKWDSCard(
             child: Padding(
               padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
               child: Column(
@@ -326,8 +327,8 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
                       style: BLKWDSTypography.titleMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingSmall),
-                    Card(
-                      color: BLKWDSColors.backgroundLight,
+                    BLKWDSCard(
+                      borderColor: BLKWDSColors.backgroundLight,
                       child: Padding(
                         padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
                         child: Column(
@@ -472,7 +473,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
                   ? widget.controller.getMemberById(assignedMemberId)
                   : null;
 
-              return Card(
+              return BLKWDSCard(
                 margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
                 child: ListTile(
                   leading: const Icon(Icons.videocam),

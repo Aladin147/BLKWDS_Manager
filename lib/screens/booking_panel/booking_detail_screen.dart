@@ -177,16 +177,17 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
         title: const Text('Delete Booking'),
         content: const Text('Are you sure you want to delete this booking? This action cannot be undone.'),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
+            isSmall: true,
           ),
-          TextButton(
+          BLKWDSButton(
+            label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(
-              foregroundColor: BLKWDSColors.errorRed,
-            ),
-            child: const Text('Delete'),
+            type: BLKWDSButtonType.danger,
+            isSmall: true,
           ),
         ],
       ),
@@ -252,7 +253,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Booking info card
-          Card(
+          BLKWDSCard(
             child: Padding(
               padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
               child: Column(
@@ -437,7 +438,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
                   ? widget.controller.getMemberById(assignedMemberId)
                   : null;
 
-              return Card(
+              return BLKWDSCard(
                 margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
                 child: ListTile(
                   leading: const Icon(Icons.videocam),

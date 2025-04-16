@@ -154,13 +154,17 @@ class _GearListScreenState extends State<GearListScreen> {
         title: const Text('Delete Gear'),
         content: Text('Are you sure you want to delete ${gear.name}?'),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
+            isSmall: true,
           ),
-          TextButton(
+          BLKWDSButton(
+            label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            type: BLKWDSButtonType.danger,
+            isSmall: true,
           ),
         ],
       ),
@@ -281,9 +285,11 @@ class _GearListScreenState extends State<GearListScreen> {
           ),
         ),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
+            isSmall: true,
           ),
         ],
       ),
@@ -443,30 +449,8 @@ class _GearListScreenState extends State<GearListScreen> {
                     // Category filter dropdown
                     Expanded(
                       flex: 2,
-                      child: DropdownButtonFormField<String?>(
-                        decoration: InputDecoration(
-                          labelText: 'Filter by Category',
-                          labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                            borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                            borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: BLKWDSConstants.inputHorizontalPadding,
-                            vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                          ),
-                          filled: true,
-                          fillColor: BLKWDSColors.inputBackground,
-                        ),
-                        dropdownColor: BLKWDSColors.backgroundMedium,
-                        style: TextStyle(color: BLKWDSColors.textPrimary),
+                      child: BLKWDSDropdown<String?>(
+                        label: 'Filter by Category',
                         value: _selectedCategory,
                         items: [
                           const DropdownMenuItem<String?>(
@@ -492,30 +476,8 @@ class _GearListScreenState extends State<GearListScreen> {
                     // Status filter dropdown
                     Expanded(
                       flex: 2,
-                      child: DropdownButtonFormField<bool?>(
-                        decoration: InputDecoration(
-                          labelText: 'Filter by Status',
-                          labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                            borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                            borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: BLKWDSConstants.inputHorizontalPadding,
-                            vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                          ),
-                          filled: true,
-                          fillColor: BLKWDSColors.inputBackground,
-                        ),
-                        dropdownColor: BLKWDSColors.backgroundMedium,
-                        style: TextStyle(color: BLKWDSColors.textPrimary),
+                      child: BLKWDSDropdown<bool?>(
+                        label: 'Filter by Status',
                         value: _selectedStatus,
                         items: const [
                           DropdownMenuItem<bool?>(

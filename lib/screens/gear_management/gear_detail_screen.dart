@@ -129,13 +129,17 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         title: const Text('Delete Gear'),
         content: Text('Are you sure you want to delete ${widget.gear.name}?'),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
+            isSmall: true,
           ),
-          TextButton(
+          BLKWDSButton(
+            label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            type: BLKWDSButtonType.danger,
+            isSmall: true,
           ),
         ],
       ),
@@ -231,9 +235,11 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
           ),
         ),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
+            isSmall: true,
           ),
         ],
       ),
@@ -424,7 +430,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Gear info card
-          Card(
+          BLKWDSCard(
             child: Padding(
               padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
               child: Column(
@@ -730,12 +736,10 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
+            BLKWDSTextField(
+              label: 'Note',
               controller: controller,
-              decoration: const InputDecoration(
-                hintText: 'Enter a note (optional)',
-                border: OutlineInputBorder(),
-              ),
+              hintText: 'Enter a note (optional)',
               maxLines: 3,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
