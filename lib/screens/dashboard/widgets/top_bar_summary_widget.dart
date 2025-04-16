@@ -133,7 +133,8 @@ class TopBarSummaryWidget extends StatelessWidget {
                   ),
                 ],
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -153,50 +154,50 @@ class TopBarSummaryWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.business,
-                    color: BLKWDSColors.accentTeal,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: BLKWDSConstants.spacingSmall),
-                Flexible(
-                  child: Text(
-                    'Studio:',
-                    style: BLKWDSTypography.labelMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    overflow: TextOverflow.ellipsis,
+                    child: const Icon(
+                      Icons.business,
+                      color: BLKWDSColors.accentTeal,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Flexible(
+                    child: Text(
+                      'Studio:',
+                      style: BLKWDSTypography.labelMedium.copyWith(
+                        color: BLKWDSColors.textPrimary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+              BLKWDSStatusBadge(
+                text: isBooked ? 'BOOKED' : 'AVAILABLE',
+                color: isBooked
+                    ? BLKWDSColors.statusOut
+                    : BLKWDSColors.statusIn,
+                icon: isBooked ? Icons.event_busy : Icons.event_available,
+              ),
+              if (isBooked)
+                Text(
+                  _formatStudioTime(studioBooking),
+                  style: BLKWDSTypography.bodySmall.copyWith(
+                    color: BLKWDSColors.textSecondary,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
-            BLKWDSStatusBadge(
-              text: isBooked ? 'BOOKED' : 'AVAILABLE',
-              color: isBooked
-                  ? BLKWDSColors.statusOut
-                  : BLKWDSColors.statusIn,
-              icon: isBooked ? Icons.event_busy : Icons.event_available,
-            ),
-            if (isBooked)
-              Text(
-                _formatStudioTime(studioBooking),
-                style: BLKWDSTypography.bodySmall.copyWith(
-                  color: BLKWDSColors.textSecondary,
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
