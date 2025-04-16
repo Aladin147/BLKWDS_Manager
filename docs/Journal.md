@@ -1,5 +1,26 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Dialog Button Standardization
+
+Today we standardized dialog buttons across the application. This is a continuation of our UI component standardization efforts and helps create a more consistent user experience.
+
+Key changes included:
+
+1. **Replaced Standard Dialog Buttons**:
+   - Replaced TextButton with BLKWDSButton in all confirmation dialogs
+   - Added isSmall parameter to dialog buttons for better fit
+   - Standardized button types (secondary for cancel, danger for delete)
+
+2. **Standardized Card Usage**:
+   - Replaced standard Card with BLKWDSCard in booking_detail_screen.dart and gear_detail_screen.dart
+   - Ensured consistent styling for all cards
+
+3. **Standardized Form Fields**:
+   - Replaced TextField with BLKWDSTextField in gear_detail_screen.dart
+   - Replaced DropdownButtonFormField with BLKWDSDropdown in gear_list_screen.dart
+
+These changes significantly improve the visual consistency of the application and provide a more cohesive user experience.
+
 ## 2025-06-13: UI Component Standardization
 
 Today we made significant progress on standardizing UI components across the application. This is a direct follow-up to our UI elements audit and addresses several of the issues we identified.

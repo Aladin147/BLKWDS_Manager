@@ -56,7 +56,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [ ] Standardize component usage (buttons, text fields, etc.)
      - [x] Replace standard TextField/TextFormField with BLKWDSTextField
      - [x] Create and implement BLKWDSDropdown for all dropdown fields
-     - [ ] Replace standard dialog buttons with BLKWDSButton
+     - [x] Replace standard dialog buttons with BLKWDSButton
      - [ ] Clarify usage guidelines for BLKWDSTextField vs. BLKWDSFormField
      - [ ] Decide on standard vs. enhanced component versions
    - [x] Standardize navigation patterns and transitions
@@ -181,6 +181,21 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.38.0 - Dialog Button Standardization (2025-06-13)
+
+**Fixed:**
+
+- Replaced standard dialog buttons with BLKWDSButton in all dialogs
+- Replaced standard Card with BLKWDSCard in booking_detail_screen.dart and gear_detail_screen.dart
+- Replaced TextField with BLKWDSTextField in gear_detail_screen.dart
+- Replaced DropdownButtonFormField with BLKWDSDropdown in gear_list_screen.dart
+
+**Changed:**
+
+- Added isSmall parameter to dialog buttons for better fit
+- Standardized button types (secondary for cancel, danger for delete)
+- Improved dialog styling with consistent button placement
 
 ### v0.37.0 - UI Component Standardization (2025-06-13)
 
