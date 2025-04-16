@@ -61,9 +61,9 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [ ] Decide on standard vs. enhanced component versions
    - [x] Standardize navigation patterns and transitions
    - [x] Remove all references to light mode/theme switching (dark mode only)
-   - [ ] Create consistent card styling across the application
-     - [ ] Replace custom Container decorations with BLKWDSCard
-     - [ ] Ensure consistent border radius, padding, and elevation
+   - [x] Create consistent card styling across the application
+     - [x] Replace custom Container decorations with BLKWDSCard
+     - [x] Ensure consistent border radius, padding, and elevation
 
 ## Feature Status
 
@@ -181,6 +181,21 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.39.0 - Card Styling Standardization (2025-06-13)
+
+**Fixed:**
+
+- Replaced custom Container decorations with BLKWDSCard in dashboard widgets
+- Replaced custom Container decorations with BLKWDSCard in studio_form.dart
+- Fixed layout issues in top_bar_summary_widget.dart
+- Fixed layout issues in studio_form.dart
+
+**Changed:**
+
+- Standardized card styling across the application
+- Ensured consistent border radius, padding, and elevation
+- Improved code readability and maintainability
 
 ### v0.38.0 - Dialog Button Standardization (2025-06-13)
 

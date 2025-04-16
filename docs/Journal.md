@@ -1,5 +1,27 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Card Styling Standardization
+
+Today we standardized card styling across the application. This is a continuation of our UI component standardization efforts and helps create a more consistent user experience.
+
+Key changes included:
+
+1. **Replaced Custom Container Decorations**:
+   - Replaced custom Container decorations with BLKWDSCard in dashboard widgets
+   - Replaced custom Container decorations with BLKWDSCard in studio_form.dart
+   - Fixed layout issues in top_bar_summary_widget.dart and studio_form.dart
+
+2. **Standardized Card Styling**:
+   - Ensured consistent border radius, padding, and elevation
+   - Improved code readability and maintainability
+   - Reduced code duplication by using the standardized BLKWDSCard component
+
+3. **Fixed Non-Functional UI Elements**:
+   - Checked for and fixed any buttons without assigned functionality
+   - Ensured all UI elements have proper functionality
+
+These changes significantly improve the visual consistency of the application and provide a more cohesive user experience. The standardized card styling also makes it easier to maintain and update the UI in the future.
+
 ## 2025-06-13: Dialog Button Standardization
 
 Today we standardized dialog buttons across the application. This is a continuation of our UI component standardization efforts and helps create a more consistent user experience.
