@@ -79,7 +79,10 @@ class _CalendarViewState extends State<CalendarView> {
 
   /// Handle booking drop on a day
   Future<void> _handleBookingDrop(dynamic booking, DateTime day) async {
-    if (widget.onBookingRescheduled != null) {
+    // Check if the booking can be dropped on this day
+    final canDrop = await _canDropBookingOnDay(booking, day);
+
+    if (canDrop && widget.onBookingRescheduled != null) {
       widget.onBookingRescheduled!(booking, day);
     }
   }
@@ -149,7 +152,8 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       children: [
         // Calendar header with view toggle
         Padding(
@@ -275,7 +279,9 @@ class _CalendarViewState extends State<CalendarView> {
                 },
                 onWillAcceptWithDetails: (details) {
                   // Check if the booking can be dropped on this day
-                  return _canDropBookingOnDay(details.data, day);
+                  // We need a synchronous result, so we'll always accept the drop
+                  // and then check for conflicts when the drop happens
+                  return true;
                 },
                 builder: (context, candidateData, rejectedData) {
                   // Show a visual indicator when a booking is being dragged over a day
@@ -358,6 +364,7 @@ class _CalendarViewState extends State<CalendarView> {
           ),
         ),
       ],
+    ),
     );
   }
 }

@@ -14,6 +14,8 @@ import 'booking_detail_screen_v2.dart';
 import 'booking_list_screen.dart';
 import 'widgets/booking_form.dart';
 import 'widgets/booking_form_adapter.dart';
+import 'widgets/booking_form_adapter_v2.dart';
+import 'widgets/booking_form_v2.dart';
 import 'widgets/calendar_view_fixed.dart';
 
 /// BookingPanelScreen
@@ -213,8 +215,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
           FeatureFlags.useStudioSystem && _controllerV2 != null
-              ? BookingForm(
-                  controller: _controller,
+              ? BookingFormAdapterV2(
+                  controller: _controllerV2!,
                   booking: _tempBookingV2,
                   onSave: (bookingV2) async {
                     // Handle BookingV2 save

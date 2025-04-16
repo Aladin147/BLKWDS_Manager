@@ -358,6 +358,7 @@ class BookingPanelControllerV2 {
           final sharedGear = booking.gearIds.where((id) => otherBooking.gearIds.contains(id)).toList();
 
           if (sharedGear.isNotEmpty) {
+            errorMessage.value = 'Conflict: Gear is already booked during this time';
             return true; // Conflict found
           }
 
@@ -365,6 +366,9 @@ class BookingPanelControllerV2 {
           if (booking.studioId != null &&
               otherBooking.studioId != null &&
               booking.studioId == otherBooking.studioId) {
+            // Get studio name for better error message
+            final studio = getStudioById(booking.studioId!);
+            errorMessage.value = 'Conflict: ${studio?.name ?? 'Studio'} is already booked during this time';
             return true; // Conflict found
           }
         }
@@ -373,7 +377,8 @@ class BookingPanelControllerV2 {
       return false; // No conflicts found
     } catch (e) {
       LogService.error('Error checking booking conflicts', e);
-      rethrow;
+      errorMessage.value = 'Error checking booking conflicts: $e';
+      return true; // Assume conflict on error to be safe
     }
   }
 
