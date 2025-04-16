@@ -138,11 +138,9 @@ class _StudioFormState extends State<StudioForm> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Type dropdown
-            DropdownButtonFormField<StudioType>(
+            BLKWDSDropdown<StudioType>(
+              label: 'Studio Type',
               value: _selectedType,
-              decoration: const InputDecoration(
-                labelText: 'Studio Type',
-              ),
               items: StudioType.values.map((type) {
                 return DropdownMenuItem<StudioType>(
                   value: type,
@@ -190,11 +188,9 @@ class _StudioFormState extends State<StudioForm> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Status dropdown
-            DropdownButtonFormField<StudioStatus>(
+            BLKWDSDropdown<StudioStatus>(
+              label: 'Status',
               value: _selectedStatus,
-              decoration: const InputDecoration(
-                labelText: 'Status',
-              ),
               items: StudioStatus.values.map((status) {
                 return DropdownMenuItem<StudioStatus>(
                   value: status,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
+import '../theme/blkwds_shadows.dart';
 
 /// Standardized dropdown component for BLKWDS Manager
 ///
@@ -14,6 +15,10 @@ class BLKWDSDropdown<T> extends StatelessWidget {
   final bool isRequired;
   final String? errorText;
   final String hintText;
+  final IconData? prefixIcon;
+  final bool enabled;
+  final String? Function(T?)? validator;
+  final AutovalidateMode? autovalidateMode;
 
   const BLKWDSDropdown({
     super.key,
@@ -24,6 +29,10 @@ class BLKWDSDropdown<T> extends StatelessWidget {
     this.isRequired = false,
     this.errorText,
     this.hintText = 'Select an option',
+    this.prefixIcon,
+    this.enabled = true,
+    this.validator,
+    this.autovalidateMode,
   });
 
   @override
@@ -60,41 +69,46 @@ class BLKWDSDropdown<T> extends StatelessWidget {
         // Dropdown with consistent styling
         Container(
           decoration: BoxDecoration(
-            color: BLKWDSColors.inputBackground,
-            borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+            color: BLKWDSColors.backgroundMedium,
+            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
             border: Border.all(
               color: errorText != null
                   ? BLKWDSColors.errorRed
                   : BLKWDSColors.inputBorder,
               width: 1.0,
             ),
+            boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level1),
           ),
-          child: DropdownButtonHideUnderline(
-            child: ButtonTheme(
-              alignedDropdown: true,
-              child: DropdownButton<T>(
-                value: value,
-                hint: Text(
-                  hintText,
-                  style: BLKWDSTypography.bodyMedium.copyWith(
-                    color: BLKWDSColors.slateGrey.withValues(alpha: 128), // 0.5 * 255 = 128
-                  ),
-                ),
-                isExpanded: true,
-                icon: const Icon(Icons.arrow_drop_down),
-                iconSize: 24,
-                elevation: 8,
-                style: BLKWDSTypography.bodyMedium,
-                dropdownColor: BLKWDSColors.white,
-                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                items: items,
-                onChanged: onChanged,
-                padding: EdgeInsets.symmetric(
-                  horizontal: BLKWDSConstants.inputHorizontalPadding,
-                  vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                ),
+          child: DropdownButtonFormField<T>(
+            value: value,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: BLKWDSTypography.bodyMedium.copyWith(
+                color: BLKWDSColors.textHint,
+              ),
+              prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: BLKWDSColors.textSecondary) : null,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: BLKWDSConstants.inputHorizontalPadding,
+                vertical: BLKWDSConstants.inputVerticalPadding,
+              ),
+              errorStyle: BLKWDSTypography.bodySmall.copyWith(
+                color: BLKWDSColors.errorRed,
               ),
             ),
+            isExpanded: true,
+            icon: const Icon(Icons.arrow_drop_down, color: BLKWDSColors.textSecondary),
+            iconSize: 24,
+            elevation: 8,
+            style: BLKWDSTypography.bodyMedium.copyWith(
+              color: BLKWDSColors.textPrimary,
+            ),
+            dropdownColor: BLKWDSColors.backgroundMedium,
+            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+            items: items,
+            onChanged: enabled ? onChanged : null,
+            validator: validator,
+            autovalidateMode: autovalidateMode,
           ),
         ),
 

@@ -4,6 +4,7 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../utils/date_formatter.dart';
+import '../../widgets/blkwds_widgets.dart';
 import '../dashboard/dashboard_controller.dart';
 
 /// ActivityLogScreen
@@ -84,18 +85,10 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
             child: Column(
               children: [
                 // Search bar
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search by gear, member, or note',
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: BLKWDSConstants.inputHorizontalPadding,
-                      vertical: BLKWDSConstants.inputVerticalPadding,
-                    ),
-                  ),
+                BLKWDSTextField(
+                  label: 'Search',
+                  hintText: 'Search by gear, member, or note',
+                  prefixIcon: Icons.search,
                   onChanged: (value) {
                     setState(() {
                       _searchQuery = value;
@@ -193,7 +186,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           )
         : null;
 
-    return Card(
+    return BLKWDSCard(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
       child: ListTile(
         leading: Container(
