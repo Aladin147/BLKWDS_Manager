@@ -5,7 +5,7 @@ import '../../services/log_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../utils/feature_flags.dart';
+
 import '../../widgets/blkwds_button.dart';
 
 /// MigrationScreen
@@ -22,29 +22,29 @@ class _MigrationScreenState extends State<MigrationScreen> {
   bool _isLoading = false;
   bool _migrationComplete = false;
   String? _errorMessage;
-  
+
   // Migration statistics
   int _totalBookings = 0;
   int _migratedBookings = 0;
   int _studiosCreated = 0;
-  
+
   @override
   void initState() {
     super.initState();
     _checkMigrationStatus();
   }
-  
+
   // Check if migration is needed
   Future<void> _checkMigrationStatus() async {
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       // Get all bookings
       final bookings = await DBService.getAllBookings();
       _totalBookings = bookings.length;
-      
+
       // Check if any bookings need migration
       bool needsMigration = false;
       for (final booking in bookings) {
@@ -53,7 +53,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
           break;
         }
       }
-      
+
       // If no migration is needed, mark as complete
       if (!needsMigration) {
         setState(() {
@@ -71,7 +71,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
       });
     }
   }
-  
+
   // Start the migration process
   Future<void> _startMigration() async {
     setState(() {
@@ -80,19 +80,19 @@ class _MigrationScreenState extends State<MigrationScreen> {
       _migratedBookings = 0;
       _studiosCreated = 0;
     });
-    
+
     try {
       // Get all bookings
       final bookings = await DBService.getAllBookings();
-      
+
       // Create studios if needed
       final studios = await DBService.getAllStudios();
-      
+
       // Check if we need to create default studios
       Studio? recordingStudio;
       Studio? productionStudio;
       Studio? hybridStudio;
-      
+
       for (final studio in studios) {
         if (studio.type == StudioType.recording) {
           recordingStudio = studio;
@@ -102,7 +102,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
           hybridStudio = studio;
         }
       }
-      
+
       // Create recording studio if needed
       if (recordingStudio == null) {
         final id = await DBService.insertStudio(
@@ -113,7 +113,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
             status: StudioStatus.available,
           ),
         );
-        
+
         recordingStudio = Studio(
           id: id,
           name: 'Recording Studio',
@@ -121,12 +121,12 @@ class _MigrationScreenState extends State<MigrationScreen> {
           description: 'Main recording studio space',
           status: StudioStatus.available,
         );
-        
+
         setState(() {
           _studiosCreated++;
         });
       }
-      
+
       // Create production studio if needed
       if (productionStudio == null) {
         final id = await DBService.insertStudio(
@@ -137,7 +137,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
             status: StudioStatus.available,
           ),
         );
-        
+
         productionStudio = Studio(
           id: id,
           name: 'Production Studio',
@@ -145,12 +145,12 @@ class _MigrationScreenState extends State<MigrationScreen> {
           description: 'Main production studio space',
           status: StudioStatus.available,
         );
-        
+
         setState(() {
           _studiosCreated++;
         });
       }
-      
+
       // Check if we need a hybrid studio
       bool needsHybridStudio = false;
       for (final booking in bookings) {
@@ -159,7 +159,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
           break;
         }
       }
-      
+
       // Create hybrid studio if needed
       if (needsHybridStudio && hybridStudio == null) {
         final id = await DBService.insertStudio(
@@ -170,7 +170,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
             status: StudioStatus.available,
           ),
         );
-        
+
         hybridStudio = Studio(
           id: id,
           name: 'Hybrid Studio',
@@ -178,55 +178,49 @@ class _MigrationScreenState extends State<MigrationScreen> {
           description: 'Combined recording and production studio space',
           status: StudioStatus.available,
         );
-        
+
         setState(() {
           _studiosCreated++;
         });
       }
-      
+
       // Migrate each booking
       for (final booking in bookings) {
-        // Determine which studio to use
-        int? studioId;
-        if (booking.isRecordingStudio && booking.isProductionStudio) {
-          studioId = hybridStudio?.id;
-        } else if (booking.isRecordingStudio) {
-          studioId = recordingStudio?.id;
-        } else if (booking.isProductionStudio) {
-          studioId = productionStudio?.id;
-        }
-        
-        // Create a BookingV2 object
-        final bookingV2 = BookingV2(
+        // For legacy bookings, we would determine which studio to use
+        // based on isRecordingStudio and isProductionStudio flags
+        // Since we've already migrated, we'll just use the existing studioId
+
+        // Create a Booking object
+        final updatedBooking = Booking(
           id: booking.id,
           projectId: booking.projectId,
           title: booking.title,
           startDate: booking.startDate,
           endDate: booking.endDate,
-          studioId: studioId,
+          studioId: booking.studioId,
           gearIds: booking.gearIds,
           assignedGearToMember: booking.assignedGearToMember,
           color: booking.color,
         );
-        
+
         // Update the booking in the database
-        await DBService.updateBookingV2(bookingV2);
-        
+        await DBService.updateBookingV2(updatedBooking);
+
         setState(() {
           _migratedBookings++;
         });
       }
-      
+
       // Enable the studio system
       // In a real app, this would update a setting in the database
       // For this example, we'll just set the feature flag
       // FeatureFlags.useStudioSystem = true;
-      
+
       // Mark migration as complete
       setState(() {
         _migrationComplete = true;
       });
-      
+
       // Log success
       LogService.info('Migration completed successfully: $_migratedBookings bookings migrated, $_studiosCreated studios created');
     } catch (e) {
@@ -240,7 +234,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -267,7 +261,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
       ),
     );
   }
-  
+
   // Build the loading state
   Widget _buildLoadingState() {
     return Column(
@@ -284,7 +278,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
       ],
     );
   }
-  
+
   // Build the migration state
   Widget _buildMigrationState() {
     return Column(
@@ -327,7 +321,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
           Container(
             padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
             decoration: BoxDecoration(
-              color: BLKWDSColors.errorRed.withOpacity(0.1),
+              color: BLKWDSColors.errorRed.withValues(alpha: 25),
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
             ),
             child: Row(
@@ -371,7 +365,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
       ],
     );
   }
-  
+
   // Build a migration step
   Widget _buildMigrationStep(String title, String description) {
     return Padding(
@@ -406,7 +400,7 @@ class _MigrationScreenState extends State<MigrationScreen> {
       ),
     );
   }
-  
+
   // Build the completed state
   Widget _buildCompletedState() {
     return Column(

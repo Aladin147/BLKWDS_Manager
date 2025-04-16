@@ -1335,8 +1335,8 @@ class DBService {
     // Get all bookings
     final List<Map<String, dynamic>> bookingMaps = await db.query('booking');
 
-    // Create BookingV2 objects
-    final List<BookingV2> bookings = [];
+    // Create Booking objects
+    final List<Booking> bookings = [];
 
     for (final bookingMap in bookingMaps) {
       final bookingId = bookingMap['id'] as int;

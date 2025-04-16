@@ -13,7 +13,7 @@ class Booking {
   final String? color; // Hex color code for visual identification
   final String? notes; // Additional notes for the booking
 
-  BookingV2({
+  Booking({
     this.id,
     required this.projectId,
     this.title,
@@ -26,9 +26,9 @@ class Booking {
     this.notes,
   });
 
-  /// Create a BookingV2 object from a map (for database operations)
-  factory BookingV2.fromMap(Map<String, dynamic> map) {
-    return BookingV2(
+  /// Create a Booking object from a map (for database operations)
+  factory Booking.fromMap(Map<String, dynamic> map) {
+    return Booking(
       id: map['id'] as int,
       projectId: map['projectId'] as int,
       title: map['title'] as String?,
@@ -43,8 +43,8 @@ class Booking {
     );
   }
 
-  /// Create a BookingV2 object from JSON
-  factory BookingV2.fromJson(Map<String, dynamic> json) {
+  /// Create a Booking object from JSON
+  factory Booking.fromJson(Map<String, dynamic> json) {
     Map<int, int>? assignments;
     if (json['assignedGearToMember'] != null) {
       assignments = {};
@@ -54,7 +54,7 @@ class Booking {
       });
     }
 
-    return BookingV2(
+    return Booking(
       id: json['id'] as int?,
       projectId: json['projectId'] as int,
       title: json['title'] as String?,
@@ -70,7 +70,7 @@ class Booking {
     );
   }
 
-  /// Convert BookingV2 object to a map (for database operations)
+  /// Convert Booking object to a map (for database operations)
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
       'projectId': projectId,
@@ -89,7 +89,7 @@ class Booking {
     return map;
   }
 
-  /// Convert BookingV2 object to JSON
+  /// Convert Booking object to JSON
   Map<String, dynamic> toJson() {
     Map<String, dynamic>? assignments;
     if (assignedGearToMember != null) {
@@ -113,8 +113,8 @@ class Booking {
     };
   }
 
-  /// Create a copy of this BookingV2 with modified fields
-  BookingV2 copyWith({
+  /// Create a copy of this Booking with modified fields
+  Booking copyWith({
     int? id,
     int? projectId,
     String? title,
@@ -126,7 +126,7 @@ class Booking {
     String? color,
     String? notes,
   }) {
-    return BookingV2(
+    return Booking(
       id: id ?? this.id,
       projectId: projectId ?? this.projectId,
       title: title ?? this.title,
@@ -140,31 +140,17 @@ class Booking {
     );
   }
 
-  /// Convert from Booking to BookingV2
-  factory BookingV2.fromBooking(Booking booking) {
-    return BookingV2(
-      id: booking.id,
-      projectId: booking.projectId,
-      title: booking.title,
-      startDate: booking.startDate,
-      endDate: booking.endDate,
-      studioId: null, // No studio ID in the original booking
-      gearIds: booking.gearIds,
-      assignedGearToMember: booking.assignedGearToMember,
-      color: booking.color,
-      notes: null, // No notes in the original booking
-    );
-  }
+
 
   @override
   String toString() {
-    return 'BookingV2(id: $id, projectId: $projectId, title: $title, startDate: $startDate, endDate: $endDate, studioId: $studioId)';
+    return 'Booking(id: $id, projectId: $projectId, title: $title, startDate: $startDate, endDate: $endDate, studioId: $studioId)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is BookingV2 &&
+    return other is Booking &&
         other.id == id &&
         other.projectId == projectId &&
         other.title == title &&
@@ -187,9 +173,9 @@ class Booking {
       notes.hashCode;
 }
 
-/// Original Booking Model
-/// Kept for backward compatibility
-class Booking {
+/// Legacy Booking Model
+/// This class is kept for reference only and should not be used
+class LegacyBooking {
   final int? id;
   final int projectId;
   final String? title;
@@ -201,7 +187,7 @@ class Booking {
   final Map<int, int>? assignedGearToMember; // {gearId: memberId}
   final String? color; // Hex color code for visual identification
 
-  Booking({
+  LegacyBooking({
     this.id,
     required this.projectId,
     this.title,
@@ -213,153 +199,4 @@ class Booking {
     this.assignedGearToMember,
     this.color,
   });
-
-  /// Create a Booking object from a map (for database operations)
-  factory Booking.fromMap(Map<String, dynamic> map) {
-    return Booking(
-      id: map['id'] as int,
-      projectId: map['projectId'] as int,
-      title: map['title'] as String?,
-      startDate: DateTime.parse(map['startDate'] as String),
-      endDate: DateTime.parse(map['endDate'] as String),
-      isRecordingStudio: (map['isRecordingStudio'] as int) == 1,
-      isProductionStudio: (map['isProductionStudio'] as int) == 1,
-      // Gear IDs and assignments are stored in a separate table, so they're not in the map
-      gearIds: const [],
-      assignedGearToMember: {},
-      color: map['color'] as String?,
-    );
-  }
-
-  /// Create a Booking object from JSON
-  factory Booking.fromJson(Map<String, dynamic> json) {
-    Map<int, int>? assignments;
-    if (json['assignedGearToMember'] != null) {
-      assignments = {};
-      final Map<String, dynamic> assignMap = json['assignedGearToMember'] as Map<String, dynamic>;
-      assignMap.forEach((key, value) {
-        assignments![int.parse(key)] = value as int;
-      });
-    }
-
-    return Booking(
-      id: json['id'] as int?,
-      projectId: json['projectId'] as int,
-      title: json['title'] as String?,
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      isRecordingStudio: json['isRecordingStudio'] as bool,
-      isProductionStudio: json['isProductionStudio'] as bool,
-      gearIds: json['gearIds'] != null
-          ? List<int>.from(json['gearIds'] as List)
-          : const [],
-      assignedGearToMember: assignments,
-      color: json['color'] as String?,
-    );
-  }
-
-  /// Convert Booking object to a map (for database operations)
-  Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{
-      'projectId': projectId,
-      if (title != null) 'title': title,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'isRecordingStudio': isRecordingStudio ? 1 : 0,
-      'isProductionStudio': isProductionStudio ? 1 : 0,
-      // Gear IDs and assignments are stored in a separate table, so they're not in the map
-    };
-
-    // Only add non-null values
-    if (id != null) map['id'] = id;
-    if (color != null) map['color'] = color;
-
-    return map;
-  }
-
-  /// Convert Booking object to JSON
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic>? assignments;
-    if (assignedGearToMember != null) {
-      assignments = {};
-      assignedGearToMember!.forEach((gearId, memberId) {
-        assignments![gearId.toString()] = memberId;
-      });
-    }
-
-    return {
-      'id': id,
-      'projectId': projectId,
-      if (title != null) 'title': title,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'isRecordingStudio': isRecordingStudio,
-      'isProductionStudio': isProductionStudio,
-      'gearIds': gearIds,
-      'assignedGearToMember': assignments,
-      'color': color,
-    };
-  }
-
-  /// Create a copy of this Booking with modified fields
-  Booking copyWith({
-    int? id,
-    int? projectId,
-    String? title,
-    DateTime? startDate,
-    DateTime? endDate,
-    bool? isRecordingStudio,
-    bool? isProductionStudio,
-    List<int>? gearIds,
-    Map<int, int>? assignedGearToMember,
-    String? color,
-  }) {
-    return Booking(
-      id: id ?? this.id,
-      projectId: projectId ?? this.projectId,
-      title: title ?? this.title,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      isRecordingStudio: isRecordingStudio ?? this.isRecordingStudio,
-      isProductionStudio: isProductionStudio ?? this.isProductionStudio,
-      gearIds: gearIds ?? this.gearIds,
-      assignedGearToMember: assignedGearToMember ?? this.assignedGearToMember,
-      color: color ?? this.color,
-    );
-  }
-
-  /// Convert to BookingV2
-  BookingV2 toBookingV2() {
-    return BookingV2.fromBooking(this);
-  }
-
-  @override
-  String toString() {
-    return 'Booking(id: $id, projectId: $projectId, title: $title, startDate: $startDate, endDate: $endDate)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Booking &&
-        other.id == id &&
-        other.projectId == projectId &&
-        other.title == title &&
-        other.startDate == startDate &&
-        other.endDate == endDate &&
-        other.isRecordingStudio == isRecordingStudio &&
-        other.isProductionStudio == isProductionStudio &&
-        other.color == color;
-  }
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      projectId.hashCode ^
-      title.hashCode ^
-      startDate.hashCode ^
-      endDate.hashCode ^
-      isRecordingStudio.hashCode ^
-      isProductionStudio.hashCode ^
-      color.hashCode;
 }

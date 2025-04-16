@@ -7,13 +7,13 @@ import '../../utils/constants.dart';
 
 /// DashboardControllerV2
 /// Handles business logic and database operations for the dashboard screen
-/// This version supports the new BookingV2 model with studio system
+/// This version supports the new Booking model with studio system
 class DashboardControllerV2 {
   // State notifiers
   final ValueNotifier<List<Gear>> gearList = ValueNotifier<List<Gear>>([]);
   final ValueNotifier<List<Member>> memberList = ValueNotifier<List<Member>>([]);
   final ValueNotifier<List<Project>> projectList = ValueNotifier<List<Project>>([]);
-  final ValueNotifier<List<BookingV2>> bookingList = ValueNotifier<List<BookingV2>>([]);
+  final ValueNotifier<List<Booking>> bookingList = ValueNotifier<List<Booking>>([]);
   final ValueNotifier<List<Studio>> studioList = ValueNotifier<List<Studio>>([]);
   final ValueNotifier<List<ActivityLog>> recentActivity = ValueNotifier<List<ActivityLog>>([]);
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
@@ -204,7 +204,7 @@ class DashboardControllerV2 {
   }
 
   // Get bookings for today
-  List<BookingV2> getTodayBookings() {
+  List<Booking> getTodayBookings() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 

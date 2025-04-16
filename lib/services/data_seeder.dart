@@ -166,7 +166,7 @@ class DataSeeder {
         title: 'Commercial Shoot',
         startDate: DateTime(now.year, now.month, now.day + 3, 9),
         endDate: DateTime(now.year, now.month, now.day + 3, 18),
-        isProductionStudio: true,
+        studioId: 2, // Production studio
         gearIds: [gearIds[0], gearIds[2], gearIds[4], gearIds[5]],
         assignedGearToMember: {
           gearIds[0]: memberIds[1], // Camera assigned to Cinematographer
@@ -178,7 +178,7 @@ class DataSeeder {
         title: 'Music Video',
         startDate: DateTime(now.year, now.month, now.day + 5, 10),
         endDate: DateTime(now.year, now.month, now.day + 6, 16),
-        isRecordingStudio: true,
+        studioId: 1, // Recording studio
         gearIds: [gearIds[1], gearIds[3], gearIds[6]],
         assignedGearToMember: {
           gearIds[3]: memberIds[2], // Mic assigned to Sound Engineer
@@ -190,7 +190,7 @@ class DataSeeder {
         title: 'Documentary Shoot',
         startDate: DateTime(now.year, now.month, now.day + 10, 13),
         endDate: DateTime(now.year, now.month, now.day + 10, 17),
-        isRecordingStudio: true,
+        studioId: 1, // Recording studio
         gearIds: [gearIds[3], gearIds[6], gearIds[7]],
       ),
     ];

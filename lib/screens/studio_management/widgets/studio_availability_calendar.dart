@@ -28,7 +28,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
   late DateTime _selectedDay;
   late int _selectedStudioId;
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  List<BookingV2> _bookings = [];
+  List<Booking> _bookings = [];
   bool _isLoading = true;
 
   @override
@@ -79,7 +79,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
   }
 
   /// Get bookings for a studio
-  Future<List<BookingV2>> _getBookingsForStudio(int studioId) async {
+  Future<List<Booking>> _getBookingsForStudio(int studioId) async {
     return await DBService.getBookingsForStudio(studioId);
   }
 
@@ -104,7 +104,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
   }
 
   /// Get bookings for a specific day
-  List<BookingV2> _getBookingsForDay(DateTime day) {
+  List<Booking> _getBookingsForDay(DateTime day) {
     final checkDay = DateTime(day.year, day.month, day.day);
 
     return _bookings.where((booking) {
@@ -125,7 +125,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
   }
 
   /// Check if a day is fully booked
-  bool _isDayFullyBooked(DateTime day, List<BookingV2> bookingsOnDay) {
+  bool _isDayFullyBooked(DateTime day, List<Booking> bookingsOnDay) {
     // If there are no bookings, the day is not fully booked
     if (bookingsOnDay.isEmpty) {
       return false;
