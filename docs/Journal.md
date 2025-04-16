@@ -1,5 +1,18 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Overflow Fixes
+
+Today we fixed overflow issues in the top bar summary widget. This was an important step in our style unification plan, as it ensures the application looks good on different screen sizes.
+
+Key changes included:
+
+1. **Replaced Row with Wrap**: Updated the top bar summary widget to use a Wrap widget instead of a Row for better responsiveness
+2. **Added Flexible Widgets**: Added Flexible widgets to text elements to prevent overflow
+3. **Reduced Card Width**: Reduced the width of summary cards from 200px to 180px for better fit on smaller screens
+4. **Added Text Overflow Handling**: Added TextOverflow.ellipsis to text elements to handle overflow gracefully
+
+These changes significantly improve the user experience on different screen sizes and create a more responsive application.
+
 ## 2025-06-13: Layout Responsiveness Improvements
 
 Today we improved the layout responsiveness of the dashboard screen by replacing fixed heights with flexible layouts. This was an important step in our style unification plan, as it ensures the application looks good on different screen sizes.

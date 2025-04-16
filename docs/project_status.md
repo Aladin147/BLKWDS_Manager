@@ -175,6 +175,18 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Recent Changes
 
+### v0.35.0 - Overflow Fixes (2025-06-13)
+
+**Fixed:**
+
+- Fixed overflow issues in top bar summary widget
+
+**Changed:**
+
+- Replaced Row with Wrap in top bar summary widget for better responsiveness
+- Added Flexible widgets to text elements to prevent overflow
+- Reduced width of summary cards for better fit on smaller screens
+
 ### v0.34.0 - Layout Responsiveness Improvements (2025-06-13)
 
 **Fixed:**
