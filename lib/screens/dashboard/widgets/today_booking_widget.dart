@@ -3,7 +3,9 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
+import '../../../theme/blkwds_animations.dart';
 
+import '../../../widgets/blkwds_button.dart';
 import '../../../widgets/blkwds_card.dart';
 import '../../../widgets/blkwds_status_badge.dart';
 
@@ -62,7 +64,8 @@ class TodayBookingWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              TextButton.icon(
+              BLKWDSButton(
+                label: 'View All',
                 onPressed: () {
                   // This would navigate to a full bookings screen in a real app
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -72,11 +75,9 @@ class TodayBookingWidget extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.visibility),
-                label: const Text('View All'),
-                style: TextButton.styleFrom(
-                  foregroundColor: BLKWDSColors.accentTeal,
-                ),
+                type: BLKWDSButtonType.secondary,
+                icon: Icons.visibility,
+                isSmall: true,
               ),
             ],
           ),
@@ -88,7 +89,7 @@ class TodayBookingWidget extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: BLKWDSLoadingSpinner(),
                   );
                 }
 
