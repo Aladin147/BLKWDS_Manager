@@ -32,18 +32,18 @@ class SettingsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
-          
+
           // Section content
           Container(
             width: double.infinity,
             padding: padding ?? const EdgeInsets.all(BLKWDSConstants.spacingMedium),
             decoration: BoxDecoration(
-              color: BLKWDSColors.white,
+              color: BLKWDSColors.backgroundMedium,
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
               boxShadow: [
                 BoxShadow(
-                  color: BLKWDSColors.slateGrey.withValues(alpha: 50),
-                  blurRadius: 4,
+                  color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+                  blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),
               ],

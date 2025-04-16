@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../models/models.dart';
+import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_widgets.dart';
@@ -103,12 +104,12 @@ class _StudioSettingsFormState extends State<StudioSettingsForm> {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: BLKWDSColors.backgroundMedium,
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
+            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
