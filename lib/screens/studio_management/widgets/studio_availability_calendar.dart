@@ -189,7 +189,8 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       children: [
         // Studio selector and view toggle
         Padding(
@@ -315,6 +316,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
               : _buildBookingsForSelectedDay(),
         ),
       ],
+    ),
     );
   }
 
