@@ -1,5 +1,18 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Navigation Standardization
+
+Today we standardized navigation patterns across the application. This was an important step in our style unification plan, as it ensures a consistent user experience when navigating between screens.
+
+Key changes included:
+
+1. **Consistent Navigation Service**: Updated all direct `Navigator.push()` calls to use the `NavigationService`
+2. **Standardized Transition Types**: Used `fade` for major sections and `rightToLeft` for detail screens
+3. **Updated Key Files**: Modified dashboard_screen.dart, booking_panel_screen.dart, and settings_screen.dart
+4. **Consistent Button Styling**: Replaced standard buttons with BLKWDSButton in dialogs
+
+These changes significantly improve the user experience by providing consistent navigation patterns and transitions throughout the application.
+
 ## 2025-06-13: Overflow Fixes
 
 Today we fixed overflow issues in the top bar summary widget. This was an important step in our style unification plan, as it ensures the application looks good on different screen sizes.

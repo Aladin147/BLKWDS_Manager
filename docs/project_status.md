@@ -54,7 +54,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Improve layout responsiveness by replacing fixed heights
    - [ ] Ensure consistent typography usage across all screens
    - [ ] Standardize component usage (buttons, text fields, etc.)
-   - [ ] Standardize navigation patterns and transitions
+   - [x] Standardize navigation patterns and transitions
    - [x] Remove all references to light mode/theme switching (dark mode only)
    - [ ] Create consistent card styling across the application
 
@@ -174,6 +174,19 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.36.0 - Navigation Standardization (2025-06-13)
+
+**Fixed:**
+
+- Standardized navigation patterns using NavigationService
+
+**Changed:**
+
+- Replaced direct Navigator.push() calls with NavigationService().navigateTo()
+- Standardized transition types (fade for major sections, rightToLeft for detail screens)
+- Updated dashboard_screen.dart, booking_panel_screen.dart, and settings_screen.dart to use NavigationService
+- Replaced standard buttons with BLKWDSButton in dialogs
 
 ### v0.35.0 - Overflow Fixes (2025-06-13)
 
