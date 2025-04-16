@@ -14,7 +14,7 @@ import 'models/booking_filter.dart';
 import 'models/booking_list_view_options.dart';
 import 'widgets/booking_filter_bar.dart';
 
-import 'widgets/booking_form_adapter.dart';
+import 'widgets/booking_form_v2.dart';
 import 'widgets/booking_list_header.dart';
 import 'widgets/booking_list_item.dart';
 
@@ -487,7 +487,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: BookingFormAdapter(
+          child: BookingFormV2(
               controller: widget.controller,
               booking: _selectedBooking,
               onSave: _saveBooking,

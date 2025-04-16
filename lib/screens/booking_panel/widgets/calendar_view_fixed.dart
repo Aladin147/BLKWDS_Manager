@@ -108,8 +108,7 @@ class _CalendarViewState extends State<CalendarView> {
         title: booking.title,
         startDate: newStartDate,
         endDate: newEndDate,
-        isRecordingStudio: booking.isRecordingStudio,
-        isProductionStudio: booking.isProductionStudio,
+        studioId: booking.studioId,
         gearIds: booking.gearIds,
         assignedGearToMember: booking.assignedGearToMember,
         color: booking.color,
@@ -117,7 +116,7 @@ class _CalendarViewState extends State<CalendarView> {
 
       // Check for conflicts
       return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
-    } else if (booking is BookingV2 && widget.controllerV2 != null) {
+    } else if (widget.controllerV2 != null) {
       // Calculate the new start and end dates
       final duration = booking.endDate.difference(booking.startDate);
       final newStartDate = DateTime(
@@ -130,7 +129,7 @@ class _CalendarViewState extends State<CalendarView> {
       final newEndDate = newStartDate.add(duration);
 
       // Create a new booking with the new dates
-      final rescheduledBooking = BookingV2(
+      final rescheduledBooking = Booking(
         id: booking.id,
         projectId: booking.projectId,
         title: booking.title,
@@ -348,7 +347,7 @@ class _CalendarViewState extends State<CalendarView> {
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
                   final booking = bookings[index];
-                  final projectId = booking is BookingV2 ? booking.projectId : (booking as Booking).projectId;
+                  final projectId = booking.projectId;
                   final project = _adapter.getProjectById(projectId);
 
                   return CalendarBookingItem(
