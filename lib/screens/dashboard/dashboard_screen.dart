@@ -4,6 +4,7 @@ import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../utils/constants.dart';
+import '../../services/navigation_service.dart';
 
 
 import '../../models/models.dart';
@@ -172,11 +173,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: const Icon(Icons.calendar_month),
             tooltip: 'Calendar',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CalendarScreen(),
-                ),
+              NavigationService().navigateTo(
+                const CalendarScreen(),
+                transitionType: BLKWDSPageTransitionType.fade,
               );
             },
           ),
@@ -184,11 +183,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: const Icon(Icons.settings),
             tooltip: 'Settings',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
-                ),
+              NavigationService().navigateTo(
+                const SettingsScreen(),
+                transitionType: BLKWDSPageTransitionType.fade,
               );
             },
           ),
@@ -407,11 +404,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 height: 300,
                                 child: QuickActionsPanel(
                                   onAddGear: () async {
-                                    final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const AddGearScreen(),
-                                      ),
+                                    final result = await NavigationService().navigateTo(
+                                      const AddGearScreen(),
+                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
                                     );
 
                                     if (result == true) {
@@ -421,47 +416,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     }
                                   },
                                   onOpenBookingPanel: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const BookingPanelScreen(),
-                                      ),
+                                    NavigationService().navigateTo(
+                                      const BookingPanelScreen(),
+                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
                                     );
                                   },
                                   onManageMembers: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const MemberListScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
+                                    NavigationService().navigateTo(
+                                      const MemberListScreen(),
+                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
                                     );
                                   },
                                   onManageProjects: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const ProjectListScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
+                                    NavigationService().navigateTo(
+                                      const ProjectListScreen(),
+                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
                                     );
                                   },
                                   onManageGear: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const GearListScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
+                                    NavigationService().navigateTo(
+                                      const GearListScreen(),
+                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
                                     );
                                   },
                                   onManageStudios: () {
-                                    Navigator.push(
-                                      context,
-                                      BLKWDSPageRoute(
-                                        page: const StudioManagementScreen(),
-                                        transitionType: BLKWDSPageTransitionType.rightToLeft,
-                                      ),
+                                    NavigationService().navigateTo(
+                                      const StudioManagementScreen(),
+                                      transitionType: BLKWDSPageTransitionType.rightToLeft,
                                     );
                                   },
                                 ),

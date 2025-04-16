@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
+import '../../services/navigation_service.dart';
+import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -224,11 +226,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       subtitle: const Text('Add, edit, and delete members'),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MemberListScreen(),
-                          ),
+                        NavigationService().navigateTo(
+                          const MemberListScreen(),
+                          transitionType: BLKWDSPageTransitionType.rightToLeft,
                         );
                       },
                     ),
@@ -237,11 +237,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       subtitle: const Text('Add, edit, and delete projects'),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProjectListScreen(),
-                          ),
+                        NavigationService().navigateTo(
+                          const ProjectListScreen(),
+                          transitionType: BLKWDSPageTransitionType.rightToLeft,
                         );
                       },
                     ),
@@ -250,11 +248,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       subtitle: const Text('Add, edit, and manage gear inventory'),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const GearListScreen(),
-                          ),
+                        NavigationService().navigateTo(
+                          const GearListScreen(),
+                          transitionType: BLKWDSPageTransitionType.rightToLeft,
                         );
                       },
                     ),
@@ -294,11 +290,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         subtitle: const Text('Test the error handling system'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ErrorHandlingExample(),
-                            ),
+                          NavigationService().navigateTo(
+                            const ErrorHandlingExample(),
+                            transitionType: BLKWDSPageTransitionType.rightToLeft,
                           );
                         },
                       ),
@@ -308,11 +302,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         subtitle: const Text('Test the retry and recovery systems'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RecoveryExample(),
-                            ),
+                          NavigationService().navigateTo(
+                            const RecoveryExample(),
+                            transitionType: BLKWDSPageTransitionType.rightToLeft,
                           );
                         },
                       ),
@@ -322,11 +314,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         subtitle: const Text('Test error analytics and boundaries'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ErrorAnalyticsExample(),
-                            ),
+                          NavigationService().navigateTo(
+                            const ErrorAnalyticsExample(),
+                            transitionType: BLKWDSPageTransitionType.rightToLeft,
                           );
                         },
                       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
+import '../../services/navigation_service.dart';
+import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -245,13 +247,15 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
           'Are you sure you want to reschedule "${_controller.getProjectById(booking.projectId)?.title ?? 'Unknown Project'}" to ${DateFormat.yMMMd().format(newStartDate)}?',
         ),
         actions: [
-          TextButton(
+          BLKWDSButton(
+            label: 'Cancel',
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            type: BLKWDSButtonType.secondary,
           ),
-          ElevatedButton(
+          BLKWDSButton(
+            label: 'Reschedule',
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Reschedule'),
+            type: BLKWDSButtonType.primary,
           ),
         ],
       ),
@@ -309,19 +313,17 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookingDetailScreenAdapter(
-          booking: booking,
-          controller: _controller,
-        ),
+    final result = await NavigationService().navigateTo(
+      BookingDetailScreenAdapter(
+        booking: booking,
+        controller: _controller,
       ),
-    ).then((result) {
-      // Refresh data if booking was updated or deleted
-      if (result == true) {
-        _controller.initialize();
-      }
-    });
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+
+    // Refresh data if booking was updated or deleted
+    if (result == true) {
+      _controller.initialize();
+    }
   }
 }
