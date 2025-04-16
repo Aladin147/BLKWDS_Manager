@@ -149,7 +149,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 5. **Dashboard UI Standardization** (In Progress)
    - Fix Layout Issues
-     - [ ] Fix indentation in top_bar_summary_widget.dart
+     - [x] Fix indentation in top_bar_summary_widget.dart
      - [ ] Make summary cards responsive by using Flexible or FractionallySizedBox
      - [ ] Add SizedBox wrapper to studio booking info card for consistency
      - [ ] Replace fixed heights with Expanded or Flexible widgets
