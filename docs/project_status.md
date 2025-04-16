@@ -51,7 +51,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 5. **Style Unification**
    - [x] Standardize background colors across all screens
    - [x] Standardize shadow styles for all cards and elevated surfaces
-   - [ ] Improve layout responsiveness by replacing fixed heights
+   - [x] Improve layout responsiveness by replacing fixed heights
    - [ ] Ensure consistent typography usage across all screens
    - [ ] Standardize component usage (buttons, text fields, etc.)
    - [ ] Standardize navigation patterns and transitions
@@ -105,7 +105,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 15. ~~Non-functional filter chips in Gear Preview List~~ (FIXED in v0.30.0)
 16. ~~Debug menu always visible in Settings screen~~ (FIXED in v0.30.0)
 17. ~~Inconsistent button styles across the application~~ (FIXED in v0.30.0)
-18. Hardcoded heights in dashboard layout affecting responsiveness (IDENTIFIED in v0.29.0)
+18. ~~Hardcoded heights in dashboard layout affecting responsiveness~~ (FIXED in v0.34.0)
 19. ~~Inconsistent background colors across screens~~ (FIXED in v0.33.0)
 20. ~~Inconsistent shadow styles for cards and elevated surfaces~~ (FIXED in v0.33.0)
 21. Inconsistent typography usage across screens (IDENTIFIED in v0.31.0)
@@ -174,6 +174,19 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.34.0 - Layout Responsiveness Improvements (2025-06-13)
+
+**Fixed:**
+
+- Improved layout responsiveness by replacing fixed heights with flexible layouts
+
+**Changed:**
+
+- Updated gear preview list to use Expanded widget instead of fixed height
+- Updated quick actions panel to use Expanded widget instead of fixed height
+- Updated today's bookings section to use responsive height based on screen size
+- Updated recent activity section to use responsive height based on screen size
 
 ### v0.33.0 - Background and Shadow Standardization (2025-06-13)
 

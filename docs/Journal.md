@@ -1,5 +1,18 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Layout Responsiveness Improvements
+
+Today we improved the layout responsiveness of the dashboard screen by replacing fixed heights with flexible layouts. This was an important step in our style unification plan, as it ensures the application looks good on different screen sizes.
+
+Key changes included:
+
+1. **Gear Preview List**: Updated to use Expanded widget instead of fixed height (400px)
+2. **Quick Actions Panel**: Updated to use Expanded widget instead of fixed height (300px)
+3. **Today's Bookings Section**: Updated to use responsive height based on screen size (25% of screen height)
+4. **Recent Activity Section**: Updated to use responsive height based on screen size (30% of screen height)
+
+These changes significantly improve the user experience on different screen sizes and create a more responsive application.
+
 ## 2025-06-13: Background and Shadow Standardization
 
 Today we standardized background colors and shadow styles across the application. This was an important step in our style unification plan, as it ensures a consistent visual appearance throughout the app.
