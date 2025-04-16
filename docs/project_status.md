@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc14 (Release Candidate 14)
+**Version:** 1.0.0-rc15 (Release Candidate 15)
 **Last Updated:** 2025-06-16
 
 ## Project Phase
@@ -254,6 +254,24 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.43.1 - Manual Dashboard Refresh (2025-06-16)
+
+**Added:**
+
+- Manual refresh button in the dashboard app bar
+- Loading indicator for the refresh button
+- Improved error handling for refresh operations
+
+**Changed:**
+
+- Enhanced user experience with dual refresh options (pull-to-refresh and manual button)
+- Added visual feedback during refresh operations
+
+**Improved:**
+
+- Discoverability of the refresh functionality
+- User experience for users unfamiliar with pull-to-refresh gestures
 
 ### v0.43.0 - Real-Time Dashboard Statistics (2025-06-16)
 
@@ -729,4 +747,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-16 (v0.43.0)
+Date: 2025-06-16 (v0.43.1)

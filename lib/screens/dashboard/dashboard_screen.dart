@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_animations.dart';
 import '../../utils/constants.dart';
 import '../../services/navigation_service.dart';
 import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../calendar/calendar_screen.dart';
-import '../settings/settings_screen.dart';
 import 'dashboard_controller.dart';
 import 'widgets/top_bar_summary_widget.dart';
 import 'widgets/quick_actions_panel.dart';
@@ -31,6 +28,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Selected member for checkout
   Member? _selectedMember;
+
+  // State for refresh button
+  bool _isRefreshing = false;
 
   @override
   void initState() {
@@ -130,6 +130,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text(Constants.appName),
         actions: [
+          // Refresh button with loading indicator
+          _isRefreshing
+              ? Container(
+                  width: 48,
+                  height: 48,
+                  padding: const EdgeInsets.all(12),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(BLKWDSColors.accentTeal),
+                  ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: 'Refresh Dashboard',
+                  onPressed: () async {
+                    // Show loading indicator
+                    setState(() {
+                      _isRefreshing = true;
+                    });
+
+                    try {
+                      // Refresh essential data
+                      await _controller.refreshEssentialData();
+
+                      // Show success message
+                      if (mounted) {
+                        _showSnackBar('Dashboard refreshed');
+                      }
+                    } catch (e) {
+                      // Show error message
+                      if (mounted) {
+                        _showSnackBar('Failed to refresh: ${e.toString()}');
+                      }
+                    } finally {
+                      // Hide loading indicator
+                      if (mounted) {
+                        setState(() {
+                          _isRefreshing = false;
+                        });
+                      }
+                    }
+                  },
+                ),
           IconButton(
             icon: const Icon(Icons.calendar_month),
             tooltip: 'Calendar',

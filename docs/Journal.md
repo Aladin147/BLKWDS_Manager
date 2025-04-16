@@ -1,8 +1,8 @@
 # BLKWDS Manager - Development Journal
 
-## 2025-06-16: Real-Time Dashboard Statistics Implementation
+## 2025-06-16: Real-Time Dashboard Statistics Implementation with Manual Refresh
 
-Today we implemented real-time dashboard statistics using direct database queries for improved performance and accuracy:
+Today we implemented real-time dashboard statistics using direct database queries for improved performance and accuracy, and added both pull-to-refresh and manual refresh functionality:
 
 1. **Analysis Phase**:
    - Identified areas in the dashboard that were using in-memory calculations
@@ -14,18 +14,19 @@ Today we implemented real-time dashboard statistics using direct database querie
    - Updated DashboardController to use these new methods
    - Implemented ValueNotifiers for real-time updates of statistics
    - Added pull-to-refresh functionality to the dashboard
+   - Added a manual refresh button with loading indicator in the app bar
    - Implemented optimized refresh methods for better performance
 
 3. **Testing Phase**:
    - Verified that the dashboard displays accurate information
-   - Tested the pull-to-refresh functionality
+   - Tested both pull-to-refresh and manual refresh functionality
    - Confirmed that statistics update correctly when data changes
 
 4. **Documentation Updates**:
    - Updated the placeholder inventory to mark Real Data for Dashboard as completed
    - Documented the changes in the Journal
 
-This implementation improves the dashboard by providing real-time, accurate statistics directly from the database rather than calculating them in memory. The pull-to-refresh functionality allows users to easily update the dashboard data without having to navigate away from the screen.
+This implementation improves the dashboard by providing real-time, accurate statistics directly from the database rather than calculating them in memory. The dual refresh options (pull-to-refresh and manual refresh button) give users flexibility in how they update the dashboard data. The manual refresh button is particularly useful for users who may not be familiar with the pull-to-refresh gesture, and it provides visual feedback with a loading indicator during the refresh process.
 
 ## 2025-06-16: Dashboard Controller Consolidation
 
