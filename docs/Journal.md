@@ -1,5 +1,21 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-14: Dashboard UI Standardization - Reusable Components
+
+Continued our UI standardization efforts by creating reusable components for common UI patterns:
+
+1. **Created BLKWDSIconContainer Component**:
+   - Standardized the icon container pattern used throughout the app
+   - Implemented consistent styling with customizable properties
+   - Added support for badges, tooltips, and tap actions
+   - Updated dashboard widgets to use the new component
+
+2. **Fixed Layout Issues**:
+   - Fixed layout issues in top_bar_summary_widget.dart by removing Flexible widgets from Wrap layout
+   - Ensured proper nesting of widgets to avoid runtime errors
+
+These changes have further improved the visual consistency of the dashboard screen and will make future UI development more efficient by reducing code duplication.
+
 ## 2025-06-13: Dashboard UI Standardization
 
 Today we continued our UI standardization efforts by implementing several improvements to the dashboard screen based on our comprehensive audit:
