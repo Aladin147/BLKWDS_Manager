@@ -486,70 +486,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Show search bar and full gear list in a modal bottom sheet
   void _showSearchAndFullGearList(BuildContext context) {
-    showModalBottomSheet(
+    BLKWDSBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        builder: (_, scrollController) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Column(
-              children: [
-                // Handle
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  height: 5,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: BLKWDSColors.slateGrey.withValues(alpha: 75),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+      type: BLKWDSBottomSheetType.fullScreen,
+      initialChildSize: 0.9,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      child: Column(
+        children: [
 
-                // Search bar
-                Padding(
-                  padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                  child: BLKWDSTextField(
-                    label: 'Search Gear',
-                    prefixIcon: Icons.search,
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value;
-                        _updateFilteredGear();
-                      });
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+            child: BLKWDSTextField(
+              label: 'Search Gear',
+              prefixIcon: Icons.search,
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                  _updateFilteredGear();
+                });
+              },
+            ),
+          ),
+
+          // Gear list
+          Expanded(
+            child: _filteredGear.isEmpty
+                ? Center(
+                    child: Text(
+                      'No gear found',
+                      style: BLKWDSTypography.bodyLarge,
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _filteredGear.length,
+                    itemBuilder: (context, index) {
+                      final gear = _filteredGear[index];
+                      return _buildGearCard(gear);
                     },
                   ),
-                ),
-
-                // Gear list
-                Expanded(
-                  child: _filteredGear.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No gear found',
-                            style: BLKWDSTypography.bodyLarge,
-                          ),
-                        )
-                      : ListView.builder(
-                          controller: scrollController,
-                          itemCount: _filteredGear.length,
-                          itemBuilder: (context, index) {
-                            final gear = _filteredGear[index];
-                            return _buildGearCard(gear);
-                          },
-                        ),
-                ),
-              ],
-            ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
