@@ -195,7 +195,7 @@ class _BLKWDSButtonEnhancedState extends State<BLKWDSButtonEnhanced> with Single
         shadows = widget.hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level2) : [];
         break;
       case BLKWDSButtonTypeEnhanced.secondary:
-        backgroundColor = Colors.transparent;
+        backgroundColor = BLKWDSColors.transparent;
         textColor = widget.customTextColor ?? BLKWDSColors.slateGrey;
         borderColor = widget.customColor ?? BLKWDSColors.secondaryButtonBorder;
         gradient = widget.useGradient ? BLKWDSGradients.secondaryButtonGradient : null;
@@ -223,14 +223,14 @@ class _BLKWDSButtonEnhancedState extends State<BLKWDSButtonEnhanced> with Single
         shadows = widget.hasShadow ? BLKWDSShadows.getWarningShadow() : [];
         break;
       case BLKWDSButtonTypeEnhanced.text:
-        backgroundColor = Colors.transparent;
+        backgroundColor = BLKWDSColors.transparent;
         textColor = widget.customTextColor ?? BLKWDSColors.electricMint;
-        borderColor = Colors.transparent;
+        borderColor = BLKWDSColors.transparent;
         gradient = null;
         shadows = [];
         break;
       case BLKWDSButtonTypeEnhanced.icon:
-        backgroundColor = widget.customColor ?? Colors.transparent;
+        backgroundColor = widget.customColor ?? BLKWDSColors.transparent;
         textColor = widget.customTextColor ?? BLKWDSColors.electricMint;
         borderColor = widget.type == BLKWDSButtonTypeEnhanced.secondary ? textColor : null;
         gradient = null;
@@ -356,7 +356,7 @@ class _BLKWDSButtonEnhancedState extends State<BLKWDSButtonEnhanced> with Single
         ..scale(_isHovered && widget.animateOnHover && !widget.isDisabled ? 1.02 : 1.0)
         ..scale(_isPressed && widget.onPressed != null && !widget.isDisabled ? 0.98 : 1.0),
       child: Material(
-        color: Colors.transparent,
+        color: BLKWDSColors.transparent,
         child: InkWell(
           onTap: widget.isDisabled ? null : widget.onPressed,
           onHover: (isHovered) {
@@ -388,10 +388,10 @@ class _BLKWDSButtonEnhancedState extends State<BLKWDSButtonEnhanced> with Single
             }
           },
           splashColor: widget.type == BLKWDSButtonTypeEnhanced.text
-              ? Colors.transparent
+              ? BLKWDSColors.transparent
               : textColor.withValues(alpha: 30),
           highlightColor: widget.type == BLKWDSButtonTypeEnhanced.text
-              ? Colors.transparent
+              ? BLKWDSColors.transparent
               : textColor.withValues(alpha: 20),
           borderRadius: BorderRadius.circular(BLKWDSConstants.buttonBorderRadius),
           child: Padding(

@@ -50,6 +50,7 @@ class BLKWDSColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color deepBlack = Color(0xFF121212); // Rich black for backgrounds
   static const Color slateGrey = Color(0xFFADBBCC); // Softer, more modern grey
+  static const Color transparent = Color(0x00000000); // Fully transparent color
 
   // Background Colors
   static const Color backgroundDark = Color(0xFF191919); // Slightly lighter than pure black

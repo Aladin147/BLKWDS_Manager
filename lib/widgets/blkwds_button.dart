@@ -49,7 +49,7 @@ class BLKWDSButton extends StatelessWidget {
         borderColor = null;
         break;
       case BLKWDSButtonType.secondary:
-        backgroundColor = Colors.transparent;
+        backgroundColor = BLKWDSColors.transparent;
         textColor = BLKWDSColors.accentTeal;
         borderColor = BLKWDSColors.accentTeal;
         break;

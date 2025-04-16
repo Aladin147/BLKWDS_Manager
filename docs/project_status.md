@@ -164,7 +164,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Create a BLKWDSBottomSheet component for the modal bottom sheet
    - Standardize Styles
      - [x] Standardize alpha values for similar elements
-     - [ ] Use BLKWDSColors constants consistently
+     - [x] Use BLKWDSColors constants consistently
      - [ ] Create a clear typography hierarchy
      - [ ] Use predefined text styles instead of direct modifications
      - [ ] Standardize spacing using BLKWDSConstants

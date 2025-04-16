@@ -26,7 +26,7 @@ class BLKWDSSnackbar {
   }) {
     // Get the color based on the type
     final Color backgroundColor;
-    final Color textColor = Colors.white;
+    final Color textColor = BLKWDSColors.white;
     final IconData icon;
 
     switch (type) {
