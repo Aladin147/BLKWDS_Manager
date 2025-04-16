@@ -1,5 +1,28 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: UI Component Standardization
+
+Today we made significant progress on standardizing UI components across the application. This is a direct follow-up to our UI elements audit and addresses several of the issues we identified.
+
+Key changes included:
+
+1. **Enhanced BLKWDSDropdown Component**:
+   - Updated the component to match our dark theme
+   - Added support for form validation
+   - Added prefixIcon support
+   - Improved styling with proper shadows and border radius
+   - Replaced DropdownButtonFormField with BLKWDSDropdown in studio_form.dart
+
+2. **Standardized Text Fields**:
+   - Replaced standard TextField with BLKWDSTextField in activity_log_screen.dart
+   - Ensured consistent styling across search fields
+
+3. **Standardized Cards**:
+   - Replaced standard Card with BLKWDSCard in activity_log_screen.dart
+   - Ensured consistent styling for list items
+
+These changes are part of our broader style unification plan and help create a more consistent user experience across the application. We'll continue to standardize other components in future updates.
+
 ## 2025-06-13: UI Elements Audit
 
 Today we conducted a comprehensive audit of UI elements across the application to identify inconsistencies and areas for improvement. This audit is a critical step in our style unification plan, as it helps us identify specific components that need standardization.

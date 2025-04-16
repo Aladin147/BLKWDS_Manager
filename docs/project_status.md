@@ -54,8 +54,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Improve layout responsiveness by replacing fixed heights
    - [ ] Ensure consistent typography usage across all screens
    - [ ] Standardize component usage (buttons, text fields, etc.)
-     - [ ] Replace standard TextField/TextFormField with BLKWDSTextField
-     - [ ] Create and implement BLKWDSDropdown for all dropdown fields
+     - [x] Replace standard TextField/TextFormField with BLKWDSTextField
+     - [x] Create and implement BLKWDSDropdown for all dropdown fields
      - [ ] Replace standard dialog buttons with BLKWDSButton
      - [ ] Clarify usage guidelines for BLKWDSTextField vs. BLKWDSFormField
      - [ ] Decide on standard vs. enhanced component versions
@@ -181,6 +181,21 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.37.0 - UI Component Standardization (2025-06-13)
+
+**Fixed:**
+
+- Updated BLKWDSDropdown component to match dark theme and support form validation
+- Replaced standard TextField with BLKWDSTextField in activity_log_screen.dart
+- Replaced standard Card with BLKWDSCard in activity_log_screen.dart
+- Replaced DropdownButtonFormField with BLKWDSDropdown in studio_form.dart
+
+**Changed:**
+
+- Enhanced BLKWDSDropdown with better styling, shadows, and form validation support
+- Added prefixIcon support to BLKWDSDropdown
+- Updated dropdown styling to match application's dark theme
 
 ### v0.36.0 - Navigation Standardization (2025-06-13)
 
