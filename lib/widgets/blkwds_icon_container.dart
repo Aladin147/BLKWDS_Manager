@@ -87,13 +87,13 @@ class BLKWDSIconContainer extends StatelessWidget {
     final Color iconCol = iconColor ?? bgColor;
     final double iconSz = iconSize ?? size.size * 0.5;
     final double borderRad = borderRadius ?? BLKWDSConstants.borderRadius;
-    
+
     final container = Container(
       width: size.size,
       height: size.size,
       padding: padding ?? const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: bgColor.withValues(alpha: backgroundAlpha ?? 50),
+        color: bgColor.withValues(alpha: backgroundAlpha != null ? backgroundAlpha!.toDouble() : 50),
         borderRadius: BorderRadius.circular(borderRad),
       ),
       child: Icon(
