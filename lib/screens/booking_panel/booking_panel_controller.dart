@@ -132,7 +132,9 @@ class BookingPanelController {
         );
       }
 
-      rethrow;
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if the studio table doesn't exist
+      studioList.value = [];
     }
   }
 
@@ -304,7 +306,9 @@ class BookingPanelController {
         );
       }
 
-      rethrow;
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if there's a database error
+      projectList.value = [];
     }
   }
 
@@ -336,7 +340,9 @@ class BookingPanelController {
         );
       }
 
-      rethrow;
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if there's a database error
+      memberList.value = [];
     }
   }
 
@@ -368,7 +374,9 @@ class BookingPanelController {
         );
       }
 
-      rethrow;
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if there's a database error
+      gearList.value = [];
     }
   }
 

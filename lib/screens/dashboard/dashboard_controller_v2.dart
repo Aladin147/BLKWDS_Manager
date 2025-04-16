@@ -223,7 +223,9 @@ class DashboardControllerV2 {
         );
       }
 
-      rethrow;
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if the studio table doesn't exist
+      studioList.value = [];
     }
   }
 
@@ -255,7 +257,9 @@ class DashboardControllerV2 {
         );
       }
 
-      rethrow;
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if there's a database error
+      recentActivity.value = [];
     }
   }
 
