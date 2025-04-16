@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
-import '../../utils/feature_flags.dart';
+
 import 'dashboard_controller.dart';
 import 'dashboard_controller_v2.dart';
 
@@ -25,7 +25,7 @@ class DashboardAdapter {
 
   /// Get today's bookings as a list of dynamic objects (either Booking or BookingV2)
   Future<List<dynamic>> getTodayBookings() async {
-    if (FeatureFlags.useStudioSystem && _controllerV2 != null) {
+    if (_controllerV2 != null) {
       return _controllerV2.getTodayBookings();
     } else if (_controllerV1 != null) {
       return _controllerV1.getTodayBookings();

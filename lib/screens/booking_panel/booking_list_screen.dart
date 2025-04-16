@@ -5,7 +5,7 @@ import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../utils/feature_flags.dart';
+
 import '../../widgets/blkwds_widgets.dart';
 import 'booking_detail_screen.dart';
 import 'booking_list_controller.dart';
@@ -13,7 +13,7 @@ import 'booking_panel_controller.dart';
 import 'models/booking_filter.dart';
 import 'models/booking_list_view_options.dart';
 import 'widgets/booking_filter_bar.dart';
-import 'widgets/booking_form.dart';
+
 import 'widgets/booking_form_adapter.dart';
 import 'widgets/booking_list_header.dart';
 import 'widgets/booking_list_item.dart';
@@ -487,21 +487,12 @@ class _BookingListScreenState extends State<BookingListScreen> {
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: FeatureFlags.useStudioSystem
-              ? BookingForm(
-                  controller: widget.controller,
-                  booking: null, // This would need to be a BookingV2 object
-                  onSave: (bookingV2) {
-                    // Handle BookingV2 save
-                  },
-                  onCancel: _hideEditBookingForm,
-                )
-              : BookingFormAdapter(
-                  controller: widget.controller,
-                  booking: _selectedBooking,
-                  onSave: _saveBooking,
-                  onCancel: _hideEditBookingForm,
-                ),
+          child: BookingFormAdapter(
+              controller: widget.controller,
+              booking: _selectedBooking,
+              onSave: _saveBooking,
+              onCancel: _hideEditBookingForm,
+            ),
         ),
       );
     }

@@ -4,7 +4,6 @@ import '../../models/models.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../utils/feature_flags.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
@@ -12,8 +11,7 @@ import 'booking_panel_controller_v2.dart';
 import 'booking_detail_screen.dart';
 import 'booking_detail_screen_v2.dart';
 import 'booking_list_screen.dart';
-import 'widgets/booking_form.dart';
-import 'widgets/booking_form_adapter.dart';
+
 import 'widgets/booking_form_adapter_v2.dart';
 import 'widgets/booking_form_v2.dart';
 import 'widgets/calendar_view_fixed.dart';
@@ -50,13 +48,11 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Initialize data
   Future<void> _initializeData() async {
-    // Initialize the appropriate controller based on feature flags
-    if (FeatureFlags.useStudioSystem) {
-      _controllerV2 = BookingPanelControllerV2();
-      await _controllerV2!.initialize();
-    }
+    // Initialize the V2 controller
+    _controllerV2 = BookingPanelControllerV2();
+    await _controllerV2!.initialize();
 
-    // Always initialize the V1 controller for compatibility
+    // Initialize the V1 controller for compatibility
     await _controller.initialize();
   }
 
@@ -214,28 +210,21 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             style: BLKWDSTypography.titleLarge,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          FeatureFlags.useStudioSystem && _controllerV2 != null
-              ? BookingFormAdapterV2(
-                  controller: _controllerV2!,
-                  booking: _tempBookingV2,
-                  onSave: (bookingV2) async {
-                    // Handle BookingV2 save
-                    final success = await _controllerV2!.createBooking(bookingV2);
-                    if (success) {
-                      _hideBookingForm();
-                      _showSnackBar('Booking created successfully');
-                    } else {
-                      _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to create booking');
-                    }
-                  },
-                  onCancel: _hideBookingForm,
-                )
-              : BookingFormAdapter(
-                  controller: _controller,
-                  booking: _selectedBooking,
-                  onSave: _saveBooking,
-                  onCancel: _hideBookingForm,
-                ),
+          BookingFormAdapterV2(
+              controller: _controllerV2!,
+              booking: _tempBookingV2,
+              onSave: (bookingV2) async {
+                // Handle BookingV2 save
+                final success = await _controllerV2!.createBooking(bookingV2);
+                if (success) {
+                  _hideBookingForm();
+                  _showSnackBar('Booking created successfully');
+                } else {
+                  _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to create booking');
+                }
+              },
+              onCancel: _hideBookingForm,
+            ),
         ],
       ),
     );
@@ -257,59 +246,32 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         // When a day is selected, show the create booking form
         // with the selected day as the start date
         setState(() {
-          if (FeatureFlags.useStudioSystem && _controllerV2 != null) {
-            // Create a BookingV2 object with default values
-            final defaultProject = _controllerV2!.projectList.value.isNotEmpty
-                ? _controllerV2!.projectList.value.first.id!
-                : 0;
+          // Create a BookingV2 object with default values
+          final defaultProject = _controllerV2!.projectList.value.isNotEmpty
+              ? _controllerV2!.projectList.value.first.id!
+              : 0;
 
-            final defaultStartDate = DateTime(
-              day.year,
-              day.month,
-              day.day,
-              DateTime.now().hour,
-              0,
-            );
+          final defaultStartDate = DateTime(
+            day.year,
+            day.month,
+            day.day,
+            DateTime.now().hour,
+            0,
+          );
 
-            final defaultEndDate = defaultStartDate.add(const Duration(hours: 2));
+          final defaultEndDate = defaultStartDate.add(const Duration(hours: 2));
 
-            // We'll create a temporary BookingV2 object and pass it to the form
-            _tempBookingV2 = BookingV2(
-              projectId: defaultProject,
-              title: 'New Booking',
-              startDate: defaultStartDate,
-              endDate: defaultEndDate,
-              studioId: null, // No studio selected by default
-              gearIds: [],
-            );
+          // We'll create a temporary BookingV2 object and pass it to the form
+          _tempBookingV2 = BookingV2(
+            projectId: defaultProject,
+            title: 'New Booking',
+            startDate: defaultStartDate,
+            endDate: defaultEndDate,
+            studioId: null, // No studio selected by default
+            gearIds: [],
+          );
 
-            _showBookingForm = true;
-          } else {
-            _selectedBooking = Booking(
-              projectId: _controller.projectList.value.isNotEmpty
-                  ? _controller.projectList.value.first.id!
-                  : 0,
-              title: 'New Booking',
-              startDate: DateTime(
-                day.year,
-                day.month,
-                day.day,
-                DateTime.now().hour,
-                0,
-              ),
-              endDate: DateTime(
-                day.year,
-                day.month,
-                day.day,
-                DateTime.now().hour + 2,
-                0,
-              ),
-              isRecordingStudio: false,
-              isProductionStudio: false,
-              gearIds: [],
-            );
-            _showBookingForm = true;
-          }
+          _showBookingForm = true;
         });
       },
       onBookingSelected: (booking) {

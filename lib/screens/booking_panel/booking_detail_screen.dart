@@ -5,10 +5,10 @@ import '../../services/services.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../utils/feature_flags.dart';
+
 import '../../widgets/blkwds_widgets.dart';
 import 'booking_panel_controller.dart';
-import 'widgets/booking_form.dart';
+
 import 'widgets/booking_form_adapter.dart';
 
 /// BookingDetailScreen
@@ -853,21 +853,12 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: FeatureFlags.useStudioSystem
-              ? BookingForm(
-                  controller: widget.controller,
-                  booking: null, // This would need to be a BookingV2 object
-                  onSave: (bookingV2) {
-                    // Handle BookingV2 save
-                  },
-                  onCancel: _hideEditBookingForm,
-                )
-              : BookingFormAdapter(
-                  controller: widget.controller,
-                  booking: _booking,
-                  onSave: _saveBooking,
-                  onCancel: _hideEditBookingForm,
-                ),
+          child: BookingFormAdapter(
+              controller: widget.controller,
+              booking: _booking,
+              onSave: _saveBooking,
+              onCancel: _hideEditBookingForm,
+            ),
         ),
       );
     }

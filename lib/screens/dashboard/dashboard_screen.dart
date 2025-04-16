@@ -4,7 +4,7 @@ import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../utils/constants.dart';
-import '../../utils/feature_flags.dart';
+
 
 import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -66,16 +66,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _controller.memberList.addListener(_updateSelectedMember);
   }
 
-  // Initialize controllers based on feature flags
+  // Initialize controllers
   void _initializeControllers() {
     _controller = DashboardController();
-
-    if (FeatureFlags.useStudioSystem) {
-      _controllerV2 = DashboardControllerV2();
-      _adapter = DashboardAdapter(controllerV1: _controller, controllerV2: _controllerV2);
-    } else {
-      _adapter = DashboardAdapter(controllerV1: _controller);
-    }
+    _controllerV2 = DashboardControllerV2();
+    _adapter = DashboardAdapter(controllerV1: _controller, controllerV2: _controllerV2);
   }
 
   // Initialize data from database

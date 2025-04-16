@@ -1,12 +1,7 @@
 /// FeatureFlags
 /// Controls feature availability throughout the application
-/// Used for feature toggling during development and migration
+/// Used for feature toggling during development
 class FeatureFlags {
-  /// Whether to use the new studio-based booking system
-  /// When true, the application will use BookingV2 and Studio models
-  /// When false, the application will use the original Booking model with boolean flags
-  static const bool useStudioSystem = true;
-
   /// Whether to show the studio management screen in the navigation
   static const bool showStudioManagement = true;
 
@@ -14,5 +9,6 @@ class FeatureFlags {
   static const bool useGearCardWithNote = true;
 
   /// Whether to show the migration UI for converting old bookings to the new system
-  static const bool showMigrationUI = true;
+  /// This flag is deprecated and will be removed in a future version
+  static const bool showMigrationUI = false;
 }
