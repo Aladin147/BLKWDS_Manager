@@ -13,6 +13,10 @@ class Booking {
   final String? color; // Hex color code for visual identification
   final String? notes; // Additional notes for the booking
 
+  // Legacy compatibility getters
+  bool get isRecordingStudio => studioId == 1; // Recording studio has ID 1
+  bool get isProductionStudio => studioId == 2; // Production studio has ID 2
+
   Booking({
     this.id,
     required this.projectId,

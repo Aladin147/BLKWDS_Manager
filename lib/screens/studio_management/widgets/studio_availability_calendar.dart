@@ -565,7 +565,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
   }
 
   /// Get project for a booking
-  Future<Project?> _getProjectForBooking(BookingV2 booking) async {
+  Future<Project?> _getProjectForBooking(Booking booking) async {
     try {
       return await DBService.getProjectById(booking.projectId);
     } catch (e) {
