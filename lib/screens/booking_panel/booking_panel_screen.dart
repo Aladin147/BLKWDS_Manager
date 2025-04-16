@@ -8,9 +8,8 @@ import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
 import 'booking_panel_controller_v2.dart';
-import 'booking_detail_screen.dart';
-import 'booking_detail_screen_v2.dart';
-import 'booking_list_screen.dart';
+import 'booking_detail_screen_adapter.dart';
+import 'booking_list_screen_adapter.dart';
 
 import 'widgets/booking_form_adapter_v2.dart';
 import 'widgets/booking_form_v2.dart';
@@ -232,8 +231,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Build list view
   Widget _buildListView() {
-    return BookingListScreen(
-      controller: _controller,
+    return BookingListScreenAdapter(
+      controller: _controllerV2 ?? _controller,
     );
   }
 
@@ -440,40 +439,20 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
-    if (_controllerV2 != null) {
-      // Use BookingDetailScreenV2 for Booking objects with V2 controller
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BookingDetailScreenV2(
-            booking: booking,
-            controller: _controllerV2!,
-          ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookingDetailScreenAdapter(
+          booking: booking,
+          controller: _controllerV2 ?? _controller,
         ),
-      ).then((result) {
-        // Refresh data if booking was updated or deleted
-        if (result == true) {
-          _controller.initialize();
-          _controllerV2!.initialize();
-        }
-      });
-    } else {
-      // Handle Booking detail navigation with V1 controller
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BookingDetailScreen(
-            booking: booking,
-            controller: _controller,
-          ),
-        ),
-      ).then((result) {
-        // Refresh data if booking was updated or deleted
-        if (result == true) {
-          _controller.initialize();
-          _controllerV2?.initialize();
-        }
-      });
-    }
+      ),
+    ).then((result) {
+      // Refresh data if booking was updated or deleted
+      if (result == true) {
+        _controller.initialize();
+        _controllerV2?.initialize();
+      }
+    });
   }
 }
