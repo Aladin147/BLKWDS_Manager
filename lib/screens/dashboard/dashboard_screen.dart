@@ -548,7 +548,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: BLKWDSColors.slateGrey.withValues(alpha: 50),
+                color: BLKWDSColors.slateGrey.withValues(alpha: BLKWDSColors.alphaVeryLow.toDouble()),
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius / 2),
               ),
               child: const Icon(Icons.camera_alt),

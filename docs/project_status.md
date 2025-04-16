@@ -163,7 +163,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Create a BLKWDSIconContainer component for the repeated icon container pattern
      - [x] Create a BLKWDSBottomSheet component for the modal bottom sheet
    - Standardize Styles
-     - [ ] Standardize alpha values for similar elements
+     - [x] Standardize alpha values for similar elements
      - [ ] Use BLKWDSColors constants consistently
      - [ ] Create a clear typography hierarchy
      - [ ] Use predefined text styles instead of direct modifications

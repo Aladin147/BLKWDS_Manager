@@ -70,7 +70,7 @@ class BLKWDSIconContainer extends StatelessWidget {
     required this.icon,
     this.size = BLKWDSIconContainerSize.medium,
     this.backgroundColor,
-    this.backgroundAlpha = 50,
+    this.backgroundAlpha = BLKWDSColors.alphaVeryLow,
     this.iconColor,
     this.iconSize,
     this.borderRadius,
@@ -93,7 +93,7 @@ class BLKWDSIconContainer extends StatelessWidget {
       height: size.size,
       padding: padding ?? const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: bgColor.withValues(alpha: backgroundAlpha != null ? backgroundAlpha!.toDouble() : 50),
+        color: bgColor.withValues(alpha: backgroundAlpha?.toDouble() ?? BLKWDSColors.alphaVeryLow.toDouble()),
         borderRadius: BorderRadius.circular(borderRad),
       ),
       child: Icon(

@@ -107,6 +107,16 @@ class BLKWDSColors {
   static const Color overlay = Color(0x80000000); // 50% black for overlays
   static const Color scrim = Color(0xCC000000); // 80% black for modal backgrounds
 
+  // Alpha Values (0-255)
+  static const int alphaFull = 255;      // 100% opacity
+  static const int alphaHigh = 230;      // 90% opacity
+  static const int alphaMediumHigh = 179; // 70% opacity
+  static const int alphaMedium = 128;     // 50% opacity
+  static const int alphaMediumLow = 102;  // 40% opacity
+  static const int alphaLow = 77;        // 30% opacity
+  static const int alphaVeryLow = 51;     // 20% opacity
+  static const int alphaNone = 0;        // 0% opacity
+
   // Gradient Colors
   static const Color gradientStart = Color(0xFF1A202C);
   static const Color gradientEnd = Color(0xFF2D3748);

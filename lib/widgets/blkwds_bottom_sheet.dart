@@ -125,16 +125,16 @@ class BLKWDSBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine the appropriate styling based on the type
-    final Color bgColor = backgroundColor ?? 
+    final Color bgColor = backgroundColor ??
         Theme.of(context).cardColor;
-    
-    final BorderRadius borderRad = borderRadius ?? 
+
+    final BorderRadius borderRad = borderRadius ??
         const BorderRadius.vertical(top: Radius.circular(20));
-    
-    final double elevationValue = elevation ?? 
+
+    final double elevationValue = elevation ??
         BLKWDSConstants.cardElevationMedium;
-    
-    final EdgeInsetsGeometry contentPadding = padding ?? 
+
+    final EdgeInsetsGeometry contentPadding = padding ??
         const EdgeInsets.all(BLKWDSConstants.spacingMedium);
 
     // Build the content based on whether it's scrollable
@@ -151,7 +151,7 @@ class BLKWDSBottomSheet extends StatelessWidget {
               borderRadius: borderRad,
               boxShadow: [
                 BoxShadow(
-                  color: BLKWDSColors.deepBlack.withValues(alpha: 50),
+                  color: BLKWDSColors.deepBlack.withValues(alpha: BLKWDSColors.alphaVeryLow.toDouble()),
                   blurRadius: elevationValue * 2,
                   spreadRadius: elevationValue / 2,
                   offset: Offset(0, -elevationValue / 2),
@@ -168,7 +168,7 @@ class BLKWDSBottomSheet extends StatelessWidget {
                     height: 5,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: BLKWDSColors.slateGrey.withValues(alpha: 75),
+                      color: BLKWDSColors.slateGrey.withValues(alpha: BLKWDSColors.alphaLow.toDouble()),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -225,7 +225,7 @@ class BLKWDSBottomSheet extends StatelessWidget {
                 height: 5,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: BLKWDSColors.slateGrey.withValues(alpha: 75),
+                  color: BLKWDSColors.slateGrey.withValues(alpha: BLKWDSColors.alphaLow.toDouble()),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),

@@ -232,7 +232,7 @@ class TodayBookingWidget extends StatelessWidget {
               icon: _getBookingIcon(booking, firstGear),
               size: BLKWDSIconContainerSize.large,
               backgroundColor: BLKWDSColors.accentTeal,
-              backgroundAlpha: 20,
+              backgroundAlpha: BLKWDSColors.alphaVeryLow,
               iconColor: BLKWDSColors.accentTeal,
               iconSize: 24,
             ),
