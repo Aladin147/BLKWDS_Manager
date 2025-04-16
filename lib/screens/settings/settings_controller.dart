@@ -19,7 +19,7 @@ class SettingsController {
   final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
 
   // App information
-  final String appVersion = '1.0.0';
+  final String appVersion = '1.0.0-rc1';
   final String appBuildNumber = '1';
   final String appCopyright = '© ${DateTime.now().year} BLKWDS Studios';
 

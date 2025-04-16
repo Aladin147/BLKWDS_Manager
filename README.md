@@ -136,7 +136,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 
 ## ✅ Version
 
-Current: **v0.14.0 – Error Handling Enhancement**
+Current: **v1.0.0-rc1 – Release Candidate 1**
 
 ---
 
