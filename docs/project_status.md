@@ -4,13 +4,13 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc3 (Release Candidate 3)
+**Version:** 1.0.0-rc4 (Release Candidate 4)
 **Last Updated:** 2025-06-07
 
 ## Project Phase
 
 **Current Phase:** Phase 1 (MVP) - Final Steps
-**Completion:** 98%
+**Completion:** 99%
 
 ### Remaining Phase 1 Tasks
 
@@ -23,7 +23,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Consolidate models (remove V2 suffix)
    - [x] Remove feature flags
    - [x] Remove compatibility layer
-   - [ ] Simplify architecture by removing adapters
+   - [x] Simplify architecture by removing adapters
    - [ ] Clean up unused code
 
 2. **Dashboard Improvements**
@@ -136,6 +136,21 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.24.0 - Studio Migration Cleanup - Phase 3 (2025-06-07)
+
+**Added:**
+- None
+
+**Changed:**
+- Consolidated controllers by removing BookingPanelControllerV2
+- Simplified adapters to work with the consolidated controller
+- Standardized component interfaces
+- Removed V2 suffixes from all components
+
+**Fixed:**
+- Fixed issues with multiple controller types
+- Removed unnecessary conditional logic
 
 ### v0.23.0 - Studio Migration Cleanup - Phase 2 (2025-06-07)
 
