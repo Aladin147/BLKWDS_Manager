@@ -27,6 +27,12 @@ Continued our UI standardization efforts by creating reusable components for com
    - Improved consistency of transparency levels for similar UI elements
    - Fixed type conversion issues between int and double alpha values
 
+5. **Standardized Color Usage**:
+   - Added transparent color constant to BLKWDSColors class
+   - Replaced all direct color references (e.g., Colors.white) with BLKWDSColors constants
+   - Updated button components to use consistent color references
+   - Improved consistency of color usage across the codebase
+
 These changes have further improved the visual consistency of the dashboard screen and will make future UI development more efficient by reducing code duplication.
 
 ## 2025-06-13: Dashboard UI Standardization
