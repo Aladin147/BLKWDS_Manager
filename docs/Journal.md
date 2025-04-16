@@ -833,11 +833,37 @@ These improvements have significantly enhanced the user experience by making the
 
 The documentation consolidation will help us maintain a clear picture of the project status and avoid conflicting information in different documents.
 
+## 2025-06-05: Studio Management System Enablement
+
+Today we enabled the studio management system by setting the `useStudioSystem` feature flag to true. This is a significant milestone as it marks the transition from our old booking system to the new studio-based system.
+
+Key accomplishments:
+
+1. **Studio System Enablement**:
+   - Set `useStudioSystem = true` in feature_flags.dart
+   - Tested initial application launch with the new system
+   - Identified and fixed layout issues that appeared after enabling the system
+
+2. **Layout Fixes**:
+   - Fixed RenderFlex overflow errors in calendar views
+   - Added SingleChildScrollView to handle content overflow
+   - Set fixed heights for booking lists to prevent layout issues
+   - Fixed FormatButton issues in TableCalendar widgets
+
+3. **Documentation Updates**:
+   - Updated project_status.md to reflect the enablement of the studio system
+   - Added a new version entry (v0.20.0) for the studio system enablement
+   - Updated the remaining tasks in the project status document
+
+We encountered some layout issues after enabling the studio system, particularly in the calendar views. These were fixed by adding proper scrolling containers and setting fixed heights for certain components to prevent overflow.
+
+The application now uses the new studio-based booking system, which provides more flexibility and better organization for studio management.
+
 ## Next Steps
 
-1. **Complete Studio Management System**
-   - Enable the studio system feature flag
+1. **Complete Studio Management System Testing**
    - Test thoroughly using the testing checklist
+   - Fix any issues that arise during testing
    - Remove compatibility layer once testing is complete
 
 2. **Finalize Phase 1 (MVP)**

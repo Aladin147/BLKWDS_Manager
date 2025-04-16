@@ -4,12 +4,12 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc1 (Release Candidate 1)  
+**Version:** 1.0.0-rc1 (Release Candidate 1)
 **Last Updated:** 2025-06-04
 
 ## Project Phase
 
-**Current Phase:** Phase 1 (MVP) - Final Steps  
+**Current Phase:** Phase 1 (MVP) - Final Steps
 **Completion:** 95%
 
 ### Remaining Phase 1 Tasks
@@ -18,7 +18,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Create Studio model and database schema
    - [x] Implement Studio Management UI
    - [x] Create migration path from old booking system
-   - [ ] Enable studio system feature flag
+   - [x] Enable studio system feature flag
    - [ ] Test with various scenarios
    - [ ] Remove compatibility layer
 
@@ -99,12 +99,14 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 **Status:** PLANNED (Next Up)
 
 ### Goals
+
 - Polish, stability, and performance improvements
 - Performance optimization for animations and transitions
 - More detailed activity logs & filters
 - Backup/restore DB + image folder structure
 
 ### Features
+
 - Undo last action (snackbar with undo link)
 - Bulk gear management (batch actions)
 - Booking templates (recurring jobs)
@@ -113,33 +115,57 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Recent Changes
 
+### v0.20.0 - Studio Management System Enablement (2025-06-05)
+
+**Added:**
+
+- Enabled studio management system feature flag
+- Fixed layout issues in calendar views
+- Added fixed height containers to prevent overflow
+
+**Changed:**
+
+- Switched from old booking system to new studio-based system
+- Updated calendar view to handle both booking types
+
+**Fixed:**
+
+- RenderFlex overflow errors in calendar views
+- FormatButton issues in TableCalendar widgets
+
 ### v0.19.0 - Dashboard Layout Responsiveness (2025-06-04)
 
 **Added:**
+
 - Responsive layout system using `LayoutBuilder`
 - Mobile layout for smaller screens
 - Fixed heights for dashboard components
 
 **Changed:**
+
 - Reorganized dashboard components for better space utilization
 - Improved search functionality in gear list modal
 
 **Fixed:**
+
 - Dashboard layout issues on initial launch
 - Proper padding and spacing between components
 
 ### v0.18.0 - Studio Management (2025-06-03)
 
 **Added:**
+
 - Studio Management screen
 - Studio model and database schema
 - Migration utilities for converting old bookings
 
 **Changed:**
+
 - Updated booking form to support studios
 - Added compatibility layer for old and new booking systems
 
 **Fixed:**
+
 - Database migration issues
 - Booking filter compatibility
 
@@ -153,5 +179,5 @@ This document should be updated:
 4. When changing project phases
 5. At least once per week during active development
 
-Last updated by: [Developer Name]  
+Last updated by: [Developer Name]
 Date: 2025-06-04
