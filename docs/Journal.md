@@ -10,7 +10,14 @@ Continued our UI standardization efforts by creating reusable components for com
    - Added support for badges, tooltips, and tap actions
    - Updated dashboard widgets to use the new component
 
-2. **Fixed Layout Issues**:
+2. **Created BLKWDSBottomSheet Component**:
+   - Standardized the bottom sheet pattern used throughout the app
+   - Implemented different bottom sheet types (standard, fullScreen, modal, action)
+   - Added support for draggable scrollable sheets with consistent styling
+   - Created a static method for showing action sheets with a list of actions
+   - Updated dashboard_screen.dart to use the new component
+
+3. **Fixed Layout Issues**:
    - Fixed layout issues in top_bar_summary_widget.dart by removing Flexible widgets from Wrap layout
    - Ensured proper nesting of widgets to avoid runtime errors
 
