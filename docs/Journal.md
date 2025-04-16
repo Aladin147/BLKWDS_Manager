@@ -1,5 +1,22 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-13: Dashboard UI Standardization
+
+Today we continued our UI standardization efforts by implementing several improvements to the dashboard screen based on our comprehensive audit:
+
+1. **Fixed Layout Issues**:
+   - Fixed indentation issues in top_bar_summary_widget.dart
+   - Made summary cards responsive using Flexible and ConstrainedBox
+   - Added SizedBox wrapper to studio booking info card for consistency
+
+2. **Standardized Components**:
+   - Replaced DropdownButtonFormField with BLKWDSDropdown
+   - Replaced TextButton.icon with BLKWDSButton
+   - Replaced CircularProgressIndicator with BLKWDSLoadingSpinner
+   - Replaced Card with BLKWDSCard
+
+These changes have significantly improved the visual consistency of the dashboard screen and will serve as a template for standardizing the rest of the application.
+
 ## 2025-06-13: Dashboard UI Audit
 
 Today we conducted a comprehensive audit of the dashboard screen to identify all UI inconsistencies, layout issues, and standardization opportunities. This is a critical step in our style unification efforts as the dashboard is the most frequently used screen in the application.
