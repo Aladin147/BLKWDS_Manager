@@ -102,10 +102,10 @@ class TopBarSummaryWidget extends StatelessWidget {
                         color: BLKWDSColors.textPrimary,
                       ),
                       overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  ),
-              ],
-            ),
+                ],
+              ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -121,7 +121,7 @@ class TopBarSummaryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                    const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
                   Flexible(
                     child: Text(
                       subtitle,
@@ -131,8 +131,8 @@ class TopBarSummaryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),
@@ -150,9 +150,9 @@ class TopBarSummaryWidget extends StatelessWidget {
         child: BLKWDSCard(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Row(
               children: [
                 Container(
@@ -193,7 +193,7 @@ class TopBarSummaryWidget extends StatelessWidget {
                 style: BLKWDSTypography.bodySmall.copyWith(
                   color: BLKWDSColors.textSecondary,
                 ),
-            ),
+              ),
           ],
         ),
       ),
