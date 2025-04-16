@@ -9,7 +9,7 @@ import '../dashboard_controller.dart';
 
 /// GearPreviewListWidget
 /// Displays a preview of recently used gear items
-class GearPreviewListWidget extends StatelessWidget {
+class GearPreviewListWidget extends StatefulWidget {
   final DashboardController controller;
   final Function(Gear, String?) onCheckout;
   final Function(Gear, String?) onReturn;
@@ -22,6 +22,21 @@ class GearPreviewListWidget extends StatelessWidget {
     required this.onReturn,
     required this.onViewAllGear,
   });
+
+  @override
+  State<GearPreviewListWidget> createState() => _GearPreviewListWidgetState();
+}
+
+/// Filter options for the gear list
+enum GearFilter {
+  all,
+  checkedOut,
+  available
+}
+
+class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
+  // Currently selected filter
+  GearFilter _selectedFilter = GearFilter.all;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +84,7 @@ class GearPreviewListWidget extends StatelessWidget {
                 ],
               ),
               TextButton.icon(
-                onPressed: onViewAllGear,
+                onPressed: widget.onViewAllGear,
                 icon: const Icon(Icons.visibility),
                 label: const Text('View All'),
                 style: TextButton.styleFrom(
@@ -83,11 +98,11 @@ class GearPreviewListWidget extends StatelessWidget {
           // Filter tabs
           Row(
             children: [
-              _buildFilterChip('All Gear', true),
+              _buildFilterChip('All Gear', _selectedFilter == GearFilter.all, GearFilter.all),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
-              _buildFilterChip('Checked Out', false),
+              _buildFilterChip('Checked Out', _selectedFilter == GearFilter.checkedOut, GearFilter.checkedOut),
               const SizedBox(width: BLKWDSConstants.spacingSmall),
-              _buildFilterChip('Available', false),
+              _buildFilterChip('Available', _selectedFilter == GearFilter.available, GearFilter.available),
             ],
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
@@ -127,9 +142,9 @@ class GearPreviewListWidget extends StatelessWidget {
           // Gear list
           Expanded(
             child: ValueListenableBuilder<List<Gear>>(
-              valueListenable: controller.gearList,
+              valueListenable: widget.controller.gearList,
               builder: (context, gearList, _) {
-                final recentGear = _getRecentGear(gearList);
+                final recentGear = _getFilteredGear(gearList);
 
                 if (recentGear.isEmpty) {
                   return const Center(
@@ -154,37 +169,33 @@ class GearPreviewListWidget extends StatelessWidget {
     );
   }
 
-  // Get recent gear (prioritize checked out gear, then recently used)
-  List<Gear> _getRecentGear(List<Gear> allGear) {
-    // First, get all checked out gear
-    final checkedOutGear = allGear.where((gear) => gear.isOut).toList();
-
-    // If we have 5 or more checked out gear, return the first 5
-    if (checkedOutGear.length >= 5) {
-      return checkedOutGear.take(5).toList();
+  // Get filtered gear based on the selected filter
+  List<Gear> _getFilteredGear(List<Gear> allGear) {
+    // Apply filter
+    List<Gear> filteredGear;
+    switch (_selectedFilter) {
+      case GearFilter.all:
+        filteredGear = allGear;
+        break;
+      case GearFilter.checkedOut:
+        filteredGear = allGear.where((gear) => gear.isOut).toList();
+        break;
+      case GearFilter.available:
+        filteredGear = allGear.where((gear) => !gear.isOut).toList();
+        break;
     }
 
-    // Otherwise, add some gear that's currently checked in
-    final checkedInGear = allGear
-        .where((gear) => !gear.isOut)
-        .toList();
-
-    // Add checked in gear until we have 5 items or run out of gear
-    final result = [...checkedOutGear];
-    final remainingSlots = 5 - result.length;
-
-    if (remainingSlots > 0 && checkedInGear.isNotEmpty) {
-      result.addAll(checkedInGear.take(remainingSlots));
-    }
-
-    return result;
+    // Limit to 5 items for the preview
+    return filteredGear.take(5).toList();
   }
 
   // Build a filter chip
-  Widget _buildFilterChip(String label, bool isSelected) {
+  Widget _buildFilterChip(String label, bool isSelected, GearFilter filter) {
     return InkWell(
       onTap: () {
-        // In a real app, this would filter the gear list
+        setState(() {
+          _selectedFilter = filter;
+        });
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
@@ -207,8 +218,8 @@ class GearPreviewListWidget extends StatelessWidget {
   Widget _buildGearItem(Gear gear) {
     return GearCardWithNote(
       gear: gear,
-      onCheckout: onCheckout,
-      onCheckin: onReturn,
+      onCheckout: widget.onCheckout,
+      onCheckin: widget.onReturn,
       isCompact: true,
     );
   }
@@ -219,12 +230,12 @@ class GearPreviewListWidget extends StatelessWidget {
     final overdueThreshold = now.subtract(const Duration(hours: 24));
 
     // Get all checked out gear
-    final checkedOutGear = controller.gearList.value.where((gear) => gear.isOut).toList();
+    final checkedOutGear = widget.controller.gearList.value.where((gear) => gear.isOut).toList();
 
     // Check if any gear has been checked out for more than 24 hours
     for (final gear in checkedOutGear) {
       // Get the most recent activity log for this gear
-      final activityLogs = controller.recentActivity.value
+      final activityLogs = widget.controller.recentActivity.value
           .where((log) => log.gearId == gear.id && log.checkedOut)
           .toList();
 

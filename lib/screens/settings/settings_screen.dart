@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -332,7 +333,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
 
                 // Debug menu (only in debug mode)
-                if (true) // TODO: Replace with a proper debug mode check
+                if (kDebugMode) // Only show in debug mode
                   SettingsSection(
                     title: 'Debug',
                     children: [

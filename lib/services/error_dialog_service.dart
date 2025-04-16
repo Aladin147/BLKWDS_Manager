@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
 import '../theme/blkwds_typography.dart';
+import '../widgets/blkwds_button.dart';
 
 /// ErrorAction enum
 /// Represents possible actions for error dialogs
@@ -63,22 +64,10 @@ class ErrorDialogService {
           backgroundColor: BLKWDSColors.backgroundMedium,
           elevation: BLKWDSConstants.cardElevationMedium,
           actions: actions.map((action) {
-            return TextButton(
+            return BLKWDSButton(
+              label: action.label,
               onPressed: () => Navigator.of(context).pop(action),
-              style: TextButton.styleFrom(
-                foregroundColor: _getActionColor(action),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: BLKWDSConstants.buttonHorizontalPaddingMedium,
-                  vertical: BLKWDSConstants.buttonVerticalPaddingMedium,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(BLKWDSConstants.buttonBorderRadius),
-                ),
-              ),
-              child: Text(
-                action.label,
-                style: BLKWDSTypography.labelLarge,
-              ),
+              type: action == ErrorAction.cancel ? BLKWDSButtonType.secondary : BLKWDSButtonType.primary,
             );
           }).toList(),
           actionsPadding: const EdgeInsets.all(BLKWDSConstants.dialogPadding),
@@ -135,22 +124,10 @@ class ErrorDialogService {
           backgroundColor: BLKWDSColors.backgroundMedium,
           elevation: BLKWDSConstants.cardElevationMedium,
           actions: actions.map((action) {
-            return TextButton(
+            return BLKWDSButton(
+              label: action.label,
               onPressed: () => Navigator.of(context).pop(action),
-              style: TextButton.styleFrom(
-                foregroundColor: _getActionColor(action),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: BLKWDSConstants.buttonHorizontalPaddingMedium,
-                  vertical: BLKWDSConstants.buttonVerticalPaddingMedium,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(BLKWDSConstants.buttonBorderRadius),
-                ),
-              ),
-              child: Text(
-                action.label,
-                style: BLKWDSTypography.labelLarge,
-              ),
+              type: action == ErrorAction.cancel ? BLKWDSButtonType.secondary : BLKWDSButtonType.primary,
             );
           }).toList(),
           actionsPadding: const EdgeInsets.all(BLKWDSConstants.dialogPadding),
@@ -162,19 +139,5 @@ class ErrorDialogService {
     );
   }
 
-  /// Get the appropriate color for an action button
-  static Color _getActionColor(ErrorAction action) {
-    switch (action) {
-      case ErrorAction.ok:
-        return BLKWDSColors.accentTeal;
-      case ErrorAction.retry:
-        return BLKWDSColors.accentTeal;
-      case ErrorAction.cancel:
-        return BLKWDSColors.textSecondary;
-      case ErrorAction.report:
-        return BLKWDSColors.warningAmber;
-      default:
-        return BLKWDSColors.accentTeal;
-    }
-  }
+  // Method removed as it's no longer needed with BLKWDSButton
 }

@@ -742,13 +742,15 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
+                BLKWDSButton(
+                  label: 'Cancel',
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  type: BLKWDSButtonType.secondary,
                 ),
-                ElevatedButton(
+                BLKWDSButton(
+                  label: 'Continue',
                   onPressed: () => Navigator.pop(context, controller.text),
-                  child: const Text('Continue'),
+                  type: BLKWDSButtonType.primary,
                 ),
               ],
             ),

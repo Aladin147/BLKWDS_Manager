@@ -224,9 +224,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingMedium),
-                      ElevatedButton(
+                      BLKWDSButton(
+                        label: 'Retry',
                         onPressed: _initializeData,
-                        child: const Text('Retry'),
+                        type: BLKWDSButtonType.primary,
                       ),
                     ],
                   ),

@@ -121,11 +121,12 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
                 style: BLKWDSTypography.bodyMedium,
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
-              ElevatedButton(
+              BLKWDSButton(
+                label: 'Return to Dashboard',
                 onPressed: () {
                   _navigationService.navigateToDashboard(clearStack: true);
                 },
-                child: const Text('Return to Dashboard'),
+                type: BLKWDSButtonType.primary,
               ),
             ],
           ),
