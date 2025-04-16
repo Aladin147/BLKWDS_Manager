@@ -21,6 +21,12 @@ Continued our UI standardization efforts by creating reusable components for com
    - Fixed layout issues in top_bar_summary_widget.dart by removing Flexible widgets from Wrap layout
    - Ensured proper nesting of widgets to avoid runtime errors
 
+4. **Standardized Alpha Values**:
+   - Added standardized alpha constants to BLKWDSColors class
+   - Updated all alpha values across the codebase to use the standardized constants
+   - Improved consistency of transparency levels for similar UI elements
+   - Fixed type conversion issues between int and double alpha values
+
 These changes have further improved the visual consistency of the dashboard screen and will make future UI development more efficient by reducing code duplication.
 
 ## 2025-06-13: Dashboard UI Standardization
