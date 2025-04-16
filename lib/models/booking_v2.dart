@@ -17,6 +17,10 @@ class Booking {
   bool get isRecordingStudio => studioId == 1; // Recording studio has ID 1
   bool get isProductionStudio => studioId == 2; // Production studio has ID 2
 
+  // For compatibility with code that checks for null
+  bool? get isRecordingStudioOrNull => studioId == 1 ? true : false;
+  bool? get isProductionStudioOrNull => studioId == 2 ? true : false;
+
   Booking({
     this.id,
     required this.projectId,
