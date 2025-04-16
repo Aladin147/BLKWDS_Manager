@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import '../models/models.dart';
 
 import 'log_service.dart';
+import 'database_validator.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -14,6 +15,10 @@ class DBService {
   static Future<Database> get database async {
     if (_db != null) return _db!;
     _db = await _initDB();
+
+    // Validate and repair database schema
+    await _validateAndRepairSchema();
+
     return _db!;
   }
 
@@ -22,10 +27,35 @@ class DBService {
     final path = join(await getDatabasesPath(), 'blkwds_manager.db');
     return await openDatabase(
       path,
-      version: 6, // Increment version to trigger migration
+      version: 7, // Increment version to trigger migration
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
     );
+  }
+
+  /// Validate and repair the database schema
+  static Future<void> _validateAndRepairSchema() async {
+    try {
+      LogService.info('Validating database schema');
+      final wasRepaired = await DatabaseValidator.validateAndRepair(_db!);
+
+      if (wasRepaired) {
+        LogService.info('Database schema was repaired');
+      } else {
+        LogService.info('Database schema is valid, no repair needed');
+      }
+
+      // Perform comprehensive validation
+      final validationResults = await DatabaseValidator.validateComprehensive(_db!);
+      if (validationResults.isNotEmpty) {
+        LogService.warning('Comprehensive validation found issues: $validationResults');
+      } else {
+        LogService.info('Comprehensive validation passed');
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Error validating database schema', e, stackTrace);
+      // Don't rethrow - we want the app to continue even if validation fails
+    }
   }
 
   /// Handle database upgrades
@@ -54,9 +84,13 @@ class DBService {
       await _migrateV5ToV6(db);
     }
 
+    if (oldVersion < 7) {
+      await _migrateV6ToV7(db);
+    }
+
     // Add future migrations here as needed
-    // if (oldVersion < 7) {
-    //   await _migrateV6ToV7(db);
+    // if (oldVersion < 8) {
+    //   await _migrateV7ToV8(db);
     // }
   }
 
@@ -310,6 +344,36 @@ class DBService {
         rethrow;
       }
     });
+  }
+
+  /// Migration from v6 to v7
+  /// Adds schema validation and repair
+  static Future<void> _migrateV6ToV7(Database db) async {
+    LogService.info('Running migration v6 to v7');
+
+    try {
+      // This migration doesn't make any schema changes
+      // It just validates and repairs the schema if needed
+      final missingTables = await DatabaseValidator.validateSchema(db);
+
+      if (missingTables.isNotEmpty) {
+        LogService.warning('Found missing tables during migration: $missingTables');
+        await DatabaseValidator.repairSchema(db, missingTables);
+        LogService.info('Repaired missing tables during migration');
+      }
+
+      // Perform comprehensive validation
+      final validationResults = await DatabaseValidator.validateComprehensive(db);
+      if (validationResults.isNotEmpty) {
+        LogService.warning('Comprehensive validation found issues during migration: $validationResults');
+      }
+
+      LogService.info('Migration v6 to v7 completed successfully');
+    } catch (e, stackTrace) {
+      LogService.error('Error during migration v6 to v7', e, stackTrace);
+      // Don't rethrow - we want the migration to continue even if validation fails
+      // This is different from other migrations where we want to roll back on failure
+    }
   }
 
   /// Migration from v5 to v6
