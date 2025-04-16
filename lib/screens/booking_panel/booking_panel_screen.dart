@@ -212,14 +212,27 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
           BookingFormAdapterV2(
               controller: _controllerV2!,
               booking: _tempBookingV2,
-              onSave: (bookingV2) async {
-                // Handle BookingV2 save
-                final success = await _controllerV2!.createBooking(bookingV2);
-                if (success) {
-                  _hideBookingForm();
-                  _showSnackBar('Booking created successfully');
+              onSave: (booking) async {
+                // Handle booking save
+                bool success;
+                if (booking.id == null) {
+                  // Create new booking
+                  success = await _controllerV2!.createBooking(booking);
+                  if (success) {
+                    _hideBookingForm();
+                    _showSnackBar('Booking created successfully');
+                  } else {
+                    _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to create booking');
+                  }
                 } else {
-                  _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to create booking');
+                  // Update existing booking
+                  success = await _controllerV2!.updateBooking(booking);
+                  if (success) {
+                    _hideBookingForm();
+                    _showSnackBar('Booking updated successfully');
+                  } else {
+                    _showSnackBar(_controllerV2!.errorMessage.value ?? 'Failed to update booking');
+                  }
                 }
               },
               onCancel: _hideBookingForm,
