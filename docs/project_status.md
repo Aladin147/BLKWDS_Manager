@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc19 (Release Candidate 19)
-**Last Updated:** 2025-06-18
+**Version:** 1.0.0-rc20 (Release Candidate 20)
+**Last Updated:** 2025-06-19
 
 ## Project Phase
 
@@ -254,6 +254,29 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.48.0 - Default Settings Centralization (2025-06-19)
+
+**Added:**
+
+- AppConfig model for centralized application configuration
+- AppConfigService for managing application configuration
+- DatabaseValidator for validating and repairing database schema
+- AppConfigScreen for viewing and editing application configuration
+
+**Changed:**
+
+- Updated StudioSettings model to use AppConfig for default values
+- Modified DBService to use AppConfig for database name and version
+- Updated DataSeeder to use AppConfig for default values
+- Enhanced SettingsController to use AppConfig for app information
+
+**Improved:**
+
+- Centralized default settings for better maintainability
+- Standardized configuration management across the application
+- Added UI for viewing and editing application configuration
+- Enhanced error handling for database operations
 
 ### v0.47.0 - Placeholder Graphics Replacement (2025-06-18)
 
