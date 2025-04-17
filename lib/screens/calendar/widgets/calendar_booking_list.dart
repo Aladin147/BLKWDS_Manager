@@ -5,6 +5,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_widgets.dart';
+import '../../../services/snackbar_service.dart';
 import '../calendar_controller.dart';
 
 /// CalendarBookingList
@@ -17,13 +18,13 @@ class CalendarBookingList extends StatelessWidget {
   final DateTime selectedDay;
 
   const CalendarBookingList({
-    Key? key,
+    super.key,
     required this.bookingsNotifier,
     required this.controller,
     required this.onBookingTap,
     required this.onCreateBooking,
     required this.selectedDay,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,32 +53,20 @@ class CalendarBookingList extends StatelessWidget {
 
   // Build empty state
   Widget _buildEmptyState() {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.event_available,
-            size: 64,
-            color: BLKWDSColors.textSecondary,
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingMedium),
-          Text(
-            'No bookings on ${DateFormat.yMMMMd().format(selectedDay)}',
-            style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: BLKWDSConstants.spacingSmall),
-          BLKWDSButton(
-            label: 'Create Booking',
-            icon: Icons.add,
-            type: BLKWDSButtonType.primary,
-            onPressed: onCreateBooking,
-          ),
-        ],
-        ),
+    return Builder(
+      builder: (context) => FallbackWidget.empty(
+        message: 'No bookings on ${DateFormat.yMMMMd().format(selectedDay)}',
+        icon: Icons.event_available,
+        onPrimaryAction: onCreateBooking,
+        primaryActionLabel: 'Create Booking',
+        secondaryActionLabel: 'Check Another Day',
+        onSecondaryAction: () {
+          // This is just a hint, the actual day selection is handled by the calendar
+          SnackbarService.showInfo(
+            context,
+            'Select a different day on the calendar to view bookings for that day.',
+          );
+        },
       ),
     );
   }

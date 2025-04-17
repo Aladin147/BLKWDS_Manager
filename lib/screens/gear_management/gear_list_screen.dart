@@ -542,31 +542,32 @@ class _GearListScreenState extends State<GearListScreen> {
                         ),
                       )
                     : _filteredGear.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.videocam_off,
-                                  color: BLKWDSColors.slateGrey,
-                                  size: 48,
-                                ),
-                                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                                Text(
-                                  _gear.isEmpty
-                                      ? 'No Gear Found'
-                                      : 'No Gear Matches Filters',
-                                  style: BLKWDSTypography.titleLarge,
-                                ),
-                                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                                BLKWDSButton(
-                                  label: 'Add Gear',
-                                  onPressed: _navigateToAddGear,
-                                  type: BLKWDSButtonType.primary,
-                                ),
-                              ],
-                            ),
-                          )
+                        ? _gear.isEmpty
+                            ? FallbackWidget.empty(
+                                message: 'No gear items in your inventory yet',
+                                icon: Icons.videocam_off,
+                                onPrimaryAction: _navigateToAddGear,
+                                primaryActionLabel: 'Add Gear',
+                                secondaryActionLabel: 'Learn More',
+                                onSecondaryAction: () {
+                                  SnackbarService.showInfo(
+                                    context,
+                                    'Gear items represent your equipment inventory that can be checked in/out and assigned to bookings.',
+                                  );
+                                },
+                              )
+                            : FallbackWidget.noData(
+                                message: 'No gear matches your current filters',
+                                icon: Icons.filter_alt_off,
+                                onRetry: () {
+                                  setState(() {
+                                    _searchQuery = '';
+                                    _selectedCategory = null;
+                                    _selectedStatus = null;
+                                    _applyFilters();
+                                  });
+                                },
+                              )
                         : ListView.builder(
                             itemCount: _filteredGear.length,
                             itemBuilder: (context, index) {

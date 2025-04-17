@@ -117,16 +117,21 @@ class FallbackWidget extends StatelessWidget {
   /// Returns a new fallback widget
   factory FallbackWidget.empty({
     String? message,
+    IconData? icon,
     VoidCallback? onPrimaryAction,
     String? primaryActionLabel,
+    VoidCallback? onSecondaryAction,
+    String? secondaryActionLabel,
   }) {
     return FallbackWidget(
       type: FallbackWidgetType.empty,
       message: message ?? 'No items found',
-      icon: Icons.inbox_outlined,
+      icon: icon ?? Icons.inbox_outlined,
       showRetry: false,
       onPrimaryAction: onPrimaryAction,
       primaryActionLabel: primaryActionLabel,
+      onSecondaryAction: onSecondaryAction,
+      secondaryActionLabel: secondaryActionLabel,
     );
   }
 
@@ -137,13 +142,18 @@ class FallbackWidget extends StatelessWidget {
   /// Returns a new fallback widget
   factory FallbackWidget.noData({
     String? message,
+    IconData? icon,
     VoidCallback? onRetry,
+    VoidCallback? onPrimaryAction,
+    String? primaryActionLabel,
   }) {
     return FallbackWidget(
       type: FallbackWidgetType.noData,
       message: message ?? 'No data available',
-      icon: Icons.no_sim_outlined,
+      icon: icon ?? Icons.no_sim_outlined,
       onRetry: onRetry,
+      onPrimaryAction: onPrimaryAction,
+      primaryActionLabel: primaryActionLabel,
     );
   }
 

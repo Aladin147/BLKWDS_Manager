@@ -606,8 +606,27 @@ class _BookingListScreenState extends State<BookingListScreen> {
             valueListenable: _listController.groupedBookings,
             builder: (context, groups, child) {
               if (groups.isEmpty) {
-                return const Center(
-                  child: Text('No bookings found'),
+                return FallbackWidget.empty(
+                  message: 'No bookings in your schedule',
+                  icon: Icons.event_busy,
+                  onPrimaryAction: () {
+                    // Navigate back to parent screen and show create form
+                    Navigator.of(context).pop();
+                    // Use a post-frame callback to ensure the navigation is complete
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (context.mounted) {
+                        SnackbarService.showInfo(context, 'Use the + button to create a new booking');
+                      }
+                    });
+                  },
+                  primaryActionLabel: 'Create Booking',
+                  secondaryActionLabel: 'Learn More',
+                  onSecondaryAction: () {
+                    SnackbarService.showInfo(
+                      context,
+                      'Bookings represent scheduled events for your projects, studios, and gear.',
+                    );
+                  },
                 );
               }
 
@@ -671,7 +690,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                                       showDetails: viewOptions.showDetails,
                                     ),
                                   );
-                                }).toList(),
+                                }),
                             ],
                           );
                         },

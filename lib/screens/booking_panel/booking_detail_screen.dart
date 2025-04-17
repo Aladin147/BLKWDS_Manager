@@ -399,34 +399,18 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
   // Build the gear tab
   Widget _buildGearTab() {
     return _gear.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.videocam_off,
-                  size: 64,
-                  color: BLKWDSColors.slateGrey,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                Text(
-                  'No Gear Assigned',
-                  style: BLKWDSTypography.titleLarge,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingSmall),
-                Text(
-                  'This booking has no gear assigned to it',
-                  style: BLKWDSTypography.bodyMedium,
-                ),
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                BLKWDSButton(
-                  label: 'Edit Booking',
-                  onPressed: _showEditBookingForm,
-                  type: BLKWDSButtonType.primary,
-                  icon: Icons.edit,
-                ),
-              ],
-            ),
+        ? FallbackWidget.empty(
+            message: 'No gear assigned to this booking',
+            icon: Icons.videocam_off,
+            onPrimaryAction: _showEditBookingForm,
+            primaryActionLabel: 'Edit Booking',
+            secondaryActionLabel: 'View Available Gear',
+            onSecondaryAction: () {
+              SnackbarService.showInfo(
+                context,
+                'You can assign gear to this booking by editing it. Available gear will be shown during editing.',
+              );
+            },
           )
         : ListView.builder(
             padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),

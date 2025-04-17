@@ -283,34 +283,20 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
   /// Build the studios tab
   Widget _buildStudiosTab() {
     if (_studios.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.business,
-              size: 64,
-              color: BLKWDSColors.slateGrey,
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
-            Text(
-              'No studios yet',
-              style: BLKWDSTypography.titleMedium,
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingSmall),
-            Text(
-              'Add a studio to get started',
-              style: BLKWDSTypography.bodyMedium,
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
-            BLKWDSButton(
-              label: 'Add Studio',
-              icon: Icons.add,
-              type: BLKWDSButtonType.primary,
-              onPressed: () => _showAddEditStudioForm(),
-            ),
-          ],
-        ),
+      return FallbackWidget.empty(
+        message: 'No studios have been set up yet',
+        icon: Icons.business,
+        onPrimaryAction: () => _showAddEditStudioForm(),
+        primaryActionLabel: 'Add Studio',
+        secondaryActionLabel: 'Learn More',
+        onSecondaryAction: () {
+          BLKWDSSnackbar.show(
+            context: context,
+            message: 'Studios are physical spaces that can be booked for projects. Add your recording or production spaces here.',
+            type: BLKWDSSnackbarType.info,
+            duration: const Duration(seconds: 6),
+          );
+        },
       );
     }
 

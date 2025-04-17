@@ -360,36 +360,19 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                 ),
               )
             : _members.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MemberAvatarWidget(
-                          member: Member(
-                            name: 'Team Member',
-                            role: 'Add Members',
-                          ),
-                          size: 64,
-                          showName: true,
-                          showRole: true,
-                        ),
-                        const SizedBox(height: BLKWDSConstants.spacingMedium),
-                        Text(
-                          'No Members Assigned',
-                          style: BLKWDSTypography.titleLarge,
-                        ),
-                        const SizedBox(height: BLKWDSConstants.spacingSmall),
-                        Text(
-                          'This project has no members assigned to it',
-                          style: BLKWDSTypography.bodyMedium,
-                        ),
-                        const SizedBox(height: BLKWDSConstants.spacingMedium),
-                        BLKWDSButton(
-                          label: 'Edit Project',
-                          onPressed: _navigateToEditProject,
-                          type: BLKWDSButtonType.primary,
-                        ),
-                      ],
+                ? Builder(
+                    builder: (context) => FallbackWidget.empty(
+                      message: 'This project has no members assigned yet',
+                      icon: Icons.people,
+                      onPrimaryAction: _navigateToEditProject,
+                      primaryActionLabel: 'Edit Project',
+                      secondaryActionLabel: 'Learn More',
+                      onSecondaryAction: () {
+                        SnackbarService.showInfo(
+                          context,
+                          'Assign team members to this project to track who is working on it.',
+                        );
+                      },
                     ),
                   )
                 : ListView.builder(
@@ -437,43 +420,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                 ),
               )
             : _bookings.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            color: BLKWDSColors.accentPurple.withValues(alpha: 50),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.calendar_today,
-                            color: BLKWDSColors.accentPurple,
-                            size: 32,
-                          ),
-                        ),
-                        const SizedBox(height: BLKWDSConstants.spacingMedium),
-                        Text(
-                          'No Bookings Found',
-                          style: BLKWDSTypography.titleLarge,
-                        ),
-                        const SizedBox(height: BLKWDSConstants.spacingSmall),
-                        Text(
-                          'This project has no bookings',
-                          style: BLKWDSTypography.bodyMedium,
-                        ),
-                        const SizedBox(height: BLKWDSConstants.spacingMedium),
-                        BLKWDSButton(
-                          label: 'Go to Booking Panel',
-                          onPressed: () {
-                            // Navigate to booking panel
-                            Navigator.pushNamed(context, '/booking-panel');
-                          },
-                          type: BLKWDSButtonType.primary,
-                        ),
-                      ],
+                ? Builder(
+                    builder: (context) => FallbackWidget.empty(
+                      message: 'This project has no bookings yet',
+                      icon: Icons.calendar_today,
+                      onPrimaryAction: () {
+                        // Navigate to booking panel
+                        Navigator.pushNamed(context, '/booking-panel');
+                      },
+                      primaryActionLabel: 'Go to Booking Panel',
+                      secondaryActionLabel: 'Learn More',
+                      onSecondaryAction: () {
+                        SnackbarService.showInfo(
+                          context,
+                          'Create bookings for this project to schedule studio time and gear.',
+                        );
+                      },
                     ),
                   )
                 : ListView.builder(
