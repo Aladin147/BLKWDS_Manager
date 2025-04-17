@@ -10,6 +10,8 @@ import '../screens/member_management/member_list_screen.dart';
 import '../screens/member_management/member_detail_screen.dart';
 import '../screens/member_management/member_form_screen.dart';
 import '../screens/project_management/project_list_screen.dart';
+import '../screens/project_management/project_detail_screen.dart';
+import '../screens/project_management/project_form_screen.dart';
 import '../screens/gear_management/gear_list_screen.dart';
 import '../screens/studio_management/studio_management_screen.dart';
 import '../screens/activity_log/activity_log_screen.dart';
@@ -28,6 +30,8 @@ class AppRoutes {
   static const String memberDetail = '/member-detail';
   static const String memberForm = '/member-form';
   static const String projectManagement = '/project-management';
+  static const String projectDetail = '/project-detail';
+  static const String projectForm = '/project-form';
   static const String gearManagement = '/gear-management';
   static const String studioManagement = '/studio-management';
   static const String activityLog = '/activity-log';
@@ -93,6 +97,30 @@ class AppRoutes {
           settings,
           MemberFormScreen(member: member),
           member == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
+        );
+
+      case projectDetail:
+        final project = args?['project'];
+        if (project == null) {
+          LogService.error('Project detail route called without project');
+          return _buildRoute(
+            settings,
+            const ProjectListScreen(),
+            BLKWDSPageTransitionType.fade,
+          );
+        }
+        return _buildRoute(
+          settings,
+          ProjectDetailScreen(project: project),
+          BLKWDSPageTransitionType.rightToLeft,
+        );
+
+      case projectForm:
+        final project = args?['project'];
+        return _buildRoute(
+          settings,
+          ProjectFormScreen(project: project),
+          project == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
         );
 
       default:

@@ -3,6 +3,7 @@ import '../theme/blkwds_animations.dart';
 import '../services/log_service.dart';
 import '../routes/app_routes.dart';
 import '../models/member.dart';
+import '../models/project.dart';
 
 /// Navigation service for BLKWDS Manager
 ///
@@ -177,6 +178,24 @@ class NavigationService {
     return navigateToNamed<T>(
       AppRoutes.projectManagement,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to project detail
+  Future<T?> navigateToProjectDetail<T>(Project project) async {
+    return navigateToNamed<T>(
+      AppRoutes.projectDetail,
+      arguments: {'project': project},
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to add/edit project form
+  Future<T?> navigateToProjectForm<T>({Project? project}) async {
+    return navigateToNamed<T>(
+      AppRoutes.projectForm,
+      arguments: project != null ? {'project': project} : null,
+      transitionType: project == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
     );
   }
 

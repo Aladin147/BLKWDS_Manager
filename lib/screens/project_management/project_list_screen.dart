@@ -4,10 +4,7 @@ import '../../services/services.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
-import 'project_detail_screen.dart';
-import 'project_form_screen.dart';
 
 /// ProjectListScreen
 /// Displays a list of all projects with search and filtering capabilities
@@ -108,36 +105,21 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   }
 
   // Navigate to project detail screen
-  void _navigateToProjectDetail(Project project) {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: ProjectDetailScreen(project: project),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) => _loadProjects());
+  void _navigateToProjectDetail(Project project) async {
+    await NavigationService().navigateToProjectDetail(project);
+    _loadProjects();
   }
 
   // Navigate to project form screen for adding a new project
-  void _navigateToAddProject() {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: const ProjectFormScreen(),
-        transitionType: BLKWDSPageTransitionType.bottomToTop,
-      ),
-    ).then((_) => _loadProjects());
+  void _navigateToAddProject() async {
+    await NavigationService().navigateToProjectForm();
+    _loadProjects();
   }
 
   // Navigate to project form screen for editing a project
-  void _navigateToEditProject(Project project) {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: ProjectFormScreen(project: project),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) => _loadProjects());
+  void _navigateToEditProject(Project project) async {
+    await NavigationService().navigateToProjectForm(project: project);
+    _loadProjects();
   }
 
   // Delete a project
