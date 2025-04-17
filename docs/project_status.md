@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc26 (Release Candidate 26)
-**Last Updated:** 2025-06-27
+**Version:** 1.0.0-rc27 (Release Candidate 27)
+**Last Updated:** 2025-06-28
 
 ## Project Phase
 
@@ -167,7 +167,13 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Remove runtime checks like _ensureBookingTableHasRequiredColumns
      - [x] Implement comprehensive error handling for database operations
      - [x] Implement database integrity checks and repair mechanisms
-     - [ ] Refactor remaining database operations in DBService to consistently use DBServiceWrapper methods
+     - [x] Create detailed implementation plan for DBServiceWrapper refactoring
+     - [ ] Audit direct database operations in DBService
+     - [ ] Refactor simple CRUD operations to use DBServiceWrapper methods
+     - [ ] Refactor transaction operations to use DBServiceWrapper methods
+     - [ ] Refactor complex operations to use DBServiceWrapper methods
+     - [ ] Update and add tests for refactored operations
+     - [ ] Update documentation for refactored operations
    - Testing Coverage
      - [ ] Add unit tests for controllers, DBService, and critical models
      - [ ] Add widget tests for core UI components
@@ -257,6 +263,28 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.57.0 - Database Service Wrapper Refactoring Implementation Plan (2025-06-28)
+
+**Added:**
+
+- Detailed implementation plan for refactoring database operations
+- Phased approach with audit, refactoring, testing, and documentation
+- Example refactoring patterns for different operation types
+- Risk assessment and mitigation strategies
+
+**Planned Improvements:**
+
+- Structured refactoring approach by operation type
+- Comprehensive testing strategy for refactored operations
+- Clear documentation for maintaining refactored code
+
+**Benefits:**
+
+- Reduced risk of regression during refactoring
+- Improved code quality and maintainability
+- Better error handling and recovery
+- Enhanced reliability of database operations
 
 ### v0.56.0 - Database Service Wrapper Consistency Plan (2025-06-27)
 
@@ -1048,4 +1076,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-27 (v0.56.0)
+Date: 2025-06-28 (v0.57.0)
