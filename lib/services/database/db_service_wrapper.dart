@@ -63,16 +63,15 @@ class DBServiceWrapper {
     RetryConfig config = RetryConfig.defaultConfig,
   }) async {
     try {
-      return await DatabaseRetry.retryWithTransaction(
-        db,
-        operation,
+      return await DatabaseRetry.retry(
+        () => db.transaction(operation),
         operationName,
         config: config,
       );
     } catch (error, stackTrace) {
       // If the error is already a DatabaseError, rethrow it
       if (error is DatabaseError) {
-        throw error;
+        rethrow;
       }
 
       // Handle the error
