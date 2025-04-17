@@ -111,7 +111,7 @@ class DatabaseIntegrityService {
 
       // Check if auto-fix is enabled in app config
       final appConfig = await AppConfigService.getConfig();
-      final autoFixEnabled = appConfig.databaseIntegrityAutoFix;
+      final autoFixEnabled = appConfig.database.databaseIntegrityAutoFix;
 
       // Run the integrity check
       final checkResults = await DatabaseIntegrityChecker.checkIntegrity(db);
@@ -125,7 +125,7 @@ class DatabaseIntegrityService {
         LogService.info('Database integrity check completed: No issues found');
       } else {
         LogService.warning('Database integrity check completed: Found issues');
-        
+
         // Log details of issues found
         if (checkResults.containsKey('foreign_key_issues')) {
           final issues = checkResults['foreign_key_issues'] as Map<String, List<Map<String, dynamic>>>;
@@ -133,14 +133,14 @@ class DatabaseIntegrityService {
             LogService.warning('Found ${entry.value.length} foreign key issues in table ${entry.key}');
           }
         }
-        
+
         if (checkResults.containsKey('orphaned_records')) {
           final issues = checkResults['orphaned_records'] as Map<String, List<Map<String, dynamic>>>;
           for (final entry in issues.entries) {
             LogService.warning('Found ${entry.value.length} orphaned records in table ${entry.key}');
           }
         }
-        
+
         if (checkResults.containsKey('consistency_issues')) {
           final issues = checkResults['consistency_issues'] as Map<String, List<Map<String, dynamic>>>;
           for (final entry in issues.entries) {
@@ -152,7 +152,7 @@ class DatabaseIntegrityService {
         if ((autoFix || autoFixEnabled) && checkResults.isNotEmpty) {
           LogService.info('Auto-fixing database integrity issues');
           final fixResults = await DatabaseIntegrityChecker.fixIntegrityIssues(db, checkResults);
-          
+
           // Log fix results
           if (fixResults.isEmpty) {
             LogService.info('No issues were fixed');
@@ -166,7 +166,7 @@ class DatabaseIntegrityService {
               }
             }
           }
-          
+
           // Add fix results to check results
           checkResults['fix_results'] = fixResults;
         }

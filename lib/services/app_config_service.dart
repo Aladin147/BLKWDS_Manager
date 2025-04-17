@@ -14,6 +14,16 @@ class AppConfigService {
   /// Get the current configuration
   static AppConfig get config => _config.value;
 
+  /// Get the current configuration asynchronously
+  /// This is useful when you need to ensure the config is loaded
+  static Future<AppConfig> getConfig() async {
+    // If config is not loaded yet, load it
+    if (_config.value == AppConfig.defaults) {
+      await loadConfig();
+    }
+    return _config.value;
+  }
+
   /// Get the configuration as a ValueNotifier
   static ValueNotifier<AppConfig> get configNotifier => _config;
 

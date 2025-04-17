@@ -57,14 +57,19 @@ void main() async {
   LogService.info('Error analytics service initialized');
 
   // Initialize database integrity service
-  if (appConfig.database.enableIntegrityChecks) {
-    await DatabaseIntegrityService().start(
-      checkIntervalHours: appConfig.database.integrityCheckIntervalHours,
-      runImmediately: false,
-    );
-    LogService.info('Database integrity service initialized');
-  } else {
-    LogService.info('Database integrity checks are disabled in application configuration');
+  try {
+    final config = await AppConfigService.getConfig();
+    if (config.database.enableIntegrityChecks) {
+      await DatabaseIntegrityService().start(
+        checkIntervalHours: config.database.integrityCheckIntervalHours,
+        runImmediately: false,
+      );
+      LogService.info('Database integrity service initialized');
+    } else {
+      LogService.info('Database integrity checks are disabled in application configuration');
+    }
+  } catch (e, stackTrace) {
+    LogService.error('Error initializing database integrity service', e, stackTrace);
   }
 
   // Run the app

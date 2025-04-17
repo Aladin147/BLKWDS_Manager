@@ -52,6 +52,15 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       });
     } catch (e, stackTrace) {
       LogService.error('Error loading app configuration', e, stackTrace);
+      // Show error to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading configuration: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -87,21 +96,25 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
         await _integrityService.stop();
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Settings saved'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Settings saved'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } catch (e, stackTrace) {
       LogService.error('Error saving app configuration', e, stackTrace);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving settings: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving settings: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -124,7 +137,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
 
       // Show a snackbar with the results
       if (!mounted) return;
-      
+
       if (results.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -154,29 +167,33 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
           }
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Found $issueCount integrity issues'),
-            backgroundColor: Colors.orange,
-            duration: const Duration(seconds: 3),
-            action: autoFix ? null : SnackBarAction(
-              label: 'Fix Issues',
-              onPressed: () => _fixIssues(results),
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Found $issueCount integrity issues'),
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 3),
+              action: autoFix ? null : SnackBarAction(
+                label: 'Fix Issues',
+                onPressed: () => _fixIssues(results),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } catch (e, stackTrace) {
       LogService.error('Error running integrity check', e, stackTrace);
       if (!mounted) return;
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error running integrity check: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error running integrity check: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isRunningCheck = false;
@@ -193,7 +210,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
     try {
       final db = await DBService.database;
       final fixResults = await DatabaseIntegrityChecker.fixIntegrityIssues(db, issues);
-      
+
       // Update the last check results
       setState(() {
         _lastCheckResults = {
@@ -204,7 +221,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
 
       // Show a snackbar with the results
       if (!mounted) return;
-      
+
       if (fixResults.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -223,25 +240,29 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
           }
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Fixed $fixedCount integrity issues'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Fixed $fixedCount integrity issues'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
       }
     } catch (e, stackTrace) {
       LogService.error('Error fixing integrity issues', e, stackTrace);
       if (!mounted) return;
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error fixing integrity issues: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error fixing integrity issues: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isRunningCheck = false;
