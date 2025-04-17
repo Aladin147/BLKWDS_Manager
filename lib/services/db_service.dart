@@ -6,6 +6,7 @@ import '../models/models.dart';
 import 'log_service.dart';
 import 'database_validator.dart';
 import 'app_config_service.dart';
+import 'schema_definitions.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -505,103 +506,10 @@ class DBService {
 
   /// Create database tables
   static Future<void> _createTables(Database db, int version) async {
-    // Gear table
-    await db.execute('''
-      CREATE TABLE gear (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        category TEXT NOT NULL,
-        description TEXT,
-        serialNumber TEXT,
-        purchaseDate TEXT,
-        thumbnailPath TEXT,
-        isOut INTEGER NOT NULL DEFAULT 0,
-        lastNote TEXT
-      )
-    ''');
-
-    // Member table
-    await db.execute('''
-      CREATE TABLE member (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        role TEXT
-      )
-    ''');
-
-    // Project table
-    await db.execute('''
-      CREATE TABLE project (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        client TEXT,
-        notes TEXT
-      )
-    ''');
-
-    // Project Member table (many-to-many relationship)
-    await db.execute('''
-      CREATE TABLE project_member (
-        projectId INTEGER,
-        memberId INTEGER,
-        PRIMARY KEY (projectId, memberId),
-        FOREIGN KEY (projectId) REFERENCES project (id) ON DELETE CASCADE,
-        FOREIGN KEY (memberId) REFERENCES member (id) ON DELETE CASCADE
-      )
-    ''');
-
-    // Booking table
-    await db.execute('''
-      CREATE TABLE booking (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        projectId INTEGER NOT NULL,
-        title TEXT,
-        startDate TEXT NOT NULL,
-        endDate TEXT NOT NULL,
-        isRecordingStudio INTEGER NOT NULL DEFAULT 0,
-        isProductionStudio INTEGER NOT NULL DEFAULT 0,
-        color TEXT,
-        FOREIGN KEY (projectId) REFERENCES project (id) ON DELETE CASCADE
-      )
-    ''');
-
-    // Booking Gear table (many-to-many relationship with optional member assignment)
-    await db.execute('''
-      CREATE TABLE booking_gear (
-        bookingId INTEGER,
-        gearId INTEGER,
-        assignedMemberId INTEGER,
-        PRIMARY KEY (bookingId, gearId),
-        FOREIGN KEY (bookingId) REFERENCES booking (id) ON DELETE CASCADE,
-        FOREIGN KEY (gearId) REFERENCES gear (id) ON DELETE CASCADE,
-        FOREIGN KEY (assignedMemberId) REFERENCES member (id) ON DELETE SET NULL
-      )
-    ''');
-
-    // Status Note table
-    await db.execute('''
-      CREATE TABLE status_note (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        gearId INTEGER NOT NULL,
-        note TEXT NOT NULL,
-        timestamp TEXT NOT NULL,
-        FOREIGN KEY (gearId) REFERENCES gear (id) ON DELETE CASCADE
-      )
-    ''');
-
-    // Activity Log table
-    await db.execute('''
-      CREATE TABLE activity_log (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        gearId INTEGER NOT NULL,
-        memberId INTEGER,
-        checkedOut INTEGER NOT NULL,
-        timestamp TEXT NOT NULL,
-        note TEXT,
-        FOREIGN KEY (gearId) REFERENCES gear (id) ON DELETE CASCADE,
-        FOREIGN KEY (memberId) REFERENCES member (id) ON DELETE SET NULL
-      )
-    ''');
+    // Create all required tables using SchemaDefinitions
+    for (final table in SchemaDefinitions.requiredTables) {
+      await SchemaDefinitions.createTable(db, table);
+    }
   }
 
   // GEAR CRUD OPERATIONS
