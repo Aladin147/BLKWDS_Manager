@@ -1,4 +1,10 @@
-import 'package:blkwds_manager/models/models.dart';
+import 'package:blkwds_manager/models/gear.dart';
+import 'package:blkwds_manager/models/member.dart';
+import 'package:blkwds_manager/models/project.dart';
+import 'package:blkwds_manager/models/booking_v2.dart'; // Use the new booking model for tests
+import 'package:blkwds_manager/models/studio.dart';
+import 'package:blkwds_manager/models/status_note.dart';
+import 'package:blkwds_manager/models/activity_log.dart';
 
 /// A helper class for generating test data
 class TestData {
@@ -68,6 +74,8 @@ class TestData {
       title: title,
       client: client,
       notes: notes,
+      // We don't include description in the database schema
+      description: null,
       memberIds: memberIds,
     );
   }
@@ -97,13 +105,21 @@ class TestData {
   /// [startDate] is the start date of the booking.
   /// [endDate] is the end date of the booking.
   /// [notes] are notes about the booking.
+  /// [gearIds] is the list of gear IDs associated with the booking.
+  /// [assignedGearToMember] is a map of gear IDs to member IDs for assigned gear.
   static Booking createTestBooking({
     int? id,
     required int projectId,
-    int? studioId,
+    int studioId = 1, // Default to recording studio (ID 1)
     DateTime? startDate,
     DateTime? endDate,
     String? notes,
+    List<int> gearIds = const [],
+    Map<int, int> assignedGearToMember = const {},
+    // These parameters are kept for backward compatibility but are ignored
+    // as they are now derived from studioId
+    bool isRecordingStudio = false,
+    bool isProductionStudio = false,
   }) {
     final now = DateTime.now();
     return Booking(
@@ -113,6 +129,8 @@ class TestData {
       startDate: startDate ?? now,
       endDate: endDate ?? now.add(const Duration(hours: 2)),
       notes: notes,
+      gearIds: gearIds,
+      assignedGearToMember: assignedGearToMember,
     );
   }
 

@@ -702,15 +702,30 @@ class DBService {
     );
   }
 
-  /// Delete a booking
+  /// Delete a booking and its associated gear assignments
   static Future<int> deleteBooking(int id) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+
+    // Use transaction with error handling and retry
+    return await DBServiceWrapper.executeTransaction(
       db,
-      'booking',
-      where: 'id = ?',
-      whereArgs: [id],
-      operationName: 'deleteBooking',
+      (txn) async {
+        // First delete associated gear assignments
+        await txn.delete(
+          'booking_gear',
+          where: 'bookingId = ?',
+          whereArgs: [id],
+        );
+
+        // Then delete the booking itself
+        return await txn.delete(
+          'booking',
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      },
+      'deleteBooking',
+      table: 'booking',
     );
   }
 
