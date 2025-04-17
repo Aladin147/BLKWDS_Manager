@@ -6,7 +6,7 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../booking_panel/booking_panel_screen.dart';
+import '../../services/navigation_service.dart';
 import '../booking_panel/widgets/booking_details_modal.dart';
 import 'calendar_controller.dart';
 import 'widgets/calendar_filter_panel.dart';
@@ -125,12 +125,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // Navigate to booking panel for editing
   void _navigateToBookingPanel(Booking booking) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const BookingPanelScreen(),
-      ),
-    ).then((_) {
+    NavigationService.instance.navigateToBookingPanel().then((_) {
       // Refresh data when returning from booking panel
       _initializeData();
     });
@@ -175,12 +170,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             icon: const Icon(Icons.add),
             tooltip: 'Create Booking',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const BookingPanelScreen(),
-                ),
-              ).then((_) {
+              NavigationService.instance.navigateToBookingPanel().then((_) {
                 // Refresh data when returning from booking panel
                 _initializeData();
               });
@@ -348,12 +338,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   controller: _controller,
                   onBookingTap: _showBookingDetails,
                   onCreateBooking: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const BookingPanelScreen(),
-                      ),
-                    ).then((_) {
+                    NavigationService.instance.navigateToBookingPanel().then((_) {
                       // Refresh data when returning from booking panel
                       _initializeData();
                     });

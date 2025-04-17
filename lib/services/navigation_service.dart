@@ -5,9 +5,10 @@ import '../routes/app_routes.dart';
 import '../models/member.dart';
 import '../models/project.dart';
 import '../models/gear.dart';
-import '../models/booking.dart';
+import '../models/booking_v2.dart';
 import '../screens/booking_panel/booking_panel_controller.dart';
 import '../screens/booking_panel/booking_detail_screen_adapter.dart';
+import '../screens/booking_panel/booking_detail_screen.dart';
 
 /// Navigation service for BLKWDS Manager
 ///
@@ -15,6 +16,9 @@ import '../screens/booking_panel/booking_detail_screen_adapter.dart';
 class NavigationService {
   // Singleton instance
   static final NavigationService _instance = NavigationService._internal();
+
+  // Public accessor for the singleton instance
+  static NavigationService get instance => _instance;
 
   // Factory constructor
   factory NavigationService() => _instance;
@@ -131,6 +135,17 @@ class NavigationService {
   Future<T?> navigateToBookingDetail<T>(Booking booking, BookingPanelController controller) async {
     return navigateTo<T>(
       BookingDetailScreenAdapter(
+        booking: booking,
+        controller: controller,
+      ),
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to booking detail from list
+  Future<T?> navigateToBookingDetailFromList<T>(Booking booking, BookingPanelController controller) async {
+    return navigateTo<T>(
+      BookingDetailScreen(
         booking: booking,
         controller: controller,
       ),

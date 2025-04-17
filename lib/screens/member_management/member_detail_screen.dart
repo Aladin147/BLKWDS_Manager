@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -113,13 +114,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
 
   // Navigate to edit member screen
   void _navigateToEditMember() {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: MemberFormScreen(member: widget.member),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) {
+    NavigationService.instance.navigateToMemberForm(member: widget.member).then((_) {
       // Refresh data when returning from edit screen
       _loadProjects();
       _loadActivityLogs();
@@ -348,11 +343,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                                     : null,
                                 trailing: const Icon(Icons.chevron_right),
                                 onTap: () {
-                                  // TODO: Navigate to project detail screen
-                                  SnackbarService.showInfoSnackBar(
-                                    context,
-                                    'Project detail screen not implemented yet',
-                                  );
+                                  NavigationService.instance.navigateToProjectDetail(project);
                                 },
                               ),
                             );

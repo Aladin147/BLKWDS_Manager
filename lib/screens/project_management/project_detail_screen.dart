@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
+import '../booking_panel/booking_panel_controller.dart';
 import 'project_form_screen.dart';
 
 /// ProjectDetailScreen
@@ -112,13 +114,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Navigate to edit project screen
   void _navigateToEditProject() {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: ProjectFormScreen(project: widget.project),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) {
+    NavigationService.instance.navigateToProjectForm(project: widget.project).then((_) {
       // Refresh data when returning from edit screen
       _loadMembers();
       _loadBookings();
@@ -426,7 +422,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                       icon: Icons.calendar_today,
                       onPrimaryAction: () {
                         // Navigate to booking panel
-                        Navigator.pushNamed(context, '/booking-panel');
+                        NavigationService.instance.navigateToBookingPanel();
                       },
                       primaryActionLabel: 'Go to Booking Panel',
                       secondaryActionLabel: 'Learn More',
@@ -463,11 +459,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
             : null,
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          // TODO: Navigate to member detail screen
-          SnackbarService.showInfoSnackBar(
-            context,
-            'Member detail screen not implemented yet',
-          );
+          NavigationService.instance.navigateToMemberDetail(member);
         },
       ),
     );
@@ -497,11 +489,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          // TODO: Navigate to booking detail screen
-          SnackbarService.showInfoSnackBar(
-            context,
-            'Booking detail screen not implemented yet',
-          );
+          // Get the booking panel controller
+          final controller = BookingPanelController();
+          // Initialize the controller
+          controller.initialize().then((_) {
+            // Navigate to booking detail
+            NavigationService.instance.navigateToBookingDetail(booking, controller);
+          });
         },
       ),
     );
