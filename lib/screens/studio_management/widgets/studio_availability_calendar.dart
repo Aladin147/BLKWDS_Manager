@@ -354,13 +354,8 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
               icon: Icons.add,
               type: BLKWDSButtonType.primary,
               onPressed: () {
-                // Navigate to booking creation screen
-                // This would be implemented in a real app
-                BLKWDSSnackbar.show(
-                  context: context,
-                  message: 'Booking creation would open here',
-                  type: BLKWDSSnackbarType.info,
-                );
+                // Navigate to booking creation screen with pre-selected studio
+                _navigateToBookingCreation();
               },
             ),
           ],
@@ -531,12 +526,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
                             isSmall: true,
                             onPressed: () {
                               // Navigate to booking details
-                              // This would be implemented in a real app
-                              BLKWDSSnackbar.show(
-                                context: context,
-                                message: 'Booking details would open here',
-                                type: BLKWDSSnackbarType.info,
-                              );
+                              _navigateToBookingDetails(booking);
                             },
                           ),
                         ],
@@ -600,5 +590,54 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
     } else {
       return '$minutes${minutes == 1 ? 'min' : 'mins'}';
     }
+  }
+
+  /// Navigate to booking creation screen
+  void _navigateToBookingCreation() {
+    // Get the selected studio
+    final selectedStudio = widget.studios.firstWhere(
+      (studio) => studio.id == _selectedStudioId,
+      orElse: () => widget.studios.first,
+    );
+
+    // Create a new booking with the selected studio and date
+    final newBooking = Booking(
+      projectId: -1, // This will be selected in the booking form
+      startDate: DateTime(
+        _selectedDay.year,
+        _selectedDay.month,
+        _selectedDay.day,
+        widget.settings.openingTime.hour,
+        widget.settings.openingTime.minute,
+      ),
+      endDate: DateTime(
+        _selectedDay.year,
+        _selectedDay.month,
+        _selectedDay.day,
+        widget.settings.openingTime.hour + 1,
+        widget.settings.openingTime.minute,
+      ),
+      studioId: selectedStudio.id,
+    );
+
+    // Navigate to the booking panel with the new booking
+    Navigator.of(context).pushNamed(
+      '/booking_panel',
+      arguments: {
+        'booking': newBooking,
+        'isNew': true,
+      },
+    );
+  }
+
+  /// Navigate to booking details screen
+  void _navigateToBookingDetails(Booking booking) {
+    // Navigate to the booking details screen
+    Navigator.of(context).pushNamed(
+      '/booking_detail',
+      arguments: {
+        'bookingId': booking.id,
+      },
+    );
   }
 }

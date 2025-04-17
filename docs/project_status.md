@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc15 (Release Candidate 15)
+**Version:** 1.0.0-rc16 (Release Candidate 16)
 **Last Updated:** 2025-06-16
 
 ## Project Phase
@@ -254,6 +254,25 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.44.0 - Studio Booking System Completion (2025-06-16)
+
+**Added:**
+
+- Navigation from studio calendar to booking creation
+- Booking details view from the calendar
+- Database schema validation for studio bookings
+
+**Changed:**
+
+- Updated DBService to ensure support for studio bookings
+- Enhanced StudioAvailabilityCalendar with proper navigation
+
+**Improved:**
+
+- Integration between studio management and booking system
+- User experience for studio booking workflow
+- Database schema validation for studio-related tables
 
 ### v0.43.1 - Manual Dashboard Refresh (2025-06-16)
 
@@ -747,4 +766,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-16 (v0.43.1)
+Date: 2025-06-16 (v0.44.0)

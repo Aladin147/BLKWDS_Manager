@@ -887,12 +887,15 @@ class DBService {
 
   // BOOKING CRUD OPERATIONS
 
-  /// Insert a new booking with gear assignments
+  /// Insert a new booking with gear assignments and studio support
   static Future<int> insertBooking(Booking booking) async {
     final db = await database;
 
     // Begin transaction
     return await db.transaction((txn) async {
+      // Ensure the booking table has the required columns
+      await _ensureBookingTableHasRequiredColumns(txn);
+
       // Insert booking
       final bookingId = await txn.insert('booking', booking.toMap());
 
@@ -909,6 +912,25 @@ class DBService {
 
       return bookingId;
     });
+  }
+
+  /// Ensure the booking table has all required columns for studio support
+  static Future<void> _ensureBookingTableHasRequiredColumns(Transaction txn) async {
+    // Check if required columns exist
+    final result = await txn.rawQuery("PRAGMA table_info(booking)");
+    final existingColumns = result.map((col) => col['name'] as String).toList();
+
+    // Add studioId column if it doesn't exist
+    if (!existingColumns.contains('studioId')) {
+      LogService.info('Adding studioId column to booking table');
+      await txn.execute('ALTER TABLE booking ADD COLUMN studioId INTEGER DEFAULT NULL');
+    }
+
+    // Add notes column if it doesn't exist
+    if (!existingColumns.contains('notes')) {
+      LogService.info('Adding notes column to booking table');
+      await txn.execute('ALTER TABLE booking ADD COLUMN notes TEXT DEFAULT NULL');
+    }
   }
 
   /// Get all bookings with their gear and member assignments
@@ -996,12 +1018,15 @@ class DBService {
     );
   }
 
-  /// Update a booking with gear assignments
+  /// Update a booking with gear assignments and studio support
   static Future<int> updateBooking(Booking booking) async {
     final db = await database;
 
     // Begin transaction
     return await db.transaction((txn) async {
+      // Ensure the booking table has the required columns
+      await _ensureBookingTableHasRequiredColumns(txn);
+
       // Update booking
       await txn.update(
         'booking',
