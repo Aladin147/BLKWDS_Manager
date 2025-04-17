@@ -10,16 +10,10 @@ import '../../widgets/blkwds_widgets.dart';
 import '../../examples/error_handling_example.dart';
 import '../../examples/recovery_example.dart';
 import '../../examples/error_analytics_example.dart';
-import '../member_management/member_list_screen.dart';
-import '../project_management/project_list_screen.dart';
-import '../gear_management/gear_list_screen.dart';
 // Migration imports removed - migration is complete
 import 'settings_controller.dart';
 import '../../widgets/dialogs/data_seeding_dialog.dart';
 import 'widgets/settings_section.dart';
-import 'app_config_screen.dart';
-import 'app_info_screen.dart';
-import 'database_integrity_screen.dart';
 
 /// SettingsScreen
 /// Screen for configuring app settings and managing data
@@ -255,10 +249,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           subtitle: const Text('Add, edit, and delete members'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            NavigationService().navigateTo(
-                              const MemberListScreen(),
-                              transitionType: BLKWDSPageTransitionType.rightToLeft,
-                            );
+                            NavigationService.instance.navigateToMemberManagement();
                           },
                         ),
                         ListTile(
@@ -266,10 +257,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           subtitle: const Text('Add, edit, and delete projects'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            NavigationService().navigateTo(
-                              const ProjectListScreen(),
-                              transitionType: BLKWDSPageTransitionType.rightToLeft,
-                            );
+                            NavigationService.instance.navigateToProjectManagement();
                           },
                         ),
                         ListTile(
@@ -277,10 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           subtitle: const Text('Add, edit, and manage gear inventory'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            NavigationService().navigateTo(
-                              const GearListScreen(),
-                              transitionType: BLKWDSPageTransitionType.rightToLeft,
-                            );
+                            NavigationService.instance.navigateToGearManagement();
                           },
                         ),
                         ListTile(
@@ -288,10 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           subtitle: const Text('Check and fix database integrity issues'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            NavigationService().navigateTo(
-                              const DatabaseIntegrityScreen(),
-                              transitionType: BLKWDSPageTransitionType.rightToLeft,
-                            );
+                            NavigationService.instance.navigateToDatabaseIntegrity();
                           },
                         ),
                         // Migration UI removed - migration is complete
@@ -323,10 +305,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           subtitle: const Text('View and edit application configuration'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            NavigationService().navigateTo(
-                              const AppConfigScreen(),
-                              transitionType: BLKWDSPageTransitionType.rightToLeft,
-                            );
+                            NavigationService.instance.navigateToAppConfig();
                           },
                         ),
                         const Divider(),
@@ -335,10 +314,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           subtitle: const Text('View detailed app information'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            NavigationService().navigateTo(
-                              const AppInfoScreen(),
-                              transitionType: BLKWDSPageTransitionType.rightToLeft,
-                            );
+                            NavigationService.instance.navigateToAppInfo();
                           },
                         ),
                       ],
@@ -354,7 +330,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             subtitle: const Text('Test the error handling system'),
                             trailing: const Icon(Icons.arrow_forward_ios),
                             onTap: () {
-                              NavigationService().navigateTo(
+                              NavigationService.instance.navigateTo(
                                 const ErrorHandlingExample(),
                                 transitionType: BLKWDSPageTransitionType.rightToLeft,
                               );
@@ -366,7 +342,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             subtitle: const Text('Test the retry and recovery systems'),
                             trailing: const Icon(Icons.arrow_forward_ios),
                             onTap: () {
-                              NavigationService().navigateTo(
+                              NavigationService.instance.navigateTo(
                                 const RecoveryExample(),
                                 transitionType: BLKWDSPageTransitionType.rightToLeft,
                               );
@@ -378,7 +354,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             subtitle: const Text('Test error analytics and boundaries'),
                             trailing: const Icon(Icons.arrow_forward_ios),
                             onTap: () {
-                              NavigationService().navigateTo(
+                              NavigationService.instance.navigateTo(
                                 const ErrorAnalyticsExample(),
                                 transitionType: BLKWDSPageTransitionType.rightToLeft,
                               );

@@ -90,7 +90,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
             context,
             'Member updated successfully',
           );
-          Navigator.pop(context);
+          NavigationService.instance.goBack();
         }
       } else {
         // Insert new member
@@ -101,7 +101,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
             context,
             'Member added successfully',
           );
-          Navigator.pop(context);
+          NavigationService.instance.goBack();
         }
       }
     } catch (e, stackTrace) {
@@ -201,7 +201,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
             // Cancel button
             BLKWDSButton(
               label: 'Cancel',
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => NavigationService.instance.goBack(),
               type: BLKWDSButtonType.secondary,
             ),
           ],

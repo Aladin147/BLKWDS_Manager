@@ -108,7 +108,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             context,
             'Gear updated successfully',
           );
-          Navigator.pop(context);
+          NavigationService.instance.goBack();
         }
       } else {
         // Insert new gear
@@ -119,7 +119,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             context,
             'Gear added successfully',
           );
-          Navigator.pop(context);
+          NavigationService.instance.goBack();
         }
       }
     } catch (e, stackTrace) {
@@ -297,7 +297,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             // Cancel button
             BLKWDSButton(
               label: 'Cancel',
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => NavigationService.instance.goBack(),
               type: BLKWDSButtonType.secondary,
             ),
           ],

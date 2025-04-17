@@ -271,4 +271,28 @@ class NavigationService {
       arguments: controller != null ? {'controller': controller} : null,
     );
   }
+
+  /// Navigate to app config
+  Future<T?> navigateToAppConfig<T>() async {
+    return navigateToNamed<T>(
+      AppRoutes.appConfig,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to app info
+  Future<T?> navigateToAppInfo<T>() async {
+    return navigateToNamed<T>(
+      AppRoutes.appInfo,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to database integrity
+  Future<T?> navigateToDatabaseIntegrity<T>() async {
+    return navigateToNamed<T>(
+      AppRoutes.databaseIntegrity,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
 }

@@ -136,7 +136,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             context,
             'Project updated successfully',
           );
-          Navigator.pop(context);
+          NavigationService.instance.goBack();
         }
       } else {
         // Insert new project
@@ -147,7 +147,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             context,
             'Project added successfully',
           );
-          Navigator.pop(context);
+          NavigationService.instance.goBack();
         }
       }
     } catch (e, stackTrace) {
@@ -317,7 +317,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             // Cancel button
             BLKWDSButton(
               label: 'Cancel',
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => NavigationService.instance.goBack(),
               type: BLKWDSButtonType.secondary,
             ),
           ],

@@ -5,6 +5,8 @@ import '../screens/booking_panel/booking_panel_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/settings/database_integrity_screen.dart';
+import '../screens/settings/app_config_screen.dart';
+import '../screens/settings/app_info_screen.dart';
 import '../screens/add_gear/add_gear_screen.dart';
 import '../screens/member_management/member_list_screen.dart';
 import '../screens/member_management/member_detail_screen.dart';
@@ -40,6 +42,8 @@ class AppRoutes {
   static const String studioManagement = '/studio-management';
   static const String activityLog = '/activity-log';
   static const String databaseIntegrity = '/database-integrity';
+  static const String appConfig = '/app-config';
+  static const String appInfo = '/app-info';
 
   // Route map for MaterialApp
   static Map<String, WidgetBuilder> get routes => {
@@ -53,6 +57,8 @@ class AppRoutes {
     gearManagement: (context) => const GearListScreen(),
     studioManagement: (context) => const StudioManagementScreen(),
     databaseIntegrity: (context) => const DatabaseIntegrityScreen(),
+    appConfig: (context) => const AppConfigScreen(),
+    appInfo: (context) => const AppInfoScreen(),
     // Activity log needs a controller, so we'll handle it in onGenerateRoute
   };
 
