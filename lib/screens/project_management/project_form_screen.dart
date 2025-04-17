@@ -22,27 +22,27 @@ class ProjectFormScreen extends StatefulWidget {
 class _ProjectFormScreenState extends State<ProjectFormScreen> {
   // Form key for validation
   final _formKey = GlobalKey<FormState>();
-  
+
   // Text controllers
   final _titleController = TextEditingController();
   final _clientController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   // Selected members
   List<Member> _allMembers = [];
   List<int> _selectedMemberIds = [];
-  
+
   // Loading state
   bool _isLoading = false;
   bool _isLoadingMembers = true;
-  
+
   // Error message
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize form fields if editing an existing project
     if (widget.project != null) {
       _titleController.text = widget.project!.title;
@@ -54,7 +54,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
       }
       _selectedMemberIds = List.from(widget.project!.memberIds);
     }
-    
+
     // Load all members
     _loadMembers();
   }
@@ -84,7 +84,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
       setState(() {
         _isLoadingMembers = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -99,7 +99,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   void _saveProject() {
     _saveData();
   }
-  
+
   // Actual save implementation
   Future<void> _saveData() async {
     // Validate form
@@ -130,7 +130,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
       if (widget.project != null) {
         // Update existing project
         await DBService.updateProject(project);
-        
+
         if (mounted) {
           SnackbarService.showSuccessSnackBar(
             context,
@@ -141,7 +141,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
       } else {
         // Insert new project
         await DBService.insertProject(project);
-        
+
         if (mounted) {
           SnackbarService.showSuccessSnackBar(
             context,
@@ -159,7 +159,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -184,7 +184,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.project != null;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Edit Project' : 'Add Project'),
@@ -207,7 +207,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               },
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Client field
             BLKWDSFormField(
               controller: _clientController,
@@ -215,7 +215,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               prefixIcon: Icons.business,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Description field
             BLKWDSFormField(
               controller: _descriptionController,
@@ -224,14 +224,14 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               maxLines: 3,
             ),
             const SizedBox(height: BLKWDSConstants.spacingLarge),
-            
+
             // Members section
             Text(
               'Project Members',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: BLKWDSConstants.spacingSmall),
-            
+
             // Members list
             _isLoadingMembers
                 ? const Center(
@@ -255,7 +255,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                           itemBuilder: (context, index) {
                             final member = _allMembers[index];
                             final isSelected = _selectedMemberIds.contains(member.id);
-                            
+
                             return CheckboxListTile(
                               title: Text(member.name),
                               subtitle: member.role != null && member.role!.isNotEmpty
@@ -265,21 +265,16 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                               onChanged: (value) {
                                 _toggleMemberSelection(member);
                               },
-                              secondary: CircleAvatar(
-                                backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                                child: Text(
-                                  member.name.isNotEmpty ? member.name[0].toUpperCase() : '?',
-                                  style: TextStyle(
-                                    color: BLKWDSColors.accentTeal,
-                                  ),
-                                ),
+                              secondary: MemberAvatarWidget(
+                                member: member,
+                                size: 36,
                               ),
                             );
                           },
                         ),
                       ),
             const SizedBox(height: BLKWDSConstants.spacingLarge),
-            
+
             // Error message
             if (_errorMessage != null) ...[
               Container(
@@ -308,7 +303,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
             ],
-            
+
             // Save button
             BLKWDSButton(
               label: isEditing ? 'Update Project' : 'Add Project',
@@ -318,7 +313,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
               icon: isEditing ? Icons.save : Icons.add,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Cancel button
             BLKWDSButton(
               label: 'Cancel',

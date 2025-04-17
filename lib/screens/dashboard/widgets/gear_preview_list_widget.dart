@@ -3,8 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../../../widgets/blkwds_card.dart';
-import '../../../widgets/blkwds_button.dart';
+import '../../../widgets/blkwds_widgets.dart';
 
 import '../../gear_management/widgets/gear_card_with_note.dart';
 import '../dashboard_controller.dart';
@@ -53,17 +52,13 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt,
-                      color: BLKWDSColors.accentTeal,
-                      size: 20,
-                    ),
+                  CategoryIconWidget(
+                    category: 'Camera',
+                    size: 32,
+                    iconSize: 20,
+                    iconColor: BLKWDSColors.accentTeal,
+                    backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                    borderRadius: 8,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
                   Text(

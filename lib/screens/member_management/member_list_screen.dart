@@ -395,16 +395,10 @@ class _MemberListScreenState extends State<MemberListScreen> {
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           child: Row(
             children: [
-              // Member avatar placeholder
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                child: Text(
-                  member.name.isNotEmpty ? member.name[0].toUpperCase() : '?',
-                  style: BLKWDSTypography.titleLarge.copyWith(
-                    color: BLKWDSColors.accentTeal,
-                  ),
-                ),
+              // Member avatar
+              MemberAvatarWidget(
+                member: member,
+                size: 48,
               ),
               const SizedBox(width: BLKWDSConstants.spacingMedium),
               // Member info

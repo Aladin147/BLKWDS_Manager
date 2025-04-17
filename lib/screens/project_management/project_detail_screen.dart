@@ -235,7 +235,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                 children: [
                   // Project title and client
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Project thumbnail
+                      ProjectThumbnailWidget(
+                        project: widget.project,
+                        size: 64,
+                        borderRadius: 12,
+                      ),
+                      const SizedBox(width: BLKWDSConstants.spacingMedium),
+                      // Project title and info
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,10 +364,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.people_outline,
-                          color: BLKWDSColors.slateGrey,
-                          size: 48,
+                        MemberAvatarWidget(
+                          member: Member(
+                            name: 'Team Member',
+                            role: 'Add Members',
+                          ),
+                          size: 64,
+                          showName: true,
+                          showRole: true,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
                         Text(
@@ -428,10 +441,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.calendar_today_outlined,
-                          color: BLKWDSColors.slateGrey,
-                          size: 48,
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: BLKWDSColors.accentPurple.withValues(alpha: 50),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.calendar_today,
+                            color: BLKWDSColors.accentPurple,
+                            size: 32,
+                          ),
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
                         Text(
@@ -470,14 +491,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
     return Card(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
-          child: Text(
-            member.name.isNotEmpty ? member.name[0].toUpperCase() : '?',
-            style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.accentTeal,
-            ),
-          ),
+        leading: MemberAvatarWidget(
+          member: member,
+          size: 40,
         ),
         title: Text(member.name),
         subtitle: member.role != null && member.role!.isNotEmpty
@@ -500,9 +516,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
     return Card(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
       child: ListTile(
-        leading: const Icon(
-          Icons.calendar_today,
-          color: BLKWDSColors.accentPurple,
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: BLKWDSColors.accentPurple.withValues(alpha: 50),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(
+            Icons.calendar_today,
+            color: BLKWDSColors.accentPurple,
+            size: 24,
+          ),
         ),
         title: Text(booking.title ?? 'Booking'),
         subtitle: Text(

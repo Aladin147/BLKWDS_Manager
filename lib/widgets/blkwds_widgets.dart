@@ -21,6 +21,9 @@ export 'blkwds_error_banner.dart';
 export 'blkwds_snackbar.dart';
 export 'error_boundary.dart';
 export 'fallback_widget.dart';
+export 'category_icon_widget.dart';
+export 'member_avatar_widget.dart';
+export 'project_thumbnail_widget.dart';
 
 // Animation Components
 export 'blkwds_animated_list.dart';

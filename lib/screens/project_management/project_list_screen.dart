@@ -21,19 +21,19 @@ class ProjectListScreen extends StatefulWidget {
 class _ProjectListScreenState extends State<ProjectListScreen> {
   // List of all projects
   List<Project> _projects = [];
-  
+
   // Filtered list of projects
   List<Project> _filteredProjects = [];
-  
+
   // Loading state
   bool _isLoading = true;
-  
+
   // Error message
   String? _errorMessage;
-  
+
   // Search query
   String _searchQuery = '';
-  
+
   // Selected client filter
   String? _selectedClient;
 
@@ -66,7 +66,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -86,11 +86,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
             project.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             (project.client?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
             (project.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
-        
+
         // Apply client filter
-        final matchesClient = _selectedClient == null || 
+        final matchesClient = _selectedClient == null ||
             project.client == _selectedClient;
-        
+
         return matchesSearch && matchesClient;
       }).toList();
     });
@@ -170,7 +170,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
     try {
       await DBService.deleteProject(project.id!);
-      
+
       // Show success snackbar with undo option
       if (mounted) {
         SnackbarService.showSuccessSnackBar(
@@ -206,7 +206,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         );
         _isLoading = false;
       });
-      
+
       // Show error snackbar
       if (mounted) {
         SnackbarService.showErrorSnackBar(
@@ -303,7 +303,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               ],
             ),
           ),
-          
+
           // Project list
           Expanded(
             child: _isLoading
@@ -343,10 +343,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.folder_outlined,
-                                  color: BLKWDSColors.slateGrey,
-                                  size: 48,
+                                ProjectThumbnailWidget(
+                                  project: Project(
+                                    title: 'New Project',
+                                    client: 'Your Client',
+                                  ),
+                                  size: 64,
+                                  borderRadius: 12,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),
                                 Text(
@@ -399,49 +402,57 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
             children: [
               // Project title and actions
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Project thumbnail
+                  ProjectThumbnailWidget(
+                    project: project,
+                    size: 48,
+                    borderRadius: 8,
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingMedium),
+                  // Project title and info
                   Expanded(
-                    child: Text(
-                      project.title,
-                      style: BLKWDSTypography.titleMedium,
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          project.title,
+                          style: BLKWDSTypography.titleMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (project.client != null && project.client!.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            project.client!,
+                            style: BLKWDSTypography.bodyMedium.copyWith(
+                              color: BLKWDSColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    tooltip: 'Edit',
-                    onPressed: () => _navigateToEditProject(project),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Delete',
-                    onPressed: () => _deleteProject(project),
-                  ),
-                ],
-              ),
-              
-              // Client and description
-              if (project.client != null && project.client!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-                  child: Row(
+                  // Action buttons
+                  Row(
                     children: [
-                      const Icon(
-                        Icons.business,
-                        size: 16,
-                        color: BLKWDSColors.textSecondary,
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        tooltip: 'Edit',
+                        onPressed: () => _navigateToEditProject(project),
                       ),
-                      const SizedBox(width: BLKWDSConstants.spacingSmall),
-                      Text(
-                        project.client!,
-                        style: BLKWDSTypography.bodyMedium.copyWith(
-                          color: BLKWDSColors.textSecondary,
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        tooltip: 'Delete',
+                        onPressed: () => _deleteProject(project),
                       ),
                     ],
                   ),
-                ),
-              
+                ],
+              ),
+
+              // Description
+
               if (project.description != null && project.description!.isNotEmpty)
                 Text(
                   project.description!,
@@ -449,7 +460,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-              
+
               // Member count
               Padding(
                 padding: const EdgeInsets.only(top: BLKWDSConstants.spacingSmall),

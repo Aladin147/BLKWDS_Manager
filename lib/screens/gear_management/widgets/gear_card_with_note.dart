@@ -60,28 +60,28 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Gear thumbnail or icon
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: BLKWDSColors.backgroundLight,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: widget.gear.thumbnailPath != null
-                        ? ClipRRect(
+                  // Gear thumbnail or category icon
+                  widget.gear.thumbnailPath != null
+                      ? Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: BLKWDSColors.backgroundLight,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.asset(
                               widget.gear.thumbnailPath!,
                               fit: BoxFit.cover,
                             ),
-                          )
-                        : Icon(
-                            _getCategoryIcon(widget.gear.category),
-                            size: 30,
-                            color: BLKWDSColors.textSecondary,
                           ),
-                  ),
+                        )
+                      : CategoryIconWidget(
+                          category: widget.gear.category,
+                          size: 50,
+                          borderRadius: 8,
+                        ),
 
                   const SizedBox(width: BLKWDSConstants.spacingMedium),
 
@@ -243,21 +243,5 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
     );
   }
 
-  // Get icon for gear category
-  IconData _getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
-      case 'camera':
-        return Icons.camera_alt;
-      case 'audio':
-        return Icons.mic;
-      case 'lighting':
-        return Icons.lightbulb;
-      case 'computer':
-        return Icons.computer;
-      case 'accessory':
-        return Icons.cable;
-      default:
-        return Icons.devices;
-    }
-  }
+
 }
