@@ -7,6 +7,7 @@ import 'log_service.dart';
 import 'database_validator.dart';
 import 'app_config_service.dart';
 import 'schema_definitions.dart';
+import 'database/migration_manager.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -24,12 +25,49 @@ class DBService {
     return _db!;
   }
 
+  /// Check if the database needs migration
+  static Future<bool> needsMigration() async {
+    try {
+      // Get the current database version
+      final currentVersion = await getDatabaseVersion();
+
+      // Get the latest migration version
+      final latestVersion = MigrationManager.getLatestVersion();
+
+      // If we don't have a current version, assume migration is needed
+      if (currentVersion == null) {
+        LogService.info('No current database version found, migration may be needed');
+        return true;
+      }
+
+      // Check if the current version is less than the latest version
+      final needsMigration = currentVersion < latestVersion;
+
+      if (needsMigration) {
+        LogService.info('Database needs migration from version $currentVersion to $latestVersion');
+      } else {
+        LogService.info('Database is at the latest version: $currentVersion');
+      }
+
+      return needsMigration;
+    } catch (e, stackTrace) {
+      LogService.error('Error checking if database needs migration', e, stackTrace);
+      // Assume migration is not needed on error
+      return false;
+    }
+  }
+
   /// Initialize the database
   static Future<Database> _initDB() async {
     final path = join(await getDatabasesPath(), AppConfigService.config.database.databaseName);
+
+    // Get the latest migration version
+    final latestVersion = MigrationManager.getLatestVersion();
+    LogService.info('Latest database version from migrations: $latestVersion');
+
     return await openDatabase(
       path,
-      version: AppConfigService.config.database.databaseVersion, // Increment version to trigger migration
+      version: latestVersion, // Use the latest migration version
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
     );
@@ -61,454 +99,101 @@ class DBService {
   }
 
   /// Handle database upgrades
-  /// This method orchestrates the migration process between versions
+  /// This method uses the MigrationManager to execute migrations between versions
   static Future<void> _upgradeDatabase(Database db, int oldVersion, int newVersion) async {
     LogService.info('Upgrading database from version $oldVersion to $newVersion');
 
-    // Execute migrations sequentially
-    if (oldVersion < 2) {
-      await _migrateV1ToV2(db);
-    }
+    try {
+      // Use the MigrationManager to execute all necessary migrations
+      await MigrationManager.migrate(db, oldVersion, newVersion);
 
-    if (oldVersion < 3) {
-      await _migrateV2ToV3(db);
-    }
+      // Store the current database version in the settings table
+      await _storeDbVersion(db, newVersion);
 
-    if (oldVersion < 4) {
-      await _migrateV3ToV4(db);
+      LogService.info('Database upgrade completed successfully');
+    } catch (e, stackTrace) {
+      LogService.error('Error upgrading database', e, stackTrace);
+      rethrow;
     }
-
-    if (oldVersion < 5) {
-      await _migrateV4ToV5(db);
-    }
-
-    if (oldVersion < 6) {
-      await _migrateV5ToV6(db);
-    }
-
-    if (oldVersion < 7) {
-      await _migrateV6ToV7(db);
-    }
-
-    // Add future migrations here as needed
-    // if (oldVersion < 8) {
-    //   await _migrateV7ToV8(db);
-    // }
   }
 
-  /// Migration from v1 to v2
-  /// Adds description, serialNumber, and purchaseDate columns to gear table
-  static Future<void> _migrateV1ToV2(Database db) async {
-    LogService.info('Running migration v1 to v2');
+  /// Get the current database version from the settings table
+  static Future<int?> getDatabaseVersion() async {
+    try {
+      final db = await database;
+      final result = await db.query(
+        'settings',
+        columns: ['value'],
+        where: 'key = ?',
+        whereArgs: ['database_version'],
+      );
 
-    // Begin transaction for atomicity
-    await db.transaction((txn) async {
-      try {
-        // Add new columns to gear table
-        await txn.execute('ALTER TABLE gear ADD COLUMN description TEXT DEFAULT NULL');
-        await txn.execute('ALTER TABLE gear ADD COLUMN serialNumber TEXT DEFAULT NULL');
-        await txn.execute('ALTER TABLE gear ADD COLUMN purchaseDate TEXT DEFAULT NULL');
-
-        // Verify migration success
-        final result = await txn.rawQuery('PRAGMA table_info(gear)');
-        final columns = result.map((col) => col['name'] as String).toList();
-
-        if (!columns.contains('description') ||
-            !columns.contains('serialNumber') ||
-            !columns.contains('purchaseDate')) {
-          throw Exception('Migration v1 to v2 failed: columns not added correctly');
-        }
-
-        LogService.info('Migration v1 to v2 completed successfully');
-      } catch (e, stackTrace) {
-        LogService.error('Error during migration v1 to v2', e, stackTrace);
-        rethrow; // This will roll back the transaction
+      if (result.isNotEmpty) {
+        final versionStr = result.first['value'] as String;
+        return int.tryParse(versionStr);
       }
-    });
+
+      return null;
+    } catch (e, stackTrace) {
+      LogService.error('Error getting database version', e, stackTrace);
+      return null;
+    }
   }
 
-  /// Migration from v2 to v3
-  /// Adds a settings table and color column to booking table
-  static Future<void> _migrateV2ToV3(Database db) async {
-    LogService.info('Running migration v2 to v3');
-
-    await db.transaction((txn) async {
-      try {
-        // Add settings table for app configuration
-        await txn.execute('''
-          CREATE TABLE settings (
+  /// Store the current database version in the settings table
+  static Future<void> _storeDbVersion(Database db, int version) async {
+    try {
+      // Check if the settings table exists
+      final tableResult = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='settings'");
+      if (tableResult.isEmpty) {
+        LogService.info('Settings table does not exist, creating it');
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS settings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             key TEXT NOT NULL UNIQUE,
             value TEXT NOT NULL
           )
         ''');
-
-        // Add color column to booking table for visual identification
-        await txn.execute('ALTER TABLE booking ADD COLUMN color TEXT DEFAULT NULL');
-
-        // Verify migration success
-        final bookingResult = await txn.rawQuery('PRAGMA table_info(booking)');
-        final bookingColumns = bookingResult.map((col) => col['name'] as String).toList();
-
-        final tableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
-        final tables = tableResult.map((t) => t['name'] as String).toList();
-
-        if (!bookingColumns.contains('color') || !tables.contains('settings')) {
-          throw Exception('Migration v2 to v3 failed: schema changes not applied correctly');
-        }
-
-        LogService.info('Migration v2 to v3 completed successfully');
-      } catch (e, stackTrace) {
-        LogService.error('Error during migration v2 to v3', e, stackTrace);
-        rethrow;
-      }
-    });
-  }
-
-  /// Migration from v3 to v4
-  /// Adds title column to booking table
-  static Future<void> _migrateV3ToV4(Database db) async {
-    LogService.info('Running migration v3 to v4');
-
-    await db.transaction((txn) async {
-      try {
-        // Add title column to booking table
-        await txn.execute('ALTER TABLE booking ADD COLUMN title TEXT DEFAULT NULL');
-
-        // Verify migration success
-        final bookingResult = await txn.rawQuery('PRAGMA table_info(booking)');
-        final bookingColumns = bookingResult.map((col) => col['name'] as String).toList();
-
-        if (!bookingColumns.contains('title')) {
-          throw Exception('Migration v3 to v4 failed: title column not added correctly');
-        }
-
-        LogService.info('Migration v3 to v4 completed successfully');
-      } catch (e, stackTrace) {
-        LogService.error('Error during migration v3 to v4', e, stackTrace);
-        rethrow;
-      }
-    });
-  }
-
-  /// Migration from v4 to v5
-  /// Adds studio tables and updates booking table for studio management
-  static Future<void> _migrateV4ToV5(Database db) async {
-    LogService.info('Running migration v4 to v5');
-
-    await db.transaction((txn) async {
-      try {
-        // Check if tables already exist
-        final tableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
-        final tables = tableResult.map((t) => t['name'] as String).toList();
-
-        // Create studio table if it doesn't exist
-        if (!tables.contains('studio')) {
-          LogService.info('Creating studio table');
-          await txn.execute('''
-            CREATE TABLE studio (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              name TEXT NOT NULL,
-              type TEXT NOT NULL,
-              description TEXT,
-              features TEXT,
-              hourlyRate REAL,
-              status TEXT NOT NULL DEFAULT 'available',
-              color TEXT
-            )
-          ''');
-        } else {
-          LogService.info('Studio table already exists, skipping creation');
-        }
-
-        // Create studio_settings table if it doesn't exist
-        if (!tables.contains('studio_settings')) {
-          LogService.info('Creating studio_settings table');
-          await txn.execute('''
-            CREATE TABLE studio_settings (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              openingTime TEXT NOT NULL,
-              closingTime TEXT NOT NULL,
-              minBookingDuration INTEGER NOT NULL,
-              maxBookingDuration INTEGER NOT NULL,
-              minAdvanceBookingTime INTEGER NOT NULL,
-              maxAdvanceBookingTime INTEGER NOT NULL,
-              cleanupTime INTEGER NOT NULL,
-              allowOverlappingBookings INTEGER NOT NULL,
-              enforceStudioHours INTEGER NOT NULL
-            )
-          ''');
-        } else {
-          LogService.info('Studio settings table already exists, skipping creation');
-        }
-
-        // Check if booking table already has the required columns
-        final bookingColumnsResult = await txn.rawQuery('PRAGMA table_info(booking)');
-        final existingBookingColumns = bookingColumnsResult.map((col) => col['name'] as String).toList();
-
-        // Add studioId column if it doesn't exist
-        if (!existingBookingColumns.contains('studioId')) {
-          LogService.info('Adding studioId column to booking table');
-          await txn.execute('ALTER TABLE booking ADD COLUMN studioId INTEGER DEFAULT NULL');
-        } else {
-          LogService.info('studioId column already exists in booking table, skipping');
-        }
-
-        // Add notes column if it doesn't exist
-        if (!existingBookingColumns.contains('notes')) {
-          LogService.info('Adding notes column to booking table');
-          await txn.execute('ALTER TABLE booking ADD COLUMN notes TEXT DEFAULT NULL');
-        } else {
-          LogService.info('notes column already exists in booking table, skipping');
-        }
-
-        // Add foreign key constraint for studioId
-        // SQLite doesn't support adding constraints to existing tables, so we'll handle this in code
-
-        // Check if studio settings already exist
-        final settingsCount = Sqflite.firstIntValue(await txn.rawQuery('SELECT COUNT(*) FROM studio_settings'));
-
-        // Insert default studio settings if none exist
-        if (settingsCount == 0) {
-          LogService.info('Inserting default studio settings');
-          final studioConfig = AppConfigService.config.studio;
-          await txn.insert('studio_settings', {
-            'openingTime': '${studioConfig.openingTime.hour}:${studioConfig.openingTime.minute}',
-            'closingTime': '${studioConfig.closingTime.hour}:${studioConfig.closingTime.minute}',
-            'minBookingDuration': studioConfig.minBookingDuration,
-            'maxBookingDuration': studioConfig.maxBookingDuration,
-            'minAdvanceBookingTime': studioConfig.minAdvanceBookingTime,
-            'maxAdvanceBookingTime': studioConfig.maxAdvanceBookingTime,
-            'cleanupTime': studioConfig.cleanupTime,
-            'allowOverlappingBookings': studioConfig.allowOverlappingBookings ? 1 : 0,
-            'enforceStudioHours': studioConfig.enforceStudioHours ? 1 : 0,
-          });
-        } else {
-          LogService.info('Studio settings already exist, skipping insertion');
-        }
-
-        // Check if default studios already exist
-        final studioMaps = await txn.query('studio');
-        bool hasRecordingStudio = false;
-        bool hasProductionStudio = false;
-
-        for (final studioMap in studioMaps) {
-          final type = studioMap['type'] as String;
-          if (type == 'recording') {
-            hasRecordingStudio = true;
-          } else if (type == 'production') {
-            hasProductionStudio = true;
-          }
-        }
-
-        // Create recording studio if it doesn't exist
-        if (!hasRecordingStudio) {
-          LogService.info('Creating default Recording Studio');
-          await txn.insert('studio', {
-            'name': 'Recording Studio',
-            'type': 'recording',
-            'description': 'Main recording studio space',
-            'status': 'available',
-          });
-        } else {
-          LogService.info('Recording Studio already exists, skipping creation');
-        }
-
-        // Create production studio if it doesn't exist
-        if (!hasProductionStudio) {
-          LogService.info('Creating default Production Studio');
-          await txn.insert('studio', {
-            'name': 'Production Studio',
-            'type': 'production',
-            'description': 'Main production studio space',
-            'status': 'available',
-          });
-        } else {
-          LogService.info('Production Studio already exists, skipping creation');
-        }
-
-        // Verify migration success
-        final verifyTableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
-        final verifyTables = verifyTableResult.map((t) => t['name'] as String).toList();
-
-        final bookingResult = await txn.rawQuery('PRAGMA table_info(booking)');
-        final bookingColumns = bookingResult.map((col) => col['name'] as String).toList();
-
-        if (!verifyTables.contains('studio') ||
-            !verifyTables.contains('studio_settings') ||
-            !bookingColumns.contains('studioId') ||
-            !bookingColumns.contains('notes')) {
-          throw Exception('Migration v4 to v5 failed: schema changes not applied correctly');
-        }
-
-        LogService.info('Migration v4 to v5 completed successfully');
-      } catch (e, stackTrace) {
-        LogService.error('Error during migration v4 to v5', e, stackTrace);
-        rethrow;
-      }
-    });
-  }
-
-  /// Migration from v6 to v7
-  /// Adds schema validation and repair
-  static Future<void> _migrateV6ToV7(Database db) async {
-    LogService.info('Running migration v6 to v7');
-
-    try {
-      // This migration doesn't make any schema changes
-      // It just validates and repairs the schema if needed
-      final missingTables = await DatabaseValidator.validateSchema(db);
-
-      if (missingTables.isNotEmpty) {
-        LogService.warning('Found missing tables during migration: $missingTables');
-        await DatabaseValidator.repairSchema(db, missingTables);
-        LogService.info('Repaired missing tables during migration');
       }
 
-      // Perform comprehensive validation
-      final validationResults = await DatabaseValidator.validateComprehensive(db);
+      // Delete any existing version entry
+      await db.delete(
+        'settings',
+        where: 'key = ?',
+        whereArgs: ['database_version'],
+      );
 
-      // Remove missing_tables entry since we already handled it
-      validationResults.remove('missing_tables');
+      // Insert the new version
+      await db.insert('settings', {
+        'key': 'database_version',
+        'value': version.toString(),
+      });
 
-      // Repair missing columns if needed
-      if (validationResults.isNotEmpty) {
-        LogService.warning('Comprehensive validation found issues during migration: $validationResults');
-        await DatabaseValidator.repairAllColumns(db, validationResults);
-        LogService.info('Repaired missing columns during migration');
-      }
-
-      LogService.info('Migration v6 to v7 completed successfully');
+      LogService.info('Stored database version $version in settings table');
     } catch (e, stackTrace) {
-      LogService.error('Error during migration v6 to v7', e, stackTrace);
-      // Don't rethrow - we want the migration to continue even if validation fails
-      // This is different from other migrations where we want to roll back on failure
+      LogService.error('Error storing database version', e, stackTrace);
+      // Don't rethrow - this is not critical
     }
-  }
-
-  /// Migration from v5 to v6
-  /// Converts existing bookings to use the studio system
-  static Future<void> _migrateV5ToV6(Database db) async {
-    LogService.info('Running migration v5 to v6');
-
-    await db.transaction((txn) async {
-      try {
-        // Get all studios
-        final studioMaps = await txn.query('studio');
-
-        // Find recording and production studios
-        int? recordingStudioId;
-        int? productionStudioId;
-
-        for (final studioMap in studioMaps) {
-          final type = studioMap['type'] as String;
-          if (type == 'recording') {
-            recordingStudioId = studioMap['id'] as int;
-          } else if (type == 'production') {
-            productionStudioId = studioMap['id'] as int;
-          }
-        }
-
-        // If studios don't exist, create them
-        if (recordingStudioId == null) {
-          recordingStudioId = await txn.insert('studio', {
-            'name': 'Recording Studio',
-            'type': 'recording',
-            'description': 'Main recording studio space',
-            'status': 'available',
-          });
-          LogService.info('Created Recording Studio with ID $recordingStudioId');
-        }
-
-        if (productionStudioId == null) {
-          productionStudioId = await txn.insert('studio', {
-            'name': 'Production Studio',
-            'type': 'production',
-            'description': 'Main production studio space',
-            'status': 'available',
-          });
-          LogService.info('Created Production Studio with ID $productionStudioId');
-        }
-
-        // Get all bookings
-        final bookingMaps = await txn.query('booking');
-
-        // Create a hybrid studio if needed
-        int? hybridStudioId;
-        bool needsHybridStudio = false;
-
-        for (final bookingMap in bookingMaps) {
-          final isRecordingStudio = (bookingMap['isRecordingStudio'] as int?) == 1;
-          final isProductionStudio = (bookingMap['isProductionStudio'] as int?) == 1;
-
-          if (isRecordingStudio == true && isProductionStudio == true) {
-            needsHybridStudio = true;
-            break;
-          }
-        }
-
-        if (needsHybridStudio) {
-          // Check if hybrid studio already exists
-          for (final studioMap in studioMaps) {
-            final type = studioMap['type'] as String;
-            if (type == 'hybrid') {
-              hybridStudioId = studioMap['id'] as int;
-              break;
-            }
-          }
-
-          if (hybridStudioId == null) {
-            hybridStudioId = await txn.insert('studio', {
-              'name': 'Hybrid Studio',
-              'type': 'hybrid',
-              'description': 'Combined recording and production studio space',
-              'status': 'available',
-            });
-            LogService.info('Created Hybrid Studio with ID $hybridStudioId');
-          }
-        }
-
-        // Update each booking with the appropriate studio ID
-        int bookingsUpdated = 0;
-        for (final bookingMap in bookingMaps) {
-          final bookingId = bookingMap['id'] as int;
-          final isRecordingStudio = (bookingMap['isRecordingStudio'] as int?) == 1;
-          final isProductionStudio = (bookingMap['isProductionStudio'] as int?) == 1;
-
-          int? studioId;
-          if (isRecordingStudio == true && isProductionStudio == true) {
-            studioId = hybridStudioId;
-          } else if (isRecordingStudio == true) {
-            studioId = recordingStudioId;
-          } else if (isProductionStudio == true) {
-            studioId = productionStudioId;
-          }
-
-          if (studioId != null) {
-            await txn.update(
-              'booking',
-              {'studioId': studioId},
-              where: 'id = ?',
-              whereArgs: [bookingId],
-            );
-            bookingsUpdated++;
-          }
-        }
-
-        LogService.info('Updated $bookingsUpdated bookings with studio IDs');
-        LogService.info('Migration v5 to v6 completed successfully');
-      } catch (e, stackTrace) {
-        LogService.error('Error during migration v5 to v6', e, stackTrace);
-        rethrow;
-      }
-    });
   }
 
   /// Create database tables
   static Future<void> _createTables(Database db, int version) async {
-    // Create all required tables using SchemaDefinitions
-    for (final table in SchemaDefinitions.requiredTables) {
-      await SchemaDefinitions.createTable(db, table);
+    LogService.info('Creating database tables for version $version');
+
+    try {
+      // Create all required tables using SchemaDefinitions
+      for (final table in SchemaDefinitions.requiredTables) {
+        LogService.info('Creating table: $table');
+        await SchemaDefinitions.createTable(db, table);
+      }
+
+      // Store the initial database version
+      await _storeDbVersion(db, version);
+
+      LogService.info('Database tables created successfully');
+    } catch (e, stackTrace) {
+      LogService.error('Error creating database tables', e, stackTrace);
+      rethrow;
     }
   }
 
