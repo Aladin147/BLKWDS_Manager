@@ -5,12 +5,12 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 ## Current Version
 
 **Version:** 1.0.0-rc20 (Release Candidate 20)
-**Last Updated:** 2025-06-19
+**Last Updated:** 2025-06-21
 
 ## Project Phase
 
-**Current Phase:** Phase 1 (MVP) - Final Steps
-**Completion:** 99.9%
+**Current Phase:** Phase 1 (MVP) - Critical Issues Resolution
+**Completion:** 95%
 
 ### Remaining Phase 1 Tasks
 
@@ -99,24 +99,32 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 ### Critical Issues (Highest Priority)
 
 1. **Database Issues**
-   - Studio table missing or not properly created (IDENTIFIED in v0.40.0)
+   - Unconditional data seeding on every app start (IDENTIFIED in v0.50.0)
+   - Booking model inconsistency with database schema (missing studioId field) (IDENTIFIED in v0.50.0)
+   - Flawed DatabaseValidator with duplicated schema definitions (IDENTIFIED in v0.50.0)
    - Database schema validation incomplete (IDENTIFIED in v0.40.0)
-   - No automatic schema repair mechanism (IDENTIFIED in v0.40.0)
    - Inconsistent error handling for database operations (IDENTIFIED in v0.40.0)
 
-2. **Non-functional UI Elements**
+2. **Testing Coverage**
+   - Minimal test coverage across unit, widget, and integration tests (IDENTIFIED in v0.50.0)
+   - Critical components like controllers, services, and models lack tests (IDENTIFIED in v0.50.0)
+   - No performance or stress tests (IDENTIFIED in v0.50.0)
+
+3. **Non-functional UI Elements**
    - ~~"View All" buttons only show snackbars instead of navigating~~ (FIXED in v0.40.0)
    - Placeholder icons and demo content in production code (IDENTIFIED in v0.40.0)
    - ~~Mixed navigation patterns (NavigationService vs direct Navigator.push)~~ (FIXED in v0.40.0)
 
-3. **Architecture Issues**
+4. **Architecture Issues**
    - ~~Dual controller system for dashboard~~ (FIXED in v0.42.0)
    - ~~Adapter pattern complexity~~ (FIXED in v0.42.0)
    - ~~MockData class in production code~~ (FIXED in v0.41.0)
+   - Unclear state management strategy with Riverpod (IDENTIFIED in v0.50.0)
 
-4. **Error Handling Inconsistencies**
+5. **Error Handling Inconsistencies**
    - Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (IDENTIFIED in v0.40.0)
    - Inconsistent error feedback levels (IDENTIFIED in v0.40.0)
+   - Static analysis warnings for use_build_context_synchronously (IDENTIFIED in v0.50.0)
 
 ### UI Standardization Issues (Secondary Priority)
 
@@ -147,51 +155,40 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Next Steps
 
-1. **Complete Studio Migration** (✓ Completed)
-   - ✓ Remove all feature flags
-   - ✓ Consolidate models (remove V2 suffix)
-   - ✓ Delete compatibility layer
-   - ✓ Update UI components to work directly with the new models
+1. **Critical Issues Resolution** (Highest Priority)
+   - Database Issues
+     - [ ] Fix unconditional data seeding in main.dart
+     - [ ] Correct Booking model to include studioId field
+     - [ ] Remove or refactor DatabaseValidator to eliminate duplicated schema definitions
+     - [ ] Ensure migrations in DBService are the single source of truth for schema
+     - [ ] Remove runtime checks like _ensureBookingTableHasRequiredColumns
+   - Testing Coverage
+     - [ ] Add unit tests for controllers, DBService, and critical models
+     - [ ] Add widget tests for core UI components
+     - [ ] Add integration tests for critical user flows
+   - Static Analysis Issues
+     - [ ] Fix use_build_context_synchronously warnings
+     - [ ] Clean up unused code and imports
+   - State Management
+     - [ ] Clarify the role of Riverpod in the application
+     - [ ] Document the state management approach
 
-2. **Flatten Architecture** (✓ Completed)
-   - ✓ Simplify controller hierarchy
-   - ✓ Remove unnecessary adapters
-   - ✓ Standardize component interfaces
-   - ✓ Reduce indirection between UI and business logic
-
-3. **Implement Error Handling System** (✓ Completed)
-   - ✓ Integrate error handling into controllers
-   - ✓ Update UI components to display error states
-   - ✓ Implement retry logic for critical operations
-   - ✓ Add recovery mechanisms for critical operations
-   - ✓ Implement error tracking and analytics
-
-4. **Code Cleanup** (✓ Completed)
-   - ✓ Remove unused code
-   - ✓ Fix remaining UI issues
-   - ✓ Add missing documentation
-   - ✓ Standardize naming conventions
-
-5. **Critical Issues Resolution** (Highest Priority)
-   - Database Functionality
-     - [x] Create a comprehensive database schema validation system
-     - [x] Implement automatic schema repair for missing tables
-     - [x] Add graceful fallbacks for all database operations
-     - [x] Verify all migrations work correctly
+2. **UI/UX Improvements** (Secondary Priority)
    - Functional UI Elements
-     - [x] Implement proper functionality for "View All" buttons
      - [ ] Replace placeholder contents in the app with actual functionality
      - [ ] Disable or remove UI elements that aren't fully implemented
-   - Architecture Improvements
-     - [x] Consolidate duplicate controllers
-     - [x] Remove adapter patterns where possible
-     - [x] Isolate mock data to test environment
    - Error Handling Standardization
      - [ ] Standardize on SnackbarService for all error notifications
      - [ ] Replace all direct ScaffoldMessenger calls
      - [ ] Ensure consistent error feedback levels
 
-6. **Dashboard UI Standardization** (Secondary Priority)
+3. **Documentation and Testing** (Ongoing)
+   - [ ] Update all documentation to reflect the current state of the application
+   - [ ] Create comprehensive testing checklist
+   - [ ] Document the database schema and migration process
+   - [ ] Create user documentation for internal testers
+
+4. **Dashboard UI Standardization** (Secondary Priority)
    - Fix Layout Issues
      - [x] Fix indentation in top_bar_summary_widget.dart
      - [x] Make summary cards responsive by using Flexible or FractionallySizedBox
@@ -220,16 +217,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [ ] Increase minimum icon sizes to 18px
      - [ ] Ensure text is readable even when truncated
 
-7. **Testing** (1-2 days)
+5. **Testing** (1-2 days)
    - Comprehensive testing of all features
    - Fix any regressions
    - Performance optimization
 
-8. **Declare Phase 1 Complete**
+6. **Declare Phase 1 Complete**
    - Tag codebase as v1.0.0
    - Update all documentation
 
-9. **Begin Phase 2**
+7. **Begin Phase 2**
    - Implement undo functionality
    - Add bulk gear management
    - Create booking templates
@@ -254,6 +251,50 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.50.0 - Comprehensive Code Audit (2025-06-21)
+
+**Added:**
+
+- Comprehensive code audit to identify critical issues before internal deployment
+- Detailed implementation plan for addressing critical issues
+- External audit validation to confirm findings
+
+**Identified Issues:**
+
+- Unconditional data seeding on every app start
+- Booking model inconsistency with database schema (missing studioId field)
+- Flawed DatabaseValidator with duplicated schema definitions
+- Minimal test coverage across unit, widget, and integration tests
+- Unclear state management strategy with Riverpod
+- Static analysis warnings for use_build_context_synchronously
+
+**Changed:**
+
+- Updated project status to reflect critical issues
+- Revised completion percentage to 95%
+- Reprioritized next steps to address critical issues first
+- Updated documentation to reflect current state
+
+### v0.49.0 - Empty State Improvements (2025-06-20)
+
+**Added:**
+
+- Enhanced FallbackWidget component with additional parameters
+- Contextual guidance text for each empty state
+- Primary and secondary actions for all empty states
+- Appropriate icons for different types of empty states
+
+**Changed:**
+
+- Standardized empty states across all screens using the FallbackWidget
+- Updated Gear List, Booking List, Studio Management, Calendar Booking List, Project Detail Members, Project Detail Bookings, and Booking Detail Gear empty states
+
+**Improved:**
+
+- Consistency of empty state screens throughout the application
+- User experience when encountering empty states
+- Guidance for users on what actions to take
 
 ### v0.48.0 - Default Settings Centralization (2025-06-19)
 
@@ -857,4 +898,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-16 (v0.45.0)
+Date: 2025-06-21 (v0.50.0)
