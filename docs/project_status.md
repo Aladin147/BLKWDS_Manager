@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc27 (Release Candidate 27)
+**Version:** 1.0.0-rc28 (Release Candidate 28)
 **Last Updated:** 2025-06-28
 
 ## Project Phase
@@ -36,8 +36,10 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Consolidate documentation into single source of truth
    - [x] Update all version references
    - [x] Create comprehensive placeholder inventory
+   - [x] Audit and update documentation for consistency
+   - [x] Create development journal to replace missing Journal.md
+   - [x] Update README.md to reflect documentation hierarchy
    - [ ] Create comprehensive testing checklist
-   - [ ] Audit and update documentation for consistency
 
 4. **UI/UX Improvements**
    - [x] Fix non-functional filter chips in Gear Preview List
@@ -263,6 +265,26 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.58.0 - Documentation Cleanup and Reorganization (2025-06-28)
+
+**Added:**
+
+- New development_journal.md file to replace the missing Journal.md
+- Updated README.md with clear documentation hierarchy
+- Established project_status.md as the single source of truth
+
+**Changed:**
+
+- Reorganized documentation structure for clarity and consistency
+- Updated documentation references to reflect the new structure
+- Removed redundant and outdated documentation
+
+**Improved:**
+
+- Documentation clarity and organization
+- Navigation between related documents
+- Documentation maintenance process
 
 ### v0.57.0 - Database Service Wrapper Refactoring Implementation Plan (2025-06-28)
 
@@ -1076,4 +1098,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-28 (v0.57.0)
+Date: 2025-06-28 (v0.58.0)

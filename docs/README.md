@@ -2,37 +2,64 @@
 
 This directory contains the documentation for the BLKWDS Manager application.
 
-## Primary Documentation
+## Single Source of Truth
 
-These documents serve as the single source of truth for the project:
+The **[Project Status](project_status.md)** document is the definitive source of truth for the BLKWDS Manager project. It contains:
 
-1. **[Project Status](project_status.md)** - Current status, feature list, and next steps
-2. **[Journal](Journal.md)** - Chronological record of development activities
-3. **[Architecture Simplification Plan](architecture/simplification_plan.md)** - Current architectural direction
+- Current version and project phase
+- Feature status and completion percentages
+- Known issues and their status
+- Detailed next steps and implementation plans
+- Recent changes and version history
+
+All other documentation should be considered supplementary to this document.
+
+## Development Journal
+
+The **[Development Journal](development_journal.md)** provides a chronological record of development activities, including:
+
+- Daily development activities and decisions
+- Implementation details and rationale
+- Challenges encountered and solutions applied
+- Progress tracking over time
+
+## Implementation Plans
+
+Detailed implementation plans for specific features and improvements are stored in the [implementation_plans](implementation_plans/) directory:
+
+- **[Database Service Wrapper Refactoring](implementation_plans/database_service_wrapper_refactoring.md)** - Plan for refactoring database operations to use the wrapper consistently
+
+## Technical Documentation
+
+### Database
+
+- **[Database Migration System](database_migration_system.md)** - Framework for database schema migrations
+- **[Database Error Handling](database_error_handling.md)** - Error handling system for database operations
+- **[Database Integrity Checks](database_integrity_checks.md)** - Integrity check system for database operations
+
+### Architecture
+
+- **[Architecture and Tech Stack](architecture/architecture_and_tech_stack.md)** - Overview of the application architecture
 
 ## Testing Documentation
 
-1. **[Studio System Testing Checklist](testing/studio_system_checklist.md)** - Comprehensive testing plan for the studio management system
-
-## Reference Documentation
-
-1. **[Architecture and Tech Stack](architecture/architecture_and_tech_stack.md)** - Overview of the application architecture
-2. **[Database Models](models/blkwds_db_models.md)** - Database schema and model definitions
-3. **[Database Service](models/db_service.md)** - Database service implementation details
-4. **[Database Migration System](database_migration_system.md)** - Database migration framework and implementation
-5. **[Database Error Handling](database_error_handling.md)** - Error handling system for database operations
-6. **[Database Integrity Checks](database_integrity_checks.md)** - Integrity check system for database operations
-
-## Legacy Documentation
-
-Older documentation that has been superseded or is no longer current has been moved to the [legacy](legacy/) directory. These documents are kept for historical reference but should not be used for current development decisions.
+- **[Testing Strategy](testing_strategy.md)** - Overall testing approach and methodology
+- **[Studio System Testing Checklist](testing/studio_system_checklist.md)** - Testing plan for the studio management system
 
 ## Documentation Guidelines
 
-1. **Keep it Current**: Update documentation as code changes
-2. **Single Source of Truth**: Avoid duplicating information across multiple documents
-3. **Clear Structure**: Use consistent formatting and organization
-4. **Code Examples**: Include relevant code examples where appropriate
-5. **Link Related Documents**: Cross-reference related documentation
+1. **Single Source of Truth**: The project_status.md file is the definitive source of truth. All other documentation should be consistent with it.
 
-**Last Updated**: 2025-06-25
+2. **Keep Documentation Current**: Update documentation as code changes. Documentation that becomes outdated should be updated or removed.
+
+3. **Clear Structure**: Use consistent formatting and organization across all documentation files.
+
+4. **Implementation Plans**: All implementation plans should be stored in the implementation_plans directory with clear, descriptive filenames.
+
+5. **Cross-Reference**: Link related documents to provide a cohesive documentation experience.
+
+6. **Code Examples**: Include relevant code examples where appropriate to illustrate concepts.
+
+7. **Avoid Duplication**: Information should not be duplicated across multiple documents. Instead, reference the authoritative source.
+
+**Last Updated**: 2025-06-28
