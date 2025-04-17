@@ -3,6 +3,7 @@ import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/booking_panel/booking_panel_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/settings/database_integrity_screen.dart';
 import '../screens/add_gear/add_gear_screen.dart';
 import '../screens/member_management/member_list_screen.dart';
 import '../screens/project_management/project_list_screen.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
   static const String gearManagement = '/gear-management';
   static const String studioManagement = '/studio-management';
   static const String activityLog = '/activity-log';
+  static const String databaseIntegrity = '/database-integrity';
 
   // Route map for MaterialApp
   static Map<String, WidgetBuilder> get routes => {
@@ -37,6 +39,7 @@ class AppRoutes {
     projectManagement: (context) => const ProjectListScreen(),
     gearManagement: (context) => const GearListScreen(),
     studioManagement: (context) => const StudioManagementScreen(),
+    databaseIntegrity: (context) => const DatabaseIntegrityScreen(),
     // Activity log needs a controller, so we'll handle it in onGenerateRoute
   };
 
@@ -44,7 +47,7 @@ class AppRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     // Extract arguments
     final args = settings.arguments as Map<String, dynamic>?;
-    
+
     // Handle specific routes that need parameters
     switch (settings.name) {
       case activityLog:
@@ -54,7 +57,7 @@ class AppRoutes {
           ActivityLogScreen(controller: controller),
           BLKWDSPageTransitionType.rightToLeft,
         );
-      
+
       case bookingPanel:
         final filter = args?['filter'];
         return _buildRoute(
@@ -62,7 +65,7 @@ class AppRoutes {
           BookingPanelScreen(initialFilter: filter),
           BLKWDSPageTransitionType.bottomToTop,
         );
-        
+
       default:
         // If the route is not found, return to dashboard
         return _buildRoute(
@@ -86,7 +89,7 @@ class AppRoutes {
         switch (transitionType) {
           case BLKWDSPageTransitionType.fade:
             return FadeTransition(opacity: animation, child: child);
-          
+
           case BLKWDSPageTransitionType.rightToLeft:
             return SlideTransition(
               position: Tween<Offset>(
@@ -95,7 +98,7 @@ class AppRoutes {
               ).animate(animation),
               child: child,
             );
-            
+
           case BLKWDSPageTransitionType.leftToRight:
             return SlideTransition(
               position: Tween<Offset>(
@@ -104,7 +107,7 @@ class AppRoutes {
               ).animate(animation),
               child: child,
             );
-            
+
           case BLKWDSPageTransitionType.bottomToTop:
             return SlideTransition(
               position: Tween<Offset>(
@@ -113,7 +116,7 @@ class AppRoutes {
               ).animate(animation),
               child: child,
             );
-            
+
           case BLKWDSPageTransitionType.topToBottom:
             return SlideTransition(
               position: Tween<Offset>(
@@ -122,15 +125,14 @@ class AppRoutes {
               ).animate(animation),
               child: child,
             );
-            
+
           case BLKWDSPageTransitionType.scale:
             return ScaleTransition(
               scale: animation,
               child: child,
             );
-            
-          default:
-            return FadeTransition(opacity: animation, child: child);
+
+          // Default case is handled by BLKWDSPageTransitionType.fade
         }
       },
     );

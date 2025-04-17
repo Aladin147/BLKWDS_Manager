@@ -85,20 +85,38 @@ class DatabaseConfig {
   /// Database version
   final int databaseVersion;
 
+  /// Whether to enable database integrity checks
+  final bool enableIntegrityChecks;
+
+  /// Interval between integrity checks in hours
+  final int integrityCheckIntervalHours;
+
+  /// Whether to automatically fix integrity issues
+  final bool databaseIntegrityAutoFix;
+
   /// Constructor
   const DatabaseConfig({
     this.databaseName = 'blkwds_manager.db',
-    this.databaseVersion = 7,
+    this.databaseVersion = 8,
+    this.enableIntegrityChecks = true,
+    this.integrityCheckIntervalHours = 24,
+    this.databaseIntegrityAutoFix = false,
   });
 
   /// Create a copy with modified fields
   DatabaseConfig copyWith({
     String? databaseName,
     int? databaseVersion,
+    bool? enableIntegrityChecks,
+    int? integrityCheckIntervalHours,
+    bool? databaseIntegrityAutoFix,
   }) {
     return DatabaseConfig(
       databaseName: databaseName ?? this.databaseName,
       databaseVersion: databaseVersion ?? this.databaseVersion,
+      enableIntegrityChecks: enableIntegrityChecks ?? this.enableIntegrityChecks,
+      integrityCheckIntervalHours: integrityCheckIntervalHours ?? this.integrityCheckIntervalHours,
+      databaseIntegrityAutoFix: databaseIntegrityAutoFix ?? this.databaseIntegrityAutoFix,
     );
   }
 
@@ -107,6 +125,9 @@ class DatabaseConfig {
     return {
       'databaseName': databaseName,
       'databaseVersion': databaseVersion,
+      'enableIntegrityChecks': enableIntegrityChecks,
+      'integrityCheckIntervalHours': integrityCheckIntervalHours,
+      'databaseIntegrityAutoFix': databaseIntegrityAutoFix,
     };
   }
 
@@ -114,13 +135,16 @@ class DatabaseConfig {
   factory DatabaseConfig.fromMap(Map<String, dynamic> map) {
     return DatabaseConfig(
       databaseName: map['databaseName'] ?? 'blkwds_manager.db',
-      databaseVersion: map['databaseVersion'] ?? 7,
+      databaseVersion: map['databaseVersion'] ?? 8,
+      enableIntegrityChecks: map['enableIntegrityChecks'] ?? true,
+      integrityCheckIntervalHours: map['integrityCheckIntervalHours'] ?? 24,
+      databaseIntegrityAutoFix: map['databaseIntegrityAutoFix'] ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'DatabaseConfig(databaseName: $databaseName, databaseVersion: $databaseVersion)';
+    return 'DatabaseConfig(databaseName: $databaseName, databaseVersion: $databaseVersion, enableIntegrityChecks: $enableIntegrityChecks, integrityCheckIntervalHours: $integrityCheckIntervalHours, databaseIntegrityAutoFix: $databaseIntegrityAutoFix)';
   }
 }
 

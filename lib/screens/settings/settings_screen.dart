@@ -19,6 +19,7 @@ import '../../widgets/dialogs/data_seeding_dialog.dart';
 import 'widgets/settings_section.dart';
 import 'app_config_screen.dart';
 import 'app_info_screen.dart';
+import 'database_integrity_screen.dart';
 
 /// SettingsScreen
 /// Screen for configuring app settings and managing data
@@ -278,6 +279,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           onTap: () {
                             NavigationService().navigateTo(
                               const GearListScreen(),
+                              transitionType: BLKWDSPageTransitionType.rightToLeft,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text('Database Integrity'),
+                          subtitle: const Text('Check and fix database integrity issues'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            NavigationService().navigateTo(
+                              const DatabaseIntegrityScreen(),
                               transitionType: BLKWDSPageTransitionType.rightToLeft,
                             );
                           },

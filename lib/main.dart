@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'app.dart';
 import 'services/services.dart';
+import 'services/database/database_integrity_service.dart';
 
 /// Main entry point for the BLKWDS Manager app
 void main() async {
@@ -54,6 +55,17 @@ void main() async {
   // Initialize error analytics service
   await ErrorAnalyticsService.initialize();
   LogService.info('Error analytics service initialized');
+
+  // Initialize database integrity service
+  if (appConfig.database.enableIntegrityChecks) {
+    await DatabaseIntegrityService().start(
+      checkIntervalHours: appConfig.database.integrityCheckIntervalHours,
+      runImmediately: false,
+    );
+    LogService.info('Database integrity service initialized');
+  } else {
+    LogService.info('Database integrity checks are disabled in application configuration');
+  }
 
   // Run the app
   runApp(const BLKWDSApp());
