@@ -25,6 +25,10 @@ void main() async {
   await DataSeeder.seedDatabase();
   LogService.info('Data seeding completed');
 
+  // Initialize app configuration
+  await AppConfigService.initialize();
+  LogService.info('App configuration initialized');
+
   // Initialize error analytics service
   await ErrorAnalyticsService.initialize();
   LogService.info('Error analytics service initialized');

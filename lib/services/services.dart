@@ -8,6 +8,7 @@ export 'db_service.dart';
 export 'image_service.dart';
 export 'export_service.dart';
 export 'navigation_service.dart';
+export 'app_config_service.dart';
 
 // Error Handling and Logging
 export 'log_service.dart';

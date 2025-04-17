@@ -12,6 +12,7 @@ import '../../services/error_type.dart';
 import '../../services/error_feedback_level.dart';
 import '../../services/retry_service.dart';
 import '../../services/retry_strategy.dart';
+import '../../services/app_config_service.dart';
 
 /// SettingsController
 /// Handles state management and business logic for the Settings screen
@@ -24,12 +25,15 @@ class SettingsController {
   final ValueNotifier<String?> successMessage = ValueNotifier<String?>(null);
 
   // App information
-  final String appVersion = '1.0.0-rc10';
-  final String appBuildNumber = '1';
-  final String appCopyright = '© ${DateTime.now().year} BLKWDS Studios';
+  String get appVersion => AppConfigService.config.appInfo.appVersion;
+  String get appBuildNumber => AppConfigService.config.appInfo.appBuildNumber;
+  String get appCopyright => AppConfigService.config.appInfo.appCopyright;
 
   // Data seeder configuration
   final ValueNotifier<DataSeederConfig> dataSeederConfig = ValueNotifier<DataSeederConfig>(DataSeederConfig.standard());
+
+  // App configuration
+  final ValueNotifier<AppConfig> appConfig = ValueNotifier<AppConfig>(AppConfigService.config);
 
   // Set the context for error handling
   void setContext(BuildContext context) {
@@ -136,7 +140,7 @@ class SettingsController {
         'gear': gear.map((g) => g.toJson()).toList(),
         'bookings': bookings.map((b) => b.toJson()).toList(),
         'exportDate': DateTime.now().toIso8601String(),
-        'appVersion': appVersion,
+        'appVersion': AppConfigService.config.appInfo.appVersion,
       };
 
       // Convert to JSON
@@ -576,6 +580,7 @@ class SettingsController {
     errorMessage.dispose();
     successMessage.dispose();
     dataSeederConfig.dispose();
+    appConfig.dispose();
   }
 
   // Save data seeder configuration
@@ -662,4 +667,6 @@ class SettingsController {
       isLoading.value = false;
     }
   }
+
+
 }

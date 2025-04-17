@@ -17,6 +17,7 @@ import '../gear_management/gear_list_screen.dart';
 import 'settings_controller.dart';
 import 'widgets/data_seeder_config_form.dart';
 import 'widgets/settings_section.dart';
+import 'app_config_screen.dart';
 
 /// SettingsScreen
 /// Screen for configuring app settings and managing data
@@ -332,6 +333,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _controller.appCopyright,
                         style: BLKWDSTypography.bodyMedium,
                       ),
+                    ),
+                    const Divider(),
+                    ListTile(
+                      title: const Text('App Configuration'),
+                      subtitle: const Text('View and edit application configuration'),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        NavigationService().navigateTo(
+                          const AppConfigScreen(),
+                          transitionType: BLKWDSPageTransitionType.rightToLeft,
+                        );
+                      },
                     ),
                   ],
                 ),

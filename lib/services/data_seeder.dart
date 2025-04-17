@@ -4,6 +4,7 @@ import '../utils/data_generator.dart';
 import 'db_service.dart';
 import 'log_service.dart';
 import 'preferences_service.dart';
+import 'app_config_service.dart';
 
 /// DataSeeder
 /// Utility class for seeding the database with sample data
@@ -116,15 +117,16 @@ class DataSeeder {
 
     // Determine number of members to create based on volume type
     int memberCount;
+    final dataSeederDefaults = AppConfigService.config.dataSeeder;
     switch (config.volumeType) {
       case DataSeederVolumeType.minimal:
-        memberCount = 2;
+        memberCount = dataSeederDefaults.minimalMemberCount;
         break;
       case DataSeederVolumeType.standard:
-        memberCount = 5;
+        memberCount = dataSeederDefaults.standardMemberCount;
         break;
       case DataSeederVolumeType.comprehensive:
-        memberCount = 15;
+        memberCount = dataSeederDefaults.comprehensiveMemberCount;
         break;
     }
 
@@ -175,15 +177,16 @@ class DataSeeder {
 
     // Determine number of gear items to create based on volume type
     int gearCount;
+    final dataSeederDefaults = AppConfigService.config.dataSeeder;
     switch (config.volumeType) {
       case DataSeederVolumeType.minimal:
-        gearCount = 3;
+        gearCount = dataSeederDefaults.minimalGearCount;
         break;
       case DataSeederVolumeType.standard:
-        gearCount = 8;
+        gearCount = dataSeederDefaults.standardGearCount;
         break;
       case DataSeederVolumeType.comprehensive:
-        gearCount = 25;
+        gearCount = dataSeederDefaults.comprehensiveGearCount;
         break;
     }
 
@@ -301,15 +304,16 @@ class DataSeeder {
 
     // Determine number of projects to create based on volume type
     int projectCount;
+    final dataSeederDefaults = AppConfigService.config.dataSeeder;
     switch (config.volumeType) {
       case DataSeederVolumeType.minimal:
-        projectCount = 2;
+        projectCount = dataSeederDefaults.minimalProjectCount;
         break;
       case DataSeederVolumeType.standard:
-        projectCount = 3;
+        projectCount = dataSeederDefaults.standardProjectCount;
         break;
       case DataSeederVolumeType.comprehensive:
-        projectCount = 10;
+        projectCount = dataSeederDefaults.comprehensiveProjectCount;
         break;
     }
 
@@ -426,15 +430,16 @@ class DataSeeder {
 
     // Determine number of bookings to create based on volume type
     int bookingCount;
+    final dataSeederDefaults = AppConfigService.config.dataSeeder;
     switch (config.volumeType) {
       case DataSeederVolumeType.minimal:
-        bookingCount = 2;
+        bookingCount = dataSeederDefaults.minimalBookingCount;
         break;
       case DataSeederVolumeType.standard:
-        bookingCount = 3;
+        bookingCount = dataSeederDefaults.standardBookingCount;
         break;
       case DataSeederVolumeType.comprehensive:
-        bookingCount = 10;
+        bookingCount = dataSeederDefaults.comprehensiveBookingCount;
         break;
     }
 

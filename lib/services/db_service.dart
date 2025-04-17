@@ -5,6 +5,7 @@ import '../models/models.dart';
 
 import 'log_service.dart';
 import 'database_validator.dart';
+import 'app_config_service.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -24,10 +25,10 @@ class DBService {
 
   /// Initialize the database
   static Future<Database> _initDB() async {
-    final path = join(await getDatabasesPath(), 'blkwds_manager.db');
+    final path = join(await getDatabasesPath(), AppConfigService.config.database.databaseName);
     return await openDatabase(
       path,
-      version: 7, // Increment version to trigger migration
+      version: AppConfigService.config.database.databaseVersion, // Increment version to trigger migration
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
     );
@@ -269,16 +270,17 @@ class DBService {
         // Insert default studio settings if none exist
         if (settingsCount == 0) {
           LogService.info('Inserting default studio settings');
+          final studioConfig = AppConfigService.config.studio;
           await txn.insert('studio_settings', {
-            'openingTime': '9:0',
-            'closingTime': '22:0',
-            'minBookingDuration': 60,
-            'maxBookingDuration': 480,
-            'minAdvanceBookingTime': 1,
-            'maxAdvanceBookingTime': 90,
-            'cleanupTime': 30,
-            'allowOverlappingBookings': 0,
-            'enforceStudioHours': 1,
+            'openingTime': '${studioConfig.openingTime.hour}:${studioConfig.openingTime.minute}',
+            'closingTime': '${studioConfig.closingTime.hour}:${studioConfig.closingTime.minute}',
+            'minBookingDuration': studioConfig.minBookingDuration,
+            'maxBookingDuration': studioConfig.maxBookingDuration,
+            'minAdvanceBookingTime': studioConfig.minAdvanceBookingTime,
+            'maxAdvanceBookingTime': studioConfig.maxAdvanceBookingTime,
+            'cleanupTime': studioConfig.cleanupTime,
+            'allowOverlappingBookings': studioConfig.allowOverlappingBookings ? 1 : 0,
+            'enforceStudioHours': studioConfig.enforceStudioHours ? 1 : 0,
           });
         } else {
           LogService.info('Studio settings already exist, skipping insertion');
