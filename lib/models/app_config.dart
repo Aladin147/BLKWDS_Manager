@@ -386,6 +386,12 @@ class AppInfo {
 
 /// Data seeder defaults
 class DataSeederDefaults {
+  /// Whether to enable data seeding on first run
+  final bool enableDataSeeding;
+
+  /// Whether to show a confirmation dialog before seeding data
+  final bool showSeedingConfirmation;
+
   /// Default number of members for minimal volume
   final int minimalMemberCount;
 
@@ -430,6 +436,8 @@ class DataSeederDefaults {
 
   /// Constructor
   const DataSeederDefaults({
+    this.enableDataSeeding = true,
+    this.showSeedingConfirmation = true,
     this.minimalMemberCount = 2,
     this.standardMemberCount = 5,
     this.comprehensiveMemberCount = 15,
@@ -467,6 +475,8 @@ class DataSeederDefaults {
 
   /// Create a copy with modified fields
   DataSeederDefaults copyWith({
+    bool? enableDataSeeding,
+    bool? showSeedingConfirmation,
     int? minimalMemberCount,
     int? standardMemberCount,
     int? comprehensiveMemberCount,
@@ -483,6 +493,8 @@ class DataSeederDefaults {
     List<String>? memberRoles,
   }) {
     return DataSeederDefaults(
+      enableDataSeeding: enableDataSeeding ?? this.enableDataSeeding,
+      showSeedingConfirmation: showSeedingConfirmation ?? this.showSeedingConfirmation,
       minimalMemberCount: minimalMemberCount ?? this.minimalMemberCount,
       standardMemberCount: standardMemberCount ?? this.standardMemberCount,
       comprehensiveMemberCount: comprehensiveMemberCount ?? this.comprehensiveMemberCount,
@@ -503,6 +515,8 @@ class DataSeederDefaults {
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
+      'enableDataSeeding': enableDataSeeding,
+      'showSeedingConfirmation': showSeedingConfirmation,
       'minimalMemberCount': minimalMemberCount,
       'standardMemberCount': standardMemberCount,
       'comprehensiveMemberCount': comprehensiveMemberCount,
@@ -523,6 +537,8 @@ class DataSeederDefaults {
   /// Create from a map
   factory DataSeederDefaults.fromMap(Map<String, dynamic> map) {
     return DataSeederDefaults(
+      enableDataSeeding: map['enableDataSeeding'] ?? true,
+      showSeedingConfirmation: map['showSeedingConfirmation'] ?? true,
       minimalMemberCount: map['minimalMemberCount'] ?? 2,
       standardMemberCount: map['standardMemberCount'] ?? 5,
       comprehensiveMemberCount: map['comprehensiveMemberCount'] ?? 15,
@@ -565,6 +581,6 @@ class DataSeederDefaults {
 
   @override
   String toString() {
-    return 'DataSeederDefaults(minimalMemberCount: $minimalMemberCount, standardMemberCount: $standardMemberCount, comprehensiveMemberCount: $comprehensiveMemberCount, minimalGearCount: $minimalGearCount, standardGearCount: $standardGearCount, comprehensiveGearCount: $comprehensiveGearCount, minimalProjectCount: $minimalProjectCount, standardProjectCount: $standardProjectCount, comprehensiveProjectCount: $comprehensiveProjectCount, minimalBookingCount: $minimalBookingCount, standardBookingCount: $standardBookingCount, comprehensiveBookingCount: $comprehensiveBookingCount, gearCategories: $gearCategories, memberRoles: $memberRoles)';
+    return 'DataSeederDefaults(enableDataSeeding: $enableDataSeeding, showSeedingConfirmation: $showSeedingConfirmation, minimalMemberCount: $minimalMemberCount, standardMemberCount: $standardMemberCount, comprehensiveMemberCount: $comprehensiveMemberCount, minimalGearCount: $minimalGearCount, standardGearCount: $standardGearCount, comprehensiveGearCount: $comprehensiveGearCount, minimalProjectCount: $minimalProjectCount, standardProjectCount: $standardProjectCount, comprehensiveProjectCount: $comprehensiveProjectCount, minimalBookingCount: $minimalBookingCount, standardBookingCount: $standardBookingCount, comprehensiveBookingCount: $comprehensiveBookingCount, gearCategories: $gearCategories, memberRoles: $memberRoles)';
   }
 }

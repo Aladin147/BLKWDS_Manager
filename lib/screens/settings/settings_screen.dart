@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
-import '../../models/models.dart';
+
 import '../../services/navigation_service.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_constants.dart';
@@ -15,7 +15,7 @@ import '../project_management/project_list_screen.dart';
 import '../gear_management/gear_list_screen.dart';
 // Migration imports removed - migration is complete
 import 'settings_controller.dart';
-import 'widgets/data_seeder_config_form.dart';
+import '../../widgets/dialogs/data_seeding_dialog.dart';
 import 'widgets/settings_section.dart';
 import 'app_config_screen.dart';
 import 'app_info_screen.dart';
@@ -34,7 +34,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _controller = SettingsController();
 
   // State
-  bool _showDataSeederConfigForm = false;
 
   @override
   void initState() {
@@ -118,42 +117,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // Handle data seeder configuration
   void _handleDataSeederConfig() {
-    setState(() {
-      _showDataSeederConfigForm = true;
-    });
-  }
-
-  // Handle save data seeder configuration
-  Future<void> _handleSaveDataSeederConfig(DataSeederConfig config) async {
-    final success = await _controller.saveDataSeederConfig(config);
-    if (success) {
-      setState(() {
-        _showDataSeederConfigForm = false;
-      });
-    }
-  }
-
-  // Handle reseed database
-  Future<void> _handleReseedDatabase() async {
-    // Show confirmation dialog
-    final confirmed = await _showConfirmationDialog(
-      title: 'Reseed Database',
-      message: 'This will delete all existing data and seed the database with new data based on your configuration. Are you sure you want to continue?',
-      confirmText: 'Reseed',
-      isDestructive: true,
+    showDialog(
+      context: context,
+      builder: (context) => const DataSeedingDialog(),
     );
-
-    if (confirmed != true) {
-      return;
-    }
-
-    final success = await _controller.reseedDatabase();
-    if (success) {
-      setState(() {
-        _showDataSeederConfigForm = false;
-      });
-    }
   }
+
+
 
   // Show confirmation dialog
   Future<bool?> _showConfirmationDialog({
@@ -410,19 +380,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
 
-          // Data seeder configuration form
-          if (_showDataSeederConfigForm)
-            ValueListenableBuilder<DataSeederConfig>(
-              valueListenable: _controller.dataSeederConfig,
-              builder: (context, config, _) {
-                return DataSeederConfigForm(
-                  config: config,
-                  onSave: _handleSaveDataSeederConfig,
-                  onCancel: () => setState(() => _showDataSeederConfigForm = false),
-                  onReseed: _handleReseedDatabase,
-                );
-              },
-            ),
+
         ],
       ),
     );
