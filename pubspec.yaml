@@ -57,11 +57,13 @@ dependencies:
   # App information
   package_info_plus: ^5.0.1
 
-  # State Management (optional)
-  flutter_riverpod: ^2.4.10
+  # State Management
+  # Using Flutter's built-in ValueNotifier for reactive state management
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # Testing utilities

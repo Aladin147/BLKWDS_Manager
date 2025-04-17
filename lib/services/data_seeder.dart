@@ -1,6 +1,7 @@
 import 'dart:math';
 import '../models/models.dart';
 import '../utils/data_generator.dart';
+import '../config/environment_config.dart';
 import 'db_service.dart';
 import 'log_service.dart';
 import 'preferences_service.dart';
@@ -68,6 +69,12 @@ class DataSeeder {
     // Get configuration
     final seederConfig = config ?? await getConfig();
 
+    // Check if we're in production environment
+    if (EnvironmentConfig.isProduction) {
+      LogService.warning('Data seeding is disabled in production environment');
+      return;
+    }
+
     // Check if database is already seeded
     final isEmpty = await isDatabaseEmpty();
     if (!isEmpty) {
@@ -130,6 +137,13 @@ class DataSeeder {
   /// Reseed the database with the given configuration
   /// This method should be used with caution as it will clear all existing data
   static Future<void> reseedDatabase(DataSeederConfig config) async {
+    // Check if we're in production environment
+    if (EnvironmentConfig.isProduction) {
+      final errorMsg = 'Database reseeding is disabled in production environment';
+      LogService.error(errorMsg);
+      throw Exception(errorMsg);
+    }
+
     // Log warning about data loss
     LogService.warning('Reseeding database will clear all existing data');
 

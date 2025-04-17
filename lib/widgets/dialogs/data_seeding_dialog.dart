@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../../theme/app_theme.dart';
+import '../../config/environment_config.dart';
 
 /// Dialog for configuring data seeding options
 class DataSeedingDialog extends StatefulWidget {
@@ -77,6 +78,17 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
 
   /// Reseed the database with the current configuration
   Future<void> _reseedDatabase() async {
+    // Check if we're in production environment
+    if (EnvironmentConfig.isProduction) {
+      if (mounted) {
+        SnackbarService.showError(
+          context,
+          'Database reseeding is disabled in production environment',
+        );
+      }
+      return;
+    }
+
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -133,6 +145,7 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // Show loading indicator while loading
     if (_isLoading) {
       return const AlertDialog(
         content: SizedBox(
@@ -141,6 +154,23 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
             child: CircularProgressIndicator(),
           ),
         ),
+      );
+    }
+
+    // Show warning dialog in production environment
+    if (EnvironmentConfig.isProduction) {
+      return AlertDialog(
+        title: const Text('Data Seeding Disabled'),
+        content: const Text(
+          'Data seeding is disabled in production environment to prevent accidental data loss. '
+          'This feature is only available in development and testing environments.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
       );
     }
 

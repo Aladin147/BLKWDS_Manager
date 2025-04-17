@@ -51,7 +51,7 @@ class Project {
       'title': title,
       'client': client,
       'notes': notes,
-      'description': description,
+      // Description is not in the database schema
       // Member IDs are stored in a separate table, so they're not in the map
     };
   }

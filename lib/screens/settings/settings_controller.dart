@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/models.dart';
+import '../../config/environment_config.dart';
 import '../../services/data_seeder.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
@@ -634,6 +635,26 @@ class SettingsController {
     successMessage.value = null;
 
     try {
+      // Check if we're in production environment
+      if (EnvironmentConfig.isProduction) {
+        final errorMsg = 'Database reseeding is disabled in production environment';
+        errorMessage.value = errorMsg;
+
+        // Show error message if context is available
+        if (context != null) {
+          ContextualErrorHandler.handleError(
+            context!,
+            errorMsg,
+            type: ErrorType.validation,
+            feedbackLevel: ErrorFeedbackLevel.snackbar,
+          );
+        } else {
+          LogService.error(errorMsg);
+        }
+
+        return false;
+      }
+
       // Reseed database
       await DataSeeder.reseedDatabase(dataSeederConfig.value);
 

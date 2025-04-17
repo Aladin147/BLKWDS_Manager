@@ -3,10 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:blkwds_manager/main.dart' as app;
 
+// Import our test files
+import 'gear_checkout_flow_test.dart' as gear_checkout;
+import 'booking_creation_flow_test.dart' as booking_creation;
+import 'project_management_flow_test.dart' as project_management;
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('End-to-end test', () {
+  group('Basic Navigation Tests', () {
     testWidgets('Verify app launches and dashboard loads', (WidgetTester tester) async {
       // Start the app
       app.main();
@@ -16,8 +21,8 @@ void main() {
       expect(find.text('BLKWDS Manager'), findsOneWidget);
 
       // Verify that the dashboard is loaded
-      expect(find.text('Today\'s Bookings'), findsOneWidget);
-      expect(find.text('Gear Status'), findsOneWidget);
+      expect(find.text('Quick Actions'), findsOneWidget);
+      expect(find.text('Recent Gear Activity'), findsOneWidget);
     });
 
     testWidgets('Navigate to Booking Panel and back', (WidgetTester tester) async {
@@ -25,9 +30,8 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // Find and tap the Booking Panel button
-      final bookingPanelButton = find.byIcon(Icons.calendar_today);
-      await tester.tap(bookingPanelButton);
+      // Find and tap the Open Booking Panel button
+      await tester.tap(find.text('Open Booking Panel'));
       await tester.pumpAndSettle();
 
       // Verify that we're on the Booking Panel screen
@@ -42,6 +46,33 @@ void main() {
       expect(find.text('BLKWDS Manager'), findsOneWidget);
     });
 
-    // More integration tests would be added here
+    testWidgets('Navigate to Settings and back', (WidgetTester tester) async {
+      // Start the app
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Find and tap the Settings button
+      final settingsButton = find.byIcon(Icons.settings);
+      await tester.tap(settingsButton);
+      await tester.pumpAndSettle();
+
+      // Verify that we're on the Settings screen
+      expect(find.text('Settings'), findsOneWidget);
+
+      // Go back to the dashboard
+      final backButton = find.byIcon(Icons.arrow_back);
+      await tester.tap(backButton);
+      await tester.pumpAndSettle();
+
+      // Verify that we're back on the dashboard
+      expect(find.text('BLKWDS Manager'), findsOneWidget);
+    });
+  });
+
+  // Run our critical user flow tests
+  group('Critical User Flow Tests', () {
+    gear_checkout.main();
+    booking_creation.main();
+    project_management.main();
   });
 }

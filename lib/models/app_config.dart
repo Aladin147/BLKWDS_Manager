@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'time_of_day.dart';
 import '../services/version_service.dart';
+import '../config/environment_config.dart';
 
 /// AppConfig
 /// Centralized configuration for the application
@@ -69,7 +70,21 @@ class AppConfig {
   }
 
   /// Default configuration
-  static const AppConfig defaults = AppConfig();
+  static AppConfig get defaults {
+    // Create environment-specific configuration
+    final dataSeeder = DataSeederDefaults(
+      // Disable data seeding in production environment
+      enableDataSeeding: !EnvironmentConfig.isProduction,
+    );
+
+    return AppConfig(
+      database: const DatabaseConfig(),
+      studio: const StudioConfig(),
+      ui: const UIConfig(),
+      appInfo: const AppInfo(),
+      dataSeeder: dataSeeder,
+    );
+  }
 
   @override
   String toString() {

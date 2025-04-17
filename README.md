@@ -26,7 +26,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 | Layer      | Description                         |
 |-----------|-------------------------------------|
 | UI        | Flutter Desktop (Windows)            |
-| State     | ValueNotifier / Riverpod (optional)  |
+| State     | ValueNotifier pattern                |
 | DB        | SQLite via `sqflite`                 |
 | Assets    | Local image paths, stored in `/images` |
 | Export    | CSV via `csv` package                |
@@ -57,9 +57,11 @@ This README is the **master reference** for the entire project lifecycle — fro
 1. **Clone the repo**
 2. Ensure Flutter is installed and targeting Windows Desktop
 3. Run `flutter pub get`
-4. Launch with `flutter run -d windows`
-5. Build with `flutter build windows`
+4. Launch with `flutter run -d windows --dart-define=ENVIRONMENT=development`
+5. Build with `flutter build windows --release --dart-define=ENVIRONMENT=production`
 6. Share as `.exe` via zipped release folder
+
+For detailed build instructions for different environments, see `build_config.md`.
 
 ---
 
@@ -73,6 +75,7 @@ This README is the **master reference** for the entire project lifecycle — fro
 | `journal.md`             | Chronological record of development activities |
 | `README.md`              | Project overview and documentation entry point |
 | `CHANGELOG.md`           | Version history and release notes |
+| `build_config.md`        | Build configuration for different environments |
 
 ### Technical Documentation
 
@@ -82,6 +85,11 @@ This README is the **master reference** for the entire project lifecycle — fro
 | `docs/database_error_handling.md` | Error handling system for database operations |
 | `docs/database_integrity_checks.md` | Integrity check system for database operations |
 | `docs/architecture/architecture_and_tech_stack.md` | Overview of the application architecture |
+| `docs/architecture/state_management.md` | State management approach and implementation |
+| `docs/testing/controller_testing_plan.md` | Testing plan for controllers |
+| `docs/testing/widget_testing_plan.md` | Testing plan for UI components |
+| `docs/testing/integration_testing_plan.md` | Testing plan for critical user flows |
+| `lib/config/environment_config.dart` | Environment detection and configuration |
 
 ### Implementation Plans
 
@@ -113,6 +121,22 @@ The project is currently at **99% completion** for Phase 1 (MVP), with only a fe
   - ✅ Added comprehensive error handling for database operations
   - ✅ Implemented database integrity checks and repair mechanisms
   - ✅ Created detailed implementation plan for DBServiceWrapper refactoring
+  - ✅ Implemented environment-aware data seeding system
+  - ✅ Added build configuration for different environments
+
+- **Architecture Improvements**
+  - ✅ Standardized on ValueNotifier pattern for state management
+  - ✅ Removed Riverpod dependency
+  - ✅ Created comprehensive state management documentation
+  - ✅ Simplified dependency management
+
+- **Testing Improvements**
+  - ✅ Implemented comprehensive tests for critical controllers
+  - ✅ Implemented comprehensive tests for core UI components
+  - ✅ Implemented comprehensive integration tests for critical user flows
+  - ✅ Created detailed testing plans for controllers, widgets, and integration tests
+  - ✅ Established patterns for testing future components
+  - ✅ Created a foundation for continuous integration and deployment
 
 - **UI/UX Enhancements**
   - ✅ Standardized background colors across all screens
@@ -164,15 +188,16 @@ The project is currently at **99% completion** for Phase 1 (MVP), with only a fe
 
 ## ✅ Version
 
-Current: **v1.0.0-rc28 – Release Candidate 28**
+Current: **v1.0.0-rc38 – Release Candidate 38**
 
 ---
 
 ## 🐛 Known Issues
 
-- **Testing Coverage**: Minimal test coverage across unit, widget, and integration tests
+- **Static Analysis Issues**: Need to fix use_build_context_synchronously warnings and clean up unused code
 - **UI Standardization**: Some inconsistencies in typography and component usage remain
-- **State Management**: Unclear state management strategy with Riverpod
+
+All critical database issues have been resolved, including the environment-aware data seeding system. State management has been standardized on the ValueNotifier pattern. Comprehensive test coverage has been implemented across unit, widget, and integration tests.
 
 For a complete list of known issues and their status, see `project_status.md`.
 
