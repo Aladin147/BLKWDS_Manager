@@ -8,6 +8,8 @@ class Booking {
   final DateTime endDate;
   final bool isRecordingStudio;
   final bool isProductionStudio;
+  final int? studioId; // ID of the studio for this booking
+  final String? notes; // Additional notes for the booking
   final List<int> gearIds;
   final Map<int, int>? assignedGearToMember; // {gearId: memberId}
   final String? color; // Hex color code for visual identification
@@ -20,6 +22,8 @@ class Booking {
     required this.endDate,
     this.isRecordingStudio = false,
     this.isProductionStudio = false,
+    this.studioId,
+    this.notes,
     this.gearIds = const [],
     this.assignedGearToMember,
     this.color,
@@ -35,6 +39,8 @@ class Booking {
       endDate: DateTime.parse(map['endDate'] as String),
       isRecordingStudio: (map['isRecordingStudio'] as int) == 1,
       isProductionStudio: (map['isProductionStudio'] as int) == 1,
+      studioId: map['studioId'] as int?,
+      notes: map['notes'] as String?,
       // Gear IDs and assignments are stored in a separate table, so they're not in the map
       gearIds: const [],
       assignedGearToMember: {},
@@ -61,6 +67,8 @@ class Booking {
       endDate: DateTime.parse(json['endDate'] as String),
       isRecordingStudio: json['isRecordingStudio'] as bool,
       isProductionStudio: json['isProductionStudio'] as bool,
+      studioId: json['studioId'] as int?,
+      notes: json['notes'] as String?,
       gearIds: json['gearIds'] != null
           ? List<int>.from(json['gearIds'] as List)
           : const [],
@@ -83,6 +91,8 @@ class Booking {
 
     // Only add non-null values
     if (id != null) map['id'] = id;
+    if (studioId != null) map['studioId'] = studioId;
+    if (notes != null) map['notes'] = notes;
     if (color != null) map['color'] = color;
 
     return map;
@@ -106,6 +116,8 @@ class Booking {
       'endDate': endDate.toIso8601String(),
       'isRecordingStudio': isRecordingStudio,
       'isProductionStudio': isProductionStudio,
+      'studioId': studioId,
+      'notes': notes,
       'gearIds': gearIds,
       'assignedGearToMember': assignments,
       'color': color,
@@ -121,6 +133,8 @@ class Booking {
     DateTime? endDate,
     bool? isRecordingStudio,
     bool? isProductionStudio,
+    int? studioId,
+    String? notes,
     List<int>? gearIds,
     Map<int, int>? assignedGearToMember,
     String? color,
@@ -133,6 +147,8 @@ class Booking {
       endDate: endDate ?? this.endDate,
       isRecordingStudio: isRecordingStudio ?? this.isRecordingStudio,
       isProductionStudio: isProductionStudio ?? this.isProductionStudio,
+      studioId: studioId ?? this.studioId,
+      notes: notes ?? this.notes,
       gearIds: gearIds ?? this.gearIds,
       assignedGearToMember: assignedGearToMember ?? this.assignedGearToMember,
       color: color ?? this.color,
@@ -141,7 +157,7 @@ class Booking {
 
   @override
   String toString() {
-    return 'Booking(id: $id, projectId: $projectId, title: $title, startDate: $startDate, endDate: $endDate)';
+    return 'Booking(id: $id, projectId: $projectId, title: $title, startDate: $startDate, endDate: $endDate, studioId: $studioId)';
   }
 
   @override
@@ -155,6 +171,8 @@ class Booking {
         other.endDate == endDate &&
         other.isRecordingStudio == isRecordingStudio &&
         other.isProductionStudio == isProductionStudio &&
+        other.studioId == studioId &&
+        other.notes == notes &&
         other.color == color;
   }
 
@@ -167,5 +185,7 @@ class Booking {
       endDate.hashCode ^
       isRecordingStudio.hashCode ^
       isProductionStudio.hashCode ^
+      studioId.hashCode ^
+      notes.hashCode ^
       color.hashCode;
 }

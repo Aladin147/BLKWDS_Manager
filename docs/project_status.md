@@ -178,7 +178,6 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [ ] Replace placeholder contents in the app with actual functionality
      - [ ] Disable or remove UI elements that aren't fully implemented
    - Error Handling Standardization
-     - [ ] Standardize on SnackbarService for all error notifications
      - [ ] Replace all direct ScaffoldMessenger calls
      - [ ] Ensure consistent error feedback levels
 
