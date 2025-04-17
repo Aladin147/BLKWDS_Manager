@@ -65,63 +65,91 @@ This README is the **master reference** for the entire project lifecycle — fro
 
 ## 📚 Key Documentation
 
+### Single Source of Truth
+
 | Doc                      | Purpose                             |
 |--------------------------|-------------------------------------|
-| `visual_guidelines.md`   | Brand styling and UI rules          |
-| `ui_ux_spec.md`          | UX behavior and screen logic        |
-| `workflow_and_dev_guidelines.md` | Dev style, folder rules, journal habits |
-| `blkwds_db_models.md`    | Data model and schema references    |
-| `error_handling_guidelines.md` | Error handling guidelines and best practices |
-| `error_handling_summary.md`  | Error handling system overview and architecture |
-| `Journal.md`             | Development journal with daily updates |
-| `roadmap.md`             | Feature evolution plan              |
-| `changelog.md`           | Version history                     |
+| `project_status.md`      | **Primary source of truth** for project status, features, issues, and next steps |
+| `journal.md`             | Chronological record of development activities |
+| `README.md`              | Project overview and documentation entry point |
+| `CHANGELOG.md`           | Version history and release notes |
+
+### Technical Documentation
+
+| Doc                      | Purpose                             |
+|--------------------------|-------------------------------------|
+| `docs/database_migration_system.md` | Database migration framework and implementation |
+| `docs/database_error_handling.md` | Error handling system for database operations |
+| `docs/database_integrity_checks.md` | Integrity check system for database operations |
+| `docs/architecture/architecture_and_tech_stack.md` | Overview of the application architecture |
+
+### Implementation Plans
+
+| Doc                      | Purpose                             |
+|--------------------------|-------------------------------------|
+| `docs/implementation_plans/database_service_wrapper_refactoring.md` | Plan for refactoring database operations |
 
 ---
 
 ## 🚦 Development Status
 
-- Basic project structure and architecture implemented
-- Dark mode theme system and data models created
-- Dashboard UI with real database integration and space-efficient layout
-- Windows compatibility issues resolved
-- Database service with CRUD operations implemented
-- Gear checkout/checkin functionality working
-- Add Gear screen implemented with form validation
-- Image upload functionality working
-- Database migration system implemented and refined
-- Booking Panel with list view and form functionality implemented
-- Improved dashboard layout with functional zones and better visual hierarchy
-- Booking filtering and search functionality implemented
-- Fixed model equality issues for dropdown widgets
-- Calendar drag-and-drop functionality implemented
-- Database schema and model mismatches fixed
-- Comprehensive error handling and logging system implemented
-  - Created standardized error feedback mechanisms (snackbars, dialogs, banners, toasts)
-  - Implemented context-aware error handling with appropriate feedback levels
-  - Added retry and recovery mechanisms for operations that might fail
-  - Created error boundaries for UI components to prevent application crashes
-  - Implemented error analytics for tracking and analyzing errors
-- UI consistency issues fixed with standardized components
-- UI/UX Enhancement Phase 1 completed with professional styling
-  - Added shadows, gradients, and micro-interactions
-  - Implemented consistent elevation system for cards and dialogs
-  - Created depth and visual hierarchy with layering
-- UI/UX Enhancement Phase 2 completed with animations and transitions
-  - Implemented screen transition system with NavigationService
-  - Created layout animation system with animated lists and expandable containers
-  - Enhanced form elements with micro-interactions
-- Comprehensive bug sweep and code quality improvements
-  - Updated widget constructors to use modern Flutter syntax
-  - Replaced all print statements with proper LogService calls
-  - Fixed database issues and improved error handling
-  - Optimized animations and UI components
+The project is currently at **99% completion** for Phase 1 (MVP), with only a few remaining tasks before it can be considered ready for internal deployment.
 
-### Upcoming Priorities
+### Completed Core Features
 
-- Add custom icons and visual assets integration
-- Implement Phase 2 features (undo functionality, bulk gear management, booking templates)
-- Add comprehensive test coverage for critical components
+- ✅ **Gear Checkout System** - Core functionality for checking gear in/out
+- ✅ **Member Management** - CRUD operations for members
+- ✅ **Project Management** - CRUD operations for projects
+- ✅ **Gear Management** - CRUD operations for gear
+- ✅ **Booking System** - Migrated to studio-based system
+- ✅ **Studio Management** - UI and functionality complete
+- ✅ **Error Handling** - Comprehensive error handling system implemented
+- ✅ **Responsive Layout** - Dashboard layout fixed
+
+### Recent Improvements
+
+- **Database Reliability**
+  - ✅ Implemented robust database migration system
+  - ✅ Added comprehensive error handling for database operations
+  - ✅ Implemented database integrity checks and repair mechanisms
+  - ✅ Created detailed implementation plan for DBServiceWrapper refactoring
+
+- **UI/UX Enhancements**
+  - ✅ Standardized background colors across all screens
+  - ✅ Standardized shadow styles for all cards and elevated surfaces
+  - ✅ Improved layout responsiveness by replacing fixed heights
+  - ✅ Standardized component usage (buttons, text fields, dropdowns)
+  - ✅ Standardized navigation patterns and transitions
+  - ✅ Implemented dark mode exclusively (removed theme switching)
+
+- **Documentation**
+  - ✅ Consolidated documentation into single source of truth
+  - ✅ Updated all version references
+  - ✅ Created comprehensive placeholder inventory
+  - ✅ Audited and updated documentation for consistency
+
+### Remaining Tasks
+
+- **Database Service Wrapper Refactoring**
+  - Refactor remaining database operations to use DBServiceWrapper methods
+  - Update and add tests for refactored operations
+
+- **Testing Coverage**
+  - Add unit tests for controllers, services, and critical models
+  - Add widget tests for core UI components
+  - Add integration tests for critical user flows
+
+- **Documentation and Testing**
+  - Create comprehensive testing checklist
+  - Create user documentation for internal testers
+
+### Upcoming Phase 2 Features
+
+- Undo functionality (snackbar with undo link)
+- Bulk gear management (batch actions)
+- Booking templates (recurring jobs)
+- Backup/export manager (manual or timed)
+- Hover tooltips everywhere
 
 ---
 
@@ -136,14 +164,17 @@ This README is the **master reference** for the entire project lifecycle — fro
 
 ## ✅ Version
 
-Current: **v1.0.0-rc1 – Release Candidate 1**
+Current: **v1.0.0-rc28 – Release Candidate 28**
 
 ---
 
 ## 🐛 Known Issues
 
-- Calendar screen filtering needs optimization
-- See `Journal.md` for detailed issue tracking
+- **Testing Coverage**: Minimal test coverage across unit, widget, and integration tests
+- **UI Standardization**: Some inconsistencies in typography and component usage remain
+- **State Management**: Unclear state management strategy with Riverpod
+
+For a complete list of known issues and their status, see `project_status.md`.
 
 ---
 
@@ -154,4 +185,4 @@ Internal use only. Not for public distribution.
 
 ---
 
-For feature implementation notes, code journal entries, or updates, always reference this README first.
+For feature implementation notes, code journal entries, or updates, always reference `project_status.md` as the single source of truth.

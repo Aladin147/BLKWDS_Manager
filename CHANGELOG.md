@@ -5,18 +5,86 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc28] - 2025-06-28
+
+### Added
+
+- New development_journal.md file to replace the missing Journal.md
+- Updated README.md with clear documentation hierarchy
+- Established project_status.md as the single source of truth
+- Detailed implementation plan for refactoring database operations
+- Phased approach with audit, refactoring, testing, and documentation
+- Example refactoring patterns for different operation types
+- Risk assessment and mitigation strategies
+
+### Changed
+
+- Reorganized documentation structure for clarity and consistency
+- Updated documentation references to reflect the new structure
+- Removed redundant and outdated documentation
+
+### Improved
+
+- Documentation clarity and organization
+- Navigation between related documents
+- Documentation maintenance process
+- Structured refactoring approach by operation type
+- Comprehensive testing strategy for refactored operations
+- Clear documentation for maintaining refactored code
+
+## [1.0.0-rc27] - 2025-06-27
+
+### Added
+
+- Comprehensive plan for refactoring remaining database operations in DBService
+- Detailed implementation strategy for using DBServiceWrapper consistently
+- Prioritization framework for database operation refactoring
+
+### Improved
+
+- Consistent error handling across all database operations
+- Uniform retry mechanisms for transient errors
+- Standardized transaction handling
+- Improved code maintainability and readability
+- Better debugging and error reporting
+
+## [1.0.0-rc26] - 2025-06-26
+
+### Added
+
+- Comprehensive test suite for database integrity system
+- Unit tests for DatabaseIntegrityChecker
+- Unit tests for DatabaseIntegrityRepair functionality
+- Unit tests for DatabaseIntegrityService
+- Test helpers for creating database corruption scenarios
+
+### Fixed
+
+- Edge cases in database integrity checks
+- Date format handling in integrity repair operations
+- Error handling in integrity service
+
+### Improved
+
+- Test coverage for database-related components
+- Robustness of integrity check and repair operations
+- Documentation for database integrity system
+
 ## [1.0.1] - 2025-05-16
 
 ### Added
+
 - Comprehensive error logging with stack traces
 - Proper documentation for database schema changes
 
 ### Changed
+
 - Updated all widget constructors to use the modern `super.key` parameter syntax
 - Improved widget structure by placing child parameters last in widget constructors
 - Replaced Container with SizedBox where appropriate for better performance
 
 ### Fixed
+
 - Critical bug in the `clearAllData` method that was trying to delete from a non-existent table
 - Replaced all print statements with proper LogService calls
 - Fixed unnecessary 'this.' qualifiers in extension methods
@@ -27,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-05-15
 
 ### Added
+
 - Initial release of BLKWDS Manager
 - Dashboard for quick check-in/check-out of gear
 - Booking Panel for multi-member project assignments

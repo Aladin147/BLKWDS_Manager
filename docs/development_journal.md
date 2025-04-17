@@ -2,6 +2,8 @@
 
 This document serves as a chronological record of development activities for the BLKWDS Manager project. It provides context and rationale for implementation decisions and tracks progress over time.
 
+*Note: This journal was reconstructed from a recovered file on 2025-06-28. It contains the most recent development activities and decisions.*
+
 ## 2025-06-28: Database Service Wrapper Refactoring Implementation Plan
 
 Today we created a detailed implementation plan for refactoring the remaining database operations in DBService to consistently use DBServiceWrapper methods:
@@ -284,6 +286,36 @@ This implementation provides several benefits:
 - Easier maintenance and future schema changes
 
 These changes address several critical issues identified in our code audit, bringing us closer to a stable release.
+
+## 2025-06-21: Dynamic App Information Implementation
+
+Today we implemented dynamic app information to replace hardcoded values in the application:
+
+1. **Analysis Phase**:
+   - Examined the current state of app information in the application
+   - Identified hardcoded values in the AppInfo model
+   - Researched Flutter packages for accessing app version information
+
+2. **Implementation Phase**:
+   - Added the package_info_plus dependency to access app version information
+   - Created a VersionService to provide dynamic app information
+   - Updated the AppInfo model to use the VersionService
+   - Modified the AppConfigService to initialize and use the VersionService
+   - Created a dedicated App Information screen to display version details
+
+3. **Integration Phase**:
+   - Added the App Information screen to the Settings screen
+   - Updated the services barrel file to export the VersionService
+   - Ensured proper initialization order in the application startup
+
+This implementation provides several benefits:
+
+- App version and build number are now dynamically retrieved from the app's build configuration
+- Copyright information is automatically updated with the current year
+- Version information is consistently displayed throughout the application
+- Users can easily access detailed app information through the Settings screen
+
+These changes make it easier to maintain the application and ensure that version information is always up-to-date.
 
 ## 2025-06-21: Comprehensive Code Audit
 
