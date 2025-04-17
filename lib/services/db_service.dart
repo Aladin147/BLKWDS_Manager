@@ -7,6 +7,9 @@ import 'database_validator.dart';
 import 'app_config_service.dart';
 import 'schema_definitions.dart';
 import 'database/migration_manager.dart';
+import 'database/db_service_wrapper.dart';
+import 'database/database_retry.dart';
+import 'database/errors/errors.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -201,43 +204,51 @@ class DBService {
   /// Insert a new gear item
   static Future<int> insertGear(Gear gear) async {
     final db = await database;
-    try {
-      // Create a map with only the columns that exist in the table
-      final Map<String, dynamic> gearMap = {
-        'name': gear.name,
-        'category': gear.category,
-        'isOut': gear.isOut ? 1 : 0,
-      };
 
-      // Add optional fields if they exist
-      if (gear.description != null) gearMap['description'] = gear.description!;
-      if (gear.serialNumber != null) gearMap['serialNumber'] = gear.serialNumber!;
-      if (gear.purchaseDate != null) gearMap['purchaseDate'] = gear.purchaseDate!.toIso8601String();
-      if (gear.thumbnailPath != null) gearMap['thumbnailPath'] = gear.thumbnailPath!;
-      if (gear.lastNote != null) gearMap['lastNote'] = gear.lastNote!;
+    // Create a map with only the columns that exist in the table
+    final Map<String, dynamic> gearMap = {
+      'name': gear.name,
+      'category': gear.category,
+      'isOut': gear.isOut ? 1 : 0,
+    };
 
-      LogService.debug('Inserting gear: $gearMap');
-      return await db.insert('gear', gearMap);
-    } catch (e, stackTrace) {
-      LogService.error('Error inserting gear', e, stackTrace);
-      rethrow;
-    }
+    // Add optional fields if they exist
+    if (gear.description != null) gearMap['description'] = gear.description!;
+    if (gear.serialNumber != null) gearMap['serialNumber'] = gear.serialNumber!;
+    if (gear.purchaseDate != null) gearMap['purchaseDate'] = gear.purchaseDate!.toIso8601String();
+    if (gear.thumbnailPath != null) gearMap['thumbnailPath'] = gear.thumbnailPath!;
+    if (gear.lastNote != null) gearMap['lastNote'] = gear.lastNote!;
+
+    LogService.debug('Inserting gear: $gearMap');
+
+    return await DBServiceWrapper.insert(
+      db,
+      'gear',
+      gearMap,
+      operationName: 'insertGear',
+    );
   }
 
   /// Get all gear items
   static Future<List<Gear>> getAllGear() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('gear');
+    final List<Map<String, dynamic>> maps = await DBServiceWrapper.query(
+      db,
+      'gear',
+      operationName: 'getAllGear',
+    );
     return List.generate(maps.length, (i) => Gear.fromMap(maps[i]));
   }
 
   /// Get a gear item by ID
   static Future<Gear?> getGearById(int id) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await DBServiceWrapper.query(
+      db,
       'gear',
       where: 'id = ?',
       whereArgs: [id],
+      operationName: 'getGearById',
     );
     if (maps.isNotEmpty) {
       return Gear.fromMap(maps.first);
@@ -248,21 +259,25 @@ class DBService {
   /// Update a gear item
   static Future<int> updateGear(Gear gear) async {
     final db = await database;
-    return await db.update(
+    return await DBServiceWrapper.update(
+      db,
       'gear',
       gear.toMap(),
       where: 'id = ?',
       whereArgs: [gear.id],
+      operationName: 'updateGear',
     );
   }
 
   /// Delete a gear item
   static Future<int> deleteGear(int id) async {
     final db = await database;
-    return await db.delete(
+    return await DBServiceWrapper.delete(
+      db,
       'gear',
       where: 'id = ?',
       whereArgs: [id],
+      operationName: 'deleteGear',
     );
   }
 
@@ -280,7 +295,12 @@ class DBService {
     if (member.role != null) memberMap['role'] = member.role;
     if (member.id != null) memberMap['id'] = member.id;
 
-    return await db.insert('member', memberMap);
+    return await DBServiceWrapper.insert(
+      db,
+      'member',
+      memberMap,
+      operationName: 'insertMember',
+    );
   }
 
   /// Get all members
@@ -339,31 +359,36 @@ class DBService {
   static Future<int> insertProject(Project project) async {
     final db = await database;
 
-    // Begin transaction
-    return await db.transaction((txn) async {
-      // Create a map with only the columns that exist in the table
-      final Map<String, dynamic> projectMap = {
-        'title': project.title,
-      };
+    // Use transaction with error handling and retry
+    return await DBServiceWrapper.executeTransaction(
+      db,
+      (txn) async {
+        // Create a map with only the columns that exist in the table
+        final Map<String, dynamic> projectMap = {
+          'title': project.title,
+        };
 
-      // Add optional fields if they exist
-      if (project.client != null) projectMap['client'] = project.client;
-      if (project.notes != null) projectMap['notes'] = project.notes;
-      if (project.id != null) projectMap['id'] = project.id;
+        // Add optional fields if they exist
+        if (project.client != null) projectMap['client'] = project.client;
+        if (project.notes != null) projectMap['notes'] = project.notes;
+        if (project.id != null) projectMap['id'] = project.id;
 
-      // Insert project
-      final projectId = await txn.insert('project', projectMap);
+        // Insert project
+        final projectId = await txn.insert('project', projectMap);
 
-      // Insert project-member associations
-      for (final memberId in project.memberIds) {
-        await txn.insert('project_member', {
-          'projectId': projectId,
-          'memberId': memberId,
-        });
-      }
+        // Insert project-member associations
+        for (final memberId in project.memberIds) {
+          await txn.insert('project_member', {
+            'projectId': projectId,
+            'memberId': memberId,
+          });
+        }
 
-      return projectId;
-    });
+        return projectId;
+      },
+      'insertProject',
+      table: 'project',
+    );
   }
 
   /// Get all projects with their member IDs
