@@ -227,7 +227,6 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [ ] Standardize spacing using BLKWDSConstants
    - Fix Non-functional Elements
      - [x] Standardize navigation using NavigationService().navigateTo()
-     - [ ] Implement proper "View All" functionality or remove the button
      - [ ] Replace placeholder icons with proper images or standardized icons
    - Improve Accessibility
      - [ ] Increase minimum icon sizes to 18px
@@ -272,7 +271,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 **Added:**
 
-- Added new navigation methods to NavigationService for member and project screens
+- Added new navigation methods to NavigationService for member, project, gear, and booking screens
 - Added missing routes to AppRoutes class
 - Implemented consistent transition animations for different types of navigation
 
@@ -280,6 +279,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 - Fixed navigation issues in member management screens
 - Fixed navigation issues in project management screens
+- Fixed navigation issues in gear management screens
+- Fixed navigation issues in booking panel screens
 - Ensured proper data refresh when returning from child screens
 
 **Improved:**

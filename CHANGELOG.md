@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added new navigation methods to NavigationService for member and project screens
+- Added new navigation methods to NavigationService for member, project, gear, and booking screens
 - Added missing routes to AppRoutes class
 - Implemented consistent transition animations for different types of navigation
 
@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed navigation issues in member management screens
 - Fixed navigation issues in project management screens
+- Fixed navigation issues in gear management screens
+- Fixed navigation issues in booking panel screens
 - Ensured proper data refresh when returning from child screens
 
 ### Improved
