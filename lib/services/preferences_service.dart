@@ -201,4 +201,26 @@ class PreferencesService {
       return false;
     }
   }
+
+  /// Get a string from preferences
+  static Future<String?> getString(String key) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(key);
+    } catch (e, stackTrace) {
+      LogService.error('Error getting string from preferences: $key', e, stackTrace);
+      return null;
+    }
+  }
+
+  /// Save a string to preferences
+  static Future<bool> setString(String key, String value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return await prefs.setString(key, value);
+    } catch (e, stackTrace) {
+      LogService.error('Error saving string to preferences: $key', e, stackTrace);
+      return false;
+    }
+  }
 }

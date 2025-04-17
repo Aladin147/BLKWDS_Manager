@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
@@ -6,6 +5,7 @@ import '../../services/log_service.dart';
 import '../../services/contextual_error_handler.dart';
 import '../../services/error_service.dart';
 import '../../services/error_type.dart';
+import '../../services/error_feedback_level.dart';
 import '../../services/retry_service.dart';
 import '../../services/retry_strategy.dart';
 import '../../utils/constants.dart';

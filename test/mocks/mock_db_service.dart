@@ -51,7 +51,7 @@ class MockDBService extends Mock implements DBService {
       title: 'Test Booking',
       startDate: DateTime.now(),
       endDate: DateTime.now().add(const Duration(hours: 2)),
-      isProductionStudio: true,
+      studioId: 1,
       gearIds: [1, 2],
       assignedGearToMember: {
         1: 1,
@@ -61,37 +61,30 @@ class MockDBService extends Mock implements DBService {
   ];
 
   // Mock implementations
-  @override
   static Future<List<Gear>> getAllGear() async {
     return _gearList;
   }
 
-  @override
   static Future<List<Member>> getAllMembers() async {
     return _memberList;
   }
 
-  @override
   static Future<List<Project>> getAllProjects() async {
     return _projectList;
   }
 
-  @override
   static Future<List<Booking>> getAllBookings() async {
     return _bookingList;
   }
 
-  @override
   static Future<int> insertGear(Gear gear) async {
     return 3; // Return a new ID
   }
 
-  @override
   static Future<int> updateGear(Gear gear) async {
     return 1; // Return number of rows affected
   }
 
-  @override
   static Future<int> deleteGear(int id) async {
     return 1; // Return number of rows affected
   }

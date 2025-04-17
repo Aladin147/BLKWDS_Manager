@@ -52,8 +52,7 @@ class _CalendarViewState extends State<CalendarView> {
 
     // Initialize adapter
     _adapter = CalendarViewAdapter(
-      controllerV1: widget.controller,
-      controllerV2: widget.controllerV2,
+      controller: widget.controller,
     );
 
     // Initialize selected bookings
@@ -120,9 +119,9 @@ class _CalendarViewState extends State<CalendarView> {
 
   // Check for booking conflicts before actually rescheduling
   Future<bool> _checkBookingConflicts(dynamic booking, DateTime day) async {
-    // Get start and end dates based on booking type
-    final startDate = booking is BookingV2 ? booking.startDate : (booking as Booking).startDate;
-    final endDate = booking is BookingV2 ? booking.endDate : booking.endDate;
+    // Get start and end dates
+    final startDate = booking.startDate;
+    final endDate = booking.endDate;
 
     // Create a new start date with the same time as the original booking
     final newStartDate = DateTime(
@@ -139,20 +138,12 @@ class _CalendarViewState extends State<CalendarView> {
     // Create a new end date based on the new start date and the original duration
     final newEndDate = newStartDate.add(duration);
 
-    // Create a new booking with the updated dates or use adapter to check conflicts
-    if (booking is BookingV2) {
-      final rescheduledBooking = booking.copyWith(
-        startDate: newStartDate,
-        endDate: newEndDate,
-      );
-      return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
-    } else {
-      final rescheduledBooking = (booking as Booking).copyWith(
-        startDate: newStartDate,
-        endDate: newEndDate,
-      );
-      return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
-    }
+    // Create a new booking with the updated dates and check for conflicts
+    final rescheduledBooking = booking.copyWith(
+      startDate: newStartDate,
+      endDate: newEndDate,
+    );
+    return !await _adapter.hasBookingConflicts(rescheduledBooking, excludeBookingId: booking.id);
   }
 
   @override
@@ -429,7 +420,7 @@ class _CalendarViewState extends State<CalendarView> {
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
                   final booking = bookings[index];
-                  final projectId = booking is BookingV2 ? booking.projectId : (booking as Booking).projectId;
+                  final projectId = booking.projectId;
                   final project = _adapter.getProjectById(projectId);
 
                   return CalendarBookingItem(

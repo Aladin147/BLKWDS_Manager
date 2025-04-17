@@ -175,9 +175,7 @@ class DataGenerator {
     return Member(
       name: randomName(),
       role: randomRole(),
-      email: '${randomName().toLowerCase().replaceAll(' ', '.')}@example.com',
-      phone: '+1${randomInt(100, 999)}${randomInt(100, 999)}${randomInt(1000, 9999)}',
-      notes: randomBool() ? randomNote() : null,
+      // email, phone, and notes are not in the Member model anymore
     );
   }
 
@@ -192,8 +190,7 @@ class DataGenerator {
         DateTime.now().subtract(const Duration(days: 365 * 3)),
         DateTime.now(),
       ) : null,
-      purchasePrice: randomBool() ? randomDouble(100, 5000) : null,
-      notes: randomBool() ? randomNote() : null,
+      // purchasePrice and notes are not in the Gear model anymore
       isOut: randomBool(),
       lastNote: randomBool() ? randomNote() : null,
     );

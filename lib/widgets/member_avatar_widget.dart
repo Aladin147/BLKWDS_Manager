@@ -121,7 +121,9 @@ class MemberAvatarWidget extends StatelessWidget {
   }
 
   /// Get color based on role
-  Color _getColorForRole(String role) {
+  Color _getColorForRole(String? role) {
+    if (role == null || role.isEmpty) return BLKWDSColors.accentTeal;
+
     final normalizedRole = role.toLowerCase().trim();
 
     // Map roles to specific colors

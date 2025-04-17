@@ -6,7 +6,7 @@ class GearIconService {
   /// Get the icon for a gear category
   static IconData getIconForCategory(String category) {
     final normalizedCategory = category.toLowerCase().trim();
-    
+
     // Map categories to specific icons
     switch (normalizedCategory) {
       case 'camera':
@@ -20,7 +20,7 @@ class GearIconService {
       case 'stabilizer':
         return Icons.videocam;
       case 'support':
-        return Icons.tripod;
+        return Icons.architecture;
       case 'power':
         return Icons.battery_full;
       case 'storage':
@@ -37,11 +37,11 @@ class GearIconService {
         return Icons.devices_other;
     }
   }
-  
+
   /// Get the color for a gear category
   static Color getColorForCategory(String category) {
     final normalizedCategory = category.toLowerCase().trim();
-    
+
     // Map categories to specific colors
     switch (normalizedCategory) {
       case 'camera':
@@ -72,7 +72,7 @@ class GearIconService {
         return Colors.blueGrey;
     }
   }
-  
+
   /// Get a list of all supported gear categories
   static List<String> getAllCategories() {
     return [

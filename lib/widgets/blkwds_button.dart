@@ -13,6 +13,13 @@ enum BLKWDSButtonType {
   danger,
 }
 
+/// Button size variants
+enum BLKWDSButtonSize {
+  small,
+  medium,
+  large,
+}
+
 class BLKWDSButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -20,6 +27,7 @@ class BLKWDSButton extends StatelessWidget {
   final IconData? icon;
   final bool isFullWidth;
   final bool isSmall;
+  final BLKWDSButtonSize? size;
   final bool isDisabled;
   final bool isLoading;
 
@@ -31,6 +39,7 @@ class BLKWDSButton extends StatelessWidget {
     this.icon,
     this.isFullWidth = false,
     this.isSmall = false,
+    this.size,
     this.isDisabled = false,
     this.isLoading = false,
   });
@@ -70,13 +79,22 @@ class BLKWDSButton extends StatelessWidget {
     }
 
     // Determine padding based on size
-    final double horizontalPadding = isSmall
-        ? BLKWDSConstants.buttonHorizontalPadding / 1.5
-        : BLKWDSConstants.buttonHorizontalPadding;
+    bool useSmallSize = isSmall || size == BLKWDSButtonSize.small;
+    bool useLargeSize = size == BLKWDSButtonSize.large;
 
-    final double verticalPadding = isSmall
-        ? BLKWDSConstants.buttonVerticalPadding / 1.5
-        : BLKWDSConstants.buttonVerticalPadding;
+    double horizontalPadding;
+    double verticalPadding;
+
+    if (useSmallSize) {
+      horizontalPadding = BLKWDSConstants.buttonHorizontalPadding / 1.5;
+      verticalPadding = BLKWDSConstants.buttonVerticalPadding / 1.5;
+    } else if (useLargeSize) {
+      horizontalPadding = BLKWDSConstants.buttonHorizontalPadding * 1.2;
+      verticalPadding = BLKWDSConstants.buttonVerticalPadding * 1.2;
+    } else {
+      horizontalPadding = BLKWDSConstants.buttonHorizontalPadding;
+      verticalPadding = BLKWDSConstants.buttonVerticalPadding;
+    }
 
     // Create button content
     Widget buttonContent;
@@ -89,8 +107,8 @@ class BLKWDSButton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: isSmall ? 16 : 20,
-            height: isSmall ? 16 : 20,
+            width: useSmallSize ? 16 : (useLargeSize ? 24 : 20),
+            height: useSmallSize ? 16 : (useLargeSize ? 24 : 20),
             child: CircularProgressIndicator(
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(textColor),
@@ -100,9 +118,11 @@ class BLKWDSButton extends StatelessWidget {
           Flexible(
             child: Text(
               'Loading...',
-              style: isSmall
+              style: useSmallSize
                   ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
-                  : BLKWDSTypography.labelLarge.copyWith(color: textColor),
+                  : (useLargeSize
+                      ? BLKWDSTypography.titleSmall.copyWith(color: textColor)
+                      : BLKWDSTypography.labelLarge.copyWith(color: textColor)),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
@@ -120,16 +140,18 @@ class BLKWDSButton extends StatelessWidget {
             Icon(
               icon,
               color: textColor,
-              size: isSmall ? 16 : 20,
+              size: useSmallSize ? 16 : (useLargeSize ? 24 : 20),
             ),
             SizedBox(width: BLKWDSConstants.spacingSmall),
           ],
           Flexible(
             child: Text(
               label,
-              style: isSmall
+              style: useSmallSize
                   ? BLKWDSTypography.labelMedium.copyWith(color: textColor)
-                  : BLKWDSTypography.labelLarge.copyWith(color: textColor),
+                  : (useLargeSize
+                      ? BLKWDSTypography.titleSmall.copyWith(color: textColor)
+                      : BLKWDSTypography.labelLarge.copyWith(color: textColor)),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),

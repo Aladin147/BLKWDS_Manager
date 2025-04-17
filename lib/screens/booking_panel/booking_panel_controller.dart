@@ -5,9 +5,9 @@ import '../../services/log_service.dart';
 import '../../services/contextual_error_handler.dart';
 import '../../services/error_service.dart';
 import '../../services/error_type.dart';
+import '../../services/error_feedback_level.dart';
 import '../../services/retry_service.dart';
 import '../../services/retry_strategy.dart';
-import '../../services/recovery_service.dart';
 import '../../theme/blkwds_colors.dart';
 
 import '../../utils/date_utils.dart';

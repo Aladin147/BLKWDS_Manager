@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Settings'),
       ),
       body: Stack(
-        children: [
+        children: <Widget>[
           ValueListenableBuilder<bool>(
             valueListenable: _controller.isLoading,
             builder: (context, isLoading, child) {
@@ -217,200 +217,201 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                // Appearance section removed - app uses dark mode only
+                    // Appearance section removed - app uses dark mode only
 
-                // Data management
-                SettingsSection(
-                  title: 'Data Management',
-                  children: [
-                    // Export data
-                    BLKWDSButton(
-                      label: 'Export Data (JSON)',
-                      icon: Icons.upload_file,
-                      type: BLKWDSButtonType.secondary,
-                      onPressed: _handleExportData,
-                      isFullWidth: true,
-                    ),
-                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                    // Data management
+                    SettingsSection(
+                      title: 'Data Management',
+                      children: [
+                        // Export data
+                        BLKWDSButton(
+                          label: 'Export Data (JSON)',
+                          icon: Icons.upload_file,
+                          type: BLKWDSButtonType.secondary,
+                          onPressed: _handleExportData,
+                          isFullWidth: true,
+                        ),
+                        const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-                    // Import data
-                    BLKWDSButton(
-                      label: 'Import Data (JSON)',
-                      icon: Icons.download_rounded,
-                      type: BLKWDSButtonType.secondary,
-                      onPressed: _handleImportData,
-                      isFullWidth: true,
-                    ),
-                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                        // Import data
+                        BLKWDSButton(
+                          label: 'Import Data (JSON)',
+                          icon: Icons.download_rounded,
+                          type: BLKWDSButtonType.secondary,
+                          onPressed: _handleImportData,
+                          isFullWidth: true,
+                        ),
+                        const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-                    // Export to CSV
-                    BLKWDSButton(
-                      label: 'Export to CSV',
-                      icon: Icons.table_chart,
-                      type: BLKWDSButtonType.secondary,
-                      onPressed: _handleExportToCsv,
-                      isFullWidth: true,
-                    ),
-                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                        // Export to CSV
+                        BLKWDSButton(
+                          label: 'Export to CSV',
+                          icon: Icons.table_chart,
+                          type: BLKWDSButtonType.secondary,
+                          onPressed: _handleExportToCsv,
+                          isFullWidth: true,
+                        ),
+                        const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-                    // Data Seeder Configuration
-                    BLKWDSButton(
-                      label: 'Data Seeder Configuration',
-                      icon: Icons.data_array,
-                      type: BLKWDSButtonType.secondary,
-                      onPressed: _handleDataSeederConfig,
-                      isFullWidth: true,
-                    ),
-                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+                        // Data Seeder Configuration
+                        BLKWDSButton(
+                          label: 'Data Seeder Configuration',
+                          icon: Icons.data_array,
+                          type: BLKWDSButtonType.secondary,
+                          onPressed: _handleDataSeederConfig,
+                          isFullWidth: true,
+                        ),
+                        const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-                    // Reset app data
-                    BLKWDSButton(
-                      label: 'Reset App Data',
-                      icon: Icons.restore,
-                      type: BLKWDSButtonType.danger,
-                      onPressed: _handleResetAppData,
-                      isFullWidth: true,
+                        // Reset app data
+                        BLKWDSButton(
+                          label: 'Reset App Data',
+                          icon: Icons.restore,
+                          type: BLKWDSButtonType.danger,
+                          onPressed: _handleResetAppData,
+                          isFullWidth: true,
+                        ),
+                      ],
                     ),
+
+                    // Management
+                    SettingsSection(
+                      title: 'Management',
+                      children: [
+                        ListTile(
+                          title: const Text('Member Management'),
+                          subtitle: const Text('Add, edit, and delete members'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            NavigationService().navigateTo(
+                              const MemberListScreen(),
+                              transitionType: BLKWDSPageTransitionType.rightToLeft,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text('Project Management'),
+                          subtitle: const Text('Add, edit, and delete projects'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            NavigationService().navigateTo(
+                              const ProjectListScreen(),
+                              transitionType: BLKWDSPageTransitionType.rightToLeft,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text('Gear Management'),
+                          subtitle: const Text('Add, edit, and manage gear inventory'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            NavigationService().navigateTo(
+                              const GearListScreen(),
+                              transitionType: BLKWDSPageTransitionType.rightToLeft,
+                            );
+                          },
+                        ),
+                        // Migration UI removed - migration is complete
+                      ],
+                    ),
+
+                    // App information
+                    SettingsSection(
+                      title: 'About',
+                      children: [
+                        ListTile(
+                          title: const Text('Version'),
+                          trailing: Text(
+                            '${_controller.appVersion} (${_controller.appBuildNumber})',
+                            style: BLKWDSTypography.bodyMedium,
+                          ),
+                        ),
+                        const Divider(),
+                        ListTile(
+                          title: const Text('Copyright'),
+                          trailing: Text(
+                            _controller.appCopyright,
+                            style: BLKWDSTypography.bodyMedium,
+                          ),
+                        ),
+                        const Divider(),
+                        ListTile(
+                          title: const Text('App Configuration'),
+                          subtitle: const Text('View and edit application configuration'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            NavigationService().navigateTo(
+                              const AppConfigScreen(),
+                              transitionType: BLKWDSPageTransitionType.rightToLeft,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+
+                    // Debug menu (only in debug mode)
+                    if (kDebugMode) // Only show in debug mode
+                      SettingsSection(
+                        title: 'Debug',
+                        children: [
+                          ListTile(
+                            title: const Text('Error Handling Example'),
+                            subtitle: const Text('Test the error handling system'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              NavigationService().navigateTo(
+                                const ErrorHandlingExample(),
+                                transitionType: BLKWDSPageTransitionType.rightToLeft,
+                              );
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            title: const Text('Recovery Mechanisms Example'),
+                            subtitle: const Text('Test the retry and recovery systems'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              NavigationService().navigateTo(
+                                const RecoveryExample(),
+                                transitionType: BLKWDSPageTransitionType.rightToLeft,
+                              );
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            title: const Text('Error Analytics & Boundaries'),
+                            subtitle: const Text('Test error analytics and boundaries'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              NavigationService().navigateTo(
+                                const ErrorAnalyticsExample(),
+                                transitionType: BLKWDSPageTransitionType.rightToLeft,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                   ],
                 ),
+              );
+            },
+          ),
 
-                // Management
-                SettingsSection(
-                  title: 'Management',
-                  children: [
-                    ListTile(
-                      title: const Text('Member Management'),
-                      subtitle: const Text('Add, edit, and delete members'),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        NavigationService().navigateTo(
-                          const MemberListScreen(),
-                          transitionType: BLKWDSPageTransitionType.rightToLeft,
-                        );
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Project Management'),
-                      subtitle: const Text('Add, edit, and delete projects'),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        NavigationService().navigateTo(
-                          const ProjectListScreen(),
-                          transitionType: BLKWDSPageTransitionType.rightToLeft,
-                        );
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Gear Management'),
-                      subtitle: const Text('Add, edit, and manage gear inventory'),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        NavigationService().navigateTo(
-                          const GearListScreen(),
-                          transitionType: BLKWDSPageTransitionType.rightToLeft,
-                        );
-                      },
-                    ),
-                    // Migration UI removed - migration is complete
-                  ],
-                ),
-
-                // App information
-                SettingsSection(
-                  title: 'About',
-                  children: [
-                    ListTile(
-                      title: const Text('Version'),
-                      trailing: Text(
-                        '${_controller.appVersion} (${_controller.appBuildNumber})',
-                        style: BLKWDSTypography.bodyMedium,
-                      ),
-                    ),
-                    const Divider(),
-                    ListTile(
-                      title: const Text('Copyright'),
-                      trailing: Text(
-                        _controller.appCopyright,
-                        style: BLKWDSTypography.bodyMedium,
-                      ),
-                    ),
-                    const Divider(),
-                    ListTile(
-                      title: const Text('App Configuration'),
-                      subtitle: const Text('View and edit application configuration'),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        NavigationService().navigateTo(
-                          const AppConfigScreen(),
-                          transitionType: BLKWDSPageTransitionType.rightToLeft,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-
-                // Debug menu (only in debug mode)
-                if (kDebugMode) // Only show in debug mode
-                  SettingsSection(
-                    title: 'Debug',
-                    children: [
-                      ListTile(
-                        title: const Text('Error Handling Example'),
-                        subtitle: const Text('Test the error handling system'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          NavigationService().navigateTo(
-                            const ErrorHandlingExample(),
-                            transitionType: BLKWDSPageTransitionType.rightToLeft,
-                          );
-                        },
-                      ),
-                      const Divider(),
-                      ListTile(
-                        title: const Text('Recovery Mechanisms Example'),
-                        subtitle: const Text('Test the retry and recovery systems'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          NavigationService().navigateTo(
-                            const RecoveryExample(),
-                            transitionType: BLKWDSPageTransitionType.rightToLeft,
-                          );
-                        },
-                      ),
-                      const Divider(),
-                      ListTile(
-                        title: const Text('Error Analytics & Boundaries'),
-                        subtitle: const Text('Test error analytics and boundaries'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          NavigationService().navigateTo(
-                            const ErrorAnalyticsExample(),
-                            transitionType: BLKWDSPageTransitionType.rightToLeft,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-              ],
+          // Data seeder configuration form
+          if (_showDataSeederConfigForm)
+            ValueListenableBuilder<DataSeederConfig>(
+              valueListenable: _controller.dataSeederConfig,
+              builder: (context, config, _) {
+                return DataSeederConfigForm(
+                  config: config,
+                  onSave: _handleSaveDataSeederConfig,
+                  onCancel: () => setState(() => _showDataSeederConfigForm = false),
+                  onReseed: _handleReseedDatabase,
+                );
+              },
             ),
-          );
-        },
+        ],
       ),
-
-      // Data seeder configuration form
-      if (_showDataSeederConfigForm)
-        ValueListenableBuilder<DataSeederConfig>(
-          valueListenable: _controller.dataSeederConfig,
-          builder: (context, config, _) {
-            return DataSeederConfigForm(
-              config: config,
-              onSave: _handleSaveDataSeederConfig,
-              onCancel: () => setState(() => _showDataSeederConfigForm = false),
-              onReseed: _handleReseedDatabase,
-            );
-          },
-        ),
-      ],
     );
   }
 }

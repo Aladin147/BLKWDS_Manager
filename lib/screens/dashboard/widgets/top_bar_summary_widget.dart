@@ -108,7 +108,7 @@ class TopBarSummaryWidget extends StatelessWidget {
                   backgroundColor: BLKWDSColors.accentTeal,
                   backgroundAlpha: BLKWDSColors.alphaVeryLow,
                   iconColor: BLKWDSColors.accentTeal,
-                  iconSize: 20,
+                  // iconSize parameter removed
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(
@@ -175,7 +175,7 @@ class TopBarSummaryWidget extends StatelessWidget {
                   backgroundColor: BLKWDSColors.accentTeal,
                   backgroundAlpha: BLKWDSColors.alphaVeryLow,
                   iconColor: BLKWDSColors.accentTeal,
-                  iconSize: 20,
+                  // iconSize parameter removed
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(

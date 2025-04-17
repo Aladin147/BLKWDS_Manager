@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/image_service.dart';
 import '../../services/contextual_error_handler.dart';
 import '../../services/error_type.dart';
+import '../../services/error_feedback_level.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';

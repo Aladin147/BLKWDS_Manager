@@ -170,7 +170,7 @@ class TodayBookingWidget extends StatelessWidget {
               backgroundColor: BLKWDSColors.accentTeal,
               backgroundAlpha: BLKWDSColors.alphaVeryLow,
               iconColor: BLKWDSColors.accentTeal,
-              iconSize: 24,
+              // iconSize parameter removed
             ),
             const SizedBox(width: BLKWDSConstants.spacingMedium),
 
@@ -237,7 +237,7 @@ class TodayBookingWidget extends StatelessWidget {
                 text: '${gearIds.length}',
                 color: BLKWDSColors.accentTeal,
                 icon: Icons.camera_alt,
-                iconSize: 14,
+                // iconSize parameter removed
               ),
           ],
         ),
