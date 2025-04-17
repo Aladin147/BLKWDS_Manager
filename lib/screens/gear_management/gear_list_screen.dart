@@ -4,10 +4,7 @@ import '../../services/services.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
-import 'gear_detail_screen.dart';
-import 'gear_form_screen.dart';
 import 'widgets/gear_card_with_note.dart';
 
 /// GearListScreen
@@ -113,36 +110,21 @@ class _GearListScreenState extends State<GearListScreen> {
   }
 
   // Navigate to gear detail screen
-  void _navigateToGearDetail(Gear gear) {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: GearDetailScreen(gear: gear),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) => _loadGear());
+  void _navigateToGearDetail(Gear gear) async {
+    await NavigationService().navigateToGearDetail(gear);
+    _loadGear();
   }
 
   // Navigate to gear form screen for adding a new gear
-  void _navigateToAddGear() {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: const GearFormScreen(),
-        transitionType: BLKWDSPageTransitionType.bottomToTop,
-      ),
-    ).then((_) => _loadGear());
+  void _navigateToAddGear() async {
+    await NavigationService().navigateToGearForm();
+    _loadGear();
   }
 
   // Navigate to gear form screen for editing a gear
-  void _navigateToEditGear(Gear gear) {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: GearFormScreen(gear: gear),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) => _loadGear());
+  void _navigateToEditGear(Gear gear) async {
+    await NavigationService().navigateToGearForm(gear: gear);
+    _loadGear();
   }
 
   // Delete a gear

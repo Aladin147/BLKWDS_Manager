@@ -4,6 +4,7 @@ import '../services/log_service.dart';
 import '../routes/app_routes.dart';
 import '../models/member.dart';
 import '../models/project.dart';
+import '../models/gear.dart';
 
 /// Navigation service for BLKWDS Manager
 ///
@@ -204,6 +205,24 @@ class NavigationService {
     return navigateToNamed<T>(
       AppRoutes.gearManagement,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to gear detail
+  Future<T?> navigateToGearDetail<T>(Gear gear) async {
+    return navigateToNamed<T>(
+      AppRoutes.gearDetail,
+      arguments: {'gear': gear},
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to add/edit gear form
+  Future<T?> navigateToGearForm<T>({Gear? gear}) async {
+    return navigateToNamed<T>(
+      AppRoutes.gearForm,
+      arguments: gear != null ? {'gear': gear} : null,
+      transitionType: gear == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
     );
   }
 

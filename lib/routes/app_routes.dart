@@ -13,6 +13,8 @@ import '../screens/project_management/project_list_screen.dart';
 import '../screens/project_management/project_detail_screen.dart';
 import '../screens/project_management/project_form_screen.dart';
 import '../screens/gear_management/gear_list_screen.dart';
+import '../screens/gear_management/gear_detail_screen.dart';
+import '../screens/gear_management/gear_form_screen.dart';
 import '../screens/studio_management/studio_management_screen.dart';
 import '../screens/activity_log/activity_log_screen.dart';
 import '../theme/blkwds_animations.dart';
@@ -33,6 +35,8 @@ class AppRoutes {
   static const String projectDetail = '/project-detail';
   static const String projectForm = '/project-form';
   static const String gearManagement = '/gear-management';
+  static const String gearDetail = '/gear-detail';
+  static const String gearForm = '/gear-form';
   static const String studioManagement = '/studio-management';
   static const String activityLog = '/activity-log';
   static const String databaseIntegrity = '/database-integrity';
@@ -121,6 +125,30 @@ class AppRoutes {
           settings,
           ProjectFormScreen(project: project),
           project == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
+        );
+
+      case gearDetail:
+        final gear = args?['gear'];
+        if (gear == null) {
+          LogService.error('Gear detail route called without gear');
+          return _buildRoute(
+            settings,
+            const GearListScreen(),
+            BLKWDSPageTransitionType.fade,
+          );
+        }
+        return _buildRoute(
+          settings,
+          GearDetailScreen(gear: gear),
+          BLKWDSPageTransitionType.rightToLeft,
+        );
+
+      case gearForm:
+        final gear = args?['gear'];
+        return _buildRoute(
+          settings,
+          GearFormScreen(gear: gear),
+          gear == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
         );
 
       default:
