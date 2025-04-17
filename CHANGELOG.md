@@ -5,6 +5,26 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc30] - 2025-06-30
+
+### Added
+
+- Added comprehensive unit tests for Project model
+- Added comprehensive unit tests for Studio model
+- Added comprehensive unit tests for BookingV2 model
+- Updated test helpers to work with the new BookingV2 model
+
+### Fixed
+
+- Fixed a bug in the deleteBooking method that wasn't properly deleting associated booking_gear records
+- Implemented the fix using a transaction to ensure both the booking and its gear assignments are deleted atomically
+
+### Improved
+
+- Improved test coverage for critical models
+- Ensured tests work with the latest model versions
+- Prevented potential orphaned records in the booking_gear table
+
 ## [1.0.0-rc29] - 2025-06-29
 
 ### Added

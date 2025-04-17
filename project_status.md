@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc29 (Release Candidate 29)
-**Last Updated:** 2025-06-29
+**Version:** 1.0.0-rc30 (Release Candidate 30)
+**Last Updated:** 2025-06-30
 
 ## Project Phase
 
@@ -177,7 +177,9 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Update and add tests for refactored operations
      - [x] Update documentation for refactored operations
    - Testing Coverage
-     - [ ] Add unit tests for controllers, DBService, and critical models
+     - [ ] Add unit tests for controllers
+     - [x] Add unit tests for DBService
+     - [x] Add unit tests for critical models
      - [ ] Add widget tests for core UI components
      - [ ] Add integration tests for critical user flows
    - Static Analysis Issues
@@ -265,6 +267,26 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.60.0 - Test Coverage Improvements (2025-06-30)
+
+**Added:**
+
+- Added comprehensive unit tests for Project model
+- Added comprehensive unit tests for Studio model
+- Added comprehensive unit tests for BookingV2 model
+- Updated test helpers to work with the new BookingV2 model
+
+**Fixed:**
+
+- Fixed a bug in the deleteBooking method that wasn't properly deleting associated booking_gear records
+- Implemented the fix using a transaction to ensure both the booking and its gear assignments are deleted atomically
+
+**Improved:**
+
+- Improved test coverage for critical models
+- Ensured tests work with the latest model versions
+- Prevented potential orphaned records in the booking_gear table
 
 ### v0.59.0 - Database Service Wrapper Refactoring Implementation (2025-06-29)
 
