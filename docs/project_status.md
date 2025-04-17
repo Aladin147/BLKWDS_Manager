@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc18 (Release Candidate 18)
-**Last Updated:** 2025-06-17
+**Version:** 1.0.0-rc19 (Release Candidate 19)
+**Last Updated:** 2025-06-18
 
 ## Project Phase
 
@@ -254,6 +254,31 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.47.0 - Placeholder Graphics Replacement (2025-06-18)
+
+**Added:**
+
+- GearIconService for mapping gear categories to specific icons
+- ProjectIconService for mapping project types to specific icons
+- CategoryIconWidget for displaying category-specific gear icons
+- MemberAvatarWidget for displaying member avatars with role-based colors
+- ProjectThumbnailWidget for displaying project thumbnails with type-specific icons
+
+**Changed:**
+
+- Updated gear cards to use category-specific icons
+- Enhanced member list items with role-based avatar colors
+- Improved project cards with type-specific thumbnails
+- Updated empty state screens with more visually appealing placeholders
+- Standardized icon styling across the application
+
+**Improved:**
+
+- Visual consistency across the application
+- User experience with more intuitive visual cues
+- Accessibility with better visual differentiation
+- Overall aesthetic appeal of the application
 
 ### v0.46.0 - Data Seeder Configuration (2025-06-17)
 
