@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'log_service.dart';
 import 'error_type.dart';
+import 'error_feedback_level.dart';
 import 'snackbar_service.dart';
 import 'error_dialog_service.dart';
 import 'exceptions/exceptions.dart';
@@ -52,6 +53,59 @@ class ErrorService {
 
     // Return a user-friendly message
     return getUserFriendlyMessage(errorType, error);
+  }
+
+  /// Handle an error with context-aware feedback
+  ///
+  /// This method handles an error and provides feedback to the user based on the
+  /// specified feedback level. It also logs the error and returns a user-friendly message.
+  ///
+  /// Parameters:
+  /// - context: The BuildContext for showing UI feedback
+  /// - error: The error object
+  /// - type: The type of error (default: ErrorType.unknown)
+  /// - stackTrace: The stack trace of the error
+  /// - feedbackLevel: The level of feedback to provide to the user (default: ErrorFeedbackLevel.snackbar)
+  ///
+  /// Returns a user-friendly error message
+  static String handleErrorWithFeedback(
+    BuildContext context,
+    Object error, {
+    ErrorType type = ErrorType.unknown,
+    StackTrace? stackTrace,
+    ErrorFeedbackLevel feedbackLevel = ErrorFeedbackLevel.snackbar,
+  }) {
+    // Determine error type if not provided
+    final errorType = type == ErrorType.unknown ? _determineErrorType(error) : type;
+
+    // Log the error
+    LogService.error('Error occurred', error, stackTrace);
+
+    // Get a user-friendly message
+    final message = getUserFriendlyMessage(errorType, error);
+
+    // Provide feedback based on the specified level
+    switch (feedbackLevel) {
+      case ErrorFeedbackLevel.silent:
+        // No feedback, just logging
+        break;
+      case ErrorFeedbackLevel.snackbar:
+        showErrorSnackBar(context, message);
+        break;
+      case ErrorFeedbackLevel.dialog:
+        showErrorDialog(context, message);
+        break;
+      case ErrorFeedbackLevel.banner:
+        // TODO: Implement banner feedback
+        showErrorSnackBar(context, message);
+        break;
+      case ErrorFeedbackLevel.page:
+        // TODO: Implement page feedback
+        showErrorDialog(context, message);
+        break;
+    }
+
+    return message;
   }
 
   /// Determine the error type from the error object
@@ -148,5 +202,55 @@ class ErrorService {
   /// Show an info snackbar
   static void showInfoSnackBar(BuildContext context, String message) {
     SnackbarService.showInfo(context, message);
+  }
+
+  /// Handle an exception with context-aware feedback
+  ///
+  /// This method handles a BLKWDSException and provides feedback to the user based on the
+  /// specified feedback level. It also logs the exception and returns a user-friendly message.
+  ///
+  /// Parameters:
+  /// - context: The BuildContext for showing UI feedback
+  /// - exception: The BLKWDSException object
+  /// - feedbackLevel: The level of feedback to provide to the user (default: ErrorFeedbackLevel.snackbar)
+  ///
+  /// Returns a user-friendly error message
+  static String handleException(
+    BuildContext context,
+    BLKWDSException exception, {
+    ErrorFeedbackLevel feedbackLevel = ErrorFeedbackLevel.snackbar,
+  }) {
+    // Log the exception
+    LogService.error(
+      'Exception in ${context.widget.runtimeType}',
+      exception,
+      exception.stackTrace,
+    );
+
+    // Get a user-friendly message
+    final message = exception.message;
+
+    // Provide feedback based on the specified level
+    switch (feedbackLevel) {
+      case ErrorFeedbackLevel.silent:
+        // No feedback, just logging
+        break;
+      case ErrorFeedbackLevel.snackbar:
+        showErrorSnackBar(context, message);
+        break;
+      case ErrorFeedbackLevel.dialog:
+        showErrorDialog(context, message);
+        break;
+      case ErrorFeedbackLevel.banner:
+        // TODO: Implement banner feedback
+        showErrorSnackBar(context, message);
+        break;
+      case ErrorFeedbackLevel.page:
+        // TODO: Implement page feedback
+        showErrorDialog(context, message);
+        break;
+    }
+
+    return message;
   }
 }

@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc16 (Release Candidate 16)
+**Version:** 1.0.0-rc17 (Release Candidate 17)
 **Last Updated:** 2025-06-16
 
 ## Project Phase
@@ -254,6 +254,26 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.45.0 - Error Handling Standardization (2025-06-16)
+
+**Added:**
+
+- Standardized ErrorFeedbackLevel enum for consistent error feedback
+- Enhanced ErrorService with context-aware error handling methods
+- Comprehensive error handling documentation
+
+**Changed:**
+
+- Enhanced SnackbarService to include all functionality from BLKWDSSnackbar
+- Deprecated BLKWDSSnackbar in favor of SnackbarService
+- Updated ContextualErrorHandler to use the new ErrorFeedbackLevel enum
+
+**Improved:**
+
+- Consistency of error handling throughout the application
+- User feedback for errors with appropriate feedback levels
+- Documentation for error handling best practices
 
 ### v0.44.0 - Studio Booking System Completion (2025-06-16)
 
@@ -766,4 +786,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-16 (v0.44.0)
+Date: 2025-06-16 (v0.45.0)

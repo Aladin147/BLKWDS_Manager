@@ -1,199 +1,176 @@
 # Error Handling System
 
-**Version:** 1.0.0
-**Last Updated:** 2025-06-10
-**Status:** Implemented
+This document describes the standardized error handling system for the BLKWDS Manager application.
 
-## Overview
+## 1. Overview
 
-The BLKWDS Manager application implements a comprehensive error handling system that provides consistent error feedback, recovery mechanisms, and error logging throughout the application. This document provides an overview of the error handling system and how it is used in the application.
+The error handling system provides a consistent approach to handling errors throughout the application. It includes:
 
-## Components
+- Centralized error handling services
+- Standardized error feedback levels
+- Consistent UI for error notifications
+- Comprehensive error logging
 
-### 1. Error Types
+## 2. Error Handling Services
 
-The application uses a standardized set of error types defined in the `ErrorType` enum:
+### 2.1 ErrorService
 
-- `database` - Database-related errors
-- `network` - Network-related errors
-- `validation` - Input validation errors
-- `auth` - Authentication and authorization errors
-- `conflict` - Resource conflict errors
-- `format` - Data format errors
-- `fileSystem` - File system errors
-- `state` - Application state errors
-- `unknown` - Unknown errors
+The `ErrorService` is the primary service for handling errors. It provides methods for:
 
-### 2. Error Feedback Levels
-
-The application provides different levels of error feedback based on the severity and context of the error:
-
-- `silent` - No user feedback, only logging
-- `toast` - Lightweight toast notification
-- `snackbar` - Snackbar notification with action
-- `dialog` - Modal dialog with actions
-- `banner` - Persistent error banner
-
-### 3. Core Services
-
-#### ContextualErrorHandler
-
-The `ContextualErrorHandler` provides context-aware error handling with appropriate user feedback:
+- Getting user-friendly error messages
+- Handling errors with different feedback levels
+- Showing error dialogs and snackbars
 
 ```dart
-ContextualErrorHandler.handleError(
+// Handle an error with a user-friendly message
+final message = ErrorService.handleError(error, stackTrace: stackTrace);
+
+// Handle an error with context-aware feedback
+ErrorService.handleErrorWithFeedback(
   context,
   error,
-  type: ErrorType.database,
   stackTrace: stackTrace,
   feedbackLevel: ErrorFeedbackLevel.snackbar,
 );
 ```
 
-#### ErrorService
+### 2.2 ContextualErrorHandler
 
-The `ErrorService` provides centralized error handling with user-friendly messages:
+The `ContextualErrorHandler` provides context-aware error handling. It determines the appropriate feedback level based on the error type and context.
 
 ```dart
-final message = ErrorService.handleError(
+// Handle an error with context-aware feedback
+ContextualErrorHandler.handleError(
+  context,
   error,
-  type: ErrorType.database,
   stackTrace: stackTrace,
+  feedbackLevel: ErrorFeedbackLevel.snackbar,
 );
-```
 
-#### RetryService
-
-The `RetryService` provides retry logic for operations that might fail:
-
-```dart
-final result = await RetryService.retry<List<Booking>>(
-  operation: () => DBService.getAllBookings(),
-  maxAttempts: 3,
-  strategy: RetryStrategy.exponential,
-  initialDelay: const Duration(milliseconds: 500),
-  retryCondition: RetryService.isRetryableError,
-);
-```
-
-#### RecoveryService
-
-The `RecoveryService` provides recovery mechanisms for critical operations:
-
-```dart
-final result = await RecoveryService.withFallback<List<Booking>>(
-  operation: () => DBService.getAllBookings(),
-  fallback: () => _loadBookingsFromCache(),
-  shouldUseFallback: (e) => e is DatabaseException,
-);
-```
-
-#### LogService
-
-The `LogService` provides structured logging with different log levels:
-
-```dart
-LogService.error('Error loading bookings', error, stackTrace);
-```
-
-### 4. UI Components
-
-#### SnackbarService
-
-The `SnackbarService` provides consistent snackbar notifications:
-
-```dart
-SnackbarService.showError(context, 'Failed to load bookings');
-```
-
-#### ErrorDialogService
-
-The `ErrorDialogService` provides standardized error dialogs:
-
-```dart
-ErrorDialogService.showError(
+// Handle a specific exception
+ContextualErrorHandler.handleException(
   context,
-  title: 'Database Error',
-  message: 'Failed to load bookings',
-  actions: [
-    ErrorDialogAction(
-      label: 'Retry',
-      onPressed: () => _loadBookings(),
-    ),
-  ],
+  exception,
+  feedbackLevel: ErrorFeedbackLevel.dialog,
 );
 ```
 
-#### BannerService
+## 3. Error Types
 
-The `BannerService` provides persistent error banners:
+The `ErrorType` enum defines the different types of errors that can occur in the application:
+
+- `database`: Database-related errors
+- `network`: Network-related errors
+- `validation`: Input validation errors
+- `auth`: Authentication errors
+- `fileSystem`: File system errors
+- `permission`: Permission errors
+- `format`: Data format errors
+- `conflict`: Data conflict errors
+- `notFound`: Resource not found errors
+- `input`: User input errors
+- `state`: Application state errors
+- `configuration`: Configuration errors
+- `unknown`: Unknown errors
+
+## 4. Error Feedback Levels
+
+The `ErrorFeedbackLevel` enum defines the different levels of feedback that can be provided to the user:
+
+- `silent`: No feedback is provided to the user, but the error is still logged
+- `snackbar`: A snackbar is shown to the user with the error message
+- `dialog`: A dialog is shown to the user with the error message
+- `banner`: A banner is shown at the top of the screen with the error message
+- `page`: A full-screen error page is shown to the user
+
+## 5. Best Practices
+
+### 5.1 When to Use Each Feedback Level
+
+- **Silent**: Use for non-critical errors that don't affect the user experience
+- **Snackbar**: Use for transient errors that the user should be aware of
+- **Dialog**: Use for critical errors that require user action
+- **Banner**: Use for persistent errors that the user should be aware of
+- **Page**: Use for fatal errors that prevent the application from functioning
+
+### 5.2 Error Handling in Controllers
+
+Controllers should use the `ContextualErrorHandler` to handle errors:
 
 ```dart
-BannerService.showErrorBanner(
-  context,
-  message: 'Database connection lost',
-  action: BannerAction(
-    label: 'Reconnect',
-    onPressed: () => _reconnectDatabase(),
-  ),
-);
-```
-
-## Integration in Controllers
-
-All controllers in the application have been updated to use the error handling system. Here's an example of how error handling is implemented in a controller:
-
-```dart
-Future<void> loadData() async {
-  try {
-    // Show loading state
-    isLoading.value = true;
-    errorMessage.value = null;
-    
-    // Use retry logic for database operations
-    final data = await RetryService.retry<List<Data>>(
-      operation: () => DBService.getData(),
-      maxAttempts: 3,
-      strategy: RetryStrategy.exponential,
-      initialDelay: const Duration(milliseconds: 500),
-      retryCondition: RetryService.isRetryableError,
-    );
-    
-    // Update state
-    this.data.value = data;
-  } catch (e, stackTrace) {
-    // Update error state
-    errorMessage.value = ErrorService.handleError(e, stackTrace: stackTrace);
-    
-    // Use contextual error handler if context is available
-    if (context != null) {
-      ContextualErrorHandler.handleError(
-        context!,
-        e,
-        stackTrace: stackTrace,
-        type: ErrorType.database,
-        feedbackLevel: ErrorFeedbackLevel.snackbar,
-      );
-    } else {
-      LogService.error('Error loading data', e, stackTrace);
-    }
-  } finally {
-    // Update loading state
-    isLoading.value = false;
-  }
+try {
+  // Perform an operation
+  await someOperation();
+} catch (e, stackTrace) {
+  // Handle the error
+  ContextualErrorHandler.handleError(
+    context,
+    e,
+    stackTrace: stackTrace,
+    type: ErrorType.database,
+    feedbackLevel: ErrorFeedbackLevel.snackbar,
+  );
 }
 ```
 
-## Best Practices
+### 5.3 Error Handling in Services
 
-1. **Use Appropriate Error Types**: Always use the most specific error type for the error being handled.
-2. **Provide Context**: Include relevant context in error messages to help users understand what went wrong.
-3. **Use Appropriate Feedback Levels**: Use the appropriate feedback level based on the severity and context of the error.
-4. **Implement Retry Logic**: Use retry logic for operations that might fail due to temporary issues.
-5. **Provide Recovery Options**: Offer recovery options when appropriate to help users recover from errors.
-6. **Log All Errors**: Always log errors with appropriate context and stack traces for debugging.
-7. **Show Success Messages**: Provide feedback for successful operations to improve user experience.
+Services should use the `LogService` to log errors and return appropriate error messages:
 
-## Conclusion
+```dart
+try {
+  // Perform an operation
+  await someOperation();
+} catch (e, stackTrace) {
+  // Log the error
+  LogService.error('Error performing operation', e, stackTrace);
+  
+  // Rethrow the error for the controller to handle
+  rethrow;
+}
+```
 
-The error handling system provides a robust foundation for handling errors throughout the application. By following the best practices outlined in this document, developers can ensure consistent error handling and a better user experience.
+## 6. Migration Guide
+
+To migrate from the old error handling approach to the new standardized approach:
+
+1. Replace direct `ScaffoldMessenger` calls with `SnackbarService` calls
+2. Replace `BLKWDSSnackbar` calls with `SnackbarService` calls
+3. Use `ContextualErrorHandler` for context-aware error handling
+4. Use `ErrorService` for centralized error handling
+
+### 6.1 Before
+
+```dart
+try {
+  // Perform an operation
+  await someOperation();
+} catch (e) {
+  // Show an error message
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('An error occurred')),
+  );
+}
+```
+
+### 6.2 After
+
+```dart
+try {
+  // Perform an operation
+  await someOperation();
+} catch (e, stackTrace) {
+  // Handle the error
+  ContextualErrorHandler.handleError(
+    context,
+    e,
+    stackTrace: stackTrace,
+    type: ErrorType.database,
+    feedbackLevel: ErrorFeedbackLevel.snackbar,
+  );
+}
+```
+
+## 7. Conclusion
+
+By following these guidelines, we can ensure a consistent and user-friendly approach to error handling throughout the application. This will improve the user experience and make the application more robust and maintainable.

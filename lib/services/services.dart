@@ -14,6 +14,7 @@ export 'log_service.dart';
 export 'log_level.dart';
 export 'error_service.dart';
 export 'error_type.dart';
+export 'error_feedback_level.dart';
 export 'snackbar_service.dart';
 export 'error_dialog_service.dart';
 export 'banner_service.dart';

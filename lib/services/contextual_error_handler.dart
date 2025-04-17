@@ -1,32 +1,13 @@
 import 'package:flutter/material.dart';
 import 'error_service.dart';
 import 'error_type.dart';
+import 'error_feedback_level.dart';
 import 'log_service.dart';
 import 'snackbar_service.dart';
-import 'error_dialog_service.dart';
 import 'banner_service.dart';
-import 'toast_service.dart';
 import 'exceptions/exceptions.dart';
 
-/// Error feedback level
-///
-/// Determines the type of feedback to show to the user
-enum ErrorFeedbackLevel {
-  /// Toast notification (lightweight, non-intrusive)
-  toast,
-
-  /// Snackbar notification (more visible than toast)
-  snackbar,
-
-  /// Dialog (requires user interaction)
-  dialog,
-
-  /// Banner (persistent, visible at the top of the screen)
-  banner,
-
-  /// Silent (no user feedback, just logging)
-  silent,
-}
+// Using ErrorFeedbackLevel from error_feedback_level.dart
 
 /// Contextual error handler
 ///
@@ -117,8 +98,8 @@ class ContextualErrorHandler {
     ErrorFeedbackLevel feedbackLevel,
   ) {
     switch (feedbackLevel) {
-      case ErrorFeedbackLevel.toast:
-        ToastService.showError(context, message);
+      case ErrorFeedbackLevel.silent:
+        // No user feedback, just logging
         break;
       case ErrorFeedbackLevel.snackbar:
         SnackbarService.showError(context, message);
@@ -129,8 +110,9 @@ class ContextualErrorHandler {
       case ErrorFeedbackLevel.banner:
         BannerService.showError(message);
         break;
-      case ErrorFeedbackLevel.silent:
-        // No user feedback, just logging
+      case ErrorFeedbackLevel.page:
+        // TODO: Implement page feedback
+        ErrorService.showErrorDialog(context, message);
         break;
     }
   }
@@ -171,7 +153,7 @@ class ContextualErrorHandler {
       case ErrorType.validation:
       case ErrorType.input:
       case ErrorType.format:
-        return ErrorFeedbackLevel.toast;
+        return ErrorFeedbackLevel.snackbar;
 
       // Operational errors
       case ErrorType.conflict:
