@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../../theme/app_theme.dart';
-import '../common/custom_button.dart';
-import '../common/custom_dropdown.dart';
 
 /// Dialog for configuring data seeding options
 class DataSeedingDialog extends StatefulWidget {
@@ -161,7 +159,7 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
                 style: TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 16),
-              
+
               // Seed on first run
               SwitchListTile(
                 title: const Text('Seed on First Run'),
@@ -175,13 +173,13 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
                   });
                 },
               ),
-              
+
               const Divider(),
-              
+
               // Volume type
               const Text('Data Volume', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              CustomDropdown<DataSeederVolumeType>(
+              DropdownButtonFormField<DataSeederVolumeType>(
                 value: _config.volumeType,
                 items: DataSeederVolumeType.values
                     .map((type) => DropdownMenuItem(
@@ -198,11 +196,11 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Randomization type
               const Text('Randomization', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              CustomDropdown<DataSeederRandomizationType>(
+              DropdownButtonFormField<DataSeederRandomizationType>(
                 value: _config.randomizationType,
                 items: DataSeederRandomizationType.values
                     .map((type) => DropdownMenuItem(
@@ -219,7 +217,7 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Data types to seed
               const Text('Data Types to Seed', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
@@ -286,17 +284,33 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
           onPressed: _isSaving ? null : () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
-        CustomButton(
+        ElevatedButton(
           onPressed: _isSaving ? null : _saveConfig,
-          text: 'Save Configuration',
-          isLoading: _isSaving,
+          child: _isSaving
+              ? const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                    SizedBox(width: 8),
+                    Text('Saving...'),
+                  ],
+                )
+              : const Text('Save Configuration'),
         ),
         const SizedBox(width: 8),
-        CustomButton(
+        ElevatedButton(
           onPressed: _isSaving ? null : _reseedDatabase,
-          text: 'Reset & Reseed Database',
-          isLoading: _isSaving,
-          color: AppTheme.dangerColor,
+          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+          child: _isSaving
+              ? const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                    SizedBox(width: 8),
+                    Text('Reseeding...'),
+                  ],
+                )
+              : const Text('Reset & Reseed Database'),
         ),
       ],
     );
@@ -319,8 +333,10 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
     switch (type) {
       case DataSeederRandomizationType.fixed:
         return 'Fixed - Consistent sample data';
-      case DataSeederRandomizationType.random:
-        return 'Random - Randomized sample data';
+      case DataSeederRandomizationType.semiRandomized:
+        return 'Semi-randomized - Some randomization';
+      case DataSeederRandomizationType.fullyRandomized:
+        return 'Fully randomized - Complete randomization';
     }
   }
 }
