@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
+import '../../models/models.dart';
 import '../../services/navigation_service.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_constants.dart';
@@ -14,6 +15,7 @@ import '../project_management/project_list_screen.dart';
 import '../gear_management/gear_list_screen.dart';
 // Migration imports removed - migration is complete
 import 'settings_controller.dart';
+import 'widgets/data_seeder_config_form.dart';
 import 'widgets/settings_section.dart';
 
 /// SettingsScreen
@@ -28,6 +30,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   // Controller
   final _controller = SettingsController();
+
+  // State
+  bool _showDataSeederConfigForm = false;
 
   @override
   void initState() {
@@ -109,6 +114,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  // Handle data seeder configuration
+  void _handleDataSeederConfig() {
+    setState(() {
+      _showDataSeederConfigForm = true;
+    });
+  }
+
+  // Handle save data seeder configuration
+  Future<void> _handleSaveDataSeederConfig(DataSeederConfig config) async {
+    final success = await _controller.saveDataSeederConfig(config);
+    if (success) {
+      setState(() {
+        _showDataSeederConfigForm = false;
+      });
+    }
+  }
+
+  // Handle reseed database
+  Future<void> _handleReseedDatabase() async {
+    // Show confirmation dialog
+    final confirmed = await _showConfirmationDialog(
+      title: 'Reseed Database',
+      message: 'This will delete all existing data and seed the database with new data based on your configuration. Are you sure you want to continue?',
+      confirmText: 'Reseed',
+      isDestructive: true,
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    final success = await _controller.reseedDatabase();
+    if (success) {
+      setState(() {
+        _showDataSeederConfigForm = false;
+      });
+    }
+  }
+
   // Show confirmation dialog
   Future<bool?> _showConfirmationDialog({
     required String title,
@@ -156,20 +200,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: ValueListenableBuilder<bool>(
-        valueListenable: _controller.isLoading,
-        builder: (context, isLoading, child) {
-          if (isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: Stack(
+        children: [
+          ValueListenableBuilder<bool>(
+            valueListenable: _controller.isLoading,
+            builder: (context, isLoading, child) {
+              if (isLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 // Appearance section removed - app uses dark mode only
 
                 // Data management
@@ -202,6 +248,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.table_chart,
                       type: BLKWDSButtonType.secondary,
                       onPressed: _handleExportToCsv,
+                      isFullWidth: true,
+                    ),
+                    const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+                    // Data Seeder Configuration
+                    BLKWDSButton(
+                      label: 'Data Seeder Configuration',
+                      icon: Icons.data_array,
+                      type: BLKWDSButtonType.secondary,
+                      onPressed: _handleDataSeederConfig,
                       isFullWidth: true,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -327,6 +383,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           );
         },
       ),
+
+      // Data seeder configuration form
+      if (_showDataSeederConfigForm)
+        ValueListenableBuilder<DataSeederConfig>(
+          valueListenable: _controller.dataSeederConfig,
+          builder: (context, config, _) {
+            return DataSeederConfigForm(
+              config: config,
+              onSave: _handleSaveDataSeederConfig,
+              onCancel: () => setState(() => _showDataSeederConfigForm = false),
+              onReseed: _handleReseedDatabase,
+            );
+          },
+        ),
+      ],
     );
   }
 }

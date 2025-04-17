@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/models.dart';
+import '../../services/data_seeder.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../services/contextual_error_handler.dart';
 import '../../services/error_service.dart';
 import '../../services/error_type.dart';
+import '../../services/error_feedback_level.dart';
 import '../../services/retry_service.dart';
 import '../../services/retry_strategy.dart';
 
@@ -25,6 +27,9 @@ class SettingsController {
   final String appVersion = '1.0.0-rc10';
   final String appBuildNumber = '1';
   final String appCopyright = '© ${DateTime.now().year} BLKWDS Studios';
+
+  // Data seeder configuration
+  final ValueNotifier<DataSeederConfig> dataSeederConfig = ValueNotifier<DataSeederConfig>(DataSeederConfig.standard());
 
   // Set the context for error handling
   void setContext(BuildContext context) {
@@ -62,7 +67,10 @@ class SettingsController {
   // Load preferences from shared preferences
   Future<void> _loadPreferences() async {
     try {
-      // No preferences to load - app uses dark mode only
+      // Load data seeder configuration
+      final config = await DataSeeder.getConfig();
+      dataSeederConfig.value = config;
+      LogService.info('Data seeder configuration loaded: $config');
     } catch (e, stackTrace) {
       LogService.error('Error loading preferences', e, stackTrace);
 
@@ -527,49 +535,23 @@ class SettingsController {
   // Add default data
   Future<void> _addDefaultData() async {
     try {
-      // Add default members with retry logic
-      await RetryService.retry<int>(
-        operation: () => DBService.insertMember(Member(
-          id: 1,
-          name: 'Alex Johnson',
-          role: 'Director',
-        )),
+      // Use the data seeder with minimal configuration
+      final minimalConfig = DataSeederConfig.minimal();
+
+      // Seed the database with retry logic
+      await RetryService.retry<void>(
+        operation: () => DataSeeder.seedDatabase(minimalConfig),
         maxAttempts: 3,
         strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 500),
         retryCondition: RetryService.isRetryableError,
       );
 
-      // Add default projects with retry logic
-      await RetryService.retry<int>(
-        operation: () => DBService.insertProject(Project(
-          id: 1,
-          title: 'Brand Commercial',
-          client: 'Brand X',
-          notes: 'Commercial shoot for Brand X',
-        )),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      // Save the configuration for future use
+      await DataSeeder.saveConfig(minimalConfig);
 
-      // Add default gear with retry logic
-      await RetryService.retry<int>(
-        operation: () => DBService.insertGear(Gear(
-          id: 1,
-          name: 'Canon R6',
-          category: 'Camera',
-          description: 'Canon EOS R6 Mirrorless Camera',
-          serialNumber: 'CR6123456',
-          purchaseDate: DateTime(2022, 1, 15),
-          isOut: false,
-        )),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      // Update the value notifier
+      dataSeederConfig.value = minimalConfig;
     } catch (e, stackTrace) {
       LogService.error('Error adding default data', e, stackTrace);
 
@@ -593,5 +575,91 @@ class SettingsController {
     isLoading.dispose();
     errorMessage.dispose();
     successMessage.dispose();
+    dataSeederConfig.dispose();
+  }
+
+  // Save data seeder configuration
+  Future<bool> saveDataSeederConfig(DataSeederConfig config) async {
+    isLoading.value = true;
+    errorMessage.value = null;
+    successMessage.value = null;
+
+    try {
+      // Save configuration
+      await DataSeeder.saveConfig(config);
+
+      // Update value notifier
+      dataSeederConfig.value = config;
+
+      successMessage.value = 'Data seeder configuration saved';
+
+      // Show success message if context is available
+      if (context != null) {
+        ErrorService.showSuccessSnackBar(context!, 'Data seeder configuration saved');
+      }
+
+      return true;
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error saving data seeder configuration: ${e.toString()}';
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          stackTrace: stackTrace,
+          type: ErrorType.state,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error saving data seeder configuration', e, stackTrace);
+      }
+
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Reseed database with current configuration
+  Future<bool> reseedDatabase() async {
+    isLoading.value = true;
+    errorMessage.value = null;
+    successMessage.value = null;
+
+    try {
+      // Reseed database
+      await DataSeeder.reseedDatabase(dataSeederConfig.value);
+
+      successMessage.value = 'Database reseeded successfully';
+
+      // Show success message if context is available
+      if (context != null) {
+        ErrorService.showSuccessSnackBar(context!, 'Database reseeded successfully');
+      }
+
+      return true;
+    } catch (e, stackTrace) {
+      final errorMsg = 'Error reseeding database: ${e.toString()}';
+      errorMessage.value = errorMsg;
+
+      // Use contextual error handler if context is available
+      if (context != null) {
+        ContextualErrorHandler.handleError(
+          context!,
+          e,
+          stackTrace: stackTrace,
+          type: ErrorType.database,
+          feedbackLevel: ErrorFeedbackLevel.snackbar,
+        );
+      } else {
+        LogService.error('Error reseeding database', e, stackTrace);
+      }
+
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

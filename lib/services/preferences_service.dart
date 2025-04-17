@@ -174,4 +174,31 @@ class PreferencesService {
       return false;
     }
   }
+
+  /// Get a map from preferences
+  static Future<Map<String, dynamic>?> getMap(String key) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString(key);
+      if (json != null) {
+        return jsonDecode(json) as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e, stackTrace) {
+      LogService.error('Error getting map from preferences: $key', e, stackTrace);
+      return null;
+    }
+  }
+
+  /// Save a map to preferences
+  static Future<bool> setMap(String key, Map<String, dynamic> value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = jsonEncode(value);
+      return await prefs.setString(key, json);
+    } catch (e, stackTrace) {
+      LogService.error('Error saving map to preferences: $key', e, stackTrace);
+      return false;
+    }
+  }
 }

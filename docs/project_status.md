@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc17 (Release Candidate 17)
-**Last Updated:** 2025-06-16
+**Version:** 1.0.0-rc18 (Release Candidate 18)
+**Last Updated:** 2025-06-17
 
 ## Project Phase
 
@@ -45,7 +45,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [ ] Improve dashboard layout responsiveness
    - [ ] Standardize navigation patterns
    - [ ] Update placeholder data in Settings
-   - [ ] Make demo data in Reset function configurable
+   - [x] Make demo data in Reset function configurable
    - [ ] Clean up unused controllers and adapters
    - [ ] Enhance error handling in UI components
 
@@ -254,6 +254,29 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.46.0 - Data Seeder Configuration (2025-06-17)
+
+**Added:**
+
+- DataSeederConfig model with options for data volume, types, and randomization
+- Data seeder presets (minimal, standard, comprehensive, demo, testing, development)
+- DataGenerator utility for generating random data
+- UI for configuring the data seeder in the settings screen
+- Database reseeding functionality
+
+**Changed:**
+
+- Enhanced DataSeeder class to use configuration options
+- Added persistence for configuration using PreferencesService
+- Updated SettingsController to handle data seeder configuration
+- Improved error handling for data seeding operations
+
+**Improved:**
+
+- Setup experience with configurable sample data
+- Testing capabilities with different data volumes
+- Development experience with customizable data seeding
 
 ### v0.45.0 - Error Handling Standardization (2025-06-16)
 
