@@ -18,6 +18,7 @@ import 'settings_controller.dart';
 import 'widgets/data_seeder_config_form.dart';
 import 'widgets/settings_section.dart';
 import 'app_config_screen.dart';
+import 'app_info_screen.dart';
 
 /// SettingsScreen
 /// Screen for configuring app settings and managing data
@@ -342,6 +343,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           onTap: () {
                             NavigationService().navigateTo(
                               const AppConfigScreen(),
+                              transitionType: BLKWDSPageTransitionType.rightToLeft,
+                            );
+                          },
+                        ),
+                        const Divider(),
+                        ListTile(
+                          title: const Text('App Information'),
+                          subtitle: const Text('View detailed app information'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            NavigationService().navigateTo(
+                              const AppInfoScreen(),
                               transitionType: BLKWDSPageTransitionType.rightToLeft,
                             );
                           },

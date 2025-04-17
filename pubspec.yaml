@@ -54,6 +54,8 @@ dependencies:
   # Using file_selector for better Windows compatibility
   file_selector: ^1.0.2
   file_selector_windows: ^0.9.3
+  # App information
+  package_info_plus: ^5.0.1
 
   # State Management (optional)
   flutter_riverpod: ^2.4.10

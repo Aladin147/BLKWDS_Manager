@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'time_of_day.dart';
+import '../services/version_service.dart';
 
 /// AppConfig
 /// Centralized configuration for the application
 class AppConfig {
   /// Database configuration
   final DatabaseConfig database;
-  
+
   /// Studio configuration
   final StudioConfig studio;
-  
+
   /// UI configuration
   final UIConfig ui;
-  
+
   /// App information
   final AppInfo appInfo;
-  
+
   /// Data seeder configuration
   final DataSeederDefaults dataSeeder;
-  
+
   /// Constructor
   const AppConfig({
     this.database = const DatabaseConfig(),
@@ -27,7 +28,7 @@ class AppConfig {
     this.appInfo = const AppInfo(),
     this.dataSeeder = const DataSeederDefaults(),
   });
-  
+
   /// Create a copy with modified fields
   AppConfig copyWith({
     DatabaseConfig? database,
@@ -44,7 +45,7 @@ class AppConfig {
       dataSeeder: dataSeeder ?? this.dataSeeder,
     );
   }
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -55,7 +56,7 @@ class AppConfig {
       'dataSeeder': dataSeeder.toMap(),
     };
   }
-  
+
   /// Create from a map
   factory AppConfig.fromMap(Map<String, dynamic> map) {
     return AppConfig(
@@ -66,10 +67,10 @@ class AppConfig {
       dataSeeder: DataSeederDefaults.fromMap(map['dataSeeder'] ?? {}),
     );
   }
-  
+
   /// Default configuration
   static const AppConfig defaults = AppConfig();
-  
+
   @override
   String toString() {
     return 'AppConfig(database: $database, studio: $studio, ui: $ui, appInfo: $appInfo, dataSeeder: $dataSeeder)';
@@ -80,16 +81,16 @@ class AppConfig {
 class DatabaseConfig {
   /// Database name
   final String databaseName;
-  
+
   /// Database version
   final int databaseVersion;
-  
+
   /// Constructor
   const DatabaseConfig({
     this.databaseName = 'blkwds_manager.db',
     this.databaseVersion = 7,
   });
-  
+
   /// Create a copy with modified fields
   DatabaseConfig copyWith({
     String? databaseName,
@@ -100,7 +101,7 @@ class DatabaseConfig {
       databaseVersion: databaseVersion ?? this.databaseVersion,
     );
   }
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -108,7 +109,7 @@ class DatabaseConfig {
       'databaseVersion': databaseVersion,
     };
   }
-  
+
   /// Create from a map
   factory DatabaseConfig.fromMap(Map<String, dynamic> map) {
     return DatabaseConfig(
@@ -116,7 +117,7 @@ class DatabaseConfig {
       databaseVersion: map['databaseVersion'] ?? 7,
     );
   }
-  
+
   @override
   String toString() {
     return 'DatabaseConfig(databaseName: $databaseName, databaseVersion: $databaseVersion)';
@@ -127,37 +128,37 @@ class DatabaseConfig {
 class StudioConfig {
   /// Default opening time
   final TimeOfDay openingTime;
-  
+
   /// Default closing time
   final TimeOfDay closingTime;
-  
+
   /// Default minimum booking duration in minutes
   final int minBookingDuration;
-  
+
   /// Default maximum booking duration in minutes
   final int maxBookingDuration;
-  
+
   /// Default minimum advance booking time in hours
   final int minAdvanceBookingTime;
-  
+
   /// Default maximum advance booking time in days
   final int maxAdvanceBookingTime;
-  
+
   /// Default cleanup time between bookings in minutes
   final int cleanupTime;
-  
+
   /// Default setting for allowing overlapping bookings
   final bool allowOverlappingBookings;
-  
+
   /// Default setting for enforcing studio hours
   final bool enforceStudioHours;
-  
+
   /// Default studio types
   final List<String> studioTypes;
-  
+
   /// Default studio statuses
   final List<String> studioStatuses;
-  
+
   /// Constructor
   const StudioConfig({
     this.openingTime = const TimeOfDay(hour: 9, minute: 0),
@@ -172,7 +173,7 @@ class StudioConfig {
     this.studioTypes = const ['recording', 'production', 'hybrid'],
     this.studioStatuses = const ['available', 'unavailable', 'maintenance'],
   });
-  
+
   /// Create a copy with modified fields
   StudioConfig copyWith({
     TimeOfDay? openingTime,
@@ -201,7 +202,7 @@ class StudioConfig {
       studioStatuses: studioStatuses ?? this.studioStatuses,
     );
   }
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -218,7 +219,7 @@ class StudioConfig {
       'studioStatuses': studioStatuses,
     };
   }
-  
+
   /// Create from a map
   factory StudioConfig.fromMap(Map<String, dynamic> map) {
     return StudioConfig(
@@ -239,7 +240,7 @@ class StudioConfig {
           : const ['available', 'unavailable', 'maintenance'],
     );
   }
-  
+
   /// Helper method to convert a string to TimeOfDay
   static TimeOfDay _timeFromString(String timeString) {
     final parts = timeString.split(':');
@@ -248,7 +249,7 @@ class StudioConfig {
       minute: int.parse(parts[1]),
     );
   }
-  
+
   @override
   String toString() {
     return 'StudioConfig(openingTime: $openingTime, closingTime: $closingTime, minBookingDuration: $minBookingDuration, maxBookingDuration: $maxBookingDuration, minAdvanceBookingTime: $minAdvanceBookingTime, maxAdvanceBookingTime: $maxAdvanceBookingTime, cleanupTime: $cleanupTime, allowOverlappingBookings: $allowOverlappingBookings, enforceStudioHours: $enforceStudioHours, studioTypes: $studioTypes, studioStatuses: $studioStatuses)';
@@ -259,20 +260,20 @@ class StudioConfig {
 class UIConfig {
   /// Default theme mode
   final ThemeMode themeMode;
-  
+
   /// Default snackbar duration in seconds
   final int snackbarDuration;
-  
+
   /// Default animation duration in milliseconds
   final int animationDuration;
-  
+
   /// Constructor
   const UIConfig({
     this.themeMode = ThemeMode.dark,
     this.snackbarDuration = 3,
     this.animationDuration = 300,
   });
-  
+
   /// Create a copy with modified fields
   UIConfig copyWith({
     ThemeMode? themeMode,
@@ -285,7 +286,7 @@ class UIConfig {
       animationDuration: animationDuration ?? this.animationDuration,
     );
   }
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -294,7 +295,7 @@ class UIConfig {
       'animationDuration': animationDuration,
     };
   }
-  
+
   /// Create from a map
   factory UIConfig.fromMap(Map<String, dynamic> map) {
     return UIConfig(
@@ -303,7 +304,7 @@ class UIConfig {
       animationDuration: map['animationDuration'] ?? 300,
     );
   }
-  
+
   @override
   String toString() {
     return 'UIConfig(themeMode: $themeMode, snackbarDuration: $snackbarDuration, animationDuration: $animationDuration)';
@@ -314,24 +315,34 @@ class UIConfig {
 class AppInfo {
   /// App name
   final String appName;
-  
+
   /// App version
   final String appVersion;
-  
+
   /// App build number
   final String appBuildNumber;
-  
+
   /// App copyright
   final String appCopyright;
-  
+
   /// Constructor
   const AppInfo({
     this.appName = 'BLKWDS Manager',
-    this.appVersion = '1.0.0-rc19',
+    this.appVersion = '1.0.0',
     this.appBuildNumber = '1',
     this.appCopyright = '© 2025 BLKWDS Studios',
   });
-  
+
+  /// Create from version service
+  factory AppInfo.fromVersionService() {
+    return AppInfo(
+      appName: VersionService.appName,
+      appVersion: VersionService.version,
+      appBuildNumber: VersionService.buildNumber,
+      appCopyright: VersionService.copyright,
+    );
+  }
+
   /// Create a copy with modified fields
   AppInfo copyWith({
     String? appName,
@@ -346,7 +357,7 @@ class AppInfo {
       appCopyright: appCopyright ?? this.appCopyright,
     );
   }
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -356,7 +367,7 @@ class AppInfo {
       'appCopyright': appCopyright,
     };
   }
-  
+
   /// Create from a map
   factory AppInfo.fromMap(Map<String, dynamic> map) {
     return AppInfo(
@@ -366,7 +377,7 @@ class AppInfo {
       appCopyright: map['appCopyright'] ?? '© 2025 BLKWDS Studios',
     );
   }
-  
+
   @override
   String toString() {
     return 'AppInfo(appName: $appName, appVersion: $appVersion, appBuildNumber: $appBuildNumber, appCopyright: $appCopyright)';
@@ -377,46 +388,46 @@ class AppInfo {
 class DataSeederDefaults {
   /// Default number of members for minimal volume
   final int minimalMemberCount;
-  
+
   /// Default number of members for standard volume
   final int standardMemberCount;
-  
+
   /// Default number of members for comprehensive volume
   final int comprehensiveMemberCount;
-  
+
   /// Default number of gear items for minimal volume
   final int minimalGearCount;
-  
+
   /// Default number of gear items for standard volume
   final int standardGearCount;
-  
+
   /// Default number of gear items for comprehensive volume
   final int comprehensiveGearCount;
-  
+
   /// Default number of projects for minimal volume
   final int minimalProjectCount;
-  
+
   /// Default number of projects for standard volume
   final int standardProjectCount;
-  
+
   /// Default number of projects for comprehensive volume
   final int comprehensiveProjectCount;
-  
+
   /// Default number of bookings for minimal volume
   final int minimalBookingCount;
-  
+
   /// Default number of bookings for standard volume
   final int standardBookingCount;
-  
+
   /// Default number of bookings for comprehensive volume
   final int comprehensiveBookingCount;
-  
+
   /// Default gear categories
   final List<String> gearCategories;
-  
+
   /// Default member roles
   final List<String> memberRoles;
-  
+
   /// Constructor
   const DataSeederDefaults({
     this.minimalMemberCount = 2,
@@ -453,7 +464,7 @@ class DataSeederDefaults {
       'Other',
     ],
   });
-  
+
   /// Create a copy with modified fields
   DataSeederDefaults copyWith({
     int? minimalMemberCount,
@@ -488,7 +499,7 @@ class DataSeederDefaults {
       memberRoles: memberRoles ?? this.memberRoles,
     );
   }
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -508,7 +519,7 @@ class DataSeederDefaults {
       'memberRoles': memberRoles,
     };
   }
-  
+
   /// Create from a map
   factory DataSeederDefaults.fromMap(Map<String, dynamic> map) {
     return DataSeederDefaults(
@@ -551,7 +562,7 @@ class DataSeederDefaults {
             ],
     );
   }
-  
+
   @override
   String toString() {
     return 'DataSeederDefaults(minimalMemberCount: $minimalMemberCount, standardMemberCount: $standardMemberCount, comprehensiveMemberCount: $comprehensiveMemberCount, minimalGearCount: $minimalGearCount, standardGearCount: $standardGearCount, comprehensiveGearCount: $comprehensiveGearCount, minimalProjectCount: $minimalProjectCount, standardProjectCount: $standardProjectCount, comprehensiveProjectCount: $comprehensiveProjectCount, minimalBookingCount: $minimalBookingCount, standardBookingCount: $standardBookingCount, comprehensiveBookingCount: $comprehensiveBookingCount, gearCategories: $gearCategories, memberRoles: $memberRoles)';

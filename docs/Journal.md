@@ -1,5 +1,32 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-06-18: Empty State Improvements
+
+Today we enhanced the empty state screens throughout the application to provide a more consistent and helpful user experience:
+
+1. **Analysis Phase**:
+   - Examined the current state of empty screens in the application
+   - Identified inconsistent implementations across different screens
+   - Analyzed the existing FallbackWidget component for reusability
+
+2. **Implementation Phase**:
+   - Enhanced the FallbackWidget component with additional parameters
+   - Standardized empty states across all screens using the FallbackWidget
+   - Added contextual guidance text for each empty state
+   - Implemented primary and secondary actions for all empty states
+   - Added appropriate icons for different types of empty states
+
+3. **Screens Updated**:
+   - Gear List Empty State
+   - Booking List Empty State
+   - Studio Management Empty State
+   - Calendar Booking List Empty State
+   - Project Detail Members Empty State
+   - Project Detail Bookings Empty State
+   - Booking Detail Gear Empty State
+
+These improvements provide a more consistent and helpful user experience when encountering empty states throughout the application. Users now receive clear guidance on what actions they can take and why those actions are important.
+
 ## 2025-06-17: Data Seeder Configuration Implementation
 
 Today we implemented a configurable data seeder system to make it easier to set up the application with sample data:

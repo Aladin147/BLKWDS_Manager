@@ -3,23 +3,32 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 import 'preferences_service.dart';
 import 'log_service.dart';
+import 'version_service.dart';
 
 /// AppConfigService
 /// Service for managing application configuration
 class AppConfigService {
   static const String _configKey = 'app_config';
   static final ValueNotifier<AppConfig> _config = ValueNotifier<AppConfig>(AppConfig.defaults);
-  
+
   /// Get the current configuration
   static AppConfig get config => _config.value;
-  
+
   /// Get the configuration as a ValueNotifier
   static ValueNotifier<AppConfig> get configNotifier => _config;
-  
+
   /// Initialize the service
   static Future<void> initialize() async {
     try {
+      // Initialize version service first
+      await VersionService.initialize();
+
+      // Load config
       await loadConfig();
+
+      // Update app info with dynamic values
+      await updateAppInfoFromVersionService();
+
       LogService.info('AppConfigService initialized');
     } catch (e, stackTrace) {
       LogService.error('Error initializing AppConfigService', e, stackTrace);
@@ -27,7 +36,18 @@ class AppConfigService {
       _config.value = AppConfig.defaults;
     }
   }
-  
+
+  /// Update app info from version service
+  static Future<void> updateAppInfoFromVersionService() async {
+    try {
+      final appInfo = AppInfo.fromVersionService();
+      await updateAppInfo(appInfo);
+      LogService.info('App info updated from version service: ${appInfo.appVersion}+${appInfo.appBuildNumber}');
+    } catch (e, stackTrace) {
+      LogService.error('Error updating app info from version service', e, stackTrace);
+    }
+  }
+
   /// Load configuration from preferences
   static Future<void> loadConfig() async {
     try {
@@ -46,7 +66,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Save configuration to preferences
   static Future<void> saveConfig(AppConfig config) async {
     try {
@@ -59,7 +79,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Reset configuration to defaults
   static Future<void> resetConfig() async {
     try {
@@ -70,7 +90,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Update database configuration
   static Future<void> updateDatabaseConfig(DatabaseConfig databaseConfig) async {
     try {
@@ -82,7 +102,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Update studio configuration
   static Future<void> updateStudioConfig(StudioConfig studioConfig) async {
     try {
@@ -94,7 +114,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Update UI configuration
   static Future<void> updateUIConfig(UIConfig uiConfig) async {
     try {
@@ -106,7 +126,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Update app information
   static Future<void> updateAppInfo(AppInfo appInfo) async {
     try {
@@ -118,7 +138,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Update data seeder defaults
   static Future<void> updateDataSeederDefaults(DataSeederDefaults dataSeederDefaults) async {
     try {
@@ -130,7 +150,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Export configuration as JSON
   static Future<String> exportConfig() async {
     try {
@@ -141,7 +161,7 @@ class AppConfigService {
       rethrow;
     }
   }
-  
+
   /// Import configuration from JSON
   static Future<void> importConfig(String jsonString) async {
     try {
