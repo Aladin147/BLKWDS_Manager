@@ -5,6 +5,23 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc29] - 2025-06-29
+
+### Added
+
+- Refactored all direct database operations in DBService to use DBServiceWrapper methods
+- Added appropriate operation names to all database operations for better error tracking
+- Replaced direct transactions with DBServiceWrapper.executeTransaction for better error handling
+- Updated journal and project status to reflect the implementation
+
+### Improved
+
+- Consistent error handling across all database operations
+- Uniform retry mechanisms for transient errors
+- Better error reporting with operation names
+- Improved code maintainability with standardized patterns
+- Enhanced reliability for database operations
+
 ## [1.0.0-rc28] - 2025-06-28
 
 ### Added
