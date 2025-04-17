@@ -21,13 +21,25 @@ void main() async {
   await DBService.database;
   LogService.info('Database initialized');
 
-  // Seed the database with sample data
-  await DataSeeder.seedDatabase();
-  LogService.info('Data seeding completed');
-
-  // Initialize app configuration
+  // Initialize app configuration first
   await AppConfigService.initialize();
   LogService.info('App configuration initialized');
+
+  // Only seed the database on first run if enabled in config and database is empty
+  final dataSeederConfig = await DataSeeder.getConfig();
+  if (dataSeederConfig.seedOnFirstRun) {
+    // Check if database is empty before seeding
+    final isEmpty = await DataSeeder.isDatabaseEmpty();
+    if (isEmpty) {
+      LogService.info('Database is empty, seeding with initial data');
+      await DataSeeder.seedDatabase(dataSeederConfig);
+      LogService.info('Data seeding completed');
+    } else {
+      LogService.info('Database already contains data, skipping seeding');
+    }
+  } else {
+    LogService.info('Data seeding on first run is disabled in configuration');
+  }
 
   // Initialize error analytics service
   await ErrorAnalyticsService.initialize();

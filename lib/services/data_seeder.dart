@@ -35,25 +35,54 @@ class DataSeeder {
     }
   }
 
+  /// Check if the database is empty
+  static Future<bool> isDatabaseEmpty() async {
+    try {
+      // Check if any members exist
+      final members = await DBService.getAllMembers();
+      if (members.isNotEmpty) return false;
+
+      // Check if any gear exists
+      final gear = await DBService.getAllGear();
+      if (gear.isNotEmpty) return false;
+
+      // Check if any projects exist
+      final projects = await DBService.getAllProjects();
+      if (projects.isNotEmpty) return false;
+
+      // Check if any studios exist
+      final studios = await DBService.getAllStudios();
+      if (studios.isNotEmpty) return false;
+
+      // If we get here, the database is empty
+      return true;
+    } catch (e, stackTrace) {
+      LogService.error('Error checking if database is empty', e, stackTrace);
+      // Assume not empty on error to prevent accidental data loss
+      return false;
+    }
+  }
+
   /// Seed the database with sample data
   static Future<void> seedDatabase([DataSeederConfig? config]) async {
     // Get configuration
     final seederConfig = config ?? await getConfig();
 
     // Check if database is already seeded
-    final members = await DBService.getAllMembers();
-    if (members.isNotEmpty) {
-      LogService.info('Database already seeded');
+    final isEmpty = await isDatabaseEmpty();
+    if (!isEmpty) {
+      LogService.info('Database already contains data, skipping seeding');
       return;
     }
 
     // Check if seeding is enabled on first run
     if (!seederConfig.seedOnFirstRun) {
-      LogService.info('Seeding on first run is disabled');
+      LogService.info('Seeding on first run is disabled in configuration');
       return;
     }
 
-    LogService.info('Seeding database with config: $seederConfig');
+    // Log that we're about to seed the database
+    LogService.info('Starting database seeding with config: $seederConfig');
 
     // Seed members
     final memberIds = seederConfig.seedMembers
@@ -99,16 +128,27 @@ class DataSeeder {
   }
 
   /// Reseed the database with the given configuration
+  /// This method should be used with caution as it will clear all existing data
   static Future<void> reseedDatabase(DataSeederConfig config) async {
-    // Clear existing data
-    await DBService.clearAllData();
-    LogService.info('Database cleared');
+    // Log warning about data loss
+    LogService.warning('Reseeding database will clear all existing data');
 
-    // Save the new configuration
-    await saveConfig(config);
+    try {
+      // Clear existing data
+      await DBService.clearAllData();
+      LogService.info('Database cleared');
 
-    // Seed the database with the new configuration
-    await seedDatabase(config);
+      // Save the new configuration
+      await saveConfig(config);
+      LogService.info('Data seeder configuration saved');
+
+      // Seed the database with the new configuration
+      await seedDatabase(config);
+      LogService.info('Database reseeded successfully');
+    } catch (e, stackTrace) {
+      LogService.error('Error reseeding database', e, stackTrace);
+      rethrow;
+    }
   }
 
   /// Seed members
