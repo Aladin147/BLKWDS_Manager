@@ -4,10 +4,7 @@ import '../../services/services.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
-import 'member_detail_screen.dart';
-import 'member_form_screen.dart';
 
 /// MemberListScreen
 /// Displays a list of all members with search and filtering capabilities
@@ -107,36 +104,21 @@ class _MemberListScreenState extends State<MemberListScreen> {
   }
 
   // Navigate to member detail screen
-  void _navigateToMemberDetail(Member member) {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: MemberDetailScreen(member: member),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) => _loadMembers());
+  void _navigateToMemberDetail(Member member) async {
+    await NavigationService().navigateToMemberDetail(member);
+    _loadMembers();
   }
 
   // Navigate to member form screen for adding a new member
-  void _navigateToAddMember() {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: const MemberFormScreen(),
-        transitionType: BLKWDSPageTransitionType.bottomToTop,
-      ),
-    ).then((_) => _loadMembers());
+  void _navigateToAddMember() async {
+    await NavigationService().navigateToMemberForm();
+    _loadMembers();
   }
 
   // Navigate to member form screen for editing a member
-  void _navigateToEditMember(Member member) {
-    Navigator.push(
-      context,
-      BLKWDSPageRoute(
-        page: MemberFormScreen(member: member),
-        transitionType: BLKWDSPageTransitionType.rightToLeft,
-      ),
-    ).then((_) => _loadMembers());
+  void _navigateToEditMember(Member member) async {
+    await NavigationService().navigateToMemberForm(member: member);
+    _loadMembers();
   }
 
   // Delete a member

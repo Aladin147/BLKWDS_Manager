@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../screens/dashboard/dashboard_screen.dart';
+import '../services/log_service.dart';
 import '../screens/booking_panel/booking_panel_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/settings/database_integrity_screen.dart';
 import '../screens/add_gear/add_gear_screen.dart';
 import '../screens/member_management/member_list_screen.dart';
+import '../screens/member_management/member_detail_screen.dart';
+import '../screens/member_management/member_form_screen.dart';
 import '../screens/project_management/project_list_screen.dart';
 import '../screens/gear_management/gear_list_screen.dart';
 import '../screens/studio_management/studio_management_screen.dart';
@@ -22,6 +25,8 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String addGear = '/add-gear';
   static const String memberManagement = '/member-management';
+  static const String memberDetail = '/member-detail';
+  static const String memberForm = '/member-form';
   static const String projectManagement = '/project-management';
   static const String gearManagement = '/gear-management';
   static const String studioManagement = '/studio-management';
@@ -64,6 +69,30 @@ class AppRoutes {
           settings,
           BookingPanelScreen(initialFilter: filter),
           BLKWDSPageTransitionType.bottomToTop,
+        );
+
+      case memberDetail:
+        final member = args?['member'];
+        if (member == null) {
+          LogService.error('Member detail route called without member');
+          return _buildRoute(
+            settings,
+            const MemberListScreen(),
+            BLKWDSPageTransitionType.fade,
+          );
+        }
+        return _buildRoute(
+          settings,
+          MemberDetailScreen(member: member),
+          BLKWDSPageTransitionType.rightToLeft,
+        );
+
+      case memberForm:
+        final member = args?['member'];
+        return _buildRoute(
+          settings,
+          MemberFormScreen(member: member),
+          member == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
         );
 
       default:

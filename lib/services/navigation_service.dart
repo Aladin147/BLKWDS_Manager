@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/blkwds_animations.dart';
 import '../services/log_service.dart';
 import '../routes/app_routes.dart';
+import '../models/member.dart';
 
 /// Navigation service for BLKWDS Manager
 ///
@@ -150,6 +151,24 @@ class NavigationService {
     return navigateToNamed<T>(
       AppRoutes.memberManagement,
       transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to member detail
+  Future<T?> navigateToMemberDetail<T>(Member member) async {
+    return navigateToNamed<T>(
+      AppRoutes.memberDetail,
+      arguments: {'member': member},
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
+  /// Navigate to add/edit member form
+  Future<T?> navigateToMemberForm<T>({Member? member}) async {
+    return navigateToNamed<T>(
+      AppRoutes.memberForm,
+      arguments: member != null ? {'member': member} : null,
+      transitionType: member == null ? BLKWDSPageTransitionType.bottomToTop : BLKWDSPageTransitionType.rightToLeft,
     );
   }
 
