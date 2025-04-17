@@ -19,6 +19,9 @@ These documents serve as the single source of truth for the project:
 1. **[Architecture and Tech Stack](architecture/architecture_and_tech_stack.md)** - Overview of the application architecture
 2. **[Database Models](models/blkwds_db_models.md)** - Database schema and model definitions
 3. **[Database Service](models/db_service.md)** - Database service implementation details
+4. **[Database Migration System](database_migration_system.md)** - Database migration framework and implementation
+5. **[Database Error Handling](database_error_handling.md)** - Error handling system for database operations
+6. **[Database Integrity Checks](database_integrity_checks.md)** - Integrity check system for database operations
 
 ## Legacy Documentation
 
@@ -32,4 +35,4 @@ Older documentation that has been superseded or is no longer current has been mo
 4. **Code Examples**: Include relevant code examples where appropriate
 5. **Link Related Documents**: Cross-reference related documentation
 
-**Last Updated**: 2025-06-06
+**Last Updated**: 2025-06-25

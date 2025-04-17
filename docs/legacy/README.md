@@ -20,4 +20,8 @@ For current project status and plans, please refer to these primary documents:
 
 The files in this directory are tagged with `[LEGACY]` in their titles and include a warning header to indicate they are no longer current. They should not be used for current development decisions without verifying against current documentation.
 
-**Last Updated**: 2025-06-06
+## Recent Additions
+
+As part of our documentation audit on 2025-06-25, we've moved several outdated implementation plans and documentation files to this directory to ensure our active documentation remains accurate and up-to-date.
+
+**Last Updated**: 2025-06-25
