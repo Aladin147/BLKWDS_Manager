@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../services/navigation_service.dart';
-import '../../theme/blkwds_animations.dart';
+
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
-import 'booking_detail_screen_adapter.dart';
 import 'booking_list_screen_adapter.dart';
 
 import 'widgets/booking_form_adapter.dart';
@@ -315,12 +314,9 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
-    final result = await NavigationService().navigateTo(
-      BookingDetailScreenAdapter(
-        booking: booking,
-        controller: _controller,
-      ),
-      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    final result = await NavigationService().navigateToBookingDetail(
+      booking,
+      _controller,
     );
 
     // Refresh data if booking was updated or deleted

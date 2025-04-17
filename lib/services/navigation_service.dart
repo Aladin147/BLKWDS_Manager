@@ -5,6 +5,9 @@ import '../routes/app_routes.dart';
 import '../models/member.dart';
 import '../models/project.dart';
 import '../models/gear.dart';
+import '../models/booking.dart';
+import '../screens/booking_panel/booking_panel_controller.dart';
+import '../screens/booking_panel/booking_detail_screen_adapter.dart';
 
 /// Navigation service for BLKWDS Manager
 ///
@@ -121,6 +124,17 @@ class NavigationService {
       AppRoutes.bookingPanel,
       transitionType: BLKWDSPageTransitionType.bottomToTop,
       arguments: filter != null ? {'filter': filter} : null,
+    );
+  }
+
+  /// Navigate to booking detail
+  Future<T?> navigateToBookingDetail<T>(Booking booking, BookingPanelController controller) async {
+    return navigateTo<T>(
+      BookingDetailScreenAdapter(
+        booking: booking,
+        controller: controller,
+      ),
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
 
