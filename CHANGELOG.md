@@ -5,6 +5,26 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc31] - 2025-06-30
+
+### Added
+
+- Added new navigation methods to NavigationService for member and project screens
+- Added missing routes to AppRoutes class
+- Implemented consistent transition animations for different types of navigation
+
+### Fixed
+
+- Fixed navigation issues in member management screens
+- Fixed navigation issues in project management screens
+- Ensured proper data refresh when returning from child screens
+
+### Improved
+
+- More consistent navigation behavior throughout the app
+- Better maintainability with centralized navigation logic
+- Improved user experience with consistent transitions
+
 ## [1.0.0-rc30] - 2025-06-30
 
 ### Added

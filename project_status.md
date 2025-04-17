@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc30 (Release Candidate 30)
+**Version:** 1.0.0-rc31 (Release Candidate 31)
 **Last Updated:** 2025-06-30
 
 ## Project Phase
@@ -226,7 +226,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [ ] Use predefined text styles instead of direct modifications
      - [ ] Standardize spacing using BLKWDSConstants
    - Fix Non-functional Elements
-     - [ ] Standardize navigation using NavigationService().navigateTo()
+     - [x] Standardize navigation using NavigationService().navigateTo()
      - [ ] Implement proper "View All" functionality or remove the button
      - [ ] Replace placeholder icons with proper images or standardized icons
    - Improve Accessibility
@@ -267,6 +267,26 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.61.0 - Navigation and Routing Improvements (2025-06-30)
+
+**Added:**
+
+- Added new navigation methods to NavigationService for member and project screens
+- Added missing routes to AppRoutes class
+- Implemented consistent transition animations for different types of navigation
+
+**Fixed:**
+
+- Fixed navigation issues in member management screens
+- Fixed navigation issues in project management screens
+- Ensured proper data refresh when returning from child screens
+
+**Improved:**
+
+- More consistent navigation behavior throughout the app
+- Better maintainability with centralized navigation logic
+- Improved user experience with consistent transitions
 
 ### v0.60.0 - Test Coverage Improvements (2025-06-30)
 
