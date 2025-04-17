@@ -25,6 +25,12 @@ class DBService {
     return _db!;
   }
 
+  /// Set a test database for testing purposes
+  /// This should only be used in tests
+  static void setTestDatabase(Database testDb) {
+    _db = testDb;
+  }
+
   /// Check if the database needs migration
   static Future<bool> needsMigration() async {
     try {
