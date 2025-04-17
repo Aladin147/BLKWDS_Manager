@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc25 (Release Candidate 25)
-**Last Updated:** 2025-06-26
+**Version:** 1.0.0-rc26 (Release Candidate 26)
+**Last Updated:** 2025-06-27
 
 ## Project Phase
 
@@ -167,6 +167,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Remove runtime checks like _ensureBookingTableHasRequiredColumns
      - [x] Implement comprehensive error handling for database operations
      - [x] Implement database integrity checks and repair mechanisms
+     - [ ] Refactor remaining database operations in DBService to consistently use DBServiceWrapper methods
    - Testing Coverage
      - [ ] Add unit tests for controllers, DBService, and critical models
      - [ ] Add widget tests for core UI components
@@ -256,6 +257,30 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.56.0 - Database Service Wrapper Consistency Plan (2025-06-27)
+
+**Added:**
+
+- Comprehensive plan for refactoring remaining database operations in DBService
+- Detailed implementation strategy for using DBServiceWrapper consistently
+- Prioritization framework for database operation refactoring
+
+**Planned Improvements:**
+
+- Consistent error handling across all database operations
+- Uniform retry mechanisms for transient errors
+- Standardized transaction handling
+- Improved code maintainability and readability
+- Better debugging and error reporting
+
+**Benefits:**
+
+- Enhanced reliability of database operations
+- Reduced code duplication
+- Improved error recovery
+- Future-proofing for wrapper enhancements
+- Consistent user feedback for database errors
 
 ### v0.55.0 - Database Integrity System Testing (2025-06-26)
 
@@ -1023,4 +1048,4 @@ This document should be updated:
 5. At least once per week during active development
 
 Last updated by: BLKWDS Development Team
-Date: 2025-06-26 (v0.55.0)
+Date: 2025-06-27 (v0.56.0)
