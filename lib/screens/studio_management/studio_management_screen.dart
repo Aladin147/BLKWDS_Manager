@@ -4,6 +4,7 @@ import '../../services/db_service.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
+import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'widgets/studio_form.dart';
 import 'widgets/studio_settings_form.dart';
@@ -152,19 +153,14 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Studio'),
-        content: Text('Are you sure you want to delete ${studio.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Delete Studio',
+        content: 'Are you sure you want to delete ${studio.name}?',
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => Navigator.pop(context, false),
+        primaryActionText: 'Delete',
+        onPrimaryAction: () => Navigator.pop(context, true),
+        isPrimaryDestructive: true,
       ),
     ) ?? false;
 
@@ -197,15 +193,17 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Studio Settings',
+          BLKWDSEnhancedButton.icon(
+            icon: Icons.settings,
             onPressed: _showStudioSettingsForm,
+            type: BLKWDSEnhancedButtonType.tertiary,
+            backgroundColor: Colors.transparent,
+            foregroundColor: BLKWDSColors.white,
           ),
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen))
           : TabBarView(
               controller: _tabController,
               children: [
@@ -221,9 +219,10 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
               ],
             ),
       floatingActionButton: _tabController.index == 0
-          ? FloatingActionButton(
+          ? BLKWDSEnhancedFloatingActionButton(
               onPressed: () => _showAddEditStudioForm(),
-              child: const Icon(Icons.add),
+              tooltip: 'Add Studio',
+              icon: Icons.add_business,
             )
           : null,
       // Show studio form if needed
@@ -251,19 +250,48 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
   /// Build the studios tab
   Widget _buildStudiosTab() {
     if (_studios.isEmpty) {
-      return FallbackWidget.empty(
-        message: 'No studios have been set up yet',
-        icon: Icons.business,
-        onPrimaryAction: () => _showAddEditStudioForm(),
-        primaryActionLabel: 'Add Studio',
-        secondaryActionLabel: 'Learn More',
-        onSecondaryAction: () {
-          SnackbarService.showInfo(
-            context,
-            'Studios are physical spaces that can be booked for projects. Add your recording or production spaces here.',
-            duration: const Duration(seconds: 6),
-          );
-        },
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BLKWDSEnhancedIconContainer(
+              icon: Icons.business,
+              size: BLKWDSEnhancedIconContainerSize.large,
+              backgroundColor: BLKWDSColors.slateGrey.withValues(alpha: 20),
+              iconColor: BLKWDSColors.slateGrey,
+            ),
+            const SizedBox(height: BLKWDSConstants.spacingMedium),
+            Text(
+              'No studios have been set up yet',
+              style: BLKWDSTypography.titleLarge,
+            ),
+            const SizedBox(height: BLKWDSConstants.spacingMedium),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BLKWDSEnhancedButton(
+                  label: 'Add Studio',
+                  icon: Icons.add_business,
+                  onPressed: () => _showAddEditStudioForm(),
+                  type: BLKWDSEnhancedButtonType.primary,
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingMedium),
+                BLKWDSEnhancedButton(
+                  label: 'Learn More',
+                  icon: Icons.info_outline,
+                  onPressed: () {
+                    SnackbarService.showInfo(
+                      context,
+                      'Studios are physical spaces that can be booked for projects. Add your recording or production spaces here.',
+                      duration: const Duration(seconds: 6),
+                    );
+                  },
+                  type: BLKWDSEnhancedButtonType.secondary,
+                ),
+              ],
+            ),
+          ],
+        ),
       );
     }
 
@@ -272,46 +300,76 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
       itemCount: _studios.length,
       itemBuilder: (context, index) {
         final studio = _studios[index];
-        return BLKWDSCard(
-          margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: studio.color != null
-                  ? Color(int.parse(studio.color!.substring(1, 7), radix: 16) + 0xFF000000)
-                  : BLKWDSColors.primaryButtonBackground,
-              child: Icon(
-                studio.type.icon,
-                color: Colors.white,
-              ),
-            ),
-            title: Text(studio.name),
-            subtitle: Text(
-              studio.description ?? studio.type.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+        return Padding(
+          padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
+          child: BLKWDSEnhancedCard(
+            onTap: () => _showAddEditStudioForm(studio),
+            animateOnHover: true,
+            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+            child: Row(
               children: [
+                // Studio icon
+                BLKWDSEnhancedIconContainer(
+                  icon: studio.type.icon,
+                  size: BLKWDSEnhancedIconContainerSize.medium,
+                  backgroundColor: studio.color != null
+                      ? Color(int.parse(studio.color!.substring(1, 7), radix: 16) + 0xFF000000)
+                      : BLKWDSColors.primaryButtonBackground,
+                  iconColor: Colors.white,
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingMedium),
+                // Studio details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        studio.name,
+                        style: BLKWDSTypography.titleMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        studio.description ?? studio.type.label,
+                        style: BLKWDSTypography.bodyMedium.copyWith(
+                          color: BLKWDSColors.textSecondary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
                 // Status badge
-                BLKWDSStatusBadge(
+                BLKWDSEnhancedStatusBadge(
                   text: studio.status.label,
                   color: studio.status.color,
+                  hasBorder: true,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
-                // Edit button
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => _showAddEditStudioForm(studio),
-                ),
-                // Delete button
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _deleteStudio(studio),
+                // Action buttons
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Tooltip(
+                      message: 'Edit',
+                      child: BLKWDSEnhancedButton.icon(
+                        icon: Icons.edit,
+                        onPressed: () => _showAddEditStudioForm(studio),
+                        type: BLKWDSEnhancedButtonType.tertiary,
+                      ),
+                    ),
+                    Tooltip(
+                      message: 'Delete',
+                      child: BLKWDSEnhancedButton.icon(
+                        icon: Icons.delete,
+                        onPressed: () => _deleteStudio(studio),
+                        type: BLKWDSEnhancedButtonType.tertiary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            onTap: () => _showAddEditStudioForm(studio),
           ),
         );
       },
