@@ -5,16 +5,30 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc45] - 2025-07-03
+
+**Added:**
+
+- Comprehensive changelog management guide in docs/development/changelog_management.md
+- Changelog template in docs/templates/changelog_template.md
+- Helper script for changelog updates in scripts/update_changelog.dart
+
+**Improved:**
+
+- Restructured changelog format to avoid duplicate heading issues
+- Documented best practices for changelog updates
+- Streamlined the changelog update process
+
 ## [1.0.0-rc44] - 2025-07-03
 
-### Fixed
+**Fixed:**
 
-- Fixed compilation issues in settings_controller_test.dart
+- Compilation issues in settings_controller_test.dart
 - Replaced anyNamed() with captureAny for parameter matching
 - Added proper parameter values for RetryService.retry calls
 - Fixed File constructor mocking with proper MockFile implementation
 
-### Improved
+**Improved:**
 
 - Enhanced test coverage for SettingsController
 - Improved test structure for better readability and maintainability
@@ -23,14 +37,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc43] - 2025-07-03
 
-### Added
+**Added:**
 
-- Added comprehensive testing checklist document
-- Added detailed guidelines for unit tests, widget tests, and integration tests
-- Added component-specific testing guidelines for ValueNotifier, controllers, and database services
-- Added examples for each type of test
+- Comprehensive testing checklist document
+- Detailed guidelines for unit tests, widget tests, and integration tests
+- Component-specific testing guidelines for ValueNotifier, controllers, and database services
+- Examples for each type of test
 
-### Improved
+**Improved:**
 
 - Enhanced testing documentation with clear guidelines
 - Better guidance for test organization and maintenance
@@ -39,14 +53,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc42] - 2025-07-03
 
-### Added
+**Added:**
 
-- Added comprehensive documentation for ValueNotifier state management approach
-- Added detailed examples of controller implementation patterns
-- Added best practices for ValueNotifier usage
-- Added comparison with other state management approaches
+- Comprehensive documentation for ValueNotifier state management approach
+- Detailed examples of controller implementation patterns
+- Best practices for ValueNotifier usage
+- Comparison with other state management approaches
 
-### Improved
+**Improved:**
 
 - Enhanced architecture documentation with clear explanations
 - Better guidance for new developers on state management
@@ -55,20 +69,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc41] - 2025-07-03
 
-### Added
+**Added:**
 
-- Added IntegrationTestHelpers class with retry logic for integration tests
-- Added helper methods for finding widgets, tapping, entering text, and waiting for app stability
-- Added improved error handling for integration test failures
+- IntegrationTestHelpers class with retry logic for integration tests
+- Helper methods for finding widgets, tapping, entering text, and waiting for app stability
+- Improved error handling for integration test failures
 
-### Fixed
+**Fixed:**
 
-- Fixed integration test runtime errors related to widget finding and test timing
-- Fixed flaky tests in gear_checkout_flow_test.dart
-- Fixed flaky tests in booking_creation_flow_test.dart
-- Fixed flaky tests in project_management_flow_test.dart
+- Integration test runtime errors related to widget finding and test timing
+- Flaky tests in gear_checkout_flow_test.dart
+- Flaky tests in booking_creation_flow_test.dart
+- Flaky tests in project_management_flow_test.dart
 
-### Improved
+**Improved:**
 
 - Enhanced test reliability with retry logic
 - Improved test stability with proper waiting mechanisms
@@ -77,20 +91,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc40] - 2025-07-03
 
-### Added
+**Added:**
 
-- Added missing database methods for integration tests
-- Added deleteMemberByName, deleteGearByName, deleteProjectByTitle, and deleteBookingByTitle methods
-- Added proper error handling for test-specific methods
+- Missing database methods for integration tests
+- DeleteMemberByName, deleteGearByName, deleteProjectByTitle, and deleteBookingByTitle methods
+- Proper error handling for test-specific methods
 
-### Fixed
+**Fixed:**
 
-- Fixed integration test compilation errors
-- Fixed Member model usage in integration tests
-- Fixed unused variable warnings in integration tests
-- Fixed DashboardController usage in gear checkout flow test
+- Integration test compilation errors
+- Member model usage in integration tests
+- Unused variable warnings in integration tests
+- DashboardController usage in gear checkout flow test
 
-### Improved
+**Improved:**
 
 - Enhanced test data cleanup in integration tests
 - Improved test reliability with proper data management
@@ -98,21 +112,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc39] - 2025-07-03
 
-### Added
+**Added:**
 
 - Comprehensive tests for BookingPanelController
 - TestBookingPanelController class for isolated testing
 - Tests for controller initialization, filtering, and booking operations
 - Tests for error handling in controller methods
 
-### Fixed
+**Fixed:**
 
 - Made BookingPanelController more testable with overridable methods
 - Fixed MockBuildContext implementation for testing
 - Improved error handling in BookingPanelController
 - Enhanced controller methods to work without context dependency
 
-### Improved
+**Improved:**
 
 - Test coverage for a critical controller component
 - Controller design with better separation of concerns
@@ -121,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc38] - 2025-07-02
 
-### Fixed
+**Fixed:**
 
 - Created MockBuildContext implementation for testing
 - Fixed Studio model parameter mismatch in test files
@@ -129,7 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing hasBookingConflicts method to MockDBService
 - Fixed error type and feedback level imports in test files
 
-### Improved
+**Improved:**
 
 - Enhanced test suite reliability with proper mock implementations
 - Ensured consistency between model implementations and test usage
@@ -138,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc37] - 2025-07-02
 
-### Fixed
+**Fixed:**
 
 - Replaced MaterialStateProperty with WidgetStateProperty
 - Replaced MaterialState with WidgetState
@@ -146,7 +160,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed dialogBackgroundColor and used dialogTheme.backgroundColor instead
 - Added TODOs for withOpacity replacements that require ColorExtension import
 
-### Improved
+**Improved:**
 
 - Removed deprecated API usage warnings
 - Prepared the codebase for future Flutter updates
@@ -155,7 +169,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc36] - 2025-07-02
 
-### Fixed
+**Fixed:**
 
 - Replaced deprecated withOpacity method with withValues in multiple files
 - Updated app_config_screen.dart to use BLKWDSColors instead of Colors.green
@@ -163,7 +177,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated fallback_widget.dart to use withValues for background and border colors
 - Fixed category_icon_widget.dart to use withValues for background color
 
-### Improved
+**Improved:**
 
 - Improved precision by using integer alpha values instead of floating-point opacity
 - Added comments to explain alpha value calculations (e.g., 0.1 * 255 = 26)
@@ -172,14 +186,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc35] - 2025-07-02
 
-### Fixed
+**Fixed:**
 
 - Standardized error handling by replacing all direct ScaffoldMessenger usage with SnackbarService
 - Updated 6 files to use the centralized SnackbarService
 - Added proper mounted checks to prevent setState after dispose errors
 - Maintained consistent error feedback UI across the entire application
 
-### Improved
+**Improved:**
 
 - Better error categorization (success, error, warning, info)
 - Reduced code duplication
@@ -188,21 +202,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc34] - 2025-07-02
 
-### Added
+**Added:**
 
 - Comprehensive codebase assessment to identify remaining issues
 - Detailed analysis of test suite compilation errors
 - Analysis of deprecated API usage across the codebase
 - Prioritized plan for addressing identified issues
 
-### Fixed
+**Fixed:**
 
 - Identified test suite compilation errors and missing mock implementations
 - Identified integration test compilation errors and undefined methods
 - Identified deprecated API usage (withOpacity, MaterialStateProperty, MaterialState)
 - Identified deprecated theme properties (background, dialogBackgroundColor)
 
-### Improved
+**Improved:**
 
 - Updated project documentation to reflect current codebase status
 - Enhanced understanding of test suite requirements
@@ -211,19 +225,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc33] - 2025-07-02
 
-### Added
+**Added:**
 
 - Comprehensive assessment of error handling standardization
 - Documentation of centralized error handling services
 - Clear plan for completing error handling standardization
 
-### Fixed
+**Fixed:**
 
 - Marked error feedback levels as standardized
 - Identified remaining direct ScaffoldMessenger usage
 - Identified deprecated BLKWDSSnackbar usage
 
-### Improved
+**Improved:**
 
 - Updated project documentation to reflect current error handling state
 - Enhanced understanding of error handling architecture
@@ -231,39 +245,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc32] - 2025-07-02
 
-### Fixed
+**Fixed:**
 
-- Fixed duplicate integration_test entry in pubspec.yaml
-- Fixed unused imports across multiple files
-- Fixed BuildContext usage across async gaps in booking_list_screen.dart
-- Fixed unused fields in error_boundary.dart
-- Fixed super parameters in database error classes
+- Duplicate integration_test entry in pubspec.yaml
+- Unused imports across multiple files
+- BuildContext usage across async gaps in booking_list_screen.dart
+- Unused fields in error_boundary.dart
+- Super parameters in database error classes
 - Added TODOs for deprecated API usage (withOpacity, MaterialState, etc.)
 
-### Improved
+**Improved:**
 
-- Improved code quality by addressing static analysis warnings
-- Enhanced error handling in booking_list_screen.dart with a helper method
+- Code quality by addressing static analysis warnings
+- Error handling in booking_list_screen.dart with a helper method
 - Modernized constructor syntax with super parameters
 - Reduced code complexity by removing unused code
 
 ## [1.0.0-rc31] - 2025-06-30
 
-### Added
+**Added:**
 
-- Added new navigation methods to NavigationService for member, project, gear, and booking screens
-- Added missing routes to AppRoutes class
-- Implemented consistent transition animations for different types of navigation
+- New navigation methods to NavigationService for member, project, gear, and booking screens
+- Missing routes to AppRoutes class
+- Consistent transition animations for different types of navigation
 
-### Fixed
+**Fixed:**
 
-- Fixed navigation issues in member management screens
-- Fixed navigation issues in project management screens
-- Fixed navigation issues in gear management screens
-- Fixed navigation issues in booking panel screens
-- Ensured proper data refresh when returning from child screens
+- Navigation issues in member management screens
+- Navigation issues in project management screens
+- Navigation issues in gear management screens
+- Navigation issues in booking panel screens
+- Proper data refresh when returning from child screens
 
-### Improved
+**Improved:**
 
 - More consistent navigation behavior throughout the app
 - Better maintainability with centralized navigation logic
@@ -271,34 +285,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc30] - 2025-06-30
 
-### Added
+**Added:**
 
-- Added comprehensive unit tests for Project model
-- Added comprehensive unit tests for Studio model
-- Added comprehensive unit tests for BookingV2 model
+- Comprehensive unit tests for Project model
+- Comprehensive unit tests for Studio model
+- Comprehensive unit tests for BookingV2 model
 - Updated test helpers to work with the new BookingV2 model
 
-### Fixed
+**Fixed:**
 
-- Fixed a bug in the deleteBooking method that wasn't properly deleting associated booking_gear records
+- Bug in the deleteBooking method that wasn't properly deleting associated booking_gear records
 - Implemented the fix using a transaction to ensure both the booking and its gear assignments are deleted atomically
 
-### Improved
+**Improved:**
 
-- Improved test coverage for critical models
-- Ensured tests work with the latest model versions
+- Test coverage for critical models
+- Tests work with the latest model versions
 - Prevented potential orphaned records in the booking_gear table
 
 ## [1.0.0-rc29] - 2025-06-29
 
-### Added
+**Added:**
 
 - Refactored all direct database operations in DBService to use DBServiceWrapper methods
-- Added appropriate operation names to all database operations for better error tracking
+- Appropriate operation names to all database operations for better error tracking
 - Replaced direct transactions with DBServiceWrapper.executeTransaction for better error handling
 - Updated journal and project status to reflect the implementation
 
-### Improved
+**Improved:**
 
 - Consistent error handling across all database operations
 - Uniform retry mechanisms for transient errors
@@ -308,7 +322,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc28] - 2025-06-28
 
-### Added
+**Added:**
 
 - New development_journal.md file to replace the missing Journal.md
 - Updated README.md with clear documentation hierarchy
@@ -318,13 +332,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example refactoring patterns for different operation types
 - Risk assessment and mitigation strategies
 
-### Changed
+**Changed:**
 
 - Reorganized documentation structure for clarity and consistency
 - Updated documentation references to reflect the new structure
 - Removed redundant and outdated documentation
 
-### Improved
+**Improved:**
 
 - Documentation clarity and organization
 - Navigation between related documents
@@ -335,13 +349,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc27] - 2025-06-27
 
-### Added
+**Added:**
 
 - Comprehensive plan for refactoring remaining database operations in DBService
 - Detailed implementation strategy for using DBServiceWrapper consistently
 - Prioritization framework for database operation refactoring
 
-### Improved
+**Improved:**
 
 - Consistent error handling across all database operations
 - Uniform retry mechanisms for transient errors
@@ -351,7 +365,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-rc26] - 2025-06-26
 
-### Added
+**Added:**
 
 - Comprehensive test suite for database integrity system
 - Unit tests for DatabaseIntegrityChecker
@@ -359,13 +373,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for DatabaseIntegrityService
 - Test helpers for creating database corruption scenarios
 
-### Fixed
+**Fixed:**
 
 - Edge cases in database integrity checks
 - Date format handling in integrity repair operations
 - Error handling in integrity service
 
-### Improved
+**Improved:**
 
 - Test coverage for database-related components
 - Robustness of integrity check and repair operations
@@ -373,18 +387,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2025-05-16
 
-### Added
+**Added:**
 
 - Comprehensive error logging with stack traces
 - Proper documentation for database schema changes
 
-### Changed
+**Changed:**
 
 - Updated all widget constructors to use the modern `super.key` parameter syntax
 - Improved widget structure by placing child parameters last in widget constructors
 - Replaced Container with SizedBox where appropriate for better performance
 
-### Fixed
+**Fixed:**
 
 - Critical bug in the `clearAllData` method that was trying to delete from a non-existent table
 - Replaced all print statements with proper LogService calls
@@ -395,7 +409,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2025-05-15
 
-### Added
+**Added:**
 
 - Initial release of BLKWDS Manager
 - Dashboard for quick check-in/check-out of gear

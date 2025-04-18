@@ -2,6 +2,28 @@
 
 **Note: This is a continuation of the original Journal.md file. The original journal contains the complete project history and should be preserved.**
 
+## 2025-07-03: Improved Changelog Management
+
+Today we improved the changelog management process to avoid recurring issues with duplicate headings and inconsistent formatting. This work involved several key improvements:
+
+1. **Restructured the Changelog Format**:
+   - Changed from using Markdown headings for categories to using bold text
+   - This avoids duplicate heading warnings from Markdown linters
+   - Maintained the same information structure while improving compatibility
+
+2. **Created Documentation and Templates**:
+   - Added a comprehensive changelog management guide in docs/development/changelog_management.md
+   - Created a template file in docs/templates/changelog_template.md
+   - Documented best practices for changelog updates
+
+3. **Developed a Helper Script**:
+   - Created scripts/update_changelog.dart to automate changelog updates
+   - The script automatically increments the version number
+   - It adds a new version entry with the current date
+   - It maintains the consistent structure
+
+These improvements will save time and reduce frustration when updating the changelog in the future. The new structure is more robust and less prone to linting issues, while still maintaining the same level of information and readability.
+
 ## 2025-07-03: Fixed Settings Controller Test
 
 Today we fixed the compilation issues in the settings_controller_test.dart file. This work involved several key improvements:
