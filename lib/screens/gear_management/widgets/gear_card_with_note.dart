@@ -149,35 +149,12 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
               BLKWDSEnhancedCard(
                 padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
                 backgroundColor: BLKWDSColors.backgroundMedium,
-                child: TextField(
+                child: BLKWDSEnhancedFormField(
                   controller: _noteController,
-                  decoration: InputDecoration(
-                    labelText: 'Note (Optional)',
-                    labelStyle: BLKWDSEnhancedText.getLabelMediumStyle().copyWith(
-                      color: BLKWDSColors.textSecondary,
-                    ),
-                    hintText: 'Add a note for this action',
-                    hintStyle: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
-                      color: BLKWDSColors.textHint,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                      borderSide: const BorderSide(color: BLKWDSColors.inputBorder),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                      borderSide: const BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: BLKWDSConstants.inputHorizontalPadding,
-                      vertical: BLKWDSConstants.inputVerticalPadding,
-                    ),
-                  ),
-                  style: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
-                    color: BLKWDSColors.textPrimary,
-                  ),
+                  label: 'Note (Optional)',
+                  hintText: 'Add a note for this action',
                   maxLines: 3,
-                  cursorColor: BLKWDSColors.accentTeal,
+                  prefixIcon: Icons.note,
                 ),
               ),
             ],

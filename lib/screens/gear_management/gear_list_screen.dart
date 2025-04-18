@@ -132,23 +132,14 @@ class _GearListScreenState extends State<GearListScreen> {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Gear'),
-        content: Text('Are you sure you want to delete ${gear.name}?'),
-        actions: [
-          BLKWDSButton(
-            label: 'Cancel',
-            onPressed: () => Navigator.pop(context, false),
-            type: BLKWDSButtonType.secondary,
-            isSmall: true,
-          ),
-          BLKWDSButton(
-            label: 'Delete',
-            onPressed: () => Navigator.pop(context, true),
-            type: BLKWDSButtonType.danger,
-            isSmall: true,
-          ),
-        ],
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Delete Gear',
+        content: 'Are you sure you want to delete ${gear.name}?',
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => Navigator.pop(context, false),
+        primaryActionText: 'Delete',
+        onPrimaryAction: () => Navigator.pop(context, true),
+        isPrimaryDestructive: true,
       ),
     );
 
@@ -239,15 +230,21 @@ class _GearListScreenState extends State<GearListScreen> {
     // Show member selection dialog
     final selectedMember = await showDialog<Member>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Check Out Gear'),
-        content: SizedBox(
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Check Out Gear',
+        contentWidget: SizedBox(
           width: double.maxFinite,
+          height: 300,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Select a member to check out ${gear.name} to:'),
+              Text(
+                'Select a member to check out ${gear.name} to:',
+                style: BLKWDSTypography.bodyMedium.copyWith(
+                  color: BLKWDSColors.textPrimary,
+                ),
+              ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
               Expanded(
                 child: ListView.builder(
@@ -255,9 +252,10 @@ class _GearListScreenState extends State<GearListScreen> {
                   itemCount: members.length,
                   itemBuilder: (context, index) {
                     final member = members[index];
-                    return ListTile(
-                      title: Text(member.name),
-                      subtitle: member.role != null ? Text(member.role!) : null,
+                    return BLKWDSEnhancedListTile(
+                      title: member.name,
+                      subtitle: member.role,
+                      leadingIcon: Icons.person,
                       onTap: () => Navigator.pop(context, member),
                     );
                   },
@@ -266,14 +264,8 @@ class _GearListScreenState extends State<GearListScreen> {
             ],
           ),
         ),
-        actions: [
-          BLKWDSButton(
-            label: 'Cancel',
-            onPressed: () => Navigator.pop(context),
-            type: BLKWDSButtonType.secondary,
-            isSmall: true,
-          ),
-        ],
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => Navigator.pop(context),
       ),
     );
 
@@ -414,7 +406,7 @@ class _GearListScreenState extends State<GearListScreen> {
             child: Column(
               children: [
                 // Search field
-                BLKWDSTextField(
+                BLKWDSEnhancedFormField(
                   label: 'Search Gear',
                   prefixIcon: Icons.search,
                   onChanged: (value) {
@@ -431,7 +423,7 @@ class _GearListScreenState extends State<GearListScreen> {
                     // Category filter dropdown
                     Expanded(
                       flex: 2,
-                      child: BLKWDSDropdown<String?>(
+                      child: BLKWDSEnhancedDropdown<String?>(
                         label: 'Filter by Category',
                         value: _selectedCategory,
                         items: [
@@ -452,13 +444,14 @@ class _GearListScreenState extends State<GearListScreen> {
                             _applyFilters();
                           });
                         },
+                        prefixIcon: Icons.category,
                       ),
                     ),
                     const SizedBox(width: BLKWDSConstants.spacingMedium),
                     // Status filter dropdown
                     Expanded(
                       flex: 2,
-                      child: BLKWDSDropdown<bool?>(
+                      child: BLKWDSEnhancedDropdown<bool?>(
                         label: 'Filter by Status',
                         value: _selectedStatus,
                         items: const [
@@ -481,6 +474,7 @@ class _GearListScreenState extends State<GearListScreen> {
                             _applyFilters();
                           });
                         },
+                        prefixIcon: Icons.check_circle_outline,
                       ),
                     ),
                   ],
@@ -492,7 +486,7 @@ class _GearListScreenState extends State<GearListScreen> {
           // Gear list
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen))
                 : _errorMessage != null
                     ? Center(
                         child: Column(
@@ -560,10 +554,10 @@ class _GearListScreenState extends State<GearListScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: BLKWDSEnhancedFloatingActionButton(
         onPressed: _navigateToAddGear,
         tooltip: 'Add Gear',
-        child: const Icon(Icons.add),
+        icon: Icons.add,
       ),
     );
   }

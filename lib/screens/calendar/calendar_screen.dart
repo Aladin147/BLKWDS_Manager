@@ -150,33 +150,37 @@ class _CalendarScreenState extends State<CalendarScreen> {
       title: 'Calendar',
       actions: [
         // Filter toggle
-        IconButton(
-          icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
-          tooltip: _showFilters ? 'Hide Filters' : 'Show Filters',
+        BLKWDSEnhancedButton.icon(
+          icon: _showFilters ? Icons.filter_list_off : Icons.filter_list,
           onPressed: () {
             setState(() {
               _showFilters = !_showFilters;
             });
           },
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
         ),
         // Create booking button
-        IconButton(
-          icon: const Icon(Icons.add),
-          tooltip: 'Create Booking',
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.add,
           onPressed: () {
             NavigationService.instance.navigateToBookingPanel().then((_) {
               // Refresh data when returning from booking panel
               _initializeData();
             });
           },
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
         ),
       ],
       body: ValueListenableBuilder<bool>(
         valueListenable: _controller.isLoading,
         builder: (context, isLoading, child) {
           if (isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen),
             );
           }
 
@@ -200,38 +204,41 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Row(
                   children: [
                     // View toggle
-                    SegmentedButton<CalendarFormat>(
-                      segments: const [
-                        ButtonSegment<CalendarFormat>(
+                    BLKWDSEnhancedSegmentedButton<CalendarFormat>(
+                      segments: [
+                        BLKWDSEnhancedSegment(
                           value: CalendarFormat.month,
-                          label: Text('Month'),
-                          icon: Icon(Icons.calendar_view_month),
+                          label: 'Month',
+                          icon: Icons.calendar_view_month,
                         ),
-                        ButtonSegment<CalendarFormat>(
+                        BLKWDSEnhancedSegment(
                           value: CalendarFormat.week,
-                          label: Text('Week'),
-                          icon: Icon(Icons.calendar_view_week),
+                          label: 'Week',
+                          icon: Icons.calendar_view_week,
                         ),
-                        ButtonSegment<CalendarFormat>(
+                        BLKWDSEnhancedSegment(
                           value: CalendarFormat.twoWeeks,
-                          label: Text('2 Weeks'),
-                          icon: Icon(Icons.calendar_view_day),
+                          label: '2 Weeks',
+                          icon: Icons.calendar_view_day,
                         ),
                       ],
-                      selected: {_calendarFormat},
-                      onSelectionChanged: (Set<CalendarFormat> formats) {
+                      selectedValue: _calendarFormat,
+                      onSegmentSelected: (format) {
                         setState(() {
-                          _calendarFormat = formats.first;
+                          _calendarFormat = format;
                         });
                       },
                     ),
                     const Spacer(),
                     // Today button
-                    BLKWDSButton(
+                    BLKWDSEnhancedButton(
                       label: 'Today',
                       icon: Icons.today,
-                      type: BLKWDSButtonType.secondary,
-                      isSmall: true,
+                      type: BLKWDSEnhancedButtonType.secondary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                        vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                      ),
                       onPressed: () {
                         setState(() {
                           _focusedDay = DateTime.now();
@@ -305,8 +312,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Text(
                       DateFormat.yMMMMd().format(_selectedDay),
                       style: BLKWDSTypography.titleMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
-                    ),
+                        color: BLKWDSColors.textPrimary,
+                      ),
                     ),
                     const Spacer(),
                     ValueListenableBuilder<List<Booking>>(
