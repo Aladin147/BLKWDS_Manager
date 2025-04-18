@@ -10,6 +10,7 @@ import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
 import '../../widgets/blkwds_widgets.dart';
+import '../../widgets/blkwds_enhanced_widgets.dart';
 import 'add_gear_controller.dart';
 
 /// AddGearScreen
@@ -45,27 +46,9 @@ class _AddGearScreenState extends State<AddGearScreen> {
       _controller.setContext(context);
     });
 
-    // Listen for changes in form values
-    _controller.name.addListener(_updateNameField);
-    _controller.description.addListener(_updateDescriptionField);
-    _controller.serialNumber.addListener(_updateSerialNumberField);
-
     // Set initial values
     _nameController.text = _controller.name.value;
     _descriptionController.text = _controller.description.value;
-    _serialNumberController.text = _controller.serialNumber.value;
-  }
-
-  // Update text fields when values change
-  void _updateNameField() {
-    _nameController.text = _controller.name.value;
-  }
-
-  void _updateDescriptionField() {
-    _descriptionController.text = _controller.description.value;
-  }
-
-  void _updateSerialNumberField() {
     _serialNumberController.text = _controller.serialNumber.value;
   }
 
@@ -152,44 +135,56 @@ class _AddGearScreenState extends State<AddGearScreen> {
                       children: [
                         // Error message
                         if (errorMessage != null)
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                            margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
-                            decoration: BoxDecoration(
-                              color: BLKWDSColors.statusOut.withValues(alpha: 50),
-                              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                            ),
-                            child: Text(
-                              errorMessage,
-                              style: BLKWDSTypography.bodyMedium.copyWith(
-                                color: BLKWDSColors.statusOut,
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
+                            child: BLKWDSEnhancedCard(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                              backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20.0),
+                              borderColor: BLKWDSColors.errorRed.withValues(alpha: 100.0),
+                              child: Row(
+                                children: [
+                                  BLKWDSEnhancedIconContainer(
+                                    icon: Icons.error_outline,
+                                    size: BLKWDSEnhancedIconContainerSize.small,
+                                    backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20.0),
+                                    iconColor: BLKWDSColors.errorRed,
+                                  ),
+                                  const SizedBox(width: BLKWDSConstants.spacingMedium),
+                                  Expanded(
+                                    child: BLKWDSEnhancedText.bodyMedium(
+                                      errorMessage,
+                                      color: BLKWDSColors.errorRed,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
 
                         // Name field
-                        BLKWDSTextField(
+                        BLKWDSEnhancedFormField(
                           label: 'Name',
                           isRequired: true,
                           hintText: 'Enter gear name',
                           controller: _nameController,
-                          errorText: _controller.name.value.trim().isEmpty && _formSubmitted
+                          validator: (value) => value == null || value.trim().isEmpty && _formSubmitted
                               ? 'Name is required'
                               : null,
                           onChanged: (value) {
                             _controller.name.value = value;
                           },
+                          prefixIcon: Icons.inventory_2,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Category dropdown
-                        BLKWDSDropdown<String>(
+                        BLKWDSEnhancedDropdown<String>(
                           label: 'Category',
                           isRequired: true,
                           value: _controller.category.value,
                           hintText: 'Select a category',
-                          errorText: _controller.category.value.isEmpty && _formSubmitted
+                          validator: (value) => value == null || value.isEmpty && _formSubmitted
                               ? 'Category is required'
                               : null,
                           items: Constants.gearCategories.map((category) {
@@ -203,29 +198,32 @@ class _AddGearScreenState extends State<AddGearScreen> {
                               _controller.category.value = value;
                             }
                           },
+                          prefixIcon: Icons.category,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Description field
-                        BLKWDSTextField(
+                        BLKWDSEnhancedFormField(
                           label: 'Description',
                           hintText: 'Enter gear description',
                           controller: _descriptionController,
-                          isMultiline: true,
+                          maxLines: 3,
                           onChanged: (value) {
                             _controller.description.value = value;
                           },
+                          prefixIcon: Icons.description,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Serial number field
-                        BLKWDSTextField(
+                        BLKWDSEnhancedFormField(
                           label: 'Serial Number',
                           hintText: 'Enter serial number',
                           controller: _serialNumberController,
                           onChanged: (value) {
                             _controller.serialNumber.value = value;
                           },
+                          prefixIcon: Icons.qr_code,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
@@ -252,49 +250,42 @@ class _AddGearScreenState extends State<AddGearScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                BLKWDSEnhancedText.labelLarge(
                                   'Thumbnail Image',
-                                  style: BLKWDSTypography.labelMedium,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingSmall),
-                                InkWell(
+                                BLKWDSEnhancedCard(
                                   onTap: _pickImage,
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      color: BLKWDSColors.slateGrey.withValues(alpha: 30),
-                                      borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                                      border: Border.all(
-                                        color: BLKWDSColors.slateGrey.withValues(alpha: 100),
-                                      ),
-                                    ),
-                                    child: thumbnailPath != null
-                                        ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                                            child: Image.file(
-                                              File(thumbnailPath),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                        : Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.add_photo_alternate,
-                                                size: 48,
-                                                color: BLKWDSColors.slateGrey,
-                                              ),
-                                              const SizedBox(height: BLKWDSConstants.spacingSmall),
-                                              Text(
-                                                'Click to add an image',
-                                                style: BLKWDSTypography.bodyMedium.copyWith(
-                                                  color: BLKWDSColors.slateGrey,
-                                                ),
-                                              ),
-                                            ],
+                                  width: double.infinity,
+                                  height: 200,
+                                  animateOnHover: true,
+                                  backgroundColor: BLKWDSColors.backgroundMedium,
+                                  borderColor: BLKWDSColors.slateGrey.withValues(alpha: 100.0),
+                                  child: thumbnailPath != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+                                        child: Image.file(
+                                          File(thumbnailPath),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          BLKWDSEnhancedIconContainer(
+                                            icon: Icons.add_photo_alternate,
+                                            size: BLKWDSEnhancedIconContainerSize.large,
+                                            backgroundColor: BLKWDSColors.backgroundLight,
+                                            backgroundAlpha: BLKWDSColors.alphaLow,
+                                            iconColor: BLKWDSColors.slateGrey,
                                           ),
-                                  ),
+                                          const SizedBox(height: BLKWDSConstants.spacingMedium),
+                                          BLKWDSEnhancedText.bodyMedium(
+                                            'Click to add an image',
+                                            color: BLKWDSColors.textSecondary,
+                                          ),
+                                        ],
+                                      ),
                                 ),
                               ],
                             );
@@ -303,25 +294,31 @@ class _AddGearScreenState extends State<AddGearScreen> {
                         const SizedBox(height: BLKWDSConstants.spacingLarge),
 
                         // Save button
-                        BLKWDSButton(
-                          label: 'Save Gear',
-                          onPressed: () {
-                            setState(() {
-                              _formSubmitted = true;
-                            });
-                            _saveGear();
-                          },
-                          type: BLKWDSButtonType.primary,
-                          isFullWidth: true,
+                        SizedBox(
+                          width: double.infinity,
+                          child: BLKWDSEnhancedButton(
+                            label: 'Save Gear',
+                            onPressed: () {
+                              setState(() {
+                                _formSubmitted = true;
+                              });
+                              _saveGear();
+                            },
+                            type: BLKWDSEnhancedButtonType.primary,
+                            icon: Icons.save,
+                          ),
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                         // Cancel button
-                        BLKWDSButton(
-                          label: 'Cancel',
-                          onPressed: () => NavigationService.instance.goBack(),
-                          type: BLKWDSButtonType.secondary,
-                          isFullWidth: true,
+                        SizedBox(
+                          width: double.infinity,
+                          child: BLKWDSEnhancedButton(
+                            label: 'Cancel',
+                            onPressed: () => NavigationService.instance.goBack(),
+                            type: BLKWDSEnhancedButtonType.secondary,
+                            icon: Icons.cancel,
+                          ),
                         ),
                       ],
                     ),

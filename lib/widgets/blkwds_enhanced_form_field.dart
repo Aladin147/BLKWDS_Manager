@@ -124,8 +124,8 @@ class BLKWDSEnhancedFormField extends StatelessWidget {
                 : null,
             filled: true,
             fillColor: isEnabled
-                ? BLKWDSColors.backgroundMedium
-                : BLKWDSColors.backgroundMedium.withValues(alpha: 150),
+                ? BLKWDSColors.backgroundDark
+                : BLKWDSColors.backgroundDark.withValues(alpha: 150),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
               borderSide: BorderSide(
@@ -167,7 +167,8 @@ class BLKWDSEnhancedFormField extends StatelessWidget {
             ),
           ),
           style: TextStyle(
-            color: isEnabled ? BLKWDSColors.textPrimary : BLKWDSColors.textSecondary,
+            color: isEnabled ? BLKWDSColors.white : BLKWDSColors.textSecondary,
+            fontSize: 16.0,
           ),
           validator: validator,
           onChanged: onChanged,
