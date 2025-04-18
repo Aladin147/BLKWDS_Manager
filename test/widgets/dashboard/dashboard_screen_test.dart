@@ -7,6 +7,9 @@ import 'package:blkwds_manager/screens/dashboard/dashboard_screen.dart';
 import 'package:blkwds_manager/screens/dashboard/dashboard_controller.dart';
 import 'package:blkwds_manager/services/navigation_service.dart';
 
+// Import test helpers
+import '../../helpers/test_database_helper.dart';
+
 // Import the generated mock
 import 'dashboard_screen_test.mocks.dart';
 
@@ -30,6 +33,11 @@ class TestDashboardController extends DashboardController {
 void main() {
   // Mock the NavigationService
   late MockNavigationService mockNavigationService;
+
+  setUpAll(() {
+    // Initialize the database for tests
+    TestDatabaseHelper.initializeDatabase();
+  });
 
   setUp(() {
     mockNavigationService = MockNavigationService();
