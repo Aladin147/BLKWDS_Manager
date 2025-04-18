@@ -126,19 +126,14 @@ class _MemberListScreenState extends State<MemberListScreen> {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Member'),
-        content: Text('Are you sure you want to delete ${member.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Delete Member',
+        content: 'Are you sure you want to delete ${member.name}?',
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => Navigator.pop(context, false),
+        primaryActionText: 'Delete',
+        onPrimaryAction: () => Navigator.pop(context, true),
+        isPrimaryDestructive: true,
       ),
     );
 
@@ -204,10 +199,12 @@ class _MemberListScreenState extends State<MemberListScreen> {
       appBar: AppBar(
         title: const Text('Member Management'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
+          BLKWDSEnhancedButton.icon(
+            icon: Icons.refresh,
             onPressed: _loadMembers,
+            type: BLKWDSEnhancedButtonType.tertiary,
+            backgroundColor: Colors.transparent,
+            foregroundColor: BLKWDSColors.white,
           ),
         ],
       ),
@@ -221,7 +218,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
                 // Search field
                 Expanded(
                   flex: 3,
-                  child: BLKWDSTextField(
+                  child: BLKWDSEnhancedFormField(
                     label: 'Search Members',
                     prefixIcon: Icons.search,
                     onChanged: (value) {
@@ -236,31 +233,10 @@ class _MemberListScreenState extends State<MemberListScreen> {
                 // Role filter dropdown
                 Expanded(
                   flex: 2,
-                  child: DropdownButtonFormField<String?>(
-                    decoration: InputDecoration(
-                      labelText: 'Filter by Role',
-                      labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                        borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                        borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: BLKWDSConstants.inputHorizontalPadding,
-                        vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                      ),
-                      filled: true,
-                      fillColor: BLKWDSColors.inputBackground,
-                    ),
-                    dropdownColor: BLKWDSColors.backgroundMedium,
-                    style: TextStyle(color: BLKWDSColors.textPrimary),
+                  child: BLKWDSEnhancedDropdown<String?>(
+                    label: 'Filter by Role',
                     value: _selectedRole,
+                    prefixIcon: Icons.work,
                     items: [
                       const DropdownMenuItem<String?>(
                         value: null,
@@ -288,16 +264,17 @@ class _MemberListScreenState extends State<MemberListScreen> {
           // Member list
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen))
                 : _errorMessage != null
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.error_outline,
-                              color: BLKWDSColors.errorRed,
-                              size: 48,
+                            BLKWDSEnhancedIconContainer(
+                              icon: Icons.error_outline,
+                              size: BLKWDSEnhancedIconContainerSize.large,
+                              backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
+                              iconColor: BLKWDSColors.errorRed,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
                             Text(
@@ -311,10 +288,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
                               style: BLKWDSTypography.bodyMedium,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
-                            BLKWDSButton(
+                            BLKWDSEnhancedButton(
                               label: 'Retry',
                               onPressed: _loadMembers,
-                              type: BLKWDSButtonType.primary,
+                              type: BLKWDSEnhancedButtonType.primary,
+                              icon: Icons.refresh,
                             ),
                           ],
                         ),
@@ -324,10 +302,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.people_outline,
-                                  color: BLKWDSColors.slateGrey,
-                                  size: 48,
+                                BLKWDSEnhancedIconContainer(
+                                  icon: Icons.people_outline,
+                                  size: BLKWDSEnhancedIconContainerSize.large,
+                                  backgroundColor: BLKWDSColors.slateGrey.withValues(alpha: 20),
+                                  iconColor: BLKWDSColors.slateGrey,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),
                                 Text(
@@ -337,10 +316,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
                                   style: BLKWDSTypography.titleLarge,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),
-                                BLKWDSButton(
+                                BLKWDSEnhancedButton(
                                   label: 'Add Member',
                                   onPressed: _navigateToAddMember,
-                                  type: BLKWDSButtonType.primary,
+                                  type: BLKWDSEnhancedButtonType.primary,
+                                  icon: Icons.person_add,
                                 ),
                               ],
                             ),
@@ -355,68 +335,74 @@ class _MemberListScreenState extends State<MemberListScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: BLKWDSEnhancedFloatingActionButton(
         onPressed: _navigateToAddMember,
         tooltip: 'Add Member',
-        child: const Icon(Icons.add),
+        icon: Icons.person_add,
       ),
     );
   }
 
   // Build a card for a member
   Widget _buildMemberCard(Member member) {
-    return Card(
-      margin: const EdgeInsets.symmetric(
+    return Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: BLKWDSConstants.spacingMedium,
         vertical: BLKWDSConstants.spacingSmall,
       ),
-      child: InkWell(
+      child: BLKWDSEnhancedCard(
         onTap: () => _navigateToMemberDetail(member),
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: Row(
-            children: [
-              // Member avatar
-              MemberAvatarWidget(
-                member: member,
-                size: 48,
-              ),
-              const SizedBox(width: BLKWDSConstants.spacingMedium),
-              // Member info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      member.name,
-                      style: BLKWDSTypography.titleMedium,
-                    ),
-                    if (member.role != null && member.role!.isNotEmpty)
-                      Text(
-                        member.role!,
-                        style: BLKWDSTypography.bodyMedium,
-                      ),
-                  ],
-                ),
-              ),
-              // Action buttons
-              Row(
+        animateOnHover: true,
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        child: Row(
+          children: [
+            // Member avatar
+            MemberAvatarWidget(
+              member: member,
+              size: 48,
+            ),
+            const SizedBox(width: BLKWDSConstants.spacingMedium),
+            // Member info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    tooltip: 'Edit',
-                    onPressed: () => _navigateToEditMember(member),
+                  Text(
+                    member.name,
+                    style: BLKWDSTypography.titleMedium,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Delete',
-                    onPressed: () => _deleteMember(member),
-                  ),
+                  if (member.role != null && member.role!.isNotEmpty)
+                    Text(
+                      member.role!,
+                      style: BLKWDSTypography.bodyMedium.copyWith(
+                        color: BLKWDSColors.textSecondary,
+                      ),
+                    ),
                 ],
               ),
-            ],
-          ),
+            ),
+            // Action buttons
+            Row(
+              children: [
+                Tooltip(
+                  message: 'Edit',
+                  child: BLKWDSEnhancedButton.icon(
+                    icon: Icons.edit,
+                    onPressed: () => _navigateToEditMember(member),
+                    type: BLKWDSEnhancedButtonType.tertiary,
+                  ),
+                ),
+                Tooltip(
+                  message: 'Delete',
+                  child: BLKWDSEnhancedButton.icon(
+                    icon: Icons.delete,
+                    onPressed: () => _deleteMember(member),
+                    type: BLKWDSEnhancedButtonType.tertiary,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
