@@ -5,6 +5,22 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc42] - 2025-07-03
+
+### Added
+
+- Added comprehensive documentation for ValueNotifier state management approach
+- Added detailed examples of controller implementation patterns
+- Added best practices for ValueNotifier usage
+- Added comparison with other state management approaches
+
+### Improved
+
+- Enhanced architecture documentation with clear explanations
+- Better guidance for new developers on state management
+- Clearer explanation of the advantages of the ValueNotifier pattern
+- More consistent documentation across the codebase
+
 ## [1.0.0-rc41] - 2025-07-03
 
 ### Added

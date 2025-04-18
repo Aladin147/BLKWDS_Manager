@@ -211,7 +211,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - State Management
      - [x] Standardize on ValueNotifier pattern for state management
      - [x] Remove Riverpod dependency
-     - [ ] Document the ValueNotifier state management approach
+     - [x] Document ValueNotifier state management approach
 
 2. **UI/UX Improvements** (Secondary Priority)
    - Functional UI Elements
