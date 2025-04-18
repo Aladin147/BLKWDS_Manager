@@ -214,11 +214,11 @@ class _BookingFormState extends State<BookingForm> {
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
           // Title field
-          BLKWDSTextField(
+          BLKWDSEnhancedFormField(
             controller: _titleController,
-            label: 'Booking Title (Optional)',
-            prefixIcon: Icons.title,
+            label: 'Booking Title',
             hintText: 'Enter a title for this booking',
+            prefixIcon: Icons.title,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 

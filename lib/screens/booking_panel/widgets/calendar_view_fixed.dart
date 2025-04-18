@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
+import '../../../theme/blkwds_shadows.dart';
 import '../../../widgets/blkwds_widgets.dart';
 
 import '../booking_panel_controller.dart';
@@ -123,30 +124,31 @@ class _CalendarViewState extends State<CalendarView> {
           child: Row(
             children: [
               // View toggle
-              SegmentedButton<CalendarFormat>(
+              BLKWDSEnhancedSegmentedButton<CalendarFormat>(
                 segments: const [
-                  ButtonSegment<CalendarFormat>(
+                  BLKWDSEnhancedSegment<CalendarFormat>(
                     value: CalendarFormat.month,
-                    label: Text('Month'),
-                    icon: Icon(Icons.calendar_view_month),
+                    label: 'Month',
+                    icon: Icons.calendar_view_month,
                   ),
-                  ButtonSegment<CalendarFormat>(
+                  BLKWDSEnhancedSegment<CalendarFormat>(
                     value: CalendarFormat.week,
-                    label: Text('Week'),
-                    icon: Icon(Icons.calendar_view_week),
+                    label: 'Week',
+                    icon: Icons.calendar_view_week,
                   ),
-                  ButtonSegment<CalendarFormat>(
+                  BLKWDSEnhancedSegment<CalendarFormat>(
                     value: CalendarFormat.twoWeeks,
-                    label: Text('2 Weeks'),
-                    icon: Icon(Icons.calendar_view_day),
+                    label: '2 Weeks',
+                    icon: Icons.calendar_view_day,
                   ),
                 ],
-                selected: {_calendarFormat},
-                onSelectionChanged: (Set<CalendarFormat> formats) {
+                selectedValue: _calendarFormat,
+                onSegmentSelected: (format) {
                   setState(() {
-                    _calendarFormat = formats.first;
+                    _calendarFormat = format;
                   });
                 },
+                primaryColor: BLKWDSColors.blkwdsGreen,
               ),
               const Spacer(),
               // Today button
@@ -189,30 +191,47 @@ class _CalendarViewState extends State<CalendarView> {
           startingDayOfWeek: StartingDayOfWeek.monday,
           calendarStyle: CalendarStyle(
             markersMaxCount: 3,
-            markerDecoration: const BoxDecoration(
+            markerDecoration: BoxDecoration(
               color: BLKWDSColors.electricMint,
               shape: BoxShape.circle,
+              boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level1),
             ),
-            todayDecoration: const BoxDecoration(
+            todayDecoration: BoxDecoration(
               color: BLKWDSColors.blkwdsGreen,
               shape: BoxShape.circle,
+              boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level1),
             ),
-            selectedDecoration: const BoxDecoration(
+            selectedDecoration: BoxDecoration(
               color: BLKWDSColors.mustardOrange,
               shape: BoxShape.circle,
+              boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level1),
             ),
+            weekendTextStyle: const TextStyle(color: BLKWDSColors.accentTeal),
+            outsideTextStyle: TextStyle(color: BLKWDSColors.textSecondary.withValues(alpha: 150)),
+            defaultTextStyle: const TextStyle(color: BLKWDSColors.textPrimary),
+            selectedTextStyle: const TextStyle(color: BLKWDSColors.white, fontWeight: FontWeight.bold),
+            todayTextStyle: const TextStyle(color: BLKWDSColors.white, fontWeight: FontWeight.bold),
           ),
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
-            titleTextStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: BLKWDSColors.blkwdsGreen),
+            titleTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: BLKWDSColors.blkwdsGreen),
             leftChevronIcon: const Icon(
               Icons.chevron_left,
-              color: BLKWDSColors.slateGrey,
+              color: BLKWDSColors.blkwdsGreen,
+              size: 28,
             ),
             rightChevronIcon: const Icon(
               Icons.chevron_right,
-              color: BLKWDSColors.slateGrey,
+              color: BLKWDSColors.blkwdsGreen,
+              size: 28,
+            ),
+            headerPadding: const EdgeInsets.symmetric(vertical: BLKWDSConstants.spacingMedium),
+            headerMargin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
+            decoration: BoxDecoration(
+              color: BLKWDSColors.backgroundMedium,
+              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level1),
             ),
           ),
           onFormatChanged: (format) {
@@ -254,15 +273,17 @@ class _CalendarViewState extends State<CalendarView> {
                     margin: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: isAccepting ? BLKWDSColors.electricMint.withValues(alpha: 50) : null,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                       border: isAccepting
                         ? Border.all(color: BLKWDSColors.electricMint, width: 2)
                         : null,
+                      boxShadow: isAccepting ? BLKWDSShadows.getShadow(BLKWDSShadows.level1) : null,
                     ),
                     child: Center(
                       child: BLKWDSEnhancedText.bodyMedium(
                         '${day.day}',
                         color: isAccepting ? BLKWDSColors.deepBlack : null,
+                        isBold: isAccepting,
                       ),
                     ),
                   );
@@ -279,20 +300,31 @@ class _CalendarViewState extends State<CalendarView> {
             valueListenable: _selectedBookings,
             builder: (context, bookings, _) {
               if (bookings.isEmpty) {
-                return Center(
+                return BLKWDSEnhancedCard(
+                  padding: const EdgeInsets.all(BLKWDSConstants.spacingLarge),
+                  animateOnHover: true,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.event_available,
-                        size: 64,
-                        color: BLKWDSColors.slateGrey,
+                      BLKWDSEnhancedIconContainer(
+                        icon: Icons.event_available,
+                        size: BLKWDSEnhancedIconContainerSize.large,
+                        backgroundColor: BLKWDSColors.backgroundLight,
+                        backgroundAlpha: BLKWDSColors.alphaLow,
+                        iconColor: BLKWDSColors.slateGrey,
+                        hasShadow: true,
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingMedium),
                       BLKWDSEnhancedText.titleLarge(
                         'No bookings on ${DateFormat.yMMMMd().format(_selectedDay)}',
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingSmall),
+                      BLKWDSEnhancedText.bodyMedium(
+                        'Click the button below to create a new booking for this day.',
+                        color: BLKWDSColors.textSecondary,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: BLKWDSConstants.spacingMedium),
                       BLKWDSEnhancedButton(
                         label: 'Create Booking',
                         icon: Icons.add,

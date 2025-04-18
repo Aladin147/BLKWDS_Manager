@@ -63,25 +63,24 @@ class CalendarBookingItem extends StatelessWidget {
         : BLKWDSColors.slateGrey;
 
     // Create a draggable widget if onReschedule is provided
-    Widget bookingCard = BLKWDSCard(
+    Widget bookingCard = BLKWDSEnhancedCard(
       borderColor: projectColor,
       onTap: onTap,
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      animateOnHover: true,
       child: Row(
         children: [
           // Time
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              BLKWDSEnhancedText.bodyMedium(
                 startTimeStr,
-                style: BLKWDSTypography.bodyMedium.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                isBold: true,
               ),
-              Text(
+              BLKWDSEnhancedText.bodySmall(
                 endTimeStr,
-                style: BLKWDSTypography.bodySmall,
+                color: BLKWDSColors.textSecondary,
               ),
             ],
           ),
@@ -92,9 +91,8 @@ class CalendarBookingItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                BLKWDSEnhancedText.titleLarge(
                   project?.title ?? 'Unknown Project',
-                  style: BLKWDSTypography.titleSmall,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: BLKWDSConstants.spacingExtraSmall),
@@ -129,15 +127,15 @@ class CalendarBookingItem extends StatelessWidget {
                         padding: const EdgeInsets.only(right: BLKWDSConstants.spacingSmall),
                         child: Row(
                           children: [
-                            BLKWDSIcon(
-                              icon: Icons.business,
-                              size: BLKWDSIconSize.extraSmall,
+                            Icon(
+                              Icons.business,
+                              size: 14,
                               color: BLKWDSColors.slateGrey,
                             ),
                             const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
-                            Text(
+                            BLKWDSEnhancedText.bodySmall(
                               studioText,
-                              style: BLKWDSTypography.bodySmall,
+                              color: BLKWDSColors.textSecondary,
                             ),
                           ],
                         ),
@@ -145,15 +143,15 @@ class CalendarBookingItem extends StatelessWidget {
                     }),
                     Row(
                       children: [
-                        BLKWDSIcon(
-                          icon: Icons.camera_alt,
-                          size: BLKWDSIconSize.extraSmall,
+                        Icon(
+                          Icons.camera_alt,
+                          size: 14,
                           color: BLKWDSColors.slateGrey,
                         ),
                         const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
-                        Text(
+                        BLKWDSEnhancedText.bodySmall(
                           '${booking is BookingV2 ? booking.gearIds.length : (booking as Booking).gearIds.length} gear',
-                          style: BLKWDSTypography.bodySmall,
+                          color: BLKWDSColors.textSecondary,
                         ),
                       ],
                     ),
@@ -164,9 +162,10 @@ class CalendarBookingItem extends StatelessWidget {
           ),
 
           // Status
-          BLKWDSStatusBadge(
+          BLKWDSEnhancedStatusBadge(
             text: statusText,
             color: statusColor,
+            hasBorder: true,
           ),
         ],
       ),

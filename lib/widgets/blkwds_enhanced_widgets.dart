@@ -9,3 +9,5 @@ export 'blkwds_enhanced_floating_action_button.dart';
 export 'blkwds_enhanced_dropdown.dart';
 export 'blkwds_enhanced_status_badge.dart';
 export 'blkwds_enhanced_icon_container.dart';
+export 'blkwds_enhanced_segmented_button.dart';
+export 'blkwds_enhanced_form_field.dart';
