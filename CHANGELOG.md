@@ -5,6 +5,23 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc38] - 2025-07-02
+
+### Fixed
+
+- Created MockBuildContext implementation for testing
+- Fixed Studio model parameter mismatch in test files
+- Updated ActivityLog model usage in dashboard_controller_test.dart
+- Added missing hasBookingConflicts method to MockDBService
+- Fixed error type and feedback level imports in test files
+
+### Improved
+
+- Enhanced test suite reliability with proper mock implementations
+- Ensured consistency between model implementations and test usage
+- Improved test maintainability with proper imports and parameter handling
+- Prepared the codebase for comprehensive test coverage
+
 ## [1.0.0-rc37] - 2025-07-02
 
 ### Fixed
