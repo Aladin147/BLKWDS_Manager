@@ -127,19 +127,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Project'),
-        content: Text('Are you sure you want to delete ${project.title}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Delete Project',
+        content: 'Are you sure you want to delete ${project.title}?',
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => Navigator.pop(context, false),
+        primaryActionText: 'Delete',
+        onPrimaryAction: () => Navigator.pop(context, true),
+        isPrimaryDestructive: true,
       ),
     );
 
@@ -205,10 +200,12 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       appBar: AppBar(
         title: const Text('Project Management'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
+          BLKWDSEnhancedButton.icon(
+            icon: Icons.refresh,
             onPressed: _loadProjects,
+            type: BLKWDSEnhancedButtonType.tertiary,
+            backgroundColor: Colors.transparent,
+            foregroundColor: BLKWDSColors.white,
           ),
         ],
       ),
@@ -222,7 +219,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                 // Search field
                 Expanded(
                   flex: 3,
-                  child: BLKWDSTextField(
+                  child: BLKWDSEnhancedFormField(
                     label: 'Search Projects',
                     prefixIcon: Icons.search,
                     onChanged: (value) {
@@ -237,31 +234,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                 // Client filter dropdown
                 Expanded(
                   flex: 2,
-                  child: DropdownButtonFormField<String?>(
-                    decoration: InputDecoration(
-                      labelText: 'Filter by Client',
-                      labelStyle: TextStyle(color: BLKWDSColors.textSecondary),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                        borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                        borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: BLKWDSConstants.inputHorizontalPadding,
-                        vertical: BLKWDSConstants.inputVerticalPadding / 2,
-                      ),
-                      filled: true,
-                      fillColor: BLKWDSColors.inputBackground,
-                    ),
-                    dropdownColor: BLKWDSColors.backgroundMedium,
-                    style: TextStyle(color: BLKWDSColors.textPrimary),
+                  child: BLKWDSEnhancedDropdown<String?>(
+                    label: 'Filter by Client',
                     value: _selectedClient,
+                    prefixIcon: Icons.business,
                     items: [
                       const DropdownMenuItem<String?>(
                         value: null,
@@ -289,16 +265,17 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
           // Project list
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen))
                 : _errorMessage != null
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.error_outline,
-                              color: BLKWDSColors.errorRed,
-                              size: 48,
+                            BLKWDSEnhancedIconContainer(
+                              icon: Icons.error_outline,
+                              size: BLKWDSEnhancedIconContainerSize.large,
+                              backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
+                              iconColor: BLKWDSColors.errorRed,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
                             Text(
@@ -312,10 +289,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                               style: BLKWDSTypography.bodyMedium,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
-                            BLKWDSButton(
+                            BLKWDSEnhancedButton(
                               label: 'Retry',
                               onPressed: _loadProjects,
-                              type: BLKWDSButtonType.primary,
+                              type: BLKWDSEnhancedButtonType.primary,
+                              icon: Icons.refresh,
                             ),
                           ],
                         ),
@@ -341,10 +319,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                   style: BLKWDSTypography.titleLarge,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),
-                                BLKWDSButton(
+                                BLKWDSEnhancedButton(
                                   label: 'Add Project',
                                   onPressed: _navigateToAddProject,
-                                  type: BLKWDSButtonType.primary,
+                                  type: BLKWDSEnhancedButtonType.primary,
+                                  icon: Icons.add_business,
                                 ),
                               ],
                             ),
@@ -359,112 +338,119 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: BLKWDSEnhancedFloatingActionButton(
         onPressed: _navigateToAddProject,
         tooltip: 'Add Project',
-        child: const Icon(Icons.add),
+        icon: Icons.add_business,
       ),
     );
   }
 
   // Build a card for a project
   Widget _buildProjectCard(Project project) {
-    return Card(
-      margin: const EdgeInsets.symmetric(
+    return Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: BLKWDSConstants.spacingMedium,
         vertical: BLKWDSConstants.spacingSmall,
       ),
-      child: InkWell(
+      child: BLKWDSEnhancedCard(
         onTap: () => _navigateToProjectDetail(project),
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Project title and actions
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Project thumbnail
-                  ProjectThumbnailWidget(
-                    project: project,
-                    size: 48,
-                    borderRadius: 8,
-                  ),
-                  const SizedBox(width: BLKWDSConstants.spacingMedium),
-                  // Project title and info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+        animateOnHover: true,
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Project title and actions
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Project thumbnail
+                ProjectThumbnailWidget(
+                  project: project,
+                  size: 48,
+                  borderRadius: 8,
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingMedium),
+                // Project title and info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        project.title,
+                        style: BLKWDSTypography.titleMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (project.client != null && project.client!.isNotEmpty) ...[
+                        const SizedBox(height: 4),
                         Text(
-                          project.title,
-                          style: BLKWDSTypography.titleMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (project.client != null && project.client!.isNotEmpty) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            project.client!,
-                            style: BLKWDSTypography.bodyMedium.copyWith(
-                              color: BLKWDSColors.textSecondary,
-                            ),
+                          project.client!,
+                          style: BLKWDSTypography.bodyMedium.copyWith(
+                            color: BLKWDSColors.textSecondary,
                           ),
-                        ],
+                        ),
+                      ],
                       ],
                     ),
                   ),
-                  // Action buttons
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        tooltip: 'Edit',
+                // Action buttons
+                Row(
+                  children: [
+                    Tooltip(
+                      message: 'Edit',
+                      child: BLKWDSEnhancedButton.icon(
+                        icon: Icons.edit,
                         onPressed: () => _navigateToEditProject(project),
+                        type: BLKWDSEnhancedButtonType.tertiary,
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        tooltip: 'Delete',
+                    ),
+                    Tooltip(
+                      message: 'Delete',
+                      child: BLKWDSEnhancedButton.icon(
+                        icon: Icons.delete,
                         onPressed: () => _deleteProject(project),
+                        type: BLKWDSEnhancedButtonType.tertiary,
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
 
-              // Description
-
-              if (project.description != null && project.description!.isNotEmpty)
-                Text(
+            // Description
+            if (project.description != null && project.description!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: BLKWDSConstants.spacingSmall),
+                child: Text(
                   project.description!,
                   style: BLKWDSTypography.bodyMedium,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+              ),
 
-              // Member count
-              Padding(
-                padding: const EdgeInsets.only(top: BLKWDSConstants.spacingSmall),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.people,
-                      size: 16,
+            // Member count
+            Padding(
+              padding: const EdgeInsets.only(top: BLKWDSConstants.spacingSmall),
+              child: Row(
+                children: [
+                  BLKWDSEnhancedIconContainer(
+                    icon: Icons.people,
+                    size: BLKWDSEnhancedIconContainerSize.small,
+                    backgroundColor: BLKWDSColors.backgroundLight.withValues(alpha: 50),
+                    iconColor: BLKWDSColors.textSecondary,
+                  ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  Text(
+                    '${project.memberIds.length} ${project.memberIds.length == 1 ? 'Member' : 'Members'}',
+                    style: BLKWDSTypography.bodySmall.copyWith(
                       color: BLKWDSColors.textSecondary,
                     ),
-                    const SizedBox(width: BLKWDSConstants.spacingSmall),
-                    Text(
-                      '${project.memberIds.length} ${project.memberIds.length == 1 ? 'Member' : 'Members'}',
-                      style: BLKWDSTypography.bodySmall.copyWith(
-                        color: BLKWDSColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
