@@ -56,10 +56,10 @@ class _BLKWDSEnhancedCardState extends State<BLKWDSEnhancedCard> {
   Widget build(BuildContext context) {
     // Determine card styling based on type
     final isPrimary = widget.type == BLKWDSEnhancedCardType.primary;
-    
+
     // Determine background color based on type
     Color backgroundColor = widget.backgroundColor ?? _getBackgroundColor();
-    
+
     // Determine border if needed
     Border? border;
     if (widget.borderColor != null) {
@@ -68,11 +68,12 @@ class _BLKWDSEnhancedCardState extends State<BLKWDSEnhancedCard> {
         width: 1.5,
       );
     }
-    
+
     // Create base card
     Widget card = Container(
       width: widget.width,
       height: widget.height,
+      constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
       decoration: BLKWDSStyleEnhancer.enhanceCard(
         backgroundColor: backgroundColor,
         borderRadius: widget.borderRadius,
@@ -84,7 +85,7 @@ class _BLKWDSEnhancedCardState extends State<BLKWDSEnhancedCard> {
       padding: widget.padding ?? EdgeInsets.all(BLKWDSConstants.cardPaddingMedium),
       child: widget.child,
     );
-    
+
     // Add hover animation if requested
     if (widget.animateOnHover) {
       card = MouseRegion(
@@ -95,6 +96,9 @@ class _BLKWDSEnhancedCardState extends State<BLKWDSEnhancedCard> {
           duration: BLKWDSConstants.animationDurationShort,
           child: AnimatedContainer(
             duration: BLKWDSConstants.animationDurationShort,
+            constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
+            width: widget.width,
+            height: widget.height,
             decoration: BLKWDSStyleEnhancer.enhanceCard(
               backgroundColor: backgroundColor,
               borderRadius: widget.borderRadius,
@@ -109,7 +113,7 @@ class _BLKWDSEnhancedCardState extends State<BLKWDSEnhancedCard> {
         ),
       );
     }
-    
+
     // Add tap functionality if provided
     if (widget.onTap != null) {
       card = GestureDetector(
@@ -117,10 +121,10 @@ class _BLKWDSEnhancedCardState extends State<BLKWDSEnhancedCard> {
         child: card,
       );
     }
-    
+
     return card;
   }
-  
+
   // Helper method to determine background color based on card type
   Color _getBackgroundColor() {
     switch (widget.type) {

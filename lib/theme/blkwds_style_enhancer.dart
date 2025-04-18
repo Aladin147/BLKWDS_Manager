@@ -99,7 +99,7 @@ class BLKWDSStyleEnhancer {
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
         if (states.contains(WidgetState.disabled)) {
-          return backgroundColor!.withAlpha(BLKWDSColors.alphaLow);
+          return backgroundColor!.withValues(alpha: BLKWDSColors.alphaLow.toDouble());
         }
         if (states.contains(WidgetState.pressed)) {
           return backgroundColor!.darken(10);
@@ -117,10 +117,10 @@ class BLKWDSStyleEnhancer {
       )),
       overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
         if (states.contains(WidgetState.pressed)) {
-          return foregroundColor!.withAlpha(BLKWDSColors.alphaVeryLow);
+          return foregroundColor!.withValues(alpha: BLKWDSColors.alphaVeryLow.toDouble());
         }
         if (states.contains(WidgetState.hovered)) {
-          return foregroundColor!.withAlpha(BLKWDSColors.alphaVeryLow);
+          return foregroundColor!.withValues(alpha: BLKWDSColors.alphaVeryLow.toDouble());
         }
         return Colors.transparent;
       }),

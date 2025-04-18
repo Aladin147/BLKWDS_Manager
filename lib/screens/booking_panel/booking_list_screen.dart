@@ -93,29 +93,35 @@ class _BookingListScreenState extends State<BookingListScreen> {
       final success = await widget.controller.updateBooking(booking);
 
       if (success) {
-        setState(() {
-          _isLoading = false;
-          _showEditForm = false;
-          _selectedBooking = null;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+            _showEditForm = false;
+            _selectedBooking = null;
+          });
 
-        _showSnackBar('Booking updated successfully', true);
+          _showSnackBar('Booking updated successfully', true);
+        }
       } else {
+        if (mounted) {
+          setState(() {
+            _errorMessage = widget.controller.errorMessage.value ?? 'Failed to update booking';
+            _isLoading = false;
+          });
+
+          _showSnackBar(_errorMessage!, false);
+        }
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Error updating booking', e, stackTrace);
+      if (mounted) {
         setState(() {
-          _errorMessage = widget.controller.errorMessage.value ?? 'Failed to update booking';
+          _errorMessage = 'Error updating booking: $e';
           _isLoading = false;
         });
 
         _showSnackBar(_errorMessage!, false);
       }
-    } catch (e, stackTrace) {
-      LogService.error('Error updating booking', e, stackTrace);
-      setState(() {
-        _errorMessage = 'Error updating booking: $e';
-        _isLoading = false;
-      });
-
-      _showSnackBar(_errorMessage!, false);
     }
   }
 
@@ -153,27 +159,33 @@ class _BookingListScreenState extends State<BookingListScreen> {
       final success = await widget.controller.deleteBooking(booking.id!);
 
       if (success) {
-        setState(() {
-          _isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
 
-        _showSnackBar('Booking deleted successfully', true);
+          _showSnackBar('Booking deleted successfully', true);
+        }
       } else {
+        if (mounted) {
+          setState(() {
+            _errorMessage = widget.controller.errorMessage.value ?? 'Failed to delete booking';
+            _isLoading = false;
+          });
+
+          _showSnackBar(_errorMessage!, false);
+        }
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Error deleting booking', e, stackTrace);
+      if (mounted) {
         setState(() {
-          _errorMessage = widget.controller.errorMessage.value ?? 'Failed to delete booking';
+          _errorMessage = 'Error deleting booking: $e';
           _isLoading = false;
         });
 
         _showSnackBar(_errorMessage!, false);
       }
-    } catch (e, stackTrace) {
-      LogService.error('Error deleting booking', e, stackTrace);
-      setState(() {
-        _errorMessage = 'Error deleting booking: $e';
-        _isLoading = false;
-      });
-
-      _showSnackBar(_errorMessage!, false);
     }
   }
 

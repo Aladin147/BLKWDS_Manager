@@ -86,9 +86,11 @@ class BLKWDSEnhancedFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 80),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
       children: [
         // Label
         Row(
@@ -180,6 +182,7 @@ class BLKWDSEnhancedFormField extends StatelessWidget {
           maxLength: maxLength,
         ),
       ],
+    ),
     );
   }
 }

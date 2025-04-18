@@ -116,7 +116,11 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: 600,
+        ),
+        child: Column(
       children: [
         // Calendar header with view toggle
         Padding(
@@ -294,8 +298,9 @@ class _CalendarViewState extends State<CalendarView> {
         ),
 
         // Selected day bookings
-        SizedBox(
-          height: 300, // Fixed height to prevent overflow
+        Container(
+          constraints: const BoxConstraints(minHeight: 300),
+          margin: const EdgeInsets.symmetric(vertical: BLKWDSConstants.spacingMedium),
           child: ValueListenableBuilder<List<dynamic>>(
             valueListenable: _selectedBookings,
             builder: (context, bookings, _) {
@@ -336,28 +341,30 @@ class _CalendarViewState extends State<CalendarView> {
                 );
               }
 
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: BLKWDSConstants.spacingMedium),
-                itemCount: bookings.length,
-                itemBuilder: (context, index) {
-                  final booking = bookings[index];
-                  final projectId = booking.projectId;
-                  final project = _adapter.getProjectById(projectId);
-
-                  return CalendarBookingItem(
-                    booking: booking,
-                    project: project,
-                    adapter: _adapter,
-                    onTap: () => widget.onBookingSelected(booking),
-                    onReschedule: widget.onBookingRescheduled,
-                  );
-                },
+              return Column(
+                children: [
+                  for (final booking in bookings)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: BLKWDSConstants.spacingMedium,
+                        vertical: BLKWDSConstants.spacingSmall,
+                      ),
+                      child: CalendarBookingItem(
+                        booking: booking,
+                        project: _adapter.getProjectById(booking.projectId),
+                        adapter: _adapter,
+                        onTap: () => widget.onBookingSelected(booking),
+                        onReschedule: widget.onBookingRescheduled,
+                      ),
+                    ),
+                ],
               );
             },
           ),
         ),
       ],
     ),
+      ),
     );
   }
 }

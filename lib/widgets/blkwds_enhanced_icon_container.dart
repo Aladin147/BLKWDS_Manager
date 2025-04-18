@@ -92,7 +92,7 @@ class BLKWDSEnhancedIconContainer extends StatelessWidget {
       width: containerSize,
       height: containerSize,
       decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(backgroundAlpha / 255),
+        color: backgroundColor.withValues(alpha: backgroundAlpha.toDouble()),
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
         border: hasBorder ? Border.all(
           color: effectiveBorderColor,

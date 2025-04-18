@@ -45,17 +45,19 @@ class BLKWDSEnhancedSegmentedButton<T> extends StatelessWidget {
     final effectivePrimaryColor = primaryColor ?? BLKWDSColors.blkwdsGreen;
 
     return Container(
+      constraints: const BoxConstraints(minHeight: 40, minWidth: 200),
       decoration: BoxDecoration(
         color: BLKWDSColors.backgroundMedium,
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
         boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level1),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: segments.map((segment) {
-          final isSelected = segment.value == selectedValue;
+      child: IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: segments.map((segment) {
+            final isSelected = segment.value == selectedValue;
 
-          return Expanded(
+            return Flexible(
             child: InkWell(
               onTap: () => onSegmentSelected(segment.value),
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
@@ -91,6 +93,7 @@ class BLKWDSEnhancedSegmentedButton<T> extends StatelessWidget {
             ),
           );
         }).toList(),
+        ),
       ),
     );
   }
