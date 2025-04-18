@@ -43,7 +43,7 @@ void main() {
 
       // Set booking title
       await tester.enterText(
-        find.widgetWithText(TextField, 'Booking Title (optional)'), 
+        find.widgetWithText(TextField, 'Booking Title (optional)'),
         'Test Booking'
       );
       await tester.pumpAndSettle();
@@ -123,9 +123,8 @@ Future<void> _prepareTestData() async {
   final member = Member(
     name: 'Test Member',
     role: 'Tester',
-    email: 'test@example.com',
   );
-  final memberId = await DBService.insertMember(member);
+  await DBService.insertMember(member);
 
   // Create a test project
   final project = Project(
@@ -133,7 +132,7 @@ Future<void> _prepareTestData() async {
     client: 'Test Client',
     notes: 'Test project for integration testing',
   );
-  final projectId = await DBService.insertProject(project);
+  await DBService.insertProject(project);
 
   // Create a test gear item
   final gear = Gear(

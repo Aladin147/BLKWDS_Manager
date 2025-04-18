@@ -5,6 +5,27 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc40] - 2025-07-03
+
+### Added
+
+- Added missing database methods for integration tests
+- Added deleteMemberByName, deleteGearByName, deleteProjectByTitle, and deleteBookingByTitle methods
+- Added proper error handling for test-specific methods
+
+### Fixed
+
+- Fixed integration test compilation errors
+- Fixed Member model usage in integration tests
+- Fixed unused variable warnings in integration tests
+- Fixed DashboardController usage in gear checkout flow test
+
+### Improved
+
+- Enhanced test data cleanup in integration tests
+- Improved test reliability with proper data management
+- Better separation between test setup and test execution
+
 ## [1.0.0-rc39] - 2025-07-03
 
 ### Added

@@ -285,6 +285,19 @@ class DBService {
     );
   }
 
+  /// Delete a gear item by name
+  /// This method is primarily used for testing purposes
+  static Future<int> deleteGearByName(String name) async {
+    final db = await database;
+    return await DBServiceWrapper.delete(
+      db,
+      'gear',
+      where: 'name = ?',
+      whereArgs: [name],
+      operationName: 'deleteGearByName',
+    );
+  }
+
   // MEMBER CRUD OPERATIONS
 
   /// Insert a new member
@@ -364,6 +377,19 @@ class DBService {
       where: 'id = ?',
       whereArgs: [id],
       operationName: 'deleteMember',
+    );
+  }
+
+  /// Delete a member by name
+  /// This method is primarily used for testing purposes
+  static Future<int> deleteMemberByName(String name) async {
+    final db = await database;
+    return await DBServiceWrapper.delete(
+      db,
+      'member',
+      where: 'name = ?',
+      whereArgs: [name],
+      operationName: 'deleteMemberByName',
     );
   }
 
@@ -532,6 +558,19 @@ class DBService {
       where: 'id = ?',
       whereArgs: [id],
       operationName: 'deleteProject',
+    );
+  }
+
+  /// Delete a project by title
+  /// This method is primarily used for testing purposes
+  static Future<int> deleteProjectByTitle(String title) async {
+    final db = await database;
+    return await DBServiceWrapper.delete(
+      db,
+      'project',
+      where: 'title = ?',
+      whereArgs: [title],
+      operationName: 'deleteProjectByTitle',
     );
   }
 
@@ -727,6 +766,30 @@ class DBService {
       'deleteBooking',
       table: 'booking',
     );
+  }
+
+  /// Delete a booking by title
+  /// This method is primarily used for testing purposes
+  static Future<int> deleteBookingByTitle(String title) async {
+    final db = await database;
+
+    // First find the booking ID by title
+    final List<Map<String, dynamic>> bookings = await DBServiceWrapper.query(
+      db,
+      'booking',
+      where: 'title = ?',
+      whereArgs: [title],
+      operationName: 'findBookingByTitle',
+    );
+
+    if (bookings.isEmpty) {
+      return 0; // No bookings found with this title
+    }
+
+    final int bookingId = bookings.first['id'] as int;
+
+    // Now delete the booking using the existing method
+    return await deleteBooking(bookingId);
   }
 
   /// Get bookings for a project

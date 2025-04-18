@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:blkwds_manager/main.dart' as app;
 import 'package:blkwds_manager/models/models.dart';
-import 'package:blkwds_manager/screens/dashboard/dashboard_controller.dart';
+
 import 'package:blkwds_manager/services/db_service.dart';
 
 void main() {
@@ -83,9 +83,13 @@ void main() {
       expect(find.text('Quick Actions'), findsOneWidget);
 
       // Try to check out gear without selecting a member
-      // First, clear the member selection if any
-      final controller = DashboardController();
-      controller.selectedMember.value = null;
+      // Note: In the actual app, the member selection is managed in the DashboardScreen state
+      // For testing purposes, we'll just try to tap the Check Out button without selecting a member
+      // We need to reset the dropdown selection
+      await tester.tap(find.byType(DropdownButton<Member>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Select Member').first);
+      await tester.pumpAndSettle();
 
       // Find a gear item in the list
       expect(find.text('Test Camera'), findsOneWidget);
@@ -109,9 +113,8 @@ Future<void> _prepareTestData() async {
   final member = Member(
     name: 'Test Member',
     role: 'Tester',
-    email: 'test@example.com',
   );
-  final memberId = await DBService.insertMember(member);
+  await DBService.insertMember(member);
 
   // Create a test gear item
   final gear = Gear(
