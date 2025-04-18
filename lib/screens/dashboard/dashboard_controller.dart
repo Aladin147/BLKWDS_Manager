@@ -37,22 +37,37 @@ class DashboardController {
     this.context = context;
   }
 
-  // Initialize the controller
+  // Dispose of resources
+  void dispose() {
+    // Dispose of all ValueNotifiers
+    gearList.dispose();
+    memberList.dispose();
+    projectList.dispose();
+    bookingList.dispose();
+    studioList.dispose();
+    recentActivity.dispose();
+    isLoading.dispose();
+    errorMessage.dispose();
+    gearOutCount.dispose();
+    bookingsTodayCount.dispose();
+    gearReturningCount.dispose();
+    studioBookingToday.dispose();
+  }
+
+  // Initialize the controller with lazy loading
   Future<void> initialize() async {
     isLoading.value = true;
     errorMessage.value = null;
 
     try {
-      // Load data from database
+      // Load essential data first (statistics and recent activity)
       await Future.wait([
-        _loadGear(),
-        _loadMembers(),
-        _loadProjects(),
-        _loadBookings(),
-        _loadStudios(),
-        _loadRecentActivity(),
         _loadDashboardStatistics(),
+        _loadRecentActivity(),
       ]);
+
+      // Then load the rest of the data in the background
+      _loadRemainingDataInBackground();
     } catch (e, stackTrace) {
       errorMessage.value = ErrorService.handleError(e, stackTrace: stackTrace);
 
@@ -73,22 +88,39 @@ class DashboardController {
     }
   }
 
-  // Load gear from database
-  Future<void> _loadGear() async {
+  // Load remaining data in the background
+  Future<void> _loadRemainingDataInBackground() async {
+    try {
+      await Future.wait([
+        _loadGear(),
+        _loadMembers(),
+        _loadProjects(),
+        _loadBookings(),
+        _loadStudios(),
+      ]);
+    } catch (e, stackTrace) {
+      LogService.error('Error loading background data', e, stackTrace);
+      // Don't show errors for background loading
+    }
+  }
+
+  // Generic method to load data with retry and error handling
+  Future<T> _loadDataWithRetry<T>(
+    Future<T> Function() operation,
+    String operationName,
+  ) async {
     try {
       // Use retry logic for database operations
-      final gear = await RetryService.retry<List<Gear>>(
-        operation: () => DBService.getAllGear(),
+      return await RetryService.retry<T>(
+        operation: operation,
         maxAttempts: 3,
         strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 500),
         retryCondition: RetryService.isRetryableError,
       );
-
-      gearList.value = gear;
     } catch (e, stackTrace) {
       // Log the error
-      LogService.error('Error loading gear', e, stackTrace);
+      LogService.error('Error $operationName', e, stackTrace);
 
       // Use contextual error handler if context is available
       if (context != null) {
@@ -103,132 +135,53 @@ class DashboardController {
 
       rethrow;
     }
+  }
+
+  // Load gear from database
+  Future<void> _loadGear() async {
+    final gear = await _loadDataWithRetry<List<Gear>>(
+      () => DBService.getAllGear(),
+      'loading gear',
+    );
+    gearList.value = gear;
   }
 
   // Load members from database
   Future<void> _loadMembers() async {
-    try {
-      // Use retry logic for database operations
-      final members = await RetryService.retry<List<Member>>(
-        operation: () => DBService.getAllMembers(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
-
-      memberList.value = members;
-    } catch (e, stackTrace) {
-      // Log the error
-      LogService.error('Error loading members', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          type: ErrorType.database,
-          stackTrace: stackTrace,
-          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
-        );
-      }
-
-      rethrow;
-    }
+    final members = await _loadDataWithRetry<List<Member>>(
+      () => DBService.getAllMembers(),
+      'loading members',
+    );
+    memberList.value = members;
   }
 
   // Load projects from database
   Future<void> _loadProjects() async {
-    try {
-      // Use retry logic for database operations
-      final projects = await RetryService.retry<List<Project>>(
-        operation: () => DBService.getAllProjects(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
-
-      projectList.value = projects;
-    } catch (e, stackTrace) {
-      // Log the error
-      LogService.error('Error loading projects', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          type: ErrorType.database,
-          stackTrace: stackTrace,
-          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
-        );
-      }
-
-      rethrow;
-    }
+    final projects = await _loadDataWithRetry<List<Project>>(
+      () => DBService.getAllProjects(),
+      'loading projects',
+    );
+    projectList.value = projects;
   }
 
   // Load bookings from database
   Future<void> _loadBookings() async {
-    try {
-      // Use retry logic for database operations
-      final bookings = await RetryService.retry<List<Booking>>(
-        operation: () => DBService.getAllBookings(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
-
-      bookingList.value = bookings;
-    } catch (e, stackTrace) {
-      // Log the error
-      LogService.error('Error loading bookings', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          type: ErrorType.database,
-          stackTrace: stackTrace,
-          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
-        );
-      }
-
-      rethrow;
-    }
+    final bookings = await _loadDataWithRetry<List<Booking>>(
+      () => DBService.getAllBookings(),
+      'loading bookings',
+    );
+    bookingList.value = bookings;
   }
 
   // Load studios from database
   Future<void> _loadStudios() async {
     try {
-      // Use retry logic for database operations
-      final studios = await RetryService.retry<List<Studio>>(
-        operation: () => DBService.getAllStudios(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
+      final studios = await _loadDataWithRetry<List<Studio>>(
+        () => DBService.getAllStudios(),
+        'loading studios',
       );
-
       studioList.value = studios;
-    } catch (e, stackTrace) {
-      // Log the error
-      LogService.error('Error loading studios', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          type: ErrorType.database,
-          stackTrace: stackTrace,
-          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
-        );
-      }
-
+    } catch (e) {
       // Set an empty list instead of rethrowing
       // This allows the app to continue functioning even if the studio table doesn't exist
       studioList.value = [];
@@ -238,32 +191,16 @@ class DashboardController {
   // Load recent activity from database
   Future<void> _loadRecentActivity() async {
     try {
-      // Use retry logic for database operations
-      final activity = await RetryService.retry<List<ActivityLog>>(
-        operation: () => DBService.getRecentActivityLogs(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
+      final activity = await _loadDataWithRetry<List<ActivityLog>>(
+        () => DBService.getRecentActivityLogs(),
+        'loading activity logs',
       );
-
       recentActivity.value = activity;
-    } catch (e, stackTrace) {
-      // Log the error
-      LogService.error('Error loading activity logs', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          type: ErrorType.database,
-          stackTrace: stackTrace,
-          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
-        );
-      }
-
-      rethrow;
+    } catch (e) {
+      // Set an empty list instead of rethrowing
+      // This allows the app to continue functioning even if activity logs fail to load
+      recentActivity.value = [];
+      rethrow; // Still rethrow to trigger error handling in initialize()
     }
   }
 
@@ -272,33 +209,21 @@ class DashboardController {
     try {
       // Load all statistics in parallel for efficiency
       final results = await Future.wait([
-        RetryService.retry<int>(
-          operation: () => DBService.getGearOutCount(),
-          maxAttempts: 3,
-          strategy: RetryStrategy.exponential,
-          initialDelay: const Duration(milliseconds: 500),
-          retryCondition: RetryService.isRetryableError,
+        _loadDataWithRetry<int>(
+          () => DBService.getGearOutCount(),
+          'loading gear out count',
         ),
-        RetryService.retry<int>(
-          operation: () => DBService.getBookingsTodayCount(),
-          maxAttempts: 3,
-          strategy: RetryStrategy.exponential,
-          initialDelay: const Duration(milliseconds: 500),
-          retryCondition: RetryService.isRetryableError,
+        _loadDataWithRetry<int>(
+          () => DBService.getBookingsTodayCount(),
+          'loading bookings today count',
         ),
-        RetryService.retry<int>(
-          operation: () => DBService.getGearReturningSoonCount(),
-          maxAttempts: 3,
-          strategy: RetryStrategy.exponential,
-          initialDelay: const Duration(milliseconds: 500),
-          retryCondition: RetryService.isRetryableError,
+        _loadDataWithRetry<int>(
+          () => DBService.getGearReturningSoonCount(),
+          'loading gear returning soon count',
         ),
-        RetryService.retry<Booking?>(
-          operation: () => DBService.getStudioBookingToday(),
-          maxAttempts: 3,
-          strategy: RetryStrategy.exponential,
-          initialDelay: const Duration(milliseconds: 500),
-          retryCondition: RetryService.isRetryableError,
+        _loadDataWithRetry<Booking?>(
+          () => DBService.getStudioBookingToday(),
+          'loading studio booking today',
         ),
       ]);
 
@@ -307,27 +232,14 @@ class DashboardController {
       bookingsTodayCount.value = results[1] as int;
       gearReturningCount.value = results[2] as int;
       studioBookingToday.value = results[3] as Booking?;
-    } catch (e, stackTrace) {
-      // Log the error
-      LogService.error('Error loading dashboard statistics', e, stackTrace);
-
-      // Use contextual error handler if context is available
-      if (context != null) {
-        ContextualErrorHandler.handleError(
-          context!,
-          e,
-          type: ErrorType.database,
-          stackTrace: stackTrace,
-          feedbackLevel: ErrorFeedbackLevel.silent, // Silent because we're rethrowing
-        );
-      }
-
+    } catch (e) {
       // Set default values instead of rethrowing
       // This allows the dashboard to continue functioning even if statistics fail to load
       gearOutCount.value = 0;
       bookingsTodayCount.value = 0;
       gearReturningCount.value = 0;
       studioBookingToday.value = null;
+      rethrow; // Still rethrow to trigger error handling in initialize()
     }
   }
 
@@ -608,19 +520,5 @@ class DashboardController {
     }
   }
 
-  // Dispose resources
-  void dispose() {
-    gearList.dispose();
-    memberList.dispose();
-    projectList.dispose();
-    bookingList.dispose();
-    studioList.dispose();
-    recentActivity.dispose();
-    isLoading.dispose();
-    errorMessage.dispose();
-    gearOutCount.dispose();
-    bookingsTodayCount.dispose();
-    gearReturningCount.dispose();
-    studioBookingToday.dispose();
-  }
+
 }
