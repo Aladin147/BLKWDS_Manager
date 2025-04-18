@@ -6,6 +6,7 @@ import '../../services/navigation_service.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_constants.dart';
+import '../../theme/blkwds_typography.dart';
 
 import '../../widgets/blkwds_widgets.dart';
 import '../../examples/error_handling_example.dart';
@@ -131,29 +132,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: BLKWDSEnhancedText.titleLarge(title),
-        content: BLKWDSEnhancedText.bodyMedium(message),
-        actions: [
-          BLKWDSEnhancedButton(
-            label: cancelText,
-            onPressed: () => Navigator.pop(context, false),
-            type: BLKWDSEnhancedButtonType.secondary,
-            padding: const EdgeInsets.symmetric(
-              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
-              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
-            ),
-          ),
-          BLKWDSEnhancedButton(
-            label: confirmText,
-            onPressed: () => Navigator.pop(context, true),
-            type: isDestructive ? BLKWDSEnhancedButtonType.error : BLKWDSEnhancedButtonType.primary,
-            padding: const EdgeInsets.symmetric(
-              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
-              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
-            ),
-          ),
-        ],
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: title,
+        content: message,
+        secondaryActionText: cancelText,
+        onSecondaryAction: () => Navigator.pop(context, false),
+        primaryActionText: confirmText,
+        onPrimaryAction: () => Navigator.pop(context, true),
+        isPrimaryDestructive: isDestructive,
       ),
     );
   }
@@ -244,34 +230,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SettingsSection(
                       title: 'Management',
                       children: [
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Member Management'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('Add, edit, and delete members'),
+                        BLKWDSEnhancedListTile(
+                          title: 'Member Management',
+                          subtitle: 'Add, edit, and delete members',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.people,
                           onTap: () {
                             NavigationService.instance.navigateToMemberManagement();
                           },
                         ),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Project Management'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('Add, edit, and delete projects'),
+                        BLKWDSEnhancedListTile(
+                          title: 'Project Management',
+                          subtitle: 'Add, edit, and delete projects',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.business,
                           onTap: () {
                             NavigationService.instance.navigateToProjectManagement();
                           },
                         ),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Gear Management'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('Add, edit, and manage gear inventory'),
+                        BLKWDSEnhancedListTile(
+                          title: 'Gear Management',
+                          subtitle: 'Add, edit, and manage gear inventory',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.camera,
                           onTap: () {
                             NavigationService.instance.navigateToGearManagement();
                           },
                         ),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Database Integrity'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('Check and fix database integrity issues'),
+                        BLKWDSEnhancedListTile(
+                          title: 'Database Integrity',
+                          subtitle: 'Check and fix database integrity issues',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.storage,
                           onTap: () {
                             NavigationService.instance.navigateToDatabaseIntegrity();
                           },
@@ -284,42 +274,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SettingsSection(
                       title: 'About',
                       children: [
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Version'),
-                          trailing: BLKWDSEnhancedText.bodyMedium(
+                        BLKWDSEnhancedListTile(
+                          title: 'Version',
+                          leadingIcon: Icons.info_outline,
+                          trailing: Text(
                             '${_controller.appVersion} (${_controller.appBuildNumber})',
+                            style: BLKWDSTypography.bodyMedium,
                           ),
                         ),
                         const Divider(),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Copyright'),
-                          trailing: BLKWDSEnhancedText.bodyMedium(
+                        BLKWDSEnhancedListTile(
+                          title: 'Copyright',
+                          leadingIcon: Icons.copyright,
+                          trailing: Text(
                             _controller.appCopyright,
+                            style: BLKWDSTypography.bodyMedium,
                           ),
                         ),
                         const Divider(),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('App Configuration'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('View and edit application configuration'),
+                        BLKWDSEnhancedListTile(
+                          title: 'App Configuration',
+                          subtitle: 'View and edit application configuration',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.settings_applications,
                           onTap: () {
                             NavigationService.instance.navigateToAppConfig();
                           },
                         ),
                         const Divider(),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('App Information'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('View detailed app information'),
+                        BLKWDSEnhancedListTile(
+                          title: 'App Information',
+                          subtitle: 'View detailed app information',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.info,
                           onTap: () {
                             NavigationService.instance.navigateToAppInfo();
                           },
                         ),
                         const Divider(),
-                        ListTile(
-                          title: BLKWDSEnhancedText.titleLarge('Style Demo'),
-                          subtitle: BLKWDSEnhancedText.bodyMedium('View enhanced UI components'),
+                        BLKWDSEnhancedListTile(
+                          title: 'Style Demo',
+                          subtitle: 'View enhanced UI components',
                           trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.style,
                           onTap: () {
                             NavigationService.instance.navigateToStyleDemo();
                           },
@@ -332,10 +329,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       SettingsSection(
                         title: 'Debug',
                         children: [
-                          ListTile(
-                            title: BLKWDSEnhancedText.titleLarge('Error Handling Example'),
-                            subtitle: BLKWDSEnhancedText.bodyMedium('Test the error handling system'),
+                          BLKWDSEnhancedListTile(
+                            title: 'Error Handling Example',
+                            subtitle: 'Test the error handling system',
                             trailing: const Icon(Icons.arrow_forward_ios),
+                            leadingIcon: Icons.error_outline,
                             onTap: () {
                               NavigationService.instance.navigateTo(
                                 const ErrorHandlingExample(),
@@ -344,10 +342,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           ),
                           const Divider(),
-                          ListTile(
-                            title: BLKWDSEnhancedText.titleLarge('Recovery Mechanisms Example'),
-                            subtitle: BLKWDSEnhancedText.bodyMedium('Test the retry and recovery systems'),
+                          BLKWDSEnhancedListTile(
+                            title: 'Recovery Mechanisms Example',
+                            subtitle: 'Test the retry and recovery systems',
                             trailing: const Icon(Icons.arrow_forward_ios),
+                            leadingIcon: Icons.refresh,
                             onTap: () {
                               NavigationService.instance.navigateTo(
                                 const RecoveryExample(),
@@ -356,10 +355,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           ),
                           const Divider(),
-                          ListTile(
-                            title: BLKWDSEnhancedText.titleLarge('Error Analytics & Boundaries'),
-                            subtitle: BLKWDSEnhancedText.bodyMedium('Test error analytics and boundaries'),
+                          BLKWDSEnhancedListTile(
+                            title: 'Error Analytics & Boundaries',
+                            subtitle: 'Test error analytics and boundaries',
                             trailing: const Icon(Icons.arrow_forward_ios),
+                            leadingIcon: Icons.analytics,
                             onTap: () {
                               NavigationService.instance.navigateTo(
                                 const ErrorAnalyticsExample(),
