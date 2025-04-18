@@ -135,7 +135,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Static analysis warnings for use_build_context_synchronously (FIXED in v0.69.0)
 
 6. **Deprecated API Usage**
-   - Deprecated color methods (withOpacity should be replaced with withValues()) (IDENTIFIED in v0.71.0)
+   - ✅ Deprecated color methods (withOpacity should be replaced with withValues()) (FIXED in v0.73.0)
    - Deprecated Material components (MaterialStateProperty, MaterialState) (IDENTIFIED in v0.71.0)
    - Deprecated theme properties (background, dialogBackgroundColor) (IDENTIFIED in v0.71.0)
 
@@ -200,7 +200,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Fix use_build_context_synchronously warnings
      - [x] Clean up unused code and imports
    - Deprecated API Usage
-     - [ ] Replace deprecated color methods (withOpacity → withValues())
+     - [x] Replace deprecated color methods (withOpacity → withValues())
      - [ ] Replace deprecated Material components (MaterialStateProperty → WidgetStateProperty, MaterialState → WidgetState)
      - [ ] Update deprecated theme properties (background, dialogBackgroundColor)
    - State Management
@@ -286,6 +286,23 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.73.0 - Deprecated API Replacement (2025-07-02)
+
+**Fixed:**
+
+- Replaced deprecated withOpacity method with withValues in multiple files
+- Updated app_config_screen.dart to use BLKWDSColors instead of Colors.green
+- Fixed error_boundary.dart to use withValues for background and border colors
+- Updated fallback_widget.dart to use withValues for background and border colors
+- Fixed category_icon_widget.dart to use withValues for background color
+
+**Improved:**
+
+- Improved precision by using integer alpha values instead of floating-point opacity
+- Added comments to explain alpha value calculations (e.g., 0.1 * 255 = 26)
+- Ensured consistent color handling across the application
+- Prepared the codebase for future Flutter updates
 
 ### v0.72.0 - Error Handling Standardization (2025-07-02)
 

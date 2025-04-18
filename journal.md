@@ -1,5 +1,35 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-02: Deprecated API Replacement - withOpacity to withValues
+
+Today we addressed one of the deprecated API usages identified in our comprehensive codebase assessment. We replaced all instances of the deprecated withOpacity method with the recommended withValues method in several files:
+
+1. **Files Updated**:
+   - app_config_screen.dart
+   - error_boundary.dart
+   - fallback_widget.dart
+   - category_icon_widget.dart
+
+2. **Changes Made**:
+   - Replaced withOpacity(0.1) with withValues(alpha: 26) (0.1 * 255 = 26)
+   - Replaced withOpacity(0.2) with withValues(alpha: 51) (0.2 * 255 = 51)
+   - Replaced withOpacity(0.3) with withValues(alpha: 77) (0.3 * 255 = 77)
+   - Added comments to explain the alpha value calculations
+   - Standardized the approach across all files
+
+3. **Benefits**:
+   - Removed deprecated API usage warnings
+   - Improved precision by using integer alpha values instead of floating-point opacity
+   - Ensured consistent color handling across the application
+   - Prepared the codebase for future Flutter updates
+
+4. **Next Steps**:
+   - Address remaining deprecated API usages (MaterialStateProperty, MaterialState)
+   - Fix test suite compilation errors
+   - Create missing mock implementations
+
+This completes one of the tasks identified in our comprehensive codebase assessment. The application now uses the recommended approach for color opacity handling.
+
 ## 2025-07-02: Error Handling Standardization Implementation
 
 Today we completed the standardization of error handling across the application by replacing all direct ScaffoldMessenger usage with the centralized SnackbarService. This work involved:

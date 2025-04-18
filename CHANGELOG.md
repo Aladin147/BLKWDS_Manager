@@ -5,6 +5,23 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc36] - 2025-07-02
+
+### Fixed
+
+- Replaced deprecated withOpacity method with withValues in multiple files
+- Updated app_config_screen.dart to use BLKWDSColors instead of Colors.green
+- Fixed error_boundary.dart to use withValues for background and border colors
+- Updated fallback_widget.dart to use withValues for background and border colors
+- Fixed category_icon_widget.dart to use withValues for background color
+
+### Improved
+
+- Improved precision by using integer alpha values instead of floating-point opacity
+- Added comments to explain alpha value calculations (e.g., 0.1 * 255 = 26)
+- Ensured consistent color handling across the application
+- Prepared the codebase for future Flutter updates
+
 ## [1.0.0-rc35] - 2025-07-02
 
 ### Fixed
