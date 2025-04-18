@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
-import '../theme/blkwds_typography.dart';
 import '../widgets/blkwds_enhanced_button.dart';
 import '../widgets/blkwds_enhanced_icon_container.dart';
 import '../widgets/blkwds_enhanced_text.dart';
@@ -44,7 +43,7 @@ class ErrorPageService {
                 iconColor: BLKWDSColors.errorRed,
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
-              BLKWDSEnhancedText.headlineMedium(
+              BLKWDSEnhancedText.headingMedium(
                 title,
                 color: BLKWDSColors.errorRed,
               ),
@@ -142,7 +141,6 @@ class ErrorPageService {
       case ErrorType.conflict:
         return 'Conflict Error';
       case ErrorType.unknown:
-      default:
         return 'Something went wrong';
     }
   }

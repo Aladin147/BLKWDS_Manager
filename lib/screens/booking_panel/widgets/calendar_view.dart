@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import '../../../models/models.dart';
+
 import '../../../services/snackbar_service.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
 import '../booking_panel_controller.dart';
-import '../booking_panel_controller_v2.dart';
+
 import 'calendar_booking_item.dart';
 import 'calendar_view_adapter.dart';
 
@@ -15,21 +15,18 @@ import 'calendar_view_adapter.dart';
 /// Widget for displaying bookings in a calendar format
 /// Works with both Booking and BookingV2 models
 class CalendarView extends StatefulWidget {
-  // Either controller or controllerV2 must be provided
-  final BookingPanelController? controller;
-  final BookingPanelControllerV2? controllerV2;
+  final BookingPanelController controller;
   final Function(DateTime) onDaySelected;
   final Function(dynamic) onBookingSelected;
   final Function(dynamic, DateTime)? onBookingRescheduled;
 
   const CalendarView({
     super.key,
-    this.controller,
-    this.controllerV2,
+    required this.controller,
     required this.onDaySelected,
     required this.onBookingSelected,
     this.onBookingRescheduled,
-  }) : assert(controller != null || controllerV2 != null, 'Either controller or controllerV2 must be provided');
+  });
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -90,7 +87,7 @@ class _CalendarViewState extends State<CalendarView> {
     }
 
     // Create a new start date with the same time as the original booking
-    final startDate = booking is BookingV2 ? booking.startDate : (booking as Booking).startDate;
+    final startDate = booking.startDate;
     final newStartDate = DateTime(
       newDay.year,
       newDay.month,
