@@ -98,10 +98,11 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                color: BLKWDSColors.errorRed,
-                size: BLKWDSConstants.iconSizeLarge,
+              BLKWDSEnhancedIconContainer(
+                icon: Icons.error_outline,
+                size: BLKWDSEnhancedIconContainerSize.large,
+                backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
+                iconColor: BLKWDSColors.errorRed,
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
               Text(
@@ -115,12 +116,13 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
                 style: BLKWDSTypography.bodyMedium,
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
-              BLKWDSButton(
+              BLKWDSEnhancedButton(
                 label: 'Return to Dashboard',
                 onPressed: () {
                   _navigationService.navigateToDashboard(clearStack: true);
                 },
-                type: BLKWDSButtonType.primary,
+                type: BLKWDSEnhancedButtonType.primary,
+                icon: Icons.home,
               ),
             ],
           ),
