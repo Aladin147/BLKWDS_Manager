@@ -9,8 +9,8 @@ class AppTheme {
   /// Secondary color
   static const Color secondaryColor = Color(0xFF4CAF50);
 
-  /// Accent color
-  static const Color accentColor = Color(0xFFFFC107);
+  /// Tertiary color (formerly accent color)
+  static const Color tertiaryColor = Color(0xFFFFC107);
 
   /// Background color
   static const Color backgroundColor = Color(0xFF121212);
@@ -65,6 +65,7 @@ class AppTheme {
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
         secondary: secondaryColor,
+        tertiary: tertiaryColor,
         surface: surfaceColor,
         // Using surfaceContainerHighest instead of deprecated background
         surfaceContainerHighest: backgroundColor,
@@ -142,6 +143,8 @@ class AppTheme {
         foregroundColor: textColor,
         elevation: 0,
       ),
+      // Note: ButtonTheme is deprecated, but kept for backward compatibility
+      // with widgets that still use RaisedButton, FlatButton, etc.
       buttonTheme: const ButtonThemeData(
         buttonColor: primaryColor,
         textTheme: ButtonTextTheme.primary,
