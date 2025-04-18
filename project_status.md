@@ -165,6 +165,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 22. Inconsistent component usage (buttons, text fields, etc.) (IDENTIFIED in v0.31.0)
 23. ~~Remnant references to light mode/theme switching~~ (FIXED in v0.32.0)
 24. Inconsistent card styling across the application (IDENTIFIED in v0.31.0)
+25. Add a persistent home button for quick navigation back to dashboard (IDENTIFIED in v0.74.0)
 
 ## Next Steps
 
@@ -212,6 +213,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - Functional UI Elements
      - [ ] Replace placeholder contents in the app with actual functionality
      - [ ] Disable or remove UI elements that aren't fully implemented
+     - [ ] Add a persistent home button for quick navigation back to dashboard
    - Error Handling Standardization
      - [x] Ensure consistent error feedback levels
      - [ ] Replace remaining direct ScaffoldMessenger calls
@@ -303,6 +305,10 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Prepared the codebase for future Flutter updates
 - Improved code maintainability
 - Ensured compatibility with newer Flutter versions
+
+**Identified:**
+
+- Need for a persistent home button for quick navigation back to dashboard
 
 ### v0.73.0 - Deprecated API Replacement (2025-07-02)
 

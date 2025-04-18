@@ -1,5 +1,28 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-02: UI/UX Improvement Identification - Home Button
+
+During our ongoing UI/UX review, we identified a potential improvement to enhance user navigation: adding a persistent home button that would allow users to quickly return to the dashboard from anywhere in the application.
+
+1. **Proposed Feature**:
+   - Add a persistent home button in the app bar or navigation area
+   - Ensure consistent placement across all screens
+   - Implement using the NavigationService for standardized navigation
+   - Consider using a recognizable home icon for intuitive user experience
+
+2. **Benefits**:
+   - Improved user navigation experience
+   - Reduced number of taps needed to return to the main dashboard
+   - Consistent navigation pattern across the application
+   - Enhanced usability for new users
+
+3. **Implementation Considerations**:
+   - Determine the best placement (app bar, bottom navigation, or floating action button)
+   - Ensure consistent styling with the rest of the application
+   - Test with users to validate the improvement in navigation efficiency
+
+This improvement has been added to our UI Standardization Issues list and will be implemented in an upcoming release.
+
 ## 2025-07-02: Deprecated Material Components Replacement
 
 Today we addressed another set of deprecated API usages identified in our comprehensive codebase assessment. We replaced all instances of deprecated Material components with their modern Widget equivalents:
