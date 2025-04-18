@@ -55,7 +55,7 @@ class CategoryIconWidget extends StatelessWidget {
       width: containerSize,
       height: containerSize,
       decoration: BoxDecoration(
-        color: backgroundColor ?? categoryColor.withOpacity(0.2), // TODO: Replace with withValues when available
+        color: backgroundColor ?? categoryColor.withValues(alpha: 51), // 0.2 * 255 = 51
         borderRadius: isCircular
             ? BorderRadius.circular(containerSize / 2)
             : BorderRadius.circular(borderRadius ?? BLKWDSConstants.borderRadius),

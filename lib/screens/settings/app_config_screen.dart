@@ -70,13 +70,13 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
               padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
               margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingLarge),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1), // TODO: Replace with withValues when available
+                color: BLKWDSColors.successGreen.withValues(alpha: 26), // 0.1 * 255 = 26
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                border: Border.all(color: Colors.green),
+                border: Border.all(color: BLKWDSColors.successGreen),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.check_circle, color: Colors.green),
+                  const Icon(Icons.check_circle, color: BLKWDSColors.successGreen),
                   const SizedBox(width: BLKWDSConstants.spacingMedium),
                   Expanded(
                     child: Text(
@@ -85,7 +85,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.green),
+                    icon: const Icon(Icons.close, color: BLKWDSColors.successGreen),
                     onPressed: () => setState(() => _successMessage = null),
                   ),
                 ],
