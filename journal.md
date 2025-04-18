@@ -1,5 +1,41 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-04: UI/UX Enhancements and Deprecated API Cleanup
+
+Today we completed significant UI/UX enhancements and cleaned up deprecated API usage throughout the codebase. This work involved several key improvements:
+
+1. **Removed Deprecated API Usage**:
+   - Removed the deprecated `BLKWDSSnackbar` class that was just forwarding to `SnackbarService`
+   - Removed the deprecated `FeatureFlags` class that was empty and no longer needed
+   - Removed deprecated methods from `SnackbarService` (`showErrorSnackBar`, `showSuccessSnackBar`, etc.)
+   - Updated all references to these deprecated methods throughout the codebase
+   - Replaced deprecated `accentColor` with `tertiaryColor` in the app theme
+   - Updated `WidgetStateProperty` and `WidgetState` usage in the app theme
+   - Added proper documentation for deprecated `ButtonTheme` usage
+
+2. **Fixed Dropdown Component**:
+   - Added a helper method `_areValuesEqual` to properly compare values in `BLKWDSEnhancedDropdown`
+   - Implemented a check to ensure the selected value exists in the items list
+   - Added a mechanism to reset the dropdown value when it doesn't exist in the items list
+   - Fixed potential null reference errors in dropdown components
+
+3. **Enhanced Theme Consistency**:
+   - Updated ColorScheme to include tertiary color
+   - Improved theme consistency across the application
+   - Fixed color handling with proper alpha values instead of floating-point opacity
+   - Ensured consistent styling across all screens
+
+4. **Benefits Achieved**:
+   - Improved code maintainability by removing deprecated APIs
+   - Enhanced UI component reliability with better validation
+   - Prepared the codebase for future Flutter updates
+   - Improved visual consistency across the application
+
+This work addresses several critical issues by cleaning up deprecated API usage and enhancing UI components. The application now has a more consistent and reliable user interface, which is a significant step forward in our UI/UX strategy.
+
+Next steps include entering a cleaning, fixing, and optimizing phase to further improve code quality and performance.
+
+
 ## 2025-07-03: Integration Test Runtime Fixes
 
 Today we fixed the runtime issues in our integration tests. This work involved several key improvements:

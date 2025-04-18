@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc49 (Release Candidate 49)
-**Last Updated:** 2025-07-05
+**Version:** 1.0.0-rc50 (Release Candidate 50)
+**Last Updated:** 2025-07-06
 
 ## Project Phase
 
@@ -57,13 +57,13 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Standardize background colors across all screens
    - [x] Standardize shadow styles for all cards and elevated surfaces
    - [x] Improve layout responsiveness by replacing fixed heights
-   - [ ] Ensure consistent typography usage across all screens
-   - [ ] Standardize component usage (buttons, text fields, etc.)
+   - [x] Ensure consistent typography usage across all screens
+   - [x] Standardize component usage (buttons, text fields, etc.)
      - [x] Replace standard TextField/TextFormField with BLKWDSTextField
      - [x] Create and implement BLKWDSDropdown for all dropdown fields
      - [x] Replace standard dialog buttons with BLKWDSButton
-     - [ ] Clarify usage guidelines for BLKWDSTextField vs. BLKWDSFormField
-     - [ ] Decide on standard vs. enhanced component versions
+     - [x] Clarify usage guidelines for BLKWDSTextField vs. BLKWDSFormField
+     - [x] Decide on standard vs. enhanced component versions
    - [x] Standardize navigation patterns and transitions
    - [x] Remove all references to light mode/theme switching (dark mode only)
    - [x] Create consistent card styling across the application
@@ -139,6 +139,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Deprecated color methods (withOpacity should be replaced with withValues()) (FIXED in v0.73.0)
    - ✅ Deprecated Material components (MaterialStateProperty, MaterialState) (FIXED in v0.74.0)
    - ✅ Deprecated theme properties (background, dialogBackgroundColor) (FIXED in v0.74.0)
+   - ✅ Deprecated SnackbarService methods (showErrorSnackBar, showSuccessSnackBar, etc.) (FIXED in v0.82.0)
+   - ✅ Deprecated FeatureFlags class (FIXED in v0.82.0)
 
 ### UI Standardization Issues (Secondary Priority)
 
@@ -309,6 +311,27 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.82.0 - Deprecated API Cleanup (2025-07-06)
+
+**Removed:**
+
+- Removed deprecated `BLKWDSSnackbar` class that was just forwarding to `SnackbarService`
+- Removed deprecated `FeatureFlags` class that was empty and no longer needed
+- Removed deprecated methods from `SnackbarService` (`showErrorSnackBar`, `showSuccessSnackBar`, etc.)
+
+**Fixed:**
+
+- Fixed dropdown value validation in `BLKWDSEnhancedDropdown` to properly handle invalid values
+- Added a helper method `_areValuesEqual` to properly compare values in dropdowns
+- Updated all references to deprecated methods throughout the codebase
+- Fixed potential null reference errors in dropdown components
+
+**Improved:**
+
+- Enhanced code maintainability by removing deprecated APIs
+- Improved dropdown component reliability with better validation
+- Prepared the codebase for future Flutter updates
 
 ### v0.81.0 - Style Enhancement Sprint (2025-07-05)
 
