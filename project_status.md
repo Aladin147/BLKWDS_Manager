@@ -136,8 +136,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 6. **Deprecated API Usage**
    - ✅ Deprecated color methods (withOpacity should be replaced with withValues()) (FIXED in v0.73.0)
-   - Deprecated Material components (MaterialStateProperty, MaterialState) (IDENTIFIED in v0.71.0)
-   - Deprecated theme properties (background, dialogBackgroundColor) (IDENTIFIED in v0.71.0)
+   - ✅ Deprecated Material components (MaterialStateProperty, MaterialState) (FIXED in v0.74.0)
+   - ✅ Deprecated theme properties (background, dialogBackgroundColor) (FIXED in v0.74.0)
 
 ### UI Standardization Issues (Secondary Priority)
 
@@ -201,8 +201,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Clean up unused code and imports
    - Deprecated API Usage
      - [x] Replace deprecated color methods (withOpacity → withValues())
-     - [ ] Replace deprecated Material components (MaterialStateProperty → WidgetStateProperty, MaterialState → WidgetState)
-     - [ ] Update deprecated theme properties (background, dialogBackgroundColor)
+     - [x] Replace deprecated Material components (MaterialStateProperty → WidgetStateProperty, MaterialState → WidgetState)
+     - [x] Update deprecated theme properties (background, dialogBackgroundColor)
    - State Management
      - [x] Standardize on ValueNotifier pattern for state management
      - [x] Remove Riverpod dependency
@@ -286,6 +286,23 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.74.0 - Deprecated Material Components Replacement (2025-07-02)
+
+**Fixed:**
+
+- Replaced MaterialStateProperty with WidgetStateProperty
+- Replaced MaterialState with WidgetState
+- Updated ColorScheme to use surfaceContainerHighest instead of deprecated background
+- Removed dialogBackgroundColor and used dialogTheme.backgroundColor instead
+- Added TODOs for withOpacity replacements that require ColorExtension import
+
+**Improved:**
+
+- Removed deprecated API usage warnings
+- Prepared the codebase for future Flutter updates
+- Improved code maintainability
+- Ensured compatibility with newer Flutter versions
 
 ### v0.73.0 - Deprecated API Replacement (2025-07-02)
 

@@ -1,5 +1,32 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-02: Deprecated Material Components Replacement
+
+Today we addressed another set of deprecated API usages identified in our comprehensive codebase assessment. We replaced all instances of deprecated Material components with their modern Widget equivalents:
+
+1. **Files Updated**:
+   - app_theme.dart
+
+2. **Changes Made**:
+   - Replaced MaterialStateProperty with WidgetStateProperty
+   - Replaced MaterialState with WidgetState
+   - Updated ColorScheme to use surfaceContainerHighest instead of deprecated background
+   - Removed dialogBackgroundColor and used dialogTheme.backgroundColor instead
+   - Added TODOs for withOpacity replacements that require ColorExtension import
+
+3. **Benefits**:
+   - Removed deprecated API usage warnings
+   - Prepared the codebase for future Flutter updates
+   - Improved code maintainability
+   - Ensured compatibility with newer Flutter versions
+
+4. **Next Steps**:
+   - Fix test suite compilation errors
+   - Create missing mock implementations (MockBuildContext, MockDirectory, MockFile)
+   - Address remaining TODOs for withOpacity replacements
+
+This completes another task identified in our comprehensive codebase assessment. The application now uses the recommended modern Widget components instead of the deprecated Material components.
+
 ## 2025-07-02: Deprecated API Replacement - withOpacity to withValues
 
 Today we addressed one of the deprecated API usages identified in our comprehensive codebase assessment. We replaced all instances of the deprecated withOpacity method with the recommended withValues method in several files:

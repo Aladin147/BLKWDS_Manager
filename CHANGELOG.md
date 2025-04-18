@@ -5,6 +5,23 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc37] - 2025-07-02
+
+### Fixed
+
+- Replaced MaterialStateProperty with WidgetStateProperty
+- Replaced MaterialState with WidgetState
+- Updated ColorScheme to use surfaceContainerHighest instead of deprecated background
+- Removed dialogBackgroundColor and used dialogTheme.backgroundColor instead
+- Added TODOs for withOpacity replacements that require ColorExtension import
+
+### Improved
+
+- Removed deprecated API usage warnings
+- Prepared the codebase for future Flutter updates
+- Improved code maintainability
+- Ensured compatibility with newer Flutter versions
+
 ## [1.0.0-rc36] - 2025-07-02
 
 ### Fixed
