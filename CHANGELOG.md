@@ -5,6 +5,29 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc34] - 2025-07-02
+
+### Added
+
+- Comprehensive codebase assessment to identify remaining issues
+- Detailed analysis of test suite compilation errors
+- Analysis of deprecated API usage across the codebase
+- Prioritized plan for addressing identified issues
+
+### Fixed
+
+- Identified test suite compilation errors and missing mock implementations
+- Identified integration test compilation errors and undefined methods
+- Identified deprecated API usage (withOpacity, MaterialStateProperty, MaterialState)
+- Identified deprecated theme properties (background, dialogBackgroundColor)
+
+### Improved
+
+- Updated project documentation to reflect current codebase status
+- Enhanced understanding of test suite requirements
+- Created detailed plan for addressing identified issues
+- Prioritized next steps based on impact and effort
+
 ## [1.0.0-rc33] - 2025-07-02
 
 ### Added

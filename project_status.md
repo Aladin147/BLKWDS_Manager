@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc39 (Release Candidate 39)
+**Version:** 1.0.0-rc40 (Release Candidate 40)
 **Last Updated:** 2025-07-02
 
 ## Project Phase
@@ -115,6 +115,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - Minimal test coverage across unit, widget, and integration tests (IDENTIFIED in v0.50.0)
    - Critical components like controllers, services, and models lack tests (IDENTIFIED in v0.50.0)
    - No performance or stress tests (IDENTIFIED in v0.50.0)
+   - Test suite compilation errors (IDENTIFIED in v0.71.0)
+   - Integration test compilation errors (IDENTIFIED in v0.71.0)
 
 3. **Non-functional UI Elements**
    - ~~"View All" buttons only show snackbars instead of navigating~~ (FIXED in v0.40.0)
@@ -131,6 +133,11 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (PARTIALLY FIXED in v0.70.0)
    - ✅ Inconsistent error feedback levels (FIXED in v0.70.0)
    - ✅ Static analysis warnings for use_build_context_synchronously (FIXED in v0.69.0)
+
+6. **Deprecated API Usage**
+   - Deprecated color methods (withOpacity should be replaced with withValues()) (IDENTIFIED in v0.71.0)
+   - Deprecated Material components (MaterialStateProperty, MaterialState) (IDENTIFIED in v0.71.0)
+   - Deprecated theme properties (background, dialogBackgroundColor) (IDENTIFIED in v0.71.0)
 
 ### UI Standardization Issues (Secondary Priority)
 
@@ -186,9 +193,16 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Add unit tests for critical models
      - [x] Add widget tests for core UI components
      - [x] Add integration tests for critical user flows
+     - [ ] Fix test suite compilation errors
+     - [ ] Fix integration test compilation errors
+     - [ ] Create missing mock implementations (MockBuildContext, MockDirectory, MockFile)
    - Static Analysis Issues
      - [x] Fix use_build_context_synchronously warnings
      - [x] Clean up unused code and imports
+   - Deprecated API Usage
+     - [ ] Replace deprecated color methods (withOpacity → withValues())
+     - [ ] Replace deprecated Material components (MaterialStateProperty → WidgetStateProperty, MaterialState → WidgetState)
+     - [ ] Update deprecated theme properties (background, dialogBackgroundColor)
    - State Management
      - [x] Standardize on ValueNotifier pattern for state management
      - [x] Remove Riverpod dependency
@@ -272,6 +286,24 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.71.0 - Comprehensive Codebase Assessment (2025-07-02)
+
+**Identified:**
+
+- Identified test suite compilation errors and missing mock implementations
+- Identified integration test compilation errors and undefined methods
+- Identified deprecated API usage (withOpacity, MaterialStateProperty, MaterialState)
+- Identified deprecated theme properties (background, dialogBackgroundColor)
+- Conducted comprehensive analysis of direct ScaffoldMessenger usage
+- Conducted comprehensive analysis of deprecated BLKWDSSnackbar usage
+
+**Improved:**
+
+- Updated project documentation to reflect current codebase status
+- Created detailed plan for addressing identified issues
+- Prioritized next steps based on impact and effort
+- Enhanced understanding of test suite requirements
 
 ### v0.70.0 - Error Handling Standardization Assessment (2025-07-02)
 
