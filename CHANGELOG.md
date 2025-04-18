@@ -5,6 +5,22 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc35] - 2025-07-02
+
+### Fixed
+
+- Standardized error handling by replacing all direct ScaffoldMessenger usage with SnackbarService
+- Updated 6 files to use the centralized SnackbarService
+- Added proper mounted checks to prevent setState after dispose errors
+- Maintained consistent error feedback UI across the entire application
+
+### Improved
+
+- Better error categorization (success, error, warning, info)
+- Reduced code duplication
+- Improved code maintainability
+- Enhanced user experience with consistent error feedback
+
 ## [1.0.0-rc34] - 2025-07-02
 
 ### Added
