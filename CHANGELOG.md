@@ -5,6 +5,29 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc49] - 2025-07-05
+
+**Added:**
+
+- BLKWDSStyleEnhancer utility class for consistent styling
+- BLKWDSEnhancedCard component with animations, gradients, and consistent styling
+- BLKWDSEnhancedButton component with loading states, hover effects, and consistent styling
+- BLKWDSEnhancedText component with standardized typography and styling options
+- Style Demo screen to showcase enhanced components
+- Navigation methods for the Style Demo screen
+
+**Fixed:**
+
+- Replaced withOpacity calls with withAlpha for better precision
+- Fixed other deprecated API usage throughout the codebase
+
+**Improved:**
+
+- Visual consistency across the application
+- Premium feel with subtle animations and consistent styling
+- Foundation for future UI improvements
+- Backward compatibility with existing code
+
 ## [1.0.0-rc48] - 2025-07-05
 
 **Added:**

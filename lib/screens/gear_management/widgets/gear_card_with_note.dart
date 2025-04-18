@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_widgets.dart';
 
 /// GearCardWithNote
@@ -47,201 +46,231 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
 
   @override
   Widget build(BuildContext context) {
-    return BLKWDSCard(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
-      child: InkWell(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
+      child: BLKWDSEnhancedCard(
+        animateOnHover: true,
         onTap: widget.onTap != null ? () => widget.onTap!(widget.gear) : null,
-        child: Padding(
-          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Gear info and status
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Gear thumbnail or category icon
-                  widget.gear.thumbnailPath != null
-                      ? Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: BLKWDSColors.backgroundLight,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              widget.gear.thumbnailPath!,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                      : CategoryIconWidget(
-                          category: widget.gear.category,
-                          size: 50,
-                          borderRadius: 8,
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Gear info and status
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Gear thumbnail or category icon
+                widget.gear.thumbnailPath != null
+                    ? Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: BLKWDSColors.backgroundLight,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-
-                  const SizedBox(width: BLKWDSConstants.spacingMedium),
-
-                  // Gear details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.gear.name,
-                          style: BLKWDSTypography.titleMedium,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            widget.gear.thumbnailPath!,
+                            fit: BoxFit.cover,
+                          ),
                         ),
+                      )
+                    : CategoryIconWidget(
+                        category: widget.gear.category,
+                        size: 50,
+                        borderRadius: 8,
+                      ),
+
+                const SizedBox(width: BLKWDSConstants.spacingMedium),
+
+                // Gear details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BLKWDSEnhancedText.titleLarge(
+                        widget.gear.name,
+                      ),
+                      const SizedBox(height: 4),
+                      BLKWDSEnhancedText.bodyMedium(
+                        widget.gear.category,
+                        color: BLKWDSColors.textSecondary,
+                      ),
+                      if (widget.gear.serialNumber != null && !widget.isCompact) ...[
                         const SizedBox(height: 4),
-                        Text(
-                          widget.gear.category,
-                          style: BLKWDSTypography.bodyMedium.copyWith(
-                            color: BLKWDSColors.textSecondary,
-                          ),
+                        BLKWDSEnhancedText.labelLarge(
+                          'S/N: ${widget.gear.serialNumber}',
                         ),
-                        if (widget.gear.serialNumber != null && !widget.isCompact) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            'S/N: ${widget.gear.serialNumber}',
-                            style: BLKWDSTypography.labelSmall,
-                          ),
-                        ],
                       ],
-                    ),
+                    ],
                   ),
+                ),
 
-                  // Status indicator
-                  BLKWDSStatusBadge(
-                    text: widget.gear.isOut ? 'OUT' : 'IN',
-                    color: widget.gear.isOut
-                        ? BLKWDSColors.statusOut
-                        : BLKWDSColors.statusIn,
-                    icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
+                // Status indicator
+                BLKWDSEnhancedStatusBadge(
+                  text: widget.gear.isOut ? 'OUT' : 'IN',
+                  color: widget.gear.isOut
+                      ? BLKWDSColors.statusOut
+                      : BLKWDSColors.statusIn,
+                  icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
+                  hasBorder: true,
+                ),
+              ],
+            ),
+
+            // Last note (if any)
+            if (widget.gear.lastNote != null && widget.gear.lastNote!.isNotEmpty && !_isExpanded) ...[
+              const SizedBox(height: BLKWDSConstants.spacingSmall),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.note,
+                    size: 16,
+                    color: BLKWDSColors.textSecondary,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: BLKWDSEnhancedText.bodyMedium(
+                      'Last note: ${widget.gear.lastNote}',
+                      color: BLKWDSColors.textSecondary,
+                      isItalic: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
+            ],
 
-              // Last note (if any)
-              if (widget.gear.lastNote != null && widget.gear.lastNote!.isNotEmpty && !_isExpanded) ...[
-                const SizedBox(height: BLKWDSConstants.spacingSmall),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.note,
-                      size: 16,
+            // Note field and actions
+            if (widget.showNote && _isExpanded) ...[
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+              BLKWDSEnhancedCard(
+                padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+                backgroundColor: BLKWDSColors.backgroundMedium,
+                child: TextField(
+                  controller: _noteController,
+                  decoration: InputDecoration(
+                    labelText: 'Note (Optional)',
+                    labelStyle: BLKWDSEnhancedText.getLabelMediumStyle().copyWith(
                       color: BLKWDSColors.textSecondary,
                     ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        'Last note: ${widget.gear.lastNote}',
-                        style: BLKWDSTypography.bodySmall.copyWith(
-                          color: BLKWDSColors.textSecondary,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-
-              // Note field and actions
-              if (widget.showNote && _isExpanded) ...[
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                TextField(
-                  controller: _noteController,
-                  decoration: const InputDecoration(
-                    labelText: 'Note (Optional)',
                     hintText: 'Add a note for this action',
-                    border: OutlineInputBorder(),
+                    hintStyle: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
+                      color: BLKWDSColors.textHint,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                      borderSide: const BorderSide(color: BLKWDSColors.inputBorder),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+                      borderSide: const BorderSide(color: BLKWDSColors.accentTeal, width: 2),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: BLKWDSConstants.inputHorizontalPadding,
+                      vertical: BLKWDSConstants.inputVerticalPadding,
+                    ),
+                  ),
+                  style: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
+                    color: BLKWDSColors.textPrimary,
                   ),
                   maxLines: 3,
+                  cursorColor: BLKWDSColors.accentTeal,
                 ),
-              ],
+              ),
+            ],
 
-              // Action buttons
-              if (widget.showActions) ...[
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Toggle note field
-                    TextButton.icon(
-                      icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
-                      label: Text(_isExpanded ? 'Hide Note' : 'Add Note'),
-                      onPressed: () {
-                        setState(() {
-                          _isExpanded = !_isExpanded;
-                          if (!_isExpanded) {
-                            _noteController.clear();
-                          }
-                        });
-                      },
+            // Action buttons
+            if (widget.showActions) ...[
+              const SizedBox(height: BLKWDSConstants.spacingMedium),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Toggle note field
+                  BLKWDSEnhancedButton(
+                    icon: _isExpanded ? Icons.expand_less : Icons.expand_more,
+                    label: _isExpanded ? 'Hide Note' : 'Add Note',
+                    type: BLKWDSEnhancedButtonType.tertiary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                      vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isExpanded = !_isExpanded;
+                        if (!_isExpanded) {
+                          _noteController.clear();
+                        }
+                      });
+                    },
+                  ),
+
+                  const Spacer(),
+
+                  // Edit button
+                  if (widget.onEdit != null)
+                    BLKWDSEnhancedButton(
+                      icon: Icons.edit,
+                      type: BLKWDSEnhancedButtonType.tertiary,
+                      padding: const EdgeInsets.all(8),
+                      onPressed: () => widget.onEdit!(widget.gear),
                     ),
 
-                    const Spacer(),
+                  // Delete button
+                  if (widget.onDelete != null)
+                    BLKWDSEnhancedButton(
+                      icon: Icons.delete,
+                      type: BLKWDSEnhancedButtonType.tertiary,
+                      padding: const EdgeInsets.all(8),
+                      onPressed: () => widget.onDelete!(widget.gear),
+                    ),
 
-                    // Edit button
-                    if (widget.onEdit != null)
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        tooltip: 'Edit',
-                        onPressed: () => widget.onEdit!(widget.gear),
-                      ),
+                  const SizedBox(width: BLKWDSConstants.spacingSmall),
 
-                    // Delete button
-                    if (widget.onDelete != null)
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        tooltip: 'Delete',
-                        onPressed: () => widget.onDelete!(widget.gear),
-                      ),
-
-                    const SizedBox(width: BLKWDSConstants.spacingSmall),
-
-                    // Check in/out button
-                    widget.gear.isOut
-                        ? BLKWDSButton(
-                            label: 'Check In',
-                            icon: Icons.check_circle,
-                            type: BLKWDSButtonType.secondary,
-                            isSmall: true,
-                            onPressed: () {
-                              final note = _noteController.text.isNotEmpty ? _noteController.text : null;
-                              widget.onCheckin(widget.gear, note);
-                              setState(() {
-                                _isExpanded = false;
-                                _noteController.clear();
-                              });
-                            },
-                          )
-                        : BLKWDSButton(
-                            label: 'Check Out',
-                            icon: Icons.logout,
-                            type: BLKWDSButtonType.primary,
-                            isSmall: true,
-                            onPressed: () {
-                              final note = _noteController.text.isNotEmpty ? _noteController.text : null;
-                              widget.onCheckout(widget.gear, note);
-                              setState(() {
-                                _isExpanded = false;
-                                _noteController.clear();
-                              });
-                            },
+                  // Check in/out button
+                  widget.gear.isOut
+                      ? BLKWDSEnhancedButton(
+                          label: 'Check In',
+                          icon: Icons.check_circle,
+                          type: BLKWDSEnhancedButtonType.secondary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                            vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
                           ),
-                  ],
-                ),
-              ],
+                          onPressed: () {
+                            final note = _noteController.text.isNotEmpty ? _noteController.text : null;
+                            widget.onCheckin(widget.gear, note);
+                            setState(() {
+                              _isExpanded = false;
+                              _noteController.clear();
+                            });
+                          },
+                        )
+                      : BLKWDSEnhancedButton(
+                          label: 'Check Out',
+                          icon: Icons.logout,
+                          type: BLKWDSEnhancedButtonType.primary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                            vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                          ),
+                          onPressed: () {
+                            final note = _noteController.text.isNotEmpty ? _noteController.text : null;
+                            widget.onCheckout(widget.gear, note);
+                            setState(() {
+                              _isExpanded = false;
+                              _noteController.clear();
+                            });
+                          },
+                        ),
+                ],
+              ),
             ],
-          ),
+          ],
         ),
       ),
     );
   }
-
-
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
+
 import '../../../widgets/blkwds_widgets.dart';
 
 import '../../gear_management/widgets/gear_card_with_note.dart';
@@ -41,8 +41,9 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BLKWDSCard(
+    return BLKWDSEnhancedCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      animateOnHover: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,24 +58,25 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
                     size: 32,
                     iconSize: 20,
                     iconColor: BLKWDSColors.accentTeal,
-                    backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                    backgroundColor: BLKWDSColors.accentTeal.withAlpha(50),
                     borderRadius: 8,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Text(
+                  BLKWDSEnhancedText.titleLarge(
                     'Recent Gear Activity',
-                    style: BLKWDSTypography.titleMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
-                    ),
+                    color: BLKWDSColors.textPrimary,
                   ),
                 ],
               ),
-              BLKWDSButton(
+              BLKWDSEnhancedButton(
                 onPressed: widget.onViewAllGear,
                 label: 'View All',
                 icon: Icons.visibility,
-                type: BLKWDSButtonType.secondary,
-                isSmall: true,
+                type: BLKWDSEnhancedButtonType.secondary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                  vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                ),
               ),
             ],
           ),
@@ -94,34 +96,34 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
 
           // Warning banner for overdue gear
           if (_hasOverdueGear())
-            Container(
-              margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-              padding: const EdgeInsets.symmetric(
-                horizontal: BLKWDSConstants.spacingMedium,
-                vertical: BLKWDSConstants.spacingSmall,
-              ),
-              decoration: BoxDecoration(
-                color: BLKWDSColors.warningAmber.withValues(alpha: 25),
-                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                border: Border.all(color: BLKWDSColors.warningAmber),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.warning_amber_rounded,
-                    color: BLKWDSColors.warningAmber,
-                    size: 20,
+            Column(
+              children: [
+                BLKWDSEnhancedCard(
+                  type: BLKWDSEnhancedCardType.warning,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: BLKWDSConstants.spacingMedium,
+                    vertical: BLKWDSConstants.spacingSmall,
                   ),
-                  const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Text(
-                    'OVERDUE GEAR: CHECKED OUT FOR 24+ HOURS',
-                    style: BLKWDSTypography.labelMedium.copyWith(
-                      color: BLKWDSColors.warningAmber,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+                  borderColor: BLKWDSColors.warningAmber,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.warning_amber_rounded,
+                        color: BLKWDSColors.warningAmber,
+                        size: 20,
+                      ),
+                      const SizedBox(width: BLKWDSConstants.spacingSmall),
+                      BLKWDSEnhancedText.labelLarge(
+                        'OVERDUE GEAR: CHECKED OUT FOR 24+ HOURS',
+                        color: BLKWDSColors.warningAmber,
+                        isBold: true,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: BLKWDSConstants.spacingSmall),
+              ],
             ),
 
           // Gear list
@@ -132,10 +134,13 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
                 final recentGear = _getFilteredGear(gearList);
 
                 if (recentGear.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                      child: Text('No recent gear activity'),
+                      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                      child: BLKWDSEnhancedText.bodyMedium(
+                        'No recent gear activity',
+                        color: BLKWDSColors.textSecondary,
+                      ),
                     ),
                   );
                 }
@@ -176,26 +181,16 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
 
   // Build a filter chip
   Widget _buildFilterChip(String label, bool isSelected, GearFilter filter) {
-    return InkWell(
-      onTap: () {
+    return BLKWDSEnhancedButton(
+      onPressed: () {
         setState(() {
           _selectedFilter = filter;
         });
       },
+      label: label,
+      type: isSelected ? BLKWDSEnhancedButtonType.primary : BLKWDSEnhancedButtonType.tertiary,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? BLKWDSColors.accentTeal : BLKWDSColors.backgroundLight,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-          label,
-          style: BLKWDSTypography.labelSmall.copyWith(
-            color: isSelected ? Colors.white : BLKWDSColors.textSecondary,
-          ),
-        ),
-      ),
     );
   }
 

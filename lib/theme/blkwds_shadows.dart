@@ -15,12 +15,12 @@ class BLKWDSShadows {
   static const int level5 = 5; // Modal shadow
 
   // Shadow Colors
-  static final Color _shadowColor = BLKWDSColors.deepBlack.withValues(alpha: 100);
-  static final Color _accentShadowColor = BLKWDSColors.accentTeal.withValues(alpha: 40);
-  static final Color _errorShadowColor = BLKWDSColors.errorRed.withValues(alpha: 40);
-  static final Color _successShadowColor = BLKWDSColors.successGreen.withValues(alpha: 40);
-  static final Color _warningShadowColor = BLKWDSColors.warningAmber.withValues(alpha: 40);
-  static final Color _infoShadowColor = BLKWDSColors.infoBlue.withValues(alpha: 40);
+  static final Color _shadowColor = BLKWDSColors.deepBlack.withAlpha(100);
+  static final Color _accentShadowColor = BLKWDSColors.accentTeal.withAlpha(40);
+  static final Color _errorShadowColor = BLKWDSColors.errorRed.withAlpha(40);
+  static final Color _successShadowColor = BLKWDSColors.successGreen.withAlpha(40);
+  static final Color _warningShadowColor = BLKWDSColors.warningAmber.withAlpha(40);
+  static final Color _infoShadowColor = BLKWDSColors.infoBlue.withAlpha(40);
 
   /// Get a standard shadow with the specified elevation level
   static List<BoxShadow> getShadow(int level) {
@@ -30,7 +30,7 @@ class BLKWDSShadows {
       case level1:
         return [
           BoxShadow(
-            color: _shadowColor.withValues(alpha: 40),
+            color: _shadowColor.withAlpha(40),
             blurRadius: 3,
             spreadRadius: 0,
             offset: const Offset(0, 1),
@@ -39,7 +39,7 @@ class BLKWDSShadows {
       case level2:
         return [
           BoxShadow(
-            color: _shadowColor.withValues(alpha: 60),
+            color: _shadowColor.withAlpha(60),
             blurRadius: 6,
             spreadRadius: 0,
             offset: const Offset(0, 2),
@@ -48,7 +48,7 @@ class BLKWDSShadows {
       case level3:
         return [
           BoxShadow(
-            color: _shadowColor.withValues(alpha: 70),
+            color: _shadowColor.withAlpha(70),
             blurRadius: 10,
             spreadRadius: 1,
             offset: const Offset(0, 4),
@@ -57,7 +57,7 @@ class BLKWDSShadows {
       case level4:
         return [
           BoxShadow(
-            color: _shadowColor.withValues(alpha: 80),
+            color: _shadowColor.withAlpha(80),
             blurRadius: 15,
             spreadRadius: 2,
             offset: const Offset(0, 6),
@@ -66,7 +66,7 @@ class BLKWDSShadows {
       case level5:
         return [
           BoxShadow(
-            color: _shadowColor.withValues(alpha: 90),
+            color: _shadowColor.withAlpha(90),
             blurRadius: 24,
             spreadRadius: 4,
             offset: const Offset(0, 8),
@@ -104,7 +104,7 @@ class BLKWDSShadows {
 
     final standardShadows = getShadow(level);
     final coloredShadow = BoxShadow(
-      color: color.withValues(alpha: 50),
+      color: color.withAlpha(50),
       blurRadius: 8,
       spreadRadius: 0,
       offset: const Offset(0, 0),
@@ -120,13 +120,13 @@ class BLKWDSShadows {
   static List<BoxShadow> getFocusShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 70),
+        color: _shadowColor.withAlpha(70),
         blurRadius: 10,
         spreadRadius: 1,
         offset: const Offset(0, 4),
       ),
       BoxShadow(
-        color: BLKWDSColors.accentTeal.withValues(alpha: 50),
+        color: BLKWDSColors.accentTeal.withAlpha(50),
         blurRadius: 12,
         spreadRadius: 1,
         offset: const Offset(0, 0),
@@ -138,7 +138,7 @@ class BLKWDSShadows {
   static List<BoxShadow> getErrorShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 70),
+        color: _shadowColor.withAlpha(70),
         blurRadius: 10,
         spreadRadius: 1,
         offset: const Offset(0, 4),
@@ -156,7 +156,7 @@ class BLKWDSShadows {
   static List<BoxShadow> getSuccessShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 70),
+        color: _shadowColor.withAlpha(70),
         blurRadius: 10,
         spreadRadius: 1,
         offset: const Offset(0, 4),
@@ -174,7 +174,7 @@ class BLKWDSShadows {
   static List<BoxShadow> getWarningShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 70),
+        color: _shadowColor.withAlpha(70),
         blurRadius: 10,
         spreadRadius: 1,
         offset: const Offset(0, 4),
@@ -192,13 +192,13 @@ class BLKWDSShadows {
   static List<BoxShadow> getHoverShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 80),
+        color: _shadowColor.withAlpha(80),
         blurRadius: 12,
         spreadRadius: 2,
         offset: const Offset(0, 5),
       ),
       BoxShadow(
-        color: _accentShadowColor.withValues(alpha: 30),
+        color: _accentShadowColor.withAlpha(30),
         blurRadius: 10,
         spreadRadius: 0,
         offset: const Offset(0, 0),
@@ -210,13 +210,13 @@ class BLKWDSShadows {
   static List<BoxShadow> getActiveShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 90),
+        color: _shadowColor.withAlpha(90),
         blurRadius: 6,
         spreadRadius: 0,
         offset: const Offset(0, 2),
       ),
       BoxShadow(
-        color: _accentShadowColor.withValues(alpha: 40),
+        color: _accentShadowColor.withAlpha(40),
         blurRadius: 6,
         spreadRadius: 0,
         offset: const Offset(0, 0),
@@ -228,7 +228,7 @@ class BLKWDSShadows {
   static List<BoxShadow> getDisabledShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 40),
+        color: _shadowColor.withAlpha(40),
         blurRadius: 4,
         spreadRadius: 0,
         offset: const Offset(0, 2),
@@ -240,7 +240,7 @@ class BLKWDSShadows {
   static List<BoxShadow> getInfoShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 70),
+        color: _shadowColor.withAlpha(70),
         blurRadius: 10,
         spreadRadius: 1,
         offset: const Offset(0, 4),
@@ -258,13 +258,13 @@ class BLKWDSShadows {
   static List<BoxShadow> getCardHoverShadow() {
     return [
       BoxShadow(
-        color: _shadowColor.withValues(alpha: 80),
+        color: _shadowColor.withAlpha(80),
         blurRadius: 15,
         spreadRadius: 1,
         offset: const Offset(0, 6),
       ),
       BoxShadow(
-        color: _accentShadowColor.withValues(alpha: 20),
+        color: _accentShadowColor.withAlpha(20),
         blurRadius: 10,
         spreadRadius: 0,
         offset: const Offset(0, 0),

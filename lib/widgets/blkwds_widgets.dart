@@ -3,7 +3,10 @@
 /// This file exports all the standardized components for easy importing
 library;
 
-// Basic UI Components
+// Enhanced UI Components (New Style System)
+export 'blkwds_enhanced_widgets.dart';
+
+// Legacy UI Components (Will be gradually replaced)
 export 'blkwds_button.dart';
 export 'blkwds_text_field.dart';
 export 'blkwds_form_field.dart';

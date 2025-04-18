@@ -3,9 +3,9 @@ import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../services/navigation_service.dart';
 import '../../services/snackbar_service.dart';
-import '../../theme/blkwds_colors.dart';
+
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
+
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
@@ -99,8 +99,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         valueListenable: _controller.isLoading,
         builder: (context, isLoading, child) {
           if (isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: BLKWDSEnhancedLoadingIndicator(),
             );
           }
 
@@ -112,11 +112,9 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
         },
       ),
       floatingActionButton: !_showBookingForm
-          ? FloatingActionButton(
+          ? BLKWDSEnhancedFloatingActionButton(
               onPressed: _showCreateBookingForm,
-              backgroundColor: BLKWDSColors.primaryButtonBackground,
-              foregroundColor: BLKWDSColors.primaryButtonText,
-              child: const Icon(Icons.add),
+              icon: Icons.add,
             )
           : null,
     );
@@ -129,9 +127,8 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          BLKWDSEnhancedText.titleLarge(
             _selectedBooking == null ? 'Create Booking' : 'Edit Booking',
-            style: BLKWDSTypography.titleLarge,
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
           BookingFormAdapter(
@@ -235,20 +232,20 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reschedule Booking'),
-        content: Text(
+        title: BLKWDSEnhancedText.titleLarge('Reschedule Booking'),
+        content: BLKWDSEnhancedText.bodyMedium(
           'Are you sure you want to reschedule "${_controller.getProjectById(booking.projectId)?.title ?? 'Unknown Project'}" to ${DateFormat.yMMMd().format(newStartDate)}?',
         ),
         actions: [
-          BLKWDSButton(
+          BLKWDSEnhancedButton(
             label: 'Cancel',
             onPressed: () => Navigator.of(context).pop(false),
-            type: BLKWDSButtonType.secondary,
+            type: BLKWDSEnhancedButtonType.secondary,
           ),
-          BLKWDSButton(
+          BLKWDSEnhancedButton(
             label: 'Reschedule',
             onPressed: () => Navigator.of(context).pop(true),
-            type: BLKWDSButtonType.primary,
+            type: BLKWDSEnhancedButtonType.primary,
           ),
         ],
       ),

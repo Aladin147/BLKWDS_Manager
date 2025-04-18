@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
-import '../../../widgets/blkwds_card.dart';
+
 import '../../../widgets/blkwds_icon_container.dart';
 import '../../../widgets/blkwds_status_badge.dart';
+import '../../../widgets/blkwds_enhanced_widgets.dart';
 import '../dashboard_controller.dart';
 
 /// TopBarSummaryWidget
@@ -94,7 +94,7 @@ class TopBarSummaryWidget extends StatelessWidget {
   }) {
     return ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 150, maxWidth: 220),
-      child: BLKWDSCard(
+      child: BLKWDSEnhancedCard(
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -112,11 +112,9 @@ class TopBarSummaryWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(
-                  child: Text(
+                  child: BLKWDSEnhancedText.labelMedium(
                     title,
-                    style: BLKWDSTypography.labelMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
-                    ),
+                    color: BLKWDSColors.textPrimary,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -128,22 +126,18 @@ class TopBarSummaryWidget extends StatelessWidget {
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Flexible(
-                  child: Text(
+                  child: BLKWDSEnhancedText.headingLarge(
                     value,
-                    style: BLKWDSTypography.headlineLarge.copyWith(
-                      color: BLKWDSColors.accentTeal,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    color: BLKWDSColors.accentTeal,
+                    isBold: true,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(
-                  child: Text(
+                  child: BLKWDSEnhancedText.bodySmall(
                     subtitle,
-                    style: BLKWDSTypography.bodySmall.copyWith(
-                      color: BLKWDSColors.textSecondary,
-                    ),
+                    color: BLKWDSColors.textSecondary,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -161,7 +155,7 @@ class TopBarSummaryWidget extends StatelessWidget {
 
     return ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 150, maxWidth: 220),
-      child: BLKWDSCard(
+      child: BLKWDSEnhancedCard(
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -179,11 +173,9 @@ class TopBarSummaryWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Flexible(
-                  child: Text(
+                  child: BLKWDSEnhancedText.labelMedium(
                     'Studio:',
-                    style: BLKWDSTypography.labelMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
-                    ),
+                    color: BLKWDSColors.textPrimary,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -198,11 +190,9 @@ class TopBarSummaryWidget extends StatelessWidget {
               icon: isBooked ? Icons.event_busy : Icons.event_available,
             ),
             if (isBooked)
-              Text(
+              BLKWDSEnhancedText.bodySmall(
                 _formatStudioTime(studioBooking),
-                style: BLKWDSTypography.bodySmall.copyWith(
-                  color: BLKWDSColors.textSecondary,
-                ),
+                color: BLKWDSColors.textSecondary,
               ),
           ],
         ),

@@ -4,7 +4,7 @@ import '../../services/log_service.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
+
 
 import '../../widgets/blkwds_widgets.dart';
 import 'booking_detail_screen.dart';
@@ -125,16 +125,18 @@ class _BookingListScreenState extends State<BookingListScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Booking'),
-        content: const Text('Are you sure you want to delete this booking?'),
+        title: BLKWDSEnhancedText.titleLarge('Delete Booking'),
+        content: BLKWDSEnhancedText.bodyMedium('Are you sure you want to delete this booking?'),
         actions: [
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            type: BLKWDSEnhancedButtonType.secondary,
           ),
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            type: BLKWDSEnhancedButtonType.error,
           ),
         ],
       ),
@@ -198,7 +200,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('View Options'),
+        title: BLKWDSEnhancedText.titleLarge('View Options'),
         content: StatefulBuilder(
           builder: (context, setState) {
             final viewOptions = _listController.viewOptions.value;
@@ -209,16 +211,15 @@ class _BookingListScreenState extends State<BookingListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Grouping options
-                  Text(
+                  BLKWDSEnhancedText.titleLarge(
                     'Group By',
-                    style: BLKWDSTypography.titleSmall,
                   ),
                   const SizedBox(height: BLKWDSConstants.spacingSmall),
                   Wrap(
                     spacing: BLKWDSConstants.spacingSmall,
                     children: BookingGroupBy.values.map((groupBy) {
                       return ChoiceChip(
-                        label: Text(groupBy.label),
+                        label: BLKWDSEnhancedText.bodyMedium(groupBy.label),
                         selected: viewOptions.groupBy == groupBy,
                         onSelected: (selected) {
                           if (selected) {
@@ -235,16 +236,15 @@ class _BookingListScreenState extends State<BookingListScreen> {
                   const SizedBox(height: BLKWDSConstants.spacingMedium),
 
                   // View density options
-                  Text(
+                  BLKWDSEnhancedText.titleLarge(
                     'View Density',
-                    style: BLKWDSTypography.titleSmall,
                   ),
                   const SizedBox(height: BLKWDSConstants.spacingSmall),
                   Wrap(
                     spacing: BLKWDSConstants.spacingSmall,
                     children: BookingViewDensity.values.map((density) {
                       return ChoiceChip(
-                        label: Text(density.label),
+                        label: BLKWDSEnhancedText.bodyMedium(density.label),
                         selected: viewOptions.viewDensity == density,
                         onSelected: (selected) {
                           if (selected) {
@@ -262,7 +262,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
 
                   // Other options
                   SwitchListTile(
-                    title: const Text('Show Past Bookings'),
+                    title: BLKWDSEnhancedText.titleLarge('Show Past Bookings'),
                     value: viewOptions.showPastBookings,
                     onChanged: (value) {
                       setState(() {
@@ -274,7 +274,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                     contentPadding: EdgeInsets.zero,
                   ),
                   SwitchListTile(
-                    title: const Text('Show Details'),
+                    title: BLKWDSEnhancedText.titleLarge('Show Details'),
                     value: viewOptions.showDetails,
                     onChanged: (value) {
                       setState(() {
@@ -291,9 +291,10 @@ class _BookingListScreenState extends State<BookingListScreen> {
           },
         ),
         actions: [
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Close',
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            type: BLKWDSEnhancedButtonType.secondary,
           ),
         ],
       ),
@@ -307,7 +308,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Save Filter Preset'),
+        title: BLKWDSEnhancedText.titleLarge('Save Filter Preset'),
         content: TextField(
           controller: textController,
           decoration: const InputDecoration(
@@ -317,11 +318,13 @@ class _BookingListScreenState extends State<BookingListScreen> {
           autofocus: true,
         ),
         actions: [
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            type: BLKWDSEnhancedButtonType.secondary,
           ),
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Save',
             onPressed: () {
               if (textController.text.isNotEmpty) {
                 // Close dialog first
@@ -337,7 +340,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                 });
               }
             },
-            child: const Text('Save'),
+            type: BLKWDSEnhancedButtonType.primary,
           ),
         ],
       ),
@@ -349,12 +352,12 @@ class _BookingListScreenState extends State<BookingListScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Filter Presets'),
+        title: BLKWDSEnhancedText.titleLarge('Filter Presets'),
         content: ValueListenableBuilder<List<SavedFilterPreset>>(
           valueListenable: _listController.savedPresets,
           builder: (context, presets, child) {
             if (presets.isEmpty) {
-              return const Text('No saved presets');
+              return BLKWDSEnhancedText.bodyMedium('No saved presets');
             }
 
             return SizedBox(
@@ -366,7 +369,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
                   final preset = presets[index];
 
                   return ListTile(
-                    title: Text(preset.name),
+                    title: BLKWDSEnhancedText.titleLarge(preset.name),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () {
@@ -389,9 +392,10 @@ class _BookingListScreenState extends State<BookingListScreen> {
           },
         ),
         actions: [
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Close',
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            type: BLKWDSEnhancedButtonType.secondary,
           ),
         ],
       ),
@@ -406,16 +410,18 @@ class _BookingListScreenState extends State<BookingListScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Bookings'),
-        content: Text('Are you sure you want to delete $selectedCount selected bookings?'),
+        title: BLKWDSEnhancedText.titleLarge('Delete Bookings'),
+        content: BLKWDSEnhancedText.bodyMedium('Are you sure you want to delete $selectedCount selected bookings?'),
         actions: [
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            type: BLKWDSEnhancedButtonType.secondary,
           ),
-          TextButton(
+          BLKWDSEnhancedButton(
+            label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            type: BLKWDSEnhancedButtonType.error,
           ),
         ],
       ),
@@ -435,8 +441,8 @@ class _BookingListScreenState extends State<BookingListScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+      return Center(
+        child: BLKWDSEnhancedLoadingIndicator(),
       );
     }
 
@@ -500,21 +506,22 @@ class _BookingListScreenState extends State<BookingListScreen> {
                           ),
                           child: Row(
                             children: [
-                              Text(
+                              BLKWDSEnhancedText.bodyMedium(
                                 '$selectedCount selected',
-                                style: BLKWDSTypography.bodyMedium.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                isBold: true,
                               ),
                               const Spacer(),
-                              TextButton.icon(
-                                icon: const Icon(Icons.delete),
-                                label: const Text('Delete'),
+                              BLKWDSEnhancedButton(
+                                icon: Icons.delete,
+                                label: 'Delete',
+                                type: BLKWDSEnhancedButtonType.error,
                                 onPressed: selectedCount > 0 ? _bulkDeleteBookings : null,
                               ),
-                              TextButton.icon(
-                                icon: const Icon(Icons.close),
-                                label: const Text('Cancel'),
+                              const SizedBox(width: BLKWDSConstants.spacingSmall),
+                              BLKWDSEnhancedButton(
+                                icon: Icons.close,
+                                label: 'Cancel',
+                                type: BLKWDSEnhancedButtonType.secondary,
                                 onPressed: () => _listController.clearSelection(),
                               ),
                             ],
@@ -550,9 +557,10 @@ class _BookingListScreenState extends State<BookingListScreen> {
                         const Spacer(),
 
                         // Select all button
-                        TextButton.icon(
-                          icon: const Icon(Icons.select_all),
-                          label: const Text('Select All'),
+                        BLKWDSEnhancedButton(
+                          icon: Icons.select_all,
+                          label: 'Select All',
+                          type: BLKWDSEnhancedButtonType.secondary,
                           onPressed: () => _listController.selectAllBookings(),
                         ),
                       ],

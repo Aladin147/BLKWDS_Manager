@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_widgets.dart';
 
 /// SettingsSection
 /// Widget for displaying a section in the settings screen
@@ -25,29 +25,17 @@ class SettingsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section title
-          Text(
+          BLKWDSEnhancedText.titleLarge(
             title,
-            style: BLKWDSTypography.titleMedium.copyWith(
-              color: BLKWDSColors.blkwdsGreen,
-            ),
+            color: BLKWDSColors.blkwdsGreen,
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
 
           // Section content
-          Container(
+          BLKWDSEnhancedCard(
             width: double.infinity,
             padding: padding ?? const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-            decoration: BoxDecoration(
-              color: BLKWDSColors.backgroundMedium,
-              borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: BLKWDSColors.deepBlack.withValues(alpha: 40),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
+            animateOnHover: true,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: children,

@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
-import '../../../theme/blkwds_animations.dart';
 
-import '../../../widgets/blkwds_button.dart';
-import '../../../widgets/blkwds_card.dart';
-import '../../../widgets/blkwds_icon_container.dart';
-import '../../../widgets/blkwds_status_badge.dart';
+import '../../../widgets/blkwds_widgets.dart';
 
 import '../../../services/navigation_service.dart';
 
@@ -26,8 +21,9 @@ class TodayBookingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BLKWDSCard(
+    return BLKWDSEnhancedCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      animateOnHover: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -36,28 +32,23 @@ class TodayBookingWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.event,
-                      color: BLKWDSColors.accentTeal,
-                      size: 20,
-                    ),
+                  const BLKWDSEnhancedIconContainer(
+                    icon: Icons.event,
+                    size: BLKWDSEnhancedIconContainerSize.small,
+                    backgroundColor: BLKWDSColors.accentTeal,
+                    backgroundAlpha: BLKWDSColors.alphaVeryLow,
+                    iconColor: BLKWDSColors.accentTeal,
+                    hasShadow: true,
+                    hasBorder: true,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Text(
+                  BLKWDSEnhancedText.titleLarge(
                     'Today\'s Bookings',
-                    style: BLKWDSTypography.titleMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
-                    ),
+                    color: BLKWDSColors.textPrimary,
                   ),
                 ],
               ),
-              BLKWDSButton(
+              BLKWDSEnhancedButton(
                 label: 'View All',
                 onPressed: () {
                   // Navigate to booking panel with today's filter
@@ -65,9 +56,12 @@ class TodayBookingWidget extends StatelessWidget {
                     filter: 'today',
                   );
                 },
-                type: BLKWDSButtonType.secondary,
+                type: BLKWDSEnhancedButtonType.secondary,
                 icon: Icons.visibility,
-                isSmall: true,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                  vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                ),
               ),
             ],
           ),
@@ -79,15 +73,15 @@ class TodayBookingWidget extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: BLKWDSLoadingSpinner(),
+                    child: BLKWDSEnhancedLoadingIndicator(),
                   );
                 }
 
                 if (snapshot.hasError) {
                   return Center(
-                    child: Text(
+                    child: BLKWDSEnhancedText.bodyMedium(
                       'Error loading bookings',
-                      style: BLKWDSTypography.bodyMedium,
+                      color: BLKWDSColors.errorRed,
                     ),
                   );
                 }
@@ -96,9 +90,9 @@ class TodayBookingWidget extends StatelessWidget {
 
                 if (todayBookings.isEmpty) {
                   return Center(
-                    child: Text(
+                    child: BLKWDSEnhancedText.bodyMedium(
                       'No bookings for today',
-                      style: BLKWDSTypography.bodyMedium,
+                      color: BLKWDSColors.textSecondary,
                     ),
                   );
                 }
@@ -157,20 +151,23 @@ class TodayBookingWidget extends StatelessWidget {
       );
     }
 
-    return BLKWDSCard(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      child: Padding(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      child: BLKWDSEnhancedCard(
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        animateOnHover: true,
         child: Row(
           children: [
             // Booking icon with colored background
-            BLKWDSIconContainer(
+            BLKWDSEnhancedIconContainer(
               icon: _getBookingIcon(booking, firstGear),
-              size: BLKWDSIconContainerSize.large,
+              size: BLKWDSEnhancedIconContainerSize.large,
               backgroundColor: BLKWDSColors.accentTeal,
               backgroundAlpha: BLKWDSColors.alphaVeryLow,
               iconColor: BLKWDSColors.accentTeal,
-              // iconSize parameter removed
+              hasShadow: true,
+              hasBorder: true,
+              borderColor: BLKWDSColors.accentTeal.withValues(alpha: 76),
             ),
             const SizedBox(width: BLKWDSConstants.spacingMedium),
 
@@ -180,9 +177,8 @@ class TodayBookingWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Project name
-                  Text(
+                  BLKWDSEnhancedText.titleLarge(
                     project.title,
-                    style: BLKWDSTypography.titleSmall,
                     overflow: TextOverflow.ellipsis,
                   ),
 
@@ -198,11 +194,9 @@ class TodayBookingWidget extends StatelessWidget {
                           color: BLKWDSColors.textSecondary,
                         ),
                         const SizedBox(width: 4),
-                        Text(
+                        BLKWDSEnhancedText.bodyMedium(
                           primaryMember.name,
-                          style: BLKWDSTypography.bodyMedium.copyWith(
-                            color: BLKWDSColors.textSecondary,
-                          ),
+                          color: BLKWDSColors.textSecondary,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -219,11 +213,9 @@ class TodayBookingWidget extends StatelessWidget {
                         color: BLKWDSColors.textSecondary,
                       ),
                       const SizedBox(width: 4),
-                      Text(
+                      BLKWDSEnhancedText.bodyMedium(
                         _formatBookingTime(booking),
-                        style: BLKWDSTypography.bodySmall.copyWith(
-                          color: BLKWDSColors.textSecondary,
-                        ),
+                        color: BLKWDSColors.textSecondary,
                       ),
                     ],
                   ),
@@ -233,11 +225,11 @@ class TodayBookingWidget extends StatelessWidget {
 
             // Gear count badge
             if (gearIds.isNotEmpty)
-              BLKWDSStatusBadge(
+              BLKWDSEnhancedStatusBadge(
                 text: '${gearIds.length}',
                 color: BLKWDSColors.accentTeal,
                 icon: Icons.camera_alt,
-                // iconSize parameter removed
+                hasBorder: true,
               ),
           ],
         ),

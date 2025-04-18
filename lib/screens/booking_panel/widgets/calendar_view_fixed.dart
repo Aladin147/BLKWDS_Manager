@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
+import '../../../widgets/blkwds_widgets.dart';
+
 import '../booking_panel_controller.dart';
 import 'calendar_booking_item.dart';
 import 'calendar_view_adapter.dart';
@@ -149,9 +150,10 @@ class _CalendarViewState extends State<CalendarView> {
               ),
               const Spacer(),
               // Today button
-              TextButton.icon(
-                icon: const Icon(Icons.today),
-                label: const Text('Today'),
+              BLKWDSEnhancedButton(
+                label: 'Today',
+                icon: Icons.today,
+                type: BLKWDSEnhancedButtonType.secondary,
                 onPressed: () {
                   setState(() {
                     _focusedDay = DateTime.now();
@@ -203,7 +205,7 @@ class _CalendarViewState extends State<CalendarView> {
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
-            titleTextStyle: BLKWDSTypography.titleMedium,
+            titleTextStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: BLKWDSColors.blkwdsGreen),
             leftChevronIcon: const Icon(
               Icons.chevron_left,
               color: BLKWDSColors.slateGrey,
@@ -258,11 +260,9 @@ class _CalendarViewState extends State<CalendarView> {
                         : null,
                     ),
                     child: Center(
-                      child: Text(
+                      child: BLKWDSEnhancedText.bodyMedium(
                         '${day.day}',
-                        style: BLKWDSTypography.bodyMedium.copyWith(
-                          color: isAccepting ? BLKWDSColors.deepBlack : null,
-                        ),
+                        color: isAccepting ? BLKWDSColors.deepBlack : null,
                       ),
                     ),
                   );
@@ -289,15 +289,15 @@ class _CalendarViewState extends State<CalendarView> {
                         color: BLKWDSColors.slateGrey,
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingMedium),
-                      Text(
+                      BLKWDSEnhancedText.titleLarge(
                         'No bookings on ${DateFormat.yMMMMd().format(_selectedDay)}',
-                        style: BLKWDSTypography.titleMedium,
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingSmall),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.add),
-                        label: const Text('Create Booking'),
+                      BLKWDSEnhancedButton(
+                        label: 'Create Booking',
+                        icon: Icons.add,
                         onPressed: () => widget.onDaySelected(_selectedDay),
+                        type: BLKWDSEnhancedButtonType.primary,
                       ),
                     ],
                   ),

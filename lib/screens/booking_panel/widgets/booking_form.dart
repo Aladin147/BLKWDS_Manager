@@ -4,7 +4,7 @@ import '../../../models/models.dart';
 import '../../../services/db_service.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
+
 
 import '../../../widgets/blkwds_widgets.dart';
 import '../booking_panel_controller.dart';
@@ -230,9 +230,8 @@ class _BookingFormState extends State<BookingForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    BLKWDSEnhancedText.labelLarge(
                       'Start Date & Time *',
-                      style: BLKWDSTypography.labelMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingSmall),
                     InkWell(
@@ -245,9 +244,8 @@ class _BookingFormState extends State<BookingForm> {
                             vertical: 8,
                           ),
                         ),
-                        child: Text(
+                        child: BLKWDSEnhancedText.bodyMedium(
                           DateFormat.yMMMd().format(_startDate),
-                          style: BLKWDSTypography.bodyMedium,
                         ),
                       ),
                     ),
@@ -262,9 +260,8 @@ class _BookingFormState extends State<BookingForm> {
                             vertical: 8,
                           ),
                         ),
-                        child: Text(
+                        child: BLKWDSEnhancedText.bodyMedium(
                           _startTime.format(context),
-                          style: BLKWDSTypography.bodyMedium,
                         ),
                       ),
                     ),
@@ -278,9 +275,8 @@ class _BookingFormState extends State<BookingForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    BLKWDSEnhancedText.labelLarge(
                       'End Date & Time *',
-                      style: BLKWDSTypography.labelMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingSmall),
                     InkWell(
@@ -293,9 +289,8 @@ class _BookingFormState extends State<BookingForm> {
                             vertical: 8,
                           ),
                         ),
-                        child: Text(
+                        child: BLKWDSEnhancedText.bodyMedium(
                           DateFormat.yMMMd().format(_endDate),
-                          style: BLKWDSTypography.bodyMedium,
                         ),
                       ),
                     ),
@@ -310,9 +305,8 @@ class _BookingFormState extends State<BookingForm> {
                             vertical: 8,
                           ),
                         ),
-                        child: Text(
+                        child: BLKWDSEnhancedText.bodyMedium(
                           _endTime.format(context),
-                          style: BLKWDSTypography.bodyMedium,
                         ),
                       ),
                     ),
@@ -324,20 +318,22 @@ class _BookingFormState extends State<BookingForm> {
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
           // Studio dropdown
-          Text(
+          BLKWDSEnhancedText.labelLarge(
             'Studio Space',
-            style: BLKWDSTypography.labelMedium,
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
           FutureBuilder<List<Studio>>(
             future: DBService.getAllStudios(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return BLKWDSEnhancedLoadingIndicator();
               }
 
               if (snapshot.hasError) {
-                return Text('Error loading studios: ${snapshot.error}');
+                return BLKWDSEnhancedText.bodyMedium(
+                  'Error loading studios: ${snapshot.error}',
+                  color: BLKWDSColors.errorRed,
+                );
               }
 
               final studios = snapshot.data ?? [];
@@ -376,16 +372,23 @@ class _BookingFormState extends State<BookingForm> {
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
           // Gear selection
-          Text(
+          BLKWDSEnhancedText.labelLarge(
             'Gear Selection',
-            style: BLKWDSTypography.labelMedium,
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
           Container(
             height: 200,
             decoration: BoxDecoration(
+              color: BLKWDSColors.backgroundMedium,
               border: Border.all(color: BLKWDSColors.slateGrey.withValues(alpha: 100)),
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+              boxShadow: [
+                BoxShadow(
+                  color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: ListView.builder(
               itemCount: widget.controller.gearList.value.length,
@@ -415,16 +418,23 @@ class _BookingFormState extends State<BookingForm> {
 
           // Member assignment (only if gear is selected)
           if (_selectedGearIds.isNotEmpty) ...[
-            Text(
+            BLKWDSEnhancedText.labelLarge(
               'Gear-to-Member Assignment (Optional)',
-              style: BLKWDSTypography.labelMedium,
             ),
             const SizedBox(height: BLKWDSConstants.spacingSmall),
             Container(
               height: 200,
               decoration: BoxDecoration(
+                color: BLKWDSColors.backgroundMedium,
                 border: Border.all(color: BLKWDSColors.slateGrey.withValues(alpha: 100)),
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: BLKWDSColors.deepBlack.withValues(alpha: 40),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: ListView.builder(
                 itemCount: _selectedGearIds.length,
@@ -472,16 +482,16 @@ class _BookingFormState extends State<BookingForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              BLKWDSButton(
+              BLKWDSEnhancedButton(
                 label: 'Cancel',
                 onPressed: widget.onCancel,
-                type: BLKWDSButtonType.secondary,
+                type: BLKWDSEnhancedButtonType.secondary,
               ),
               const SizedBox(width: BLKWDSConstants.spacingMedium),
-              BLKWDSButton(
+              BLKWDSEnhancedButton(
                 label: widget.booking == null ? 'Create Booking' : 'Update Booking',
                 onPressed: _saveBooking,
-                type: BLKWDSButtonType.primary,
+                type: BLKWDSEnhancedButtonType.primary,
               ),
             ],
           ),

@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
 import '../../../utils/date_formatter.dart';
 import '../../../services/navigation_service.dart';
-import '../../../widgets/blkwds_button.dart';
+import '../../../widgets/blkwds_widgets.dart';
 import '../dashboard_controller.dart';
 
 /// RecentActivityWidget
@@ -20,19 +19,9 @@ class RecentActivityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BLKWDSEnhancedCard(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundMedium,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: BLKWDSColors.deepBlack.withValues(alpha: 40),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      animateOnHover: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,28 +31,23 @@ class RecentActivityWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.history,
-                      color: BLKWDSColors.accentTeal,
-                      size: 20,
-                    ),
+                  const BLKWDSEnhancedIconContainer(
+                    icon: Icons.history,
+                    size: BLKWDSEnhancedIconContainerSize.small,
+                    backgroundColor: BLKWDSColors.accentTeal,
+                    backgroundAlpha: BLKWDSColors.alphaVeryLow,
+                    iconColor: BLKWDSColors.accentTeal,
+                    hasShadow: true,
+                    hasBorder: true,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Text(
+                  BLKWDSEnhancedText.titleLarge(
                     'Recent Activity',
-                    style: BLKWDSTypography.titleMedium.copyWith(
-                      color: BLKWDSColors.textPrimary,
-                    ),
+                    color: BLKWDSColors.textPrimary,
                   ),
                 ],
               ),
-              BLKWDSButton(
+              BLKWDSEnhancedButton(
                 onPressed: () {
                   // Navigate to a full activity log screen using NavigationService
                   NavigationService().navigateToActivityLog(
@@ -72,8 +56,11 @@ class RecentActivityWidget extends StatelessWidget {
                 },
                 label: 'View All',
                 icon: Icons.visibility,
-                type: BLKWDSButtonType.secondary,
-                isSmall: true,
+                type: BLKWDSEnhancedButtonType.secondary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                  vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                ),
               ),
             ],
           ),
@@ -85,8 +72,11 @@ class RecentActivityWidget extends StatelessWidget {
               valueListenable: controller.recentActivity,
               builder: (context, activities, _) {
                 if (activities.isEmpty) {
-                  return const Center(
-                    child: Text('No recent activity'),
+                  return Center(
+                    child: BLKWDSEnhancedText.bodyMedium(
+                      'No recent activity',
+                      color: BLKWDSColors.textSecondary,
+                    ),
                   );
                 }
 
@@ -119,94 +109,91 @@ class RecentActivityWidget extends StatelessWidget {
           )
         : null;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
-      decoration: BoxDecoration(
-        color: BLKWDSColors.backgroundLight,
-        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        border: Border.all(
-          color: activity.checkedOut
-              ? BLKWDSColors.warningAmber.withValues(alpha: 30)
-              : BLKWDSColors.successGreen.withValues(alpha: 30),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Activity icon
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: activity.checkedOut
-                  ? BLKWDSColors.warningAmber.withValues(alpha: 30)
-                  : BLKWDSColors.successGreen.withValues(alpha: 30),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Icon(
-              activity.checkedOut ? Icons.logout : Icons.login,
-              color: activity.checkedOut
+    return Padding(
+      padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      child: BLKWDSEnhancedCard(
+        padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
+        backgroundColor: BLKWDSColors.backgroundLight,
+        borderColor: activity.checkedOut
+            ? BLKWDSColors.warningAmber.withValues(alpha: 30)
+            : BLKWDSColors.successGreen.withValues(alpha: 30),
+        animateOnHover: true,
+        isElevated: true,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Activity icon
+            BLKWDSEnhancedIconContainer(
+              icon: activity.checkedOut ? Icons.logout : Icons.login,
+              size: BLKWDSEnhancedIconContainerSize.small,
+              backgroundColor: activity.checkedOut
                   ? BLKWDSColors.warningAmber
                   : BLKWDSColors.successGreen,
-              size: 20,
+              backgroundAlpha: BLKWDSColors.alphaVeryLow,
+              iconColor: activity.checkedOut
+                  ? BLKWDSColors.warningAmber
+                  : BLKWDSColors.successGreen,
+              hasShadow: true,
+              hasBorder: true,
+              borderColor: activity.checkedOut
+                  ? BLKWDSColors.warningAmber.withValues(alpha: 76)
+                  : BLKWDSColors.successGreen.withValues(alpha: 76),
             ),
-          ),
-          const SizedBox(width: BLKWDSConstants.spacingSmall),
+            const SizedBox(width: BLKWDSConstants.spacingSmall),
 
-          // Activity details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Gear name
-                Text(
-                  gear.name,
-                  style: BLKWDSTypography.titleSmall,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: 2),
-
-                // Action text
-                Text(
-                  activity.checkedOut
-                      ? 'Checked out to ${member?.name ?? 'Unknown'}'
-                      : 'Returned to inventory',
-                  style: BLKWDSTypography.bodySmall.copyWith(
-                    color: BLKWDSColors.textSecondary,
-                  ),
-                ),
-
-                // Note if available
-                if (activity.note != null && activity.note!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    'Note: ${activity.note}',
-                    style: BLKWDSTypography.bodySmall.copyWith(
-                      color: BLKWDSColors.textSecondary,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    maxLines: 1,
+            // Activity details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Gear name
+                  BLKWDSEnhancedText.titleLarge(
+                    gear.name,
                     overflow: TextOverflow.ellipsis,
                   ),
+
+                  const SizedBox(height: 2),
+
+                  // Action text
+                  BLKWDSEnhancedText.bodyMedium(
+                    activity.checkedOut
+                        ? 'Checked out to ${member?.name ?? 'Unknown'}'
+                        : 'Returned to inventory',
+                    color: BLKWDSColors.textSecondary,
+                  ),
+
+                  // Note if available
+                  if (activity.note != null && activity.note!.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    BLKWDSEnhancedText.bodyMedium(
+                      'Note: ${activity.note}',
+                      color: BLKWDSColors.textSecondary,
+                      isItalic: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                 ],
               ],
             ),
           ),
 
-          // Timestamp
-          Padding(
-            padding: const EdgeInsets.only(left: BLKWDSConstants.spacingSmall),
-            child: Text(
-              _formatTimestamp(activity.timestamp),
-              style: BLKWDSTypography.labelSmall.copyWith(
+            // Timestamp
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: BLKWDSConstants.spacingSmall,
+                vertical: BLKWDSConstants.spacingXXSmall,
+              ),
+              decoration: BoxDecoration(
+                color: BLKWDSColors.backgroundDark.withValues(alpha: 50),
+                borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadiusSmall),
+              ),
+              child: BLKWDSEnhancedText.labelLarge(
+                _formatTimestamp(activity.timestamp),
                 color: BLKWDSColors.textSecondary,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

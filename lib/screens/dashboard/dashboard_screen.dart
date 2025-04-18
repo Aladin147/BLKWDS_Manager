@@ -131,14 +131,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 width: 48,
                 height: 48,
                 padding: const EdgeInsets.all(12),
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(BLKWDSColors.accentTeal),
+                child: const BLKWDSEnhancedLoadingIndicator(
+                  size: 24,
                 ),
               )
-            : IconButton(
-                icon: const Icon(Icons.refresh),
-                tooltip: 'Refresh Dashboard',
+            : BLKWDSEnhancedButton(
+                icon: Icons.refresh,
+                type: BLKWDSEnhancedButtonType.tertiary,
+                padding: const EdgeInsets.all(8),
                 onPressed: () async {
                   // Show loading indicator
                   setState(() {
@@ -168,16 +168,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   }
                 },
               ),
-        IconButton(
-          icon: const Icon(Icons.calendar_month),
-          tooltip: 'Calendar',
+        BLKWDSEnhancedButton(
+          icon: Icons.calendar_month,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          padding: const EdgeInsets.all(8),
           onPressed: () {
             NavigationService().navigateToCalendar();
           },
         ),
-        IconButton(
-          icon: const Icon(Icons.settings),
-          tooltip: 'Settings',
+        BLKWDSEnhancedButton(
+          icon: Icons.settings,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          padding: const EdgeInsets.all(8),
           onPressed: () {
             NavigationService().navigateToSettings();
           },
@@ -188,7 +190,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         builder: (context, isLoading, _) {
           if (isLoading) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: BLKWDSEnhancedLoadingIndicator(),
             );
           }
 
@@ -202,21 +204,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       const Icon(Icons.error_outline, size: 48, color: BLKWDSColors.statusOut),
                       const SizedBox(height: BLKWDSConstants.spacingMedium),
-                      Text(
+                      BLKWDSEnhancedText.titleLarge(
                         'Error loading data',
-                        style: BLKWDSTypography.titleMedium,
+                        color: BLKWDSColors.errorRed,
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingSmall),
-                      Text(
+                      BLKWDSEnhancedText.bodyMedium(
                         error,
-                        style: BLKWDSTypography.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: BLKWDSConstants.spacingMedium),
-                      BLKWDSButton(
+                      BLKWDSEnhancedButton(
                         label: 'Retry',
                         onPressed: _initializeData,
-                        type: BLKWDSButtonType.primary,
+                        type: BLKWDSEnhancedButtonType.primary,
                       ),
                     ],
                   ),
@@ -260,13 +261,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         // Member dropdown
                         Expanded(
-                          child: BLKWDSDropdown<Member>(
+                          child: BLKWDSEnhancedDropdown<Member>(
                             label: 'Select Member',
                             value: _selectedMember,
                             items: _controller.memberList.value.map((member) {
                               return DropdownMenuItem<Member>(
                                 value: member,
-                                child: Text(member.name),
+                                child: BLKWDSEnhancedText.bodyMedium(member.name),
                               );
                             }).toList(),
                             onChanged: (value) {

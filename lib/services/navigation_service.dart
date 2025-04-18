@@ -295,4 +295,12 @@ class NavigationService {
       transitionType: BLKWDSPageTransitionType.rightToLeft,
     );
   }
+
+  /// Navigate to style demo
+  Future<T?> navigateToStyleDemo<T>() async {
+    return navigateToNamed<T>(
+      AppRoutes.styleDemo,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
 }
