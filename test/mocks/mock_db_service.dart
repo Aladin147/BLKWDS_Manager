@@ -90,4 +90,10 @@ class MockDBService extends Mock implements DBService {
   }
 
   // Add more mock implementations as needed
+
+  /// Check if a booking conflicts with existing bookings
+  static Future<bool> hasBookingConflicts(Booking booking, {int? excludeBookingId}) async {
+    // This is a mock implementation for testing
+    return false;
+  }
 }
