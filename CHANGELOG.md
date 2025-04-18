@@ -5,6 +5,24 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc46] - 2025-07-04
+
+**Added:**
+
+- Comprehensive UI/UX audit document (docs/ui_ux/ui_ux_audit.md)
+- Detailed implementation plan for persistent home button (docs/ui_ux/home_button_implementation_plan.md)
+- Detailed implementation plan for error handling standardization (docs/ui_ux/error_handling_standardization_plan.md)
+- Detailed implementation plan for typography standardization (docs/ui_ux/typography_standardization_plan.md)
+- Detailed implementation plan for placeholder content replacement (docs/ui_ux/placeholder_content_replacement_plan.md)
+
+**Improved:**
+
+- Better understanding of remaining UI/UX tasks
+- Prioritized UI/UX improvements based on user impact
+- Created clear roadmap for completing UI/UX standardization
+- Enhanced documentation with detailed implementation plans
+- Established patterns for future UI/UX improvements
+
 ## [1.0.0-rc45] - 2025-07-03
 
 **Added:**
