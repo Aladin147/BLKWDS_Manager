@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc50 (Release Candidate 50)
-**Last Updated:** 2025-07-06
+**Version:** 1.0.0-rc51 (Release Candidate 51)
+**Last Updated:** 2025-07-08
 
 ## Project Phase
 
@@ -114,6 +114,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 2. **Testing Coverage**
    - ✅ Test suite compilation errors (FIXED in v0.76.0)
    - ✅ Critical controller tests implemented (BookingPanelController) (FIXED in v0.76.0)
+   - ✅ Dashboard widget tests fixed (FIXED in v0.83.0)
    - Minimal test coverage across unit, widget, and integration tests (IDENTIFIED in v0.50.0)
    - Some critical components like services and models lack tests (IDENTIFIED in v0.50.0)
    - No performance or stress tests (IDENTIFIED in v0.50.0)
@@ -129,6 +130,9 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ~~Adapter pattern complexity~~ (FIXED in v0.42.0)
    - ~~MockData class in production code~~ (FIXED in v0.41.0)
    - ~~Unclear state management strategy with Riverpod~~ (RESOLVED in v0.64.0 - Standardized on ValueNotifier pattern)
+   - ✅ Inconsistent navigation service access (FIXED in v0.84.0)
+   - ✅ Standardized navigation patterns (FIXED in v0.84.0)
+   - Some screens still need to be updated to use NavigationHelper (IDENTIFIED in v0.84.0)
 
 5. **Error Handling Inconsistencies**
    - ✅ Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (FIXED in v0.72.0)
@@ -311,6 +315,56 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.84.0 - Routing and Navigation Improvements (2025-07-08)
+
+**Added:**
+
+- Implemented a new `NavigationHelper` class to standardize navigation service access
+- Centralized all navigation methods in one place
+- Created consistent navigation patterns across the app
+
+**Fixed:**
+
+- Fixed inconsistencies between using `NavigationService()` and `NavigationService.instance`
+- Updated the `BLKWDSHomeButton` to use the new NavigationHelper
+- Updated the Dashboard screen to use the NavigationHelper for all navigation actions
+- Updated the Calendar screen to use the NavigationHelper for all navigation actions
+
+**Improved:**
+
+- Improved code maintainability with standardized navigation access
+- Eliminated potential bugs from inconsistent navigation service access
+- Made the codebase more maintainable and easier to understand
+- Prepared the groundwork for future routing improvements
+
+### v0.83.0 - Code Cleanup and Optimization (2025-07-07)
+
+**Added:**
+
+- Implemented caching for frequently accessed data with a new `CacheService` class
+- Added caching to `DBService.getAllGear()`, `DBService.getAllMembers()`, and `DBService.getAllProjects()`
+- Implemented cache invalidation when data is modified
+- Added cache statistics and periodic cache cleaning
+- Created a `TestDatabaseHelper` class to initialize the database for tests
+
+**Fixed:**
+
+- Fixed the `dashboard_screen_test.dart` file by implementing a proper test controller
+- Fixed the `gear_preview_list_widget_test.dart` file by creating a custom mock controller
+- Fixed the `quick_actions_panel_test.dart` file by updating the test assertions
+- Fixed the `top_bar_summary_widget_test.dart` file by creating a custom mock controller
+
+**Improved:**
+
+- Implemented lazy loading in `DashboardController` to load essential data first
+- Created a generic `_loadDataWithRetry` method to reduce code duplication
+- Added proper resource disposal with a `dispose()` method
+- Optimized error handling to allow the app to continue functioning even if some data fails to load
+- Improved application performance with caching
+- Reduced database queries for frequently accessed data
+- Enhanced controller efficiency with lazy loading
+- Fixed critical test issues to improve test reliability
 
 ### v0.82.0 - Deprecated API Cleanup (2025-07-06)
 
