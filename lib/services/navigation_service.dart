@@ -15,10 +15,15 @@ import '../screens/booking_panel/booking_detail_screen.dart';
 /// Provides consistent navigation with animated transitions throughout the app
 class NavigationService {
   // Singleton instance
-  static final NavigationService _instance = NavigationService._internal();
+  static NavigationService _instance = NavigationService._internal();
 
   // Public accessor for the singleton instance
   static NavigationService get instance => _instance;
+
+  // Setter for testing purposes
+  static set instance(NavigationService service) {
+    _instance = service;
+  }
 
   // Factory constructor
   factory NavigationService() => _instance;

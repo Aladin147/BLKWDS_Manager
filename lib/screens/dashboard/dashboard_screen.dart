@@ -49,12 +49,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Initialize controller
   void _initializeController() {
-    _controller = DashboardController();
+    // Use test controller if available (for testing)
+    if (DashboardController.testController != null) {
+      _controller = DashboardController.testController!;
+    } else {
+      _controller = DashboardController();
 
-    // Set the context for error handling
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.setContext(context);
-    });
+      // Set the context for error handling
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _controller.setContext(context);
+      });
+    }
   }
 
   // Initialize data from database

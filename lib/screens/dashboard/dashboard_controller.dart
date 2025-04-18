@@ -14,6 +14,8 @@ import '../../utils/constants.dart';
 /// Handles business logic and database operations for the dashboard screen
 /// Consolidated controller that combines functionality from previous versions
 class DashboardController {
+  // Static test controller for unit testing
+  static DashboardController? testController;
   // Build context for error handling
   BuildContext? context;
   // State notifiers
