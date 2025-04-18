@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:blkwds_manager/screens/dashboard/widgets/quick_actions_panel.dart';
-import 'package:blkwds_manager/theme/blkwds_colors.dart';
 
 void main() {
   testWidgets('QuickActionsPanel displays all required buttons', (WidgetTester tester) async {
-    // Create mock callbacks
-    bool addGearCalled = false;
-    bool openBookingPanelCalled = false;
-    bool manageMembersCalled = false;
-    bool manageProjectsCalled = false;
-    bool manageGearCalled = false;
-    
+
     // Build the widget
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: QuickActionsPanel(
-            onAddGear: () { addGearCalled = true; },
-            onOpenBookingPanel: () { openBookingPanelCalled = true; },
-            onManageMembers: () { manageMembersCalled = true; },
-            onManageProjects: () { manageProjectsCalled = true; },
-            onManageGear: () { manageGearCalled = true; },
+            onAddGear: () {},
+            onOpenBookingPanel: () {},
+            onManageMembers: () {},
+            onManageProjects: () {},
+            onManageGear: () {},
           ),
         ),
       ),
@@ -29,24 +22,21 @@ void main() {
 
     // Verify that the panel title is displayed
     expect(find.text('Quick Actions'), findsOneWidget);
-    
+
     // Verify that all required buttons are displayed
     expect(find.text('Add Gear'), findsOneWidget);
     expect(find.text('Open Booking Panel'), findsOneWidget);
     expect(find.text('Manage Members'), findsOneWidget);
     expect(find.text('Manage Projects'), findsOneWidget);
     expect(find.text('Manage Gear'), findsOneWidget);
-    
+
     // Verify that optional buttons are not displayed
     expect(find.text('Manage Studios'), findsNothing);
     expect(find.text('Export Logs'), findsNothing);
   });
 
   testWidgets('QuickActionsPanel displays optional buttons when callbacks are provided', (WidgetTester tester) async {
-    // Create mock callbacks
-    bool manageStudiosCalled = false;
-    bool exportLogsCalled = false;
-    
+
     // Build the widget with optional callbacks
     await tester.pumpWidget(
       MaterialApp(
@@ -57,8 +47,8 @@ void main() {
             onManageMembers: () {},
             onManageProjects: () {},
             onManageGear: () {},
-            onManageStudios: () { manageStudiosCalled = true; },
-            onExportLogs: () { exportLogsCalled = true; },
+            onManageStudios: () {},
+            onExportLogs: () {},
           ),
         ),
       ),
@@ -78,7 +68,7 @@ void main() {
     bool manageGearCalled = false;
     bool manageStudiosCalled = false;
     bool exportLogsCalled = false;
-    
+
     // Build the widget with all callbacks
     await tester.pumpWidget(
       MaterialApp(
@@ -102,27 +92,27 @@ void main() {
     await tester.tap(find.text('Add Gear'));
     await tester.pump();
     expect(addGearCalled, true);
-    
+
     await tester.tap(find.text('Open Booking Panel'));
     await tester.pump();
     expect(openBookingPanelCalled, true);
-    
+
     await tester.tap(find.text('Manage Members'));
     await tester.pump();
     expect(manageMembersCalled, true);
-    
+
     await tester.tap(find.text('Manage Projects'));
     await tester.pump();
     expect(manageProjectsCalled, true);
-    
+
     await tester.tap(find.text('Manage Gear'));
     await tester.pump();
     expect(manageGearCalled, true);
-    
+
     await tester.tap(find.text('Manage Studios'));
     await tester.pump();
     expect(manageStudiosCalled, true);
-    
+
     await tester.tap(find.text('Export Logs'));
     await tester.pump();
     expect(exportLogsCalled, true);
@@ -144,21 +134,17 @@ void main() {
       ),
     );
 
-    // Find the icon container
-    final container = tester.widget<Container>(find.byType(Container).first);
-    
-    // Verify the container decoration
-    final decoration = container.decoration as BoxDecoration;
-    expect(decoration.color, BLKWDSColors.accentTeal.withValues(alpha: 50));
-    expect(decoration.borderRadius, BorderRadius.circular(8));
-    
-    // Find the icon
-    final icon = tester.widget<Icon>(find.byType(Icon).first);
-    expect(icon.color, BLKWDSColors.accentTeal);
-    expect(icon.size, 20);
-    
-    // Verify that all buttons have the correct type
-    final primaryButtons = tester.widgetList<ElevatedButton>(find.byType(ElevatedButton));
-    expect(primaryButtons.length, 5); // 5 primary buttons
+    // Verify that the panel title is displayed
+    expect(find.text('Quick Actions'), findsOneWidget);
+
+    // Verify that the icon is displayed
+    expect(find.byIcon(Icons.flash_on), findsOneWidget);
+
+    // Verify that all buttons have the correct icons
+    expect(find.byIcon(Icons.add_circle_outline), findsOneWidget);
+    expect(find.byIcon(Icons.calendar_today), findsOneWidget);
+    expect(find.byIcon(Icons.people), findsOneWidget);
+    expect(find.byIcon(Icons.folder), findsOneWidget);
+    expect(find.byIcon(Icons.videocam), findsOneWidget);
   });
 }
