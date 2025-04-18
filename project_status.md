@@ -200,7 +200,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Fix integration test compilation errors
      - [x] Create missing mock implementations (MockBuildContext)
      - [x] Create missing mock implementations (MockDirectory, MockFile)
-     - [ ] Fix integration test runtime errors
+     - [x] Fix integration test runtime errors
    - Static Analysis Issues
      - [x] Fix use_build_context_synchronously warnings
      - [x] Clean up unused code and imports

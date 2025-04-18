@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:blkwds_manager/main.dart' as app;
 import 'package:blkwds_manager/models/models.dart';
-
 import 'package:blkwds_manager/services/db_service.dart';
+
+import 'test_helpers.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -18,51 +19,57 @@ void main() {
       // Prepare test data
       await _prepareTestData();
 
-      // Wait for the dashboard to load
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      // Wait for the dashboard to load with improved stability
+      await IntegrationTestHelpers.waitForAppStability(tester);
 
-      // Verify that we're on the dashboard
-      expect(find.text('Quick Actions'), findsOneWidget);
-      expect(find.text('Recent Gear Activity'), findsOneWidget);
+      // Verify that we're on the dashboard with retry logic
+      final quickActionsFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Quick Actions');
+      expect(quickActionsFinder, findsOneWidget);
 
-      // Select a member from the dropdown
-      await tester.tap(find.byType(DropdownButton<Member>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Test Member').last);
-      await tester.pumpAndSettle();
+      final recentActivityFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Recent Gear Activity');
+      expect(recentActivityFinder, findsOneWidget);
 
-      // Find a gear item in the list
-      expect(find.text('Test Camera'), findsOneWidget);
+      // Select a member from the dropdown with retry logic
+      final dropdownFinder = await IntegrationTestHelpers.findByTypeWithRetry<DropdownButton<Member>>(tester);
+      await IntegrationTestHelpers.tapWithRetry(tester, dropdownFinder);
 
-      // Check out the gear
-      await tester.tap(find.text('Check Out').first);
-      await tester.pumpAndSettle();
+      final memberFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Member');
+      await IntegrationTestHelpers.tapWithRetry(tester, memberFinder.last);
 
-      // Add a note in the dialog
-      await tester.enterText(find.byType(TextField).last, 'Integration test checkout');
-      await tester.pumpAndSettle();
+      // Find a gear item in the list with retry logic
+      final gearFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Camera');
+      expect(gearFinder, findsOneWidget);
 
-      // Confirm the check-out
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
+      // Check out the gear with retry logic
+      final checkOutFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Check Out');
+      await IntegrationTestHelpers.tapWithRetry(tester, checkOutFinder.first);
 
-      // Verify the gear status is updated (should now show "Check In" button)
-      expect(find.text('Check In'), findsOneWidget);
+      // Add a note in the dialog with retry logic
+      final textFieldFinder = await IntegrationTestHelpers.findByTypeWithRetry<TextField>(tester);
+      await IntegrationTestHelpers.enterTextWithRetry(tester, textFieldFinder.last, 'Integration test checkout');
 
-      // Check in the gear
-      await tester.tap(find.text('Check In').first);
-      await tester.pumpAndSettle();
+      // Confirm the check-out with retry logic
+      final confirmFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
+      await IntegrationTestHelpers.tapWithRetry(tester, confirmFinder);
 
-      // Add a note in the dialog
-      await tester.enterText(find.byType(TextField).last, 'Integration test checkin');
-      await tester.pumpAndSettle();
+      // Verify the gear status is updated with retry logic
+      final checkInFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Check In');
+      expect(checkInFinder, findsOneWidget);
 
-      // Confirm the check-in
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
+      // Check in the gear with retry logic
+      await IntegrationTestHelpers.tapWithRetry(tester, checkInFinder.first);
 
-      // Verify the gear status is updated (should now show "Check Out" button again)
-      expect(find.text('Check Out'), findsOneWidget);
+      // Add a note in the dialog with retry logic
+      final textFieldFinder2 = await IntegrationTestHelpers.findByTypeWithRetry<TextField>(tester);
+      await IntegrationTestHelpers.enterTextWithRetry(tester, textFieldFinder2.last, 'Integration test checkin');
+
+      // Confirm the check-in with retry logic
+      final confirmFinder2 = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
+      await IntegrationTestHelpers.tapWithRetry(tester, confirmFinder2);
+
+      // Verify the gear status is updated with retry logic
+      final checkOutFinder2 = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Check Out');
+      expect(checkOutFinder2, findsOneWidget);
 
       // Clean up test data
       await _cleanupTestData();
@@ -76,30 +83,34 @@ void main() {
       // Prepare test data
       await _prepareTestData();
 
-      // Wait for the dashboard to load
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      // Wait for the dashboard to load with improved stability
+      await IntegrationTestHelpers.waitForAppStability(tester);
 
-      // Verify that we're on the dashboard
-      expect(find.text('Quick Actions'), findsOneWidget);
+      // Verify that we're on the dashboard with retry logic
+      final quickActionsFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Quick Actions');
+      expect(quickActionsFinder, findsOneWidget);
 
       // Try to check out gear without selecting a member
       // Note: In the actual app, the member selection is managed in the DashboardScreen state
       // For testing purposes, we'll just try to tap the Check Out button without selecting a member
       // We need to reset the dropdown selection
-      await tester.tap(find.byType(DropdownButton<Member>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Select Member').first);
-      await tester.pumpAndSettle();
+      final dropdownFinder = await IntegrationTestHelpers.findByTypeWithRetry<DropdownButton<Member>>(tester);
+      await IntegrationTestHelpers.tapWithRetry(tester, dropdownFinder);
 
-      // Find a gear item in the list
-      expect(find.text('Test Camera'), findsOneWidget);
+      final selectMemberFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Select Member');
+      await IntegrationTestHelpers.tapWithRetry(tester, selectMemberFinder.first);
 
-      // Check out the gear
-      await tester.tap(find.text('Check Out').first);
-      await tester.pumpAndSettle();
+      // Find a gear item in the list with retry logic
+      final gearFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Camera');
+      expect(gearFinder, findsOneWidget);
 
-      // Verify that an error message is displayed
-      expect(find.text('Please select a member first'), findsOneWidget);
+      // Check out the gear with retry logic
+      final checkOutFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Check Out');
+      await IntegrationTestHelpers.tapWithRetry(tester, checkOutFinder.first);
+
+      // Verify that an error message is displayed with retry logic
+      final errorFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Please select a member first');
+      expect(errorFinder, findsOneWidget);
 
       // Clean up test data
       await _cleanupTestData();

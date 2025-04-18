@@ -5,6 +5,28 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc41] - 2025-07-03
+
+### Added
+
+- Added IntegrationTestHelpers class with retry logic for integration tests
+- Added helper methods for finding widgets, tapping, entering text, and waiting for app stability
+- Added improved error handling for integration test failures
+
+### Fixed
+
+- Fixed integration test runtime errors related to widget finding and test timing
+- Fixed flaky tests in gear_checkout_flow_test.dart
+- Fixed flaky tests in booking_creation_flow_test.dart
+- Fixed flaky tests in project_management_flow_test.dart
+
+### Improved
+
+- Enhanced test reliability with retry logic
+- Improved test stability with proper waiting mechanisms
+- Better error reporting for test failures
+- More consistent test behavior across different environments
+
 ## [1.0.0-rc40] - 2025-07-03
 
 ### Added

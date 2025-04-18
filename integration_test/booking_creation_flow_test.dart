@@ -6,6 +6,8 @@ import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/services/db_service.dart';
 import 'package:blkwds_manager/services/navigation_service.dart';
 
+import 'test_helpers.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -18,74 +20,75 @@ void main() {
       // Prepare test data
       await _prepareTestData();
 
-      // Wait for the dashboard to load
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      // Wait for the dashboard to load with improved stability
+      await IntegrationTestHelpers.waitForAppStability(tester);
 
-      // Navigate to Booking Panel
-      await tester.tap(find.text('Open Booking Panel'));
-      await tester.pumpAndSettle();
+      // Navigate to Booking Panel with retry logic
+      final bookingPanelButtonFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Open Booking Panel');
+      await IntegrationTestHelpers.tapWithRetry(tester, bookingPanelButtonFinder);
 
-      // Verify that we're on the booking panel
-      expect(find.text('Booking Panel'), findsOneWidget);
+      // Verify that we're on the booking panel with retry logic
+      final bookingPanelTitleFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Booking Panel');
+      expect(bookingPanelTitleFinder, findsOneWidget);
 
-      // Click "Create New Booking"
-      await tester.tap(find.text('Create New Booking'));
-      await tester.pumpAndSettle();
+      // Click "Create New Booking" with retry logic
+      final createBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Create New Booking');
+      await IntegrationTestHelpers.tapWithRetry(tester, createBookingFinder);
 
-      // Verify that the booking form is displayed
-      expect(find.text('New Booking'), findsOneWidget);
+      // Verify that the booking form is displayed with retry logic
+      final newBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'New Booking');
+      expect(newBookingFinder, findsOneWidget);
 
-      // Select a project
-      await tester.tap(find.byType(DropdownButton<Project>).first);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Test Project').last);
-      await tester.pumpAndSettle();
+      // Select a project with retry logic
+      final projectDropdownFinder = await IntegrationTestHelpers.findByTypeWithRetry<DropdownButton<Project>>(tester);
+      await IntegrationTestHelpers.tapWithRetry(tester, projectDropdownFinder.first);
 
-      // Set booking title
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Booking Title (optional)'),
-        'Test Booking'
-      );
-      await tester.pumpAndSettle();
+      final projectFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Project');
+      await IntegrationTestHelpers.tapWithRetry(tester, projectFinder.last);
+
+      // Set booking title with retry logic
+      final titleFieldFinder = find.widgetWithText(TextField, 'Booking Title (optional)');
+      await IntegrationTestHelpers.enterTextWithRetry(tester, titleFieldFinder, 'Test Booking');
 
       // Set start date and time
       // Note: Date/time pickers are complex to test in integration tests
       // For simplicity, we'll assume the default values are acceptable
 
-      // Select gear items
-      await tester.tap(find.text('Select Gear'));
-      await tester.pumpAndSettle();
+      // Select gear items with retry logic
+      final selectGearFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Select Gear');
+      await IntegrationTestHelpers.tapWithRetry(tester, selectGearFinder);
 
-      // Check the test gear item
-      await tester.tap(find.text('Test Camera'));
-      await tester.pumpAndSettle();
+      // Check the test gear item with retry logic
+      final testCameraFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Camera');
+      await IntegrationTestHelpers.tapWithRetry(tester, testCameraFinder);
 
-      // Confirm gear selection
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
+      // Confirm gear selection with retry logic
+      final confirmFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
+      await IntegrationTestHelpers.tapWithRetry(tester, confirmFinder);
 
-      // Assign gear to members
-      await tester.tap(find.text('Assign Members'));
-      await tester.pumpAndSettle();
+      // Assign gear to members with retry logic
+      final assignMembersFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Assign Members');
+      await IntegrationTestHelpers.tapWithRetry(tester, assignMembersFinder);
 
-      // Select a member for the gear
-      await tester.tap(find.text('Test Member'));
-      await tester.pumpAndSettle();
+      // Select a member for the gear with retry logic
+      final testMemberFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Member');
+      await IntegrationTestHelpers.tapWithRetry(tester, testMemberFinder);
 
-      // Confirm member assignment
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
+      // Confirm member assignment with retry logic
+      final confirmMemberFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
+      await IntegrationTestHelpers.tapWithRetry(tester, confirmMemberFinder);
 
-      // Save the booking
-      await tester.tap(find.text('Save Booking'));
-      await tester.pumpAndSettle();
+      // Save the booking with retry logic
+      final saveBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Save Booking');
+      await IntegrationTestHelpers.tapWithRetry(tester, saveBookingFinder);
 
-      // Verify that the booking was created successfully
-      expect(find.text('Test Booking'), findsOneWidget);
+      // Verify that the booking was created successfully with retry logic
+      final testBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Booking');
+      expect(testBookingFinder, findsOneWidget);
 
-      // Navigate back to dashboard
+      // Navigate back to dashboard and wait for stability
       NavigationService().navigateToDashboard();
-      await tester.pumpAndSettle();
+      await IntegrationTestHelpers.waitForAppStability(tester);
 
       // Clean up test data
       await _cleanupTestData();
@@ -96,23 +99,24 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // Wait for the dashboard to load
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      // Wait for the dashboard to load with improved stability
+      await IntegrationTestHelpers.waitForAppStability(tester);
 
-      // Navigate to Booking Panel
-      await tester.tap(find.text('Open Booking Panel'));
-      await tester.pumpAndSettle();
+      // Navigate to Booking Panel with retry logic
+      final bookingPanelButtonFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Open Booking Panel');
+      await IntegrationTestHelpers.tapWithRetry(tester, bookingPanelButtonFinder);
 
-      // Click "Create New Booking"
-      await tester.tap(find.text('Create New Booking'));
-      await tester.pumpAndSettle();
+      // Click "Create New Booking" with retry logic
+      final createBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Create New Booking');
+      await IntegrationTestHelpers.tapWithRetry(tester, createBookingFinder);
 
-      // Try to save without selecting a project (required field)
-      await tester.tap(find.text('Save Booking'));
-      await tester.pumpAndSettle();
+      // Try to save without selecting a project (required field) with retry logic
+      final saveBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Save Booking');
+      await IntegrationTestHelpers.tapWithRetry(tester, saveBookingFinder);
 
-      // Verify that validation error is displayed
-      expect(find.text('Please select a project'), findsOneWidget);
+      // Verify that validation error is displayed with retry logic
+      final errorFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Please select a project');
+      expect(errorFinder, findsOneWidget);
     });
   });
 }
