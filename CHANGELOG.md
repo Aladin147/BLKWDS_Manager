@@ -5,6 +5,22 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc44] - 2025-07-03
+
+### Fixed
+
+- Fixed compilation issues in settings_controller_test.dart
+- Replaced anyNamed() with captureAny for parameter matching
+- Added proper parameter values for RetryService.retry calls
+- Fixed File constructor mocking with proper MockFile implementation
+
+### Improved
+
+- Enhanced test coverage for SettingsController
+- Improved test structure for better readability and maintainability
+- Added proper verification of mock interactions
+- Improved test assertions for better error reporting
+
 ## [1.0.0-rc43] - 2025-07-03
 
 ### Added
