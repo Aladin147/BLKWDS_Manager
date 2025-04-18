@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
 import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/screens/dashboard/dashboard_controller.dart';
 import 'package:blkwds_manager/screens/dashboard/widgets/top_bar_summary_widget.dart';
 import 'package:blkwds_manager/theme/blkwds_colors.dart';
 
-// Generate mocks
-@GenerateMocks([DashboardController])
+// Import test helpers
+import '../../helpers/test_database_helper.dart';
+
+// Create a mock DashboardController
+class MockDashboardController extends Mock implements DashboardController {
+  @override
+  final ValueNotifier<int> gearOutCount = ValueNotifier<int>(5);
+  @override
+  final ValueNotifier<int> bookingsTodayCount = ValueNotifier<int>(3);
+  @override
+  final ValueNotifier<int> gearReturningCount = ValueNotifier<int>(2);
+  @override
+  final ValueNotifier<Booking?> studioBookingToday = ValueNotifier<Booking?>(null);
+}
+
 void main() {
   late MockDashboardController mockController;
 
+  setUpAll(() {
+    // Initialize the database for tests
+    TestDatabaseHelper.initializeDatabase();
+  });
+
   setUp(() {
     mockController = MockDashboardController();
-    
-    // Set up the ValueNotifiers in the mock controller
-    when(mockController.gearOutCount).thenReturn(ValueNotifier<int>(5));
-    when(mockController.bookingsTodayCount).thenReturn(ValueNotifier<int>(3));
-    when(mockController.gearReturningCount).thenReturn(ValueNotifier<int>(2));
-    when(mockController.studioBookingToday).thenReturn(ValueNotifier<Booking?>(null));
+
+    // ValueNotifiers are already set up in the mock class
   });
 
   testWidgets('TopBarSummaryWidget displays correct statistics', (WidgetTester tester) async {
@@ -93,7 +106,7 @@ void main() {
     );
 
     // Update the mock controller
-    when(mockController.studioBookingToday).thenReturn(ValueNotifier<Booking?>(mockBooking));
+    mockController.studioBookingToday.value = mockBooking;
 
     // Build the widget
     await tester.pumpWidget(
@@ -126,13 +139,15 @@ void main() {
 
     // Find the container
     final container = tester.widget<Container>(find.byType(Container).first);
-    
+
     // Verify the container decoration
     final decoration = container.decoration as BoxDecoration;
     expect(decoration.color, BLKWDSColors.backgroundDark);
 
-    // Find the summary cards
-    final cards = tester.widgetList<Card>(find.byType(Card));
-    expect(cards.length, 4); // 4 summary cards
+    // Verify that all summary cards are displayed
+    expect(find.text('Gear Out'), findsOneWidget);
+    expect(find.text('Bookings Today'), findsOneWidget);
+    expect(find.text('Gear Returning'), findsOneWidget);
+    expect(find.text('Studio:'), findsOneWidget);
   });
 }
