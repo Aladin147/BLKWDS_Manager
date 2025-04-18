@@ -82,11 +82,19 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
             // Check if the value exists in the items list
             bool valueExists = false;
             if (value != null) {
-              valueExists = items.any((item) => item.value == value);
+              // Use deep equality check for complex objects
+              valueExists = items.any((item) => _areValuesEqual(item.value, value));
             }
 
             // Only set the value if it exists in the items list
             final effectiveValue = valueExists ? value : null;
+
+            // If the value doesn't exist in the items list, call onChanged with null
+            // to update the parent widget's state
+            if (!valueExists && value != null) {
+              // Use Future.microtask to avoid calling setState during build
+              Future.microtask(() => onChanged(null));
+            }
 
             return DropdownButtonFormField<T>(
               value: effectiveValue,
@@ -136,5 +144,21 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  /// Helper method to compare values for equality
+  /// This handles both primitive types and complex objects
+  bool _areValuesEqual(T? a, T? b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+
+    // For primitive types, use == operator
+    if (a is String || a is num || a is bool) {
+      return a == b;
+    }
+
+    // For complex objects, compare toString() representations
+    // This is a simple approach that works for most cases
+    return a.toString() == b.toString();
   }
 }

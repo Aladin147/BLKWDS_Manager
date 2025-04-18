@@ -87,29 +87,7 @@ class SnackbarService {
     );
   }
 
-  /// @deprecated Use showError instead
-  /// Show an error snackbar with action
-  static void showErrorSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
-    showError(context, message, action: action);
-  }
 
-  /// @deprecated Use showSuccess instead
-  /// Show a success snackbar with action
-  static void showSuccessSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
-    showSuccess(context, message, action: action);
-  }
-
-  /// @deprecated Use showWarning instead
-  /// Show a warning snackbar with action
-  static void showWarningSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
-    showWarning(context, message, action: action);
-  }
-
-  /// @deprecated Use showInfo instead
-  /// Show an info snackbar with action
-  static void showInfoSnackBar(BuildContext context, String message, {SnackBarAction? action}) {
-    showInfo(context, message, action: action);
-  }
 
   /// Show an error snackbar without context
   static void showErrorGlobal(String message, {SnackBarAction? action, Duration? duration}) {
