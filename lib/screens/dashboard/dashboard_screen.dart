@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../services/navigation_service.dart';
+import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
-import '../../services/navigation_service.dart';
 import '../../models/models.dart';
 import '../../widgets/blkwds_widgets.dart';
 import 'dashboard_controller.dart';
@@ -115,12 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Show a snackbar message
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: BLKWDSConstants.toastDuration,
-      ),
-    );
+    SnackbarService.showInfo(context, message, duration: BLKWDSConstants.toastDuration);
   }
 
   @override

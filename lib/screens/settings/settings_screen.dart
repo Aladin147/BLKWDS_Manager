@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
 
 import '../../services/navigation_service.dart';
+import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -153,12 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // Show snackbar
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: BLKWDSConstants.toastDuration,
-      ),
-    );
+    SnackbarService.showInfo(context, message, duration: BLKWDSConstants.toastDuration);
   }
 
   @override

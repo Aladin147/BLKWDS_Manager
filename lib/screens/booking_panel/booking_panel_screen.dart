@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../services/navigation_service.dart';
+import '../../services/snackbar_service.dart';
 
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
@@ -71,16 +72,6 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
       _selectedBooking = null;
       _tempBookingV2 = null;
     });
-  }
-
-  // Show a snackbar message
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: BLKWDSConstants.toastDuration,
-      ),
-    );
   }
 
   @override
@@ -155,20 +146,24 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
                 if (booking.id == null) {
                   // Create new booking
                   success = await _controller.createBooking(booking);
+                  if (!mounted) return;
+
                   if (success) {
                     _hideBookingForm();
-                    _showSnackBar('Booking created successfully');
+                    SnackbarService.showSuccess(context, 'Booking created successfully');
                   } else {
-                    _showSnackBar(_controller.errorMessage.value ?? 'Failed to create booking');
+                    SnackbarService.showError(context, _controller.errorMessage.value ?? 'Failed to create booking');
                   }
                 } else {
                   // Update existing booking
                   success = await _controller.updateBooking(booking);
+                  if (!mounted) return;
+
                   if (success) {
                     _hideBookingForm();
-                    _showSnackBar('Booking updated successfully');
+                    SnackbarService.showSuccess(context, 'Booking updated successfully');
                   } else {
-                    _showSnackBar(_controller.errorMessage.value ?? 'Failed to update booking');
+                    SnackbarService.showError(context, _controller.errorMessage.value ?? 'Failed to update booking');
                   }
                 }
               },
@@ -277,32 +272,17 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
         if (success) {
           // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Booking rescheduled successfully'),
-              backgroundColor: BLKWDSColors.blkwdsGreen,
-            ),
-          );
+          SnackbarService.showSuccess(context, 'Booking rescheduled successfully');
         } else {
           // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(_controller.errorMessage.value ?? 'Failed to reschedule booking'),
-              backgroundColor: BLKWDSColors.statusOut,
-            ),
-          );
+          SnackbarService.showError(context, _controller.errorMessage.value ?? 'Failed to reschedule booking');
         }
       } catch (e) {
         // Check if the widget is still mounted before showing snackbar
         if (!mounted) return;
 
         // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: BLKWDSColors.statusOut,
-          ),
-        );
+        SnackbarService.showError(context, 'Error: $e');
       } finally {
         // Hide loading indicator
         setState(() {

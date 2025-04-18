@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
+import '../../services/navigation_service.dart';
+import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../../services/navigation_service.dart';
 import '../booking_panel/widgets/booking_details_modal.dart';
 import 'calendar_controller.dart';
 import 'widgets/calendar_filter_panel.dart';
@@ -133,12 +134,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // Show a snackbar message
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: BLKWDSConstants.toastDuration,
-      ),
-    );
+    SnackbarService.showInfo(context, message, duration: BLKWDSConstants.toastDuration);
   }
 
   @override

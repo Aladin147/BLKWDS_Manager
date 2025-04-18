@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../../../models/models.dart';
+import '../../../services/snackbar_service.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
@@ -84,12 +85,7 @@ class _CalendarViewState extends State<CalendarView> {
 
     if (!noConflicts) {
       // Show a snackbar message if there are conflicts
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cannot reschedule: conflicts with existing bookings'),
-          backgroundColor: BLKWDSColors.statusOut,
-        ),
-      );
+      SnackbarService.showError(context, 'Cannot reschedule: conflicts with existing bookings');
       return;
     }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/app_config_service.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
+import '../../services/snackbar_service.dart';
 import '../../services/database/database_integrity_service.dart';
 import '../../services/database/database_integrity_checker.dart';
 import '../../widgets/loading_indicator.dart';
@@ -52,12 +53,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       LogService.error('Error loading app configuration', e, stackTrace);
       // Show error to user
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error loading configuration: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        SnackbarService.showError(context, 'Error loading configuration: ${e.toString()}');
       }
     } finally {
       setState(() {
@@ -95,23 +91,12 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Settings saved'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+        SnackbarService.showSuccess(context, 'Settings saved', duration: const Duration(seconds: 2));
       }
     } catch (e, stackTrace) {
       LogService.error('Error saving app configuration', e, stackTrace);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error saving settings: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        SnackbarService.showError(context, 'Error saving settings: ${e.toString()}', duration: const Duration(seconds: 3));
       }
     } finally {
       setState(() {
@@ -137,13 +122,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       if (!mounted) return;
 
       if (results.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No integrity issues found'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
-        );
+        SnackbarService.showSuccess(context, 'No integrity issues found', duration: const Duration(seconds: 3));
       } else {
         int issueCount = 0;
         if (results.containsKey('foreign_key_issues')) {
@@ -166,17 +145,19 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
         }
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Found $issueCount integrity issues'),
-              backgroundColor: Colors.orange,
+          if (autoFix) {
+            SnackbarService.showWarning(context, 'Found $issueCount integrity issues', duration: const Duration(seconds: 3));
+          } else {
+            SnackbarService.showWarning(
+              context,
+              'Found $issueCount integrity issues',
               duration: const Duration(seconds: 3),
-              action: autoFix ? null : SnackBarAction(
+              action: SnackBarAction(
                 label: 'Fix Issues',
                 onPressed: () => _fixIssues(results),
               ),
-            ),
-          );
+            );
+          }
         }
       }
     } catch (e, stackTrace) {
@@ -184,13 +165,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       if (!mounted) return;
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error running integrity check: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        SnackbarService.showError(context, 'Error running integrity check: ${e.toString()}', duration: const Duration(seconds: 3));
       }
     } finally {
       setState(() {
@@ -221,13 +196,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       if (!mounted) return;
 
       if (fixResults.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No issues were fixed'),
-            backgroundColor: Colors.orange,
-            duration: Duration(seconds: 3),
-          ),
-        );
+        SnackbarService.showWarning(context, 'No issues were fixed', duration: const Duration(seconds: 3));
       } else {
         int fixedCount = 0;
         for (final entry in fixResults.entries) {
@@ -239,13 +208,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
         }
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Fixed $fixedCount integrity issues'),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+          SnackbarService.showSuccess(context, 'Fixed $fixedCount integrity issues', duration: const Duration(seconds: 3));
         }
       }
     } catch (e, stackTrace) {
@@ -253,13 +216,7 @@ class _DatabaseIntegrityScreenState extends State<DatabaseIntegrityScreen> {
       if (!mounted) return;
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error fixing integrity issues: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        SnackbarService.showError(context, 'Error fixing integrity issues: ${e.toString()}', duration: const Duration(seconds: 3));
       }
     } finally {
       setState(() {
