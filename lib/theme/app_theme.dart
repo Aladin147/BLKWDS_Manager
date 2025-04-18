@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// AppTheme
 /// Defines the application theme
@@ -66,12 +67,13 @@ class AppTheme {
         primary: primaryColor,
         secondary: secondaryColor,
         surface: surfaceColor,
-        background: backgroundColor,
+        // Using surfaceContainerHighest instead of deprecated background
+        surfaceContainerHighest: backgroundColor,
         error: errorColor,
       ),
       scaffoldBackgroundColor: backgroundColor,
       cardColor: cardColor,
-      dialogBackgroundColor: dialogColor,
+      // dialogBackgroundColor is deprecated, using dialogTheme.backgroundColor instead
       dividerColor: dividerColor,
       shadowColor: shadowColor,
       textTheme: const TextTheme(
@@ -230,47 +232,47 @@ class AppTheme {
         ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return disabledTextColor;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return primaryColor;
           }
           return dividerColor;
         }),
-        checkColor: MaterialStateProperty.all(textColor),
+        checkColor: WidgetStateProperty.all(textColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(2),
         ),
       ),
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return disabledTextColor;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return primaryColor;
           }
           return dividerColor;
         }),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return disabledTextColor;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return primaryColor;
           }
           return textColor;
         }),
-        trackColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return disabledTextColor.withOpacity(0.5); // TODO: Replace with withValues when available
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return disabledTextColor.withOpacity(0.5); // TODO: Import ColorExtension from blkwds_colors.dart to use withValues
           }
-          if (states.contains(MaterialState.selected)) {
-            return primaryColor.withOpacity(0.5); // TODO: Replace with withValues when available
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor.withOpacity(0.5); // TODO: Import ColorExtension from blkwds_colors.dart to use withValues
           }
           return dividerColor;
         }),
@@ -283,7 +285,7 @@ class AppTheme {
         ),
       ),
       dialogTheme: DialogTheme(
-        backgroundColor: dialogColor,
+        backgroundColor: dialogColor, // Proper place for dialog background color
         elevation: 24,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
