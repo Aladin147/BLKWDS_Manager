@@ -73,13 +73,7 @@ class BookingPanelController {
   Future<void> _loadBookings() async {
     try {
       // Use retry logic for database operations
-      final bookings = await RetryService.retry<List<Booking>>(
-        operation: () => DBService.getAllBookings(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final bookings = await loadBookings();
 
       bookingList.value = bookings;
 
@@ -104,17 +98,22 @@ class BookingPanelController {
     }
   }
 
+  // This method can be overridden in tests
+  Future<List<Booking>> loadBookings() async {
+    return await RetryService.retry<List<Booking>>(
+      operation: () => DBService.getAllBookings(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
   // Load studios from database
   Future<void> _loadStudios() async {
     try {
       // Use retry logic for database operations
-      final studios = await RetryService.retry<List<Studio>>(
-        operation: () => DBService.getAllStudios(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final studios = await loadStudios();
 
       studioList.value = studios;
     } catch (e, stackTrace) {
@@ -136,6 +135,17 @@ class BookingPanelController {
       // This allows the app to continue functioning even if the studio table doesn't exist
       studioList.value = [];
     }
+  }
+
+  // This method can be overridden in tests
+  Future<List<Studio>> loadStudios() async {
+    return await RetryService.retry<List<Studio>>(
+      operation: () => DBService.getAllStudios(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
   }
 
   // Apply filters to the booking list
@@ -282,13 +292,7 @@ class BookingPanelController {
   Future<void> _loadProjects() async {
     try {
       // Use retry logic for database operations
-      final projects = await RetryService.retry<List<Project>>(
-        operation: () => DBService.getAllProjects(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final projects = await loadProjects();
 
       projectList.value = projects;
     } catch (e, stackTrace) {
@@ -312,17 +316,22 @@ class BookingPanelController {
     }
   }
 
+  // This method can be overridden in tests
+  Future<List<Project>> loadProjects() async {
+    return await RetryService.retry<List<Project>>(
+      operation: () => DBService.getAllProjects(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
   // Load members from database
   Future<void> _loadMembers() async {
     try {
       // Use retry logic for database operations
-      final members = await RetryService.retry<List<Member>>(
-        operation: () => DBService.getAllMembers(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final members = await loadMembers();
 
       memberList.value = members;
     } catch (e, stackTrace) {
@@ -346,17 +355,22 @@ class BookingPanelController {
     }
   }
 
+  // This method can be overridden in tests
+  Future<List<Member>> loadMembers() async {
+    return await RetryService.retry<List<Member>>(
+      operation: () => DBService.getAllMembers(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
   // Load gear from database
   Future<void> _loadGear() async {
     try {
       // Use retry logic for database operations
-      final gear = await RetryService.retry<List<Gear>>(
-        operation: () => DBService.getAllGear(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final gear = await loadGear();
 
       gearList.value = gear;
     } catch (e, stackTrace) {
@@ -378,6 +392,28 @@ class BookingPanelController {
       // This allows the app to continue functioning even if there's a database error
       gearList.value = [];
     }
+  }
+
+  // This method can be overridden in tests
+  Future<List<Gear>> loadGear() async {
+    return await RetryService.retry<List<Gear>>(
+      operation: () => DBService.getAllGear(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
+  // This method can be overridden in tests
+  Future<int> createBookingInDB(Booking booking) async {
+    return await RetryService.retry<int>(
+      operation: () => DBService.insertBooking(booking),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
   }
 
   // Create a new booking
@@ -404,13 +440,7 @@ class BookingPanelController {
       }
 
       // Use retry logic for database operations
-      final id = await RetryService.retry<int>(
-        operation: () => DBService.insertBooking(booking),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final id = await createBookingInDB(booking);
 
       // Reload bookings
       await _loadBookings();
@@ -444,6 +474,17 @@ class BookingPanelController {
     }
   }
 
+  // This method can be overridden in tests
+  Future<int> updateBookingInDB(Booking booking) async {
+    return await RetryService.retry<int>(
+      operation: () => DBService.updateBooking(booking),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
   // Update an existing booking
   Future<bool> updateBooking(Booking booking) async {
     isLoading.value = true;
@@ -468,13 +509,7 @@ class BookingPanelController {
       }
 
       // Use retry logic for database operations
-      final id = await RetryService.retry<int>(
-        operation: () => DBService.updateBooking(booking),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
+      final id = await updateBookingInDB(booking);
 
       // Reload bookings
       await _loadBookings();

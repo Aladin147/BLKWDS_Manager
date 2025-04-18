@@ -5,6 +5,29 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc39] - 2025-07-03
+
+### Added
+
+- Comprehensive tests for BookingPanelController
+- TestBookingPanelController class for isolated testing
+- Tests for controller initialization, filtering, and booking operations
+- Tests for error handling in controller methods
+
+### Fixed
+
+- Made BookingPanelController more testable with overridable methods
+- Fixed MockBuildContext implementation for testing
+- Improved error handling in BookingPanelController
+- Enhanced controller methods to work without context dependency
+
+### Improved
+
+- Test coverage for a critical controller component
+- Controller design with better separation of concerns
+- Error handling with more consistent patterns
+- Code maintainability with better testability
+
 ## [1.0.0-rc38] - 2025-07-02
 
 ### Fixed

@@ -10,13 +10,13 @@ class MockBuildContext extends Mock implements BuildContext {
   bool get debugDoingBuild => false;
 
   @override
-  Widget get widget => throw UnimplementedError();
+  Widget get widget => const SizedBox();
 
   @override
   BuildOwner? get owner => throw UnimplementedError();
 
   @override
-  RenderObject? get findRenderObject => throw UnimplementedError();
+  RenderObject? findRenderObject() => throw UnimplementedError();
 
   @override
   Size? get size => throw UnimplementedError();
@@ -32,22 +32,12 @@ class MockBuildContext extends Mock implements BuildContext {
   }
 
   @override
-  DiagnosticsNode describeElement(String name, {DiagnosticsTreeStyle style = DiagnosticsTreeStyle.errorProperty}) {
-    throw UnimplementedError();
-  }
-
-  @override
   List<DiagnosticsNode> describeMissingAncestor({required Type expectedAncestorType}) {
-    throw UnimplementedError();
+    return [];
   }
 
   @override
   DiagnosticsNode describeOwnershipChain(String name) {
-    throw UnimplementedError();
-  }
-
-  @override
-  DiagnosticsNode describeWidget(String name, {DiagnosticsTreeStyle style = DiagnosticsTreeStyle.errorProperty}) {
     throw UnimplementedError();
   }
 
@@ -72,11 +62,6 @@ class MockBuildContext extends Mock implements BuildContext {
   }
 
   @override
-  RenderObject findRenderObjectOfType<T extends RenderObject>() {
-    throw UnimplementedError();
-  }
-
-  @override
   T? findRootAncestorStateOfType<T extends State<StatefulWidget>>() {
     return null;
   }
@@ -87,16 +72,10 @@ class MockBuildContext extends Mock implements BuildContext {
   }
 
   @override
-  BuildContext get parent => throw UnimplementedError();
-
-  @override
   bool visitAncestorElements(bool Function(Element element) visitor) {
     return false;
   }
 
   @override
   void visitChildElements(ElementVisitor visitor) {}
-
-  @override
-  void visitChildren(ElementVisitor visitor) {}
 }
