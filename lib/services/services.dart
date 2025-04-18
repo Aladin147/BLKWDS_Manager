@@ -32,3 +32,4 @@ export 'exceptions/exceptions.dart';
 
 // Data Services
 export 'data_seeder.dart';
+export 'cache_service.dart';

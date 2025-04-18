@@ -8,6 +8,7 @@ import 'app_config_service.dart';
 import 'schema_definitions.dart';
 import 'database/migration_manager.dart';
 import 'database/db_service_wrapper.dart';
+import 'cache_service.dart';
 
 /// DBService
 /// Handles all SQLite operations for the app
@@ -225,23 +226,46 @@ class DBService {
 
     LogService.debug('Inserting gear: $gearMap');
 
-    return await DBServiceWrapper.insert(
+    final result = await DBServiceWrapper.insert(
       db,
       'gear',
       gearMap,
       operationName: 'insertGear',
     );
+
+    // Invalidate the gear cache
+    CacheService().remove('all_gear');
+
+    return result;
   }
 
   /// Get all gear items
   static Future<List<Gear>> getAllGear() async {
+    // Check cache first
+    final cacheKey = 'all_gear';
+    final cache = CacheService();
+    final cachedGear = cache.get<List<Gear>>(cacheKey);
+
+    if (cachedGear != null) {
+      LogService.debug('Using cached gear list (${cachedGear.length} items)');
+      return cachedGear;
+    }
+
+    // Cache miss, fetch from database
     final db = await database;
     final List<Map<String, dynamic>> maps = await DBServiceWrapper.query(
       db,
       'gear',
       operationName: 'getAllGear',
     );
-    return List.generate(maps.length, (i) => Gear.fromMap(maps[i]));
+
+    final gearList = List.generate(maps.length, (i) => Gear.fromMap(maps[i]));
+
+    // Cache the result for 5 minutes
+    cache.put(cacheKey, gearList);
+    LogService.debug('Cached gear list (${gearList.length} items)');
+
+    return gearList;
   }
 
   /// Get a gear item by ID
@@ -263,7 +287,7 @@ class DBService {
   /// Update a gear item
   static Future<int> updateGear(Gear gear) async {
     final db = await database;
-    return await DBServiceWrapper.update(
+    final result = await DBServiceWrapper.update(
       db,
       'gear',
       gear.toMap(),
@@ -271,31 +295,46 @@ class DBService {
       whereArgs: [gear.id],
       operationName: 'updateGear',
     );
+
+    // Invalidate the gear cache
+    CacheService().remove('all_gear');
+
+    return result;
   }
 
   /// Delete a gear item
   static Future<int> deleteGear(int id) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+    final result = await DBServiceWrapper.delete(
       db,
       'gear',
       where: 'id = ?',
       whereArgs: [id],
       operationName: 'deleteGear',
     );
+
+    // Invalidate the gear cache
+    CacheService().remove('all_gear');
+
+    return result;
   }
 
   /// Delete a gear item by name
   /// This method is primarily used for testing purposes
   static Future<int> deleteGearByName(String name) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+    final result = await DBServiceWrapper.delete(
       db,
       'gear',
       where: 'name = ?',
       whereArgs: [name],
       operationName: 'deleteGearByName',
     );
+
+    // Invalidate the gear cache
+    CacheService().remove('all_gear');
+
+    return result;
   }
 
   // MEMBER CRUD OPERATIONS
@@ -312,23 +351,46 @@ class DBService {
     if (member.role != null) memberMap['role'] = member.role;
     if (member.id != null) memberMap['id'] = member.id;
 
-    return await DBServiceWrapper.insert(
+    final result = await DBServiceWrapper.insert(
       db,
       'member',
       memberMap,
       operationName: 'insertMember',
     );
+
+    // Invalidate the member cache
+    CacheService().remove('all_members');
+
+    return result;
   }
 
   /// Get all members
   static Future<List<Member>> getAllMembers() async {
+    // Check cache first
+    final cacheKey = 'all_members';
+    final cache = CacheService();
+    final cachedMembers = cache.get<List<Member>>(cacheKey);
+
+    if (cachedMembers != null) {
+      LogService.debug('Using cached member list (${cachedMembers.length} items)');
+      return cachedMembers;
+    }
+
+    // Cache miss, fetch from database
     final db = await database;
     final List<Map<String, dynamic>> maps = await DBServiceWrapper.query(
       db,
       'member',
       operationName: 'getAllMembers',
     );
-    return List.generate(maps.length, (i) => Member.fromMap(maps[i]));
+
+    final memberList = List.generate(maps.length, (i) => Member.fromMap(maps[i]));
+
+    // Cache the result for 5 minutes
+    cache.put(cacheKey, memberList);
+    LogService.debug('Cached member list (${memberList.length} items)');
+
+    return memberList;
   }
 
   /// Get a member by ID
@@ -358,7 +420,7 @@ class DBService {
     // Add optional fields if they exist
     if (member.role != null) memberMap['role'] = member.role;
 
-    return await DBServiceWrapper.update(
+    final result = await DBServiceWrapper.update(
       db,
       'member',
       memberMap,
@@ -366,31 +428,46 @@ class DBService {
       whereArgs: [member.id],
       operationName: 'updateMember',
     );
+
+    // Invalidate the member cache
+    CacheService().remove('all_members');
+
+    return result;
   }
 
   /// Delete a member
   static Future<int> deleteMember(int id) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+    final result = await DBServiceWrapper.delete(
       db,
       'member',
       where: 'id = ?',
       whereArgs: [id],
       operationName: 'deleteMember',
     );
+
+    // Invalidate the member cache
+    CacheService().remove('all_members');
+
+    return result;
   }
 
   /// Delete a member by name
   /// This method is primarily used for testing purposes
   static Future<int> deleteMemberByName(String name) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+    final result = await DBServiceWrapper.delete(
       db,
       'member',
       where: 'name = ?',
       whereArgs: [name],
       operationName: 'deleteMemberByName',
     );
+
+    // Invalidate the member cache
+    CacheService().remove('all_members');
+
+    return result;
   }
 
   // PROJECT CRUD OPERATIONS
@@ -400,7 +477,7 @@ class DBService {
     final db = await database;
 
     // Use transaction with error handling and retry
-    return await DBServiceWrapper.executeTransaction(
+    final result = await DBServiceWrapper.executeTransaction(
       db,
       (txn) async {
         // Create a map with only the columns that exist in the table
@@ -429,10 +506,25 @@ class DBService {
       'insertProject',
       table: 'project',
     );
+
+    // Invalidate the project cache
+    CacheService().remove('all_projects');
+
+    return result;
   }
 
   /// Get all projects with their member IDs
   static Future<List<Project>> getAllProjects() async {
+    // Check cache first
+    final cacheKey = 'all_projects';
+    final cache = CacheService();
+    final cachedProjects = cache.get<List<Project>>(cacheKey);
+
+    if (cachedProjects != null) {
+      LogService.debug('Using cached project list (${cachedProjects.length} items)');
+      return cachedProjects;
+    }
+
     final db = await database;
 
     // Get all projects
@@ -465,6 +557,10 @@ class DBService {
         Project.fromMap(projectMap).copyWith(memberIds: memberIds),
       );
     }
+
+    // Cache the result for 5 minutes
+    cache.put(cacheKey, projects);
+    LogService.debug('Cached project list (${projects.length} items)');
 
     return projects;
   }
