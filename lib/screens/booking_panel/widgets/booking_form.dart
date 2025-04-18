@@ -188,10 +188,9 @@ class _BookingFormState extends State<BookingForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Project dropdown
-          DropdownButtonFormField<int>(
-            decoration: const InputDecoration(
-              labelText: 'Project *',
-            ),
+          BLKWDSEnhancedDropdown<int>(
+            label: 'Project *',
+            prefixIcon: Icons.business,
             value: _selectedProjectId,
             items: widget.controller.projectList.value.map((project) {
               return DropdownMenuItem<int>(
@@ -338,10 +337,9 @@ class _BookingFormState extends State<BookingForm> {
 
               final studios = snapshot.data ?? [];
 
-              return DropdownButtonFormField<int?>(
-                decoration: const InputDecoration(
-                  labelText: 'Select Studio (Optional)',
-                ),
+              return BLKWDSEnhancedDropdown<int?>(
+                label: 'Select Studio (Optional)',
+                prefixIcon: Icons.meeting_room,
                 value: _selectedStudioId,
                 items: [
                   const DropdownMenuItem<int?>(
@@ -445,31 +443,34 @@ class _BookingFormState extends State<BookingForm> {
 
                   return ListTile(
                     title: Text(gear?.name ?? 'Unknown Gear'),
-                    subtitle: DropdownButton<int?>(
-                      value: assignedMemberId,
-                      hint: const Text('Assign to member'),
-                      isExpanded: true,
-                      items: [
-                        const DropdownMenuItem<int?>(
-                          value: null,
-                          child: Text('None'),
-                        ),
-                        ...widget.controller.memberList.value.map((member) {
-                          return DropdownMenuItem<int?>(
-                            value: member.id,
-                            child: Text(member.name),
-                          );
-                        }),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          if (value == null) {
-                            _assignedGearToMember.remove(gearId);
-                          } else {
-                            _assignedGearToMember[gearId] = value;
-                          }
-                        });
-                      },
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: BLKWDSEnhancedDropdown<int?>(
+                        label: 'Assign to member',
+                        value: assignedMemberId,
+                        prefixIcon: Icons.person,
+                        items: [
+                          const DropdownMenuItem<int?>(
+                            value: null,
+                            child: Text('None'),
+                          ),
+                          ...widget.controller.memberList.value.map((member) {
+                            return DropdownMenuItem<int?>(
+                              value: member.id,
+                              child: Text(member.name),
+                            );
+                          }),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            if (value == null) {
+                              _assignedGearToMember.remove(gearId);
+                            } else {
+                              _assignedGearToMember[gearId] = value;
+                            }
+                          });
+                        },
+                      ),
                     ),
                   );
                 },
