@@ -16,19 +16,14 @@ class ConstraintError extends DatabaseError {
   /// [originalError] is the original error that caused this exception
   /// [stackTrace] is the stack trace of the original error
   ConstraintError(
-    String message,
-    String operation, {
-    String? table,
+    super.message,
+    super.operation, {
+    super.table,
     this.constraint,
-    Object? originalError,
-    StackTrace? stackTrace,
+    super.originalError,
+    super.stackTrace,
   }) : super(
-          message,
-          operation,
-          table: table,
           isTransient: false, // Constraint errors are typically not transient
-          originalError: originalError,
-          stackTrace: stackTrace,
         );
 
   /// Create a user-friendly error message

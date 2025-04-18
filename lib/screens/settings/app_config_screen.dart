@@ -70,7 +70,7 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
               padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
               margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingLarge),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: Colors.green.withOpacity(0.1), // TODO: Replace with withValues when available
                 borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
                 border: Border.all(color: Colors.green),
               ),
@@ -518,7 +518,9 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       setState(() {
         _errorMessage = 'Error saving configuration: ${e.toString()}';
       });
-      ErrorService.showErrorSnackBar(context, 'Error saving configuration');
+      if (mounted) {
+        ErrorService.showErrorSnackBar(context, 'Error saving configuration');
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -544,7 +546,9 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       setState(() {
         _errorMessage = 'Error resetting configuration: ${e.toString()}';
       });
-      ErrorService.showErrorSnackBar(context, 'Error resetting configuration');
+      if (mounted) {
+        ErrorService.showErrorSnackBar(context, 'Error resetting configuration');
+      }
     } finally {
       setState(() {
         _isLoading = false;

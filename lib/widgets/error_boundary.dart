@@ -50,8 +50,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
   /// The error that occurred
   Object? _error;
 
-  /// The stack trace of the error
-  StackTrace? _stackTrace;
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,6 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
         setState(() {
           _hasError = true;
           _error = error;
-          _stackTrace = stackTrace;
         });
 
         // Call onError callback if provided
@@ -103,9 +101,9 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: BLKWDSColors.errorRed.withOpacity(0.1),
+        color: BLKWDSColors.errorRed.withOpacity(0.1), // TODO: Replace with withValues when available
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        border: Border.all(color: BLKWDSColors.errorRed.withOpacity(0.3)),
+        border: Border.all(color: BLKWDSColors.errorRed.withOpacity(0.3)), // TODO: Replace with withValues when available
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -144,7 +142,6 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
               setState(() {
                 _hasError = false;
                 _error = null;
-                _stackTrace = null;
               });
             },
             type: BLKWDSButtonType.secondary,

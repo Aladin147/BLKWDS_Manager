@@ -5,6 +5,24 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc32] - 2025-07-02
+
+### Fixed
+
+- Fixed duplicate integration_test entry in pubspec.yaml
+- Fixed unused imports across multiple files
+- Fixed BuildContext usage across async gaps in booking_list_screen.dart
+- Fixed unused fields in error_boundary.dart
+- Fixed super parameters in database error classes
+- Added TODOs for deprecated API usage (withOpacity, MaterialState, etc.)
+
+### Improved
+
+- Improved code quality by addressing static analysis warnings
+- Enhanced error handling in booking_list_screen.dart with a helper method
+- Modernized constructor syntax with super parameters
+- Reduced code complexity by removing unused code
+
 ## [1.0.0-rc31] - 2025-06-30
 
 ### Added

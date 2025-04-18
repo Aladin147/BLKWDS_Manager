@@ -5,7 +5,6 @@ import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../utils/date_formatter.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../../services/navigation_service.dart';
 import '../dashboard/dashboard_controller.dart';
 
 /// ActivityLogScreen
@@ -31,7 +30,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
   void initState() {
     super.initState();
     _controller = widget.controller ?? DashboardController();
-    
+
     if (widget.controller == null) {
       // Initialize the controller if it wasn't provided
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -62,14 +61,14 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
             (g) => g.id == activity.gearId,
             orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
           );
-          
+
           final member = activity.memberId != null
               ? _controller.memberList.value.firstWhere(
                   (m) => m.id == activity.memberId,
                   orElse: () => Member(id: 0, name: 'Unknown'),
                 )
               : null;
-          
+
           // Search in gear name, member name, and note
           return gear.name.toLowerCase().contains(query) ||
               (member?.name.toLowerCase().contains(query) ?? false) ||
@@ -109,7 +108,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
               },
             ),
           ),
-          
+
           // Activity list
           Expanded(
             child: ValueListenableBuilder<bool>(
@@ -120,7 +119,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                     child: CircularProgressIndicator(),
                   );
                 }
-                
+
                 if (_filteredActivities.isEmpty) {
                   return Center(
                     child: Text(
@@ -131,7 +130,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                     ),
                   );
                 }
-                
+
                 return ListView.builder(
                   itemCount: _filteredActivities.length,
                   itemBuilder: (context, index) {
@@ -153,14 +152,14 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
       (g) => g.id == activity.gearId,
       orElse: () => Gear(id: 0, name: 'Unknown', category: 'Unknown'),
     );
-    
+
     final member = activity.memberId != null
         ? _controller.memberList.value.firstWhere(
             (m) => m.id == activity.memberId,
             orElse: () => Member(id: 0, name: 'Unknown'),
           )
         : null;
-    
+
     return BLKWDSCard(
       margin: const EdgeInsets.symmetric(
         horizontal: BLKWDSConstants.spacingMedium,
@@ -190,7 +189,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
               ),
             ),
             const SizedBox(width: BLKWDSConstants.spacingMedium),
-            
+
             // Activity details
             Expanded(
               child: Column(
@@ -201,9 +200,9 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                     gear.name,
                     style: BLKWDSTypography.titleMedium,
                   ),
-                  
+
                   const SizedBox(height: BLKWDSConstants.spacingXSmall),
-                  
+
                   // Action text
                   Text(
                     activity.checkedOut
@@ -213,7 +212,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                       color: BLKWDSColors.textSecondary,
                     ),
                   ),
-                  
+
                   // Note if available
                   if (activity.note != null && activity.note!.isNotEmpty) ...[
                     const SizedBox(height: BLKWDSConstants.spacingXSmall),
@@ -225,9 +224,9 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: BLKWDSConstants.spacingXSmall),
-                  
+
                   // Timestamp
                   Text(
                     DateFormatter.formatDateTime(activity.timestamp),

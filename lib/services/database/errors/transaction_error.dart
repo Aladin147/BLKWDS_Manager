@@ -12,17 +12,12 @@ class TransactionError extends DatabaseError {
   /// [originalError] is the original error that caused this exception
   /// [stackTrace] is the stack trace of the original error
   TransactionError(
-    String message,
-    String operation, {
-    String? table,
-    Object? originalError,
-    StackTrace? stackTrace,
+    super.message,
+    super.operation, {
+    super.table,
+    super.originalError,
+    super.stackTrace,
   }) : super(
-          message,
-          operation,
-          table: table,
           isTransient: false, // Transaction errors are typically not transient
-          originalError: originalError,
-          stackTrace: stackTrace,
         );
 }

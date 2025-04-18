@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc38 (Release Candidate 38)
-**Last Updated:** 2025-07-01
+**Version:** 1.0.0-rc39 (Release Candidate 39)
+**Last Updated:** 2025-07-02
 
 ## Project Phase
 
@@ -130,7 +130,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 5. **Error Handling Inconsistencies**
    - Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (IDENTIFIED in v0.40.0)
    - Inconsistent error feedback levels (IDENTIFIED in v0.40.0)
-   - Static analysis warnings for use_build_context_synchronously (IDENTIFIED in v0.50.0)
+   - ✅ Static analysis warnings for use_build_context_synchronously (FIXED in v0.69.0)
 
 ### UI Standardization Issues (Secondary Priority)
 
@@ -187,8 +187,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
      - [x] Add widget tests for core UI components
      - [x] Add integration tests for critical user flows
    - Static Analysis Issues
-     - [ ] Fix use_build_context_synchronously warnings
-     - [ ] Clean up unused code and imports
+     - [x] Fix use_build_context_synchronously warnings
+     - [x] Clean up unused code and imports
    - State Management
      - [x] Standardize on ValueNotifier pattern for state management
      - [x] Remove Riverpod dependency
@@ -271,6 +271,24 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 - Hover tooltips everywhere
 
 ## Recent Changes
+
+### v0.69.0 - Static Analysis Improvements (2025-07-02)
+
+**Fixed:**
+
+- Fixed duplicate integration_test entry in pubspec.yaml
+- Fixed unused imports across multiple files
+- Fixed BuildContext usage across async gaps in booking_list_screen.dart
+- Fixed unused fields in error_boundary.dart
+- Fixed super parameters in database error classes
+- Added TODOs for deprecated API usage (withOpacity, MaterialState, etc.)
+
+**Improved:**
+
+- Improved code quality by addressing static analysis warnings
+- Enhanced error handling in booking_list_screen.dart with a helper method
+- Modernized constructor syntax with super parameters
+- Reduced code complexity by removing unused code
 
 ### v0.68.0 - Integration Testing Implementation (2025-07-01)
 

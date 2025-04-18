@@ -267,10 +267,10 @@ class AppTheme {
         }),
         trackColor: MaterialStateProperty.resolveWith<Color>((states) {
           if (states.contains(MaterialState.disabled)) {
-            return disabledTextColor.withOpacity(0.5);
+            return disabledTextColor.withOpacity(0.5); // TODO: Replace with withValues when available
           }
           if (states.contains(MaterialState.selected)) {
-            return primaryColor.withOpacity(0.5);
+            return primaryColor.withOpacity(0.5); // TODO: Replace with withValues when available
           }
           return dividerColor;
         }),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:blkwds_manager/screens/dashboard/dashboard_screen.dart';
-import 'package:blkwds_manager/screens/dashboard/dashboard_controller.dart';
-import 'package:blkwds_manager/models/models.dart';
 import '../test_helpers.dart';
 
 void main() {

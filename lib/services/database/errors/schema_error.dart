@@ -12,17 +12,12 @@ class SchemaError extends DatabaseError {
   /// [originalError] is the original error that caused this exception
   /// [stackTrace] is the stack trace of the original error
   SchemaError(
-    String message,
-    String operation, {
-    String? table,
-    Object? originalError,
-    StackTrace? stackTrace,
+    super.message,
+    super.operation, {
+    super.table,
+    super.originalError,
+    super.stackTrace,
   }) : super(
-          message,
-          operation,
-          table: table,
           isTransient: false, // Schema errors are typically not transient
-          originalError: originalError,
-          stackTrace: stackTrace,
         );
 }

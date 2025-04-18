@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../models/app_config.dart';
 import '../../services/app_config_service.dart';
 import '../../services/db_service.dart';
 import '../../services/log_service.dart';
 import '../../services/database/database_integrity_service.dart';
 import '../../services/database/database_integrity_checker.dart';
-import '../../theme/app_theme.dart';
 import '../../widgets/loading_indicator.dart';
 
 /// Database Integrity Screen
@@ -13,7 +11,7 @@ import '../../widgets/loading_indicator.dart';
 /// This screen allows the user to manage database integrity checks.
 class DatabaseIntegrityScreen extends StatefulWidget {
   /// Constructor
-  const DatabaseIntegrityScreen({Key? key}) : super(key: key);
+  const DatabaseIntegrityScreen({super.key});
 
   @override
   State<DatabaseIntegrityScreen> createState() => _DatabaseIntegrityScreenState();

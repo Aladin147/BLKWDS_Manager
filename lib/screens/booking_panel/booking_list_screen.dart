@@ -10,7 +10,6 @@ import '../../widgets/blkwds_widgets.dart';
 import 'booking_detail_screen.dart';
 import 'booking_list_controller.dart';
 import 'booking_panel_controller.dart';
-import 'models/booking_filter.dart';
 import 'models/booking_list_view_options.dart';
 import 'widgets/booking_filter_bar.dart';
 
@@ -41,6 +40,18 @@ class _BookingListScreenState extends State<BookingListScreen> {
   Booking? _selectedBooking;
   bool _isLoading = false;
   String? _errorMessage;
+
+  // Helper method to show snackbar safely after async operations
+  void _showSnackBar(String message, bool isSuccess) {
+    if (!mounted) return;
+
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: isSuccess ? Colors.green : Colors.red,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   void initState() {
@@ -89,24 +100,14 @@ class _BookingListScreenState extends State<BookingListScreen> {
           _selectedBooking = null;
         });
 
-        if (mounted) {
-          SnackbarService.showSuccessSnackBar(
-            context,
-            'Booking updated successfully',
-          );
-        }
+        _showSnackBar('Booking updated successfully', true);
       } else {
         setState(() {
           _errorMessage = widget.controller.errorMessage.value ?? 'Failed to update booking';
           _isLoading = false;
         });
 
-        if (mounted) {
-          SnackbarService.showErrorSnackBar(
-            context,
-            _errorMessage!,
-          );
-        }
+        _showSnackBar(_errorMessage!, false);
       }
     } catch (e, stackTrace) {
       LogService.error('Error updating booking', e, stackTrace);
@@ -115,12 +116,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         _isLoading = false;
       });
 
-      if (mounted) {
-        SnackbarService.showErrorSnackBar(
-          context,
-          _errorMessage!,
-        );
-      }
+      _showSnackBar(_errorMessage!, false);
     }
   }
 
@@ -160,24 +156,14 @@ class _BookingListScreenState extends State<BookingListScreen> {
           _isLoading = false;
         });
 
-        if (mounted) {
-          SnackbarService.showSuccessSnackBar(
-            context,
-            'Booking deleted successfully',
-          );
-        }
+        _showSnackBar('Booking deleted successfully', true);
       } else {
         setState(() {
           _errorMessage = widget.controller.errorMessage.value ?? 'Failed to delete booking';
           _isLoading = false;
         });
 
-        if (mounted) {
-          SnackbarService.showErrorSnackBar(
-            context,
-            _errorMessage!,
-          );
-        }
+        _showSnackBar(_errorMessage!, false);
       }
     } catch (e, stackTrace) {
       LogService.error('Error deleting booking', e, stackTrace);
@@ -186,12 +172,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
         _isLoading = false;
       });
 
-      if (mounted) {
-        SnackbarService.showErrorSnackBar(
-          context,
-          _errorMessage!,
-        );
-      }
+      _showSnackBar(_errorMessage!, false);
     }
   }
 
@@ -342,25 +323,19 @@ class _BookingListScreenState extends State<BookingListScreen> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () async {
+            onPressed: () {
               if (textController.text.isNotEmpty) {
-                final success = await _listController.savePreset(textController.text);
+                // Close dialog first
+                Navigator.pop(context);
 
-                if (mounted) {
-                  Navigator.pop(context);
-
+                // Then perform the async operation
+                _listController.savePreset(textController.text).then((success) {
                   if (success) {
-                    SnackbarService.showSuccessSnackBar(
-                      context,
-                      'Preset saved successfully',
-                    );
+                    _showSnackBar('Preset saved successfully', true);
                   } else {
-                    SnackbarService.showErrorSnackBar(
-                      context,
-                      'Failed to save preset',
-                    );
+                    _showSnackBar('Failed to save preset', false);
                   }
-                }
+                });
               }
             },
             child: const Text('Save'),
@@ -395,15 +370,13 @@ class _BookingListScreenState extends State<BookingListScreen> {
                     title: Text(preset.name),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () async {
-                        final success = await _listController.deletePreset(preset.id);
-
-                        if (mounted && success) {
-                          SnackbarService.showSuccessSnackBar(
-                            context,
-                            'Preset deleted',
-                          );
-                        }
+                      onPressed: () {
+                        // Perform the async operation
+                        _listController.deletePreset(preset.id).then((success) {
+                          if (success) {
+                            _showSnackBar('Preset deleted', true);
+                          }
+                        });
                       },
                     ),
                     onTap: () {
@@ -453,18 +426,10 @@ class _BookingListScreenState extends State<BookingListScreen> {
 
     final success = await _listController.bulkDeleteBookings();
 
-    if (mounted) {
-      if (success) {
-        SnackbarService.showSuccessSnackBar(
-          context,
-          'Deleted $selectedCount bookings',
-        );
-      } else {
-        SnackbarService.showErrorSnackBar(
-          context,
-          'Failed to delete some bookings',
-        );
-      }
+    if (success) {
+      _showSnackBar('Deleted $selectedCount bookings', true);
+    } else {
+      _showSnackBar('Failed to delete some bookings', false);
     }
   }
 

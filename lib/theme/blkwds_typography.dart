@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'blkwds_colors.dart';
-import 'blkwds_constants.dart';
 
 /// BLKWDS Manager Typography
 /// Based on the visual guidelines document

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
-import '../../services/navigation_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
 import '../booking_panel/booking_panel_controller.dart';
-import 'project_form_screen.dart';
 
 /// ProjectDetailScreen
 /// Displays detailed information about a project

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
-import '../../services/navigation_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
-import '../../theme/blkwds_animations.dart';
 import '../../widgets/blkwds_widgets.dart';
-import 'gear_form_screen.dart';
-import 'widgets/gear_card_with_note.dart';
 
 /// GearDetailScreen
 /// Displays detailed information about a gear item
@@ -31,16 +27,11 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
   // Activity logs
   List<ActivityLog> _activityLogs = [];
 
-  // Status notes
-  List<StatusNote> _statusNotes = [];
-
   // Loading states
   bool _isLoadingLogs = true;
-  bool _isLoadingNotes = true;
 
   // Error messages
   String? _logsErrorMessage;
-  String? _notesErrorMessage;
 
   @override
   void initState() {
@@ -83,27 +74,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
   // Load status notes for this gear
   Future<void> _loadStatusNotes() async {
-    setState(() {
-      _isLoadingNotes = true;
-      _notesErrorMessage = null;
-    });
-
-    try {
-      final notes = await DBService.getStatusNotesForGear(widget.gear.id!);
-      setState(() {
-        _statusNotes = notes;
-        _isLoadingNotes = false;
-      });
-    } catch (e, stackTrace) {
-      LogService.error('Failed to load status notes', e, stackTrace);
-      setState(() {
-        _notesErrorMessage = ErrorService.getUserFriendlyMessage(
-          ErrorType.database,
-          e.toString(),
-        );
-        _isLoadingNotes = false;
-      });
-    }
+    // This method is no longer used but kept for future reference
   }
 
   // Navigate to edit gear screen

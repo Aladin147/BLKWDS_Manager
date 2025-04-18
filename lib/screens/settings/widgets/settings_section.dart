@@ -11,11 +11,11 @@ class SettingsSection extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const SettingsSection({
-    Key? key,
+    super.key,
     required this.title,
     required this.children,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

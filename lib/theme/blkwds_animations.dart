@@ -364,14 +364,12 @@ class _BLKWDSLoadingSpinnerState extends State<BLKWDSLoadingSpinner> with Single
 class _SpinnerPainter extends CustomPainter {
   final Animation<double> animation;
   final Color color;
-  final Color? backgroundColor;
   final double strokeWidth;
 
   _SpinnerPainter({
     required this.animation,
     required this.color,
     required this.strokeWidth,
-    this.backgroundColor,
   });
 
   @override
@@ -387,7 +385,7 @@ class _SpinnerPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // Draw background circle with lower opacity
-    paint.color = backgroundColor ?? Color.fromRGBO(color.r.toInt(), color.g.toInt(), color.b.toInt(), 0.2);
+    paint.color = Color.fromRGBO(color.r.toInt(), color.g.toInt(), color.b.toInt(), 0.2);
     canvas.drawCircle(center, radius, paint);
 
     // Draw animated arc

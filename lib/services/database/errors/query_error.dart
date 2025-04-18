@@ -20,20 +20,15 @@ class QueryError extends DatabaseError {
   /// [originalError] is the original error that caused this exception
   /// [stackTrace] is the stack trace of the original error
   QueryError(
-    String message,
-    String operation, {
-    String? table,
+    super.message,
+    super.operation, {
+    super.table,
     this.query,
     this.parameters,
-    Object? originalError,
-    StackTrace? stackTrace,
+    super.originalError,
+    super.stackTrace,
   }) : super(
-          message,
-          operation,
-          table: table,
           isTransient: false, // Query errors are typically not transient
-          originalError: originalError,
-          stackTrace: stackTrace,
         );
 
   /// Create a user-friendly error message

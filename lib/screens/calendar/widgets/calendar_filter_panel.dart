@@ -13,10 +13,10 @@ class CalendarFilterPanel extends StatelessWidget {
   final VoidCallback onResetFilters;
 
   const CalendarFilterPanel({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onResetFilters,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

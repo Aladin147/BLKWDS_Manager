@@ -1,6 +1,5 @@
 import 'package:sqflite/sqflite.dart';
 import '../log_service.dart';
-import '../schema_definitions.dart';
 import 'errors/errors.dart';
 
 /// Database integrity checker

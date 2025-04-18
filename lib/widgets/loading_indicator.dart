@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
 
 /// A loading indicator widget
 ///
@@ -19,18 +18,18 @@ class LoadingIndicator extends StatelessWidget {
 
   /// Constructor
   const LoadingIndicator({
-    Key? key,
+    super.key,
     this.size = 24.0,
     this.color,
     this.label,
     this.labelStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final indicatorColor = color ?? theme.colorScheme.primary;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:blkwds_manager/main.dart' as app;
-import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/services/db_service.dart';
 
 void main() {
@@ -33,19 +32,19 @@ void main() {
 
       // Fill in project details
       await tester.enterText(
-        find.widgetWithText(TextField, 'Project Title'), 
+        find.widgetWithText(TextField, 'Project Title'),
         'Integration Test Project'
       );
       await tester.pumpAndSettle();
 
       await tester.enterText(
-        find.widgetWithText(TextField, 'Client'), 
+        find.widgetWithText(TextField, 'Client'),
         'Integration Test Client'
       );
       await tester.pumpAndSettle();
 
       await tester.enterText(
-        find.widgetWithText(TextField, 'Notes'), 
+        find.widgetWithText(TextField, 'Notes'),
         'Project created during integration testing'
       );
       await tester.pumpAndSettle();
@@ -66,7 +65,7 @@ void main() {
 
       // Update project details
       await tester.enterText(
-        find.widgetWithText(TextField, 'Project Title'), 
+        find.widgetWithText(TextField, 'Project Title'),
         'Updated Integration Test Project'
       );
       await tester.pumpAndSettle();

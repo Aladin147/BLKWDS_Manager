@@ -5,7 +5,6 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
-import '../../../utils/feature_flags.dart';
 import '../booking_panel_controller.dart';
 import '../booking_panel_controller_v2.dart';
 import 'calendar_booking_item.dart';

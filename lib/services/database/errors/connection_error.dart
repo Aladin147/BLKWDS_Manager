@@ -11,15 +11,11 @@ class ConnectionError extends DatabaseError {
   /// [originalError] is the original error that caused this exception
   /// [stackTrace] is the stack trace of the original error
   ConnectionError(
-    String message,
-    String operation, {
-    Object? originalError,
-    StackTrace? stackTrace,
+    super.message,
+    super.operation, {
+    super.originalError,
+    super.stackTrace,
   }) : super(
-          message,
-          operation,
           isTransient: true, // Connection errors are typically transient
-          originalError: originalError,
-          stackTrace: stackTrace,
         );
 }

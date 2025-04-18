@@ -183,9 +183,9 @@ class FallbackWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withOpacity(0.1), // TODO: Replace with withValues when available
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withOpacity(0.3)), // TODO: Replace with withValues when available
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
