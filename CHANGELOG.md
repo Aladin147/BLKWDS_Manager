@@ -5,6 +5,22 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc43] - 2025-07-03
+
+### Added
+
+- Added comprehensive testing checklist document
+- Added detailed guidelines for unit tests, widget tests, and integration tests
+- Added component-specific testing guidelines for ValueNotifier, controllers, and database services
+- Added examples for each type of test
+
+### Improved
+
+- Enhanced testing documentation with clear guidelines
+- Better guidance for test organization and maintenance
+- Clearer explanation of test coverage goals
+- More consistent testing approach across the codebase
+
 ## [1.0.0-rc42] - 2025-07-03
 
 ### Added
