@@ -4,6 +4,8 @@ import 'error_type.dart';
 import 'error_feedback_level.dart';
 import 'snackbar_service.dart';
 import 'error_dialog_service.dart';
+import 'error_page_service.dart';
+import 'banner_service.dart';
 import 'exceptions/exceptions.dart';
 
 /// ErrorService
@@ -96,12 +98,14 @@ class ErrorService {
         showErrorDialog(context, message);
         break;
       case ErrorFeedbackLevel.banner:
-        // TODO: Implement banner feedback
-        showErrorSnackBar(context, message);
+        BannerService.showError(message);
         break;
       case ErrorFeedbackLevel.page:
-        // TODO: Implement page feedback
-        showErrorDialog(context, message);
+        ErrorPageService.navigateToErrorPage(
+          context: context,
+          message: message,
+          title: ErrorPageService.getErrorTitle(_determineErrorType(error)),
+        );
         break;
     }
 
@@ -242,12 +246,14 @@ class ErrorService {
         showErrorDialog(context, message);
         break;
       case ErrorFeedbackLevel.banner:
-        // TODO: Implement banner feedback
-        showErrorSnackBar(context, message);
+        BannerService.showError(message);
         break;
       case ErrorFeedbackLevel.page:
-        // TODO: Implement page feedback
-        showErrorDialog(context, message);
+        ErrorPageService.navigateToErrorPage(
+          context: context,
+          message: message,
+          title: ErrorPageService.getErrorTitle(exception.type),
+        );
         break;
     }
 

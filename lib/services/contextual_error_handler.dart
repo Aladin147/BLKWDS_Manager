@@ -5,6 +5,7 @@ import 'error_feedback_level.dart';
 import 'log_service.dart';
 import 'snackbar_service.dart';
 import 'banner_service.dart';
+import 'error_page_service.dart';
 import 'exceptions/exceptions.dart';
 
 // Using ErrorFeedbackLevel from error_feedback_level.dart
@@ -111,8 +112,11 @@ class ContextualErrorHandler {
         BannerService.showError(message);
         break;
       case ErrorFeedbackLevel.page:
-        // TODO: Implement page feedback
-        ErrorService.showErrorDialog(context, message);
+        ErrorPageService.navigateToErrorPage(
+          context: context,
+          message: message,
+          title: ErrorPageService.getErrorTitle(type),
+        );
         break;
     }
   }

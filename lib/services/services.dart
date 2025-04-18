@@ -20,6 +20,7 @@ export 'error_feedback_level.dart';
 export 'snackbar_service.dart';
 export 'error_dialog_service.dart';
 export 'banner_service.dart';
+export 'error_page_service.dart';
 export 'toast_service.dart';
 export 'contextual_error_handler.dart';
 export 'form_error_handler.dart';
