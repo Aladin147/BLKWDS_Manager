@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/navigation_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 
@@ -178,7 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           type: BLKWDSEnhancedButtonType.tertiary,
           padding: const EdgeInsets.all(8),
           onPressed: () {
-            NavigationService().navigateToCalendar();
+            NavigationHelper.navigateToCalendar();
           },
         ),
         BLKWDSEnhancedButton(
@@ -186,7 +186,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           type: BLKWDSEnhancedButtonType.tertiary,
           padding: const EdgeInsets.all(8),
           onPressed: () {
-            NavigationService().navigateToSettings();
+            NavigationHelper.navigateToSettings();
           },
         ),
       ],
@@ -298,7 +298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 flex: 1,
                                 child: QuickActionsPanel(
                                   onAddGear: () async {
-                                    final result = await NavigationService().navigateToAddGear();
+                                    final result = await NavigationHelper.navigateToAddGear();
 
                                     if (result == true) {
                                       // Refresh data when returning from add gear screen
@@ -306,19 +306,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     }
                                   },
                                   onOpenBookingPanel: () {
-                                    NavigationService().navigateToBookingPanel();
+                                    NavigationHelper.navigateToBookingPanel();
                                   },
                                   onManageMembers: () {
-                                    NavigationService().navigateToMemberManagement();
+                                    NavigationHelper.navigateToMemberManagement();
                                   },
                                   onManageProjects: () {
-                                    NavigationService().navigateToProjectManagement();
+                                    NavigationHelper.navigateToProjectManagement();
                                   },
                                   onManageGear: () {
-                                    NavigationService().navigateToGearManagement();
+                                    NavigationHelper.navigateToGearManagement();
                                   },
                                   onManageStudios: () {
-                                    NavigationService().navigateToStudioManagement();
+                                    NavigationHelper.navigateToStudioManagement();
                                   },
                                 ),
                               ),
@@ -336,7 +336,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     onReturn: _handleReturn,
                                     onViewAllGear: () {
                                       // Navigate to gear management screen
-                                      NavigationService().navigateToGearManagement();
+                                      NavigationHelper.navigateToGearManagement();
                                     },
                                   ),
                                 ),
@@ -350,7 +350,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 height: 300,
                                 child: QuickActionsPanel(
                                   onAddGear: () async {
-                                    final result = await NavigationService().navigateToAddGear();
+                                    final result = await NavigationHelper.navigateToAddGear();
 
                                     if (result == true) {
                                       // Refresh data when returning from add gear screen
@@ -358,19 +358,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     }
                                   },
                                   onOpenBookingPanel: () {
-                                    NavigationService().navigateToBookingPanel();
+                                    NavigationHelper.navigateToBookingPanel();
                                   },
                                   onManageMembers: () {
-                                    NavigationService().navigateToMemberManagement();
+                                    NavigationHelper.navigateToMemberManagement();
                                   },
                                   onManageProjects: () {
-                                    NavigationService().navigateToProjectManagement();
+                                    NavigationHelper.navigateToProjectManagement();
                                   },
                                   onManageGear: () {
-                                    NavigationService().navigateToGearManagement();
+                                    NavigationHelper.navigateToGearManagement();
                                   },
                                   onManageStudios: () {
-                                    NavigationService().navigateToStudioManagement();
+                                    NavigationHelper.navigateToStudioManagement();
                                   },
                                 ),
                               ),
@@ -386,7 +386,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onReturn: _handleReturn,
                                   onViewAllGear: () {
                                     // Navigate to gear management screen
-                                    NavigationService().navigateToGearManagement();
+                                    NavigationHelper.navigateToGearManagement();
                                   },
                                 ),
                               ),

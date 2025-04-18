@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/navigation_service.dart';
+import '../services/navigation_helper.dart';
 import '../theme/blkwds_colors.dart';
 
 /// A reusable home button widget that navigates to the dashboard
@@ -14,7 +14,7 @@ class BLKWDSHomeButton extends StatelessWidget {
       color: BLKWDSColors.accentTeal,
       tooltip: 'Home',
       onPressed: () {
-        NavigationService.instance.navigateToDashboard(clearStack: true);
+        NavigationHelper.navigateToDashboard(clearStack: true);
       },
     );
   }

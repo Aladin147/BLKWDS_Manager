@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
-import '../../services/navigation_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
@@ -126,7 +126,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // Navigate to booking panel for editing
   void _navigateToBookingPanel(Booking booking) {
-    NavigationService.instance.navigateToBookingPanel().then((_) {
+    NavigationHelper.navigateToBookingPanel().then((_) {
       // Refresh data when returning from booking panel
       _initializeData();
     });
@@ -165,7 +165,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         BLKWDSEnhancedButton.icon(
           icon: Icons.add,
           onPressed: () {
-            NavigationService.instance.navigateToBookingPanel().then((_) {
+            NavigationHelper.navigateToBookingPanel().then((_) {
               // Refresh data when returning from booking panel
               _initializeData();
             });
@@ -338,7 +338,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   controller: _controller,
                   onBookingTap: _showBookingDetails,
                   onCreateBooking: () {
-                    NavigationService.instance.navigateToBookingPanel().then((_) {
+                    NavigationHelper.navigateToBookingPanel().then((_) {
                       // Refresh data when returning from booking panel
                       _initializeData();
                     });
