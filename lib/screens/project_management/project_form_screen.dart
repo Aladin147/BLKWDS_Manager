@@ -87,7 +87,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'Failed to load members: ${e.toString()}',
         );
@@ -132,7 +132,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
         await DBService.updateProject(project);
 
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Project updated successfully',
           );
@@ -143,7 +143,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
         await DBService.insertProject(project);
 
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Project added successfully',
           );
@@ -162,7 +162,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

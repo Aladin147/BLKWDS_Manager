@@ -104,7 +104,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
         await DBService.updateGear(gear);
 
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Gear updated successfully',
           );
@@ -115,7 +115,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
         await DBService.insertGear(gear);
 
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Gear added successfully',
           );
@@ -134,7 +134,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

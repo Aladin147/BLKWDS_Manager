@@ -66,7 +66,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -150,7 +150,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
       // Show success snackbar with undo option
       if (mounted) {
-        SnackbarService.showSuccessSnackBar(
+        SnackbarService.showSuccess(
           context,
           '${project.title} deleted',
           action: SnackBarAction(
@@ -162,7 +162,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               } catch (e, stackTrace) {
                 LogService.error('Failed to restore project', e, stackTrace);
                 if (mounted) {
-                  SnackbarService.showErrorSnackBar(
+                  SnackbarService.showError(
                     context,
                     'Failed to restore project',
                   );
@@ -186,7 +186,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

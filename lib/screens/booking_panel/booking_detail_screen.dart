@@ -132,7 +132,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking updated successfully',
           );
@@ -145,7 +145,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -160,7 +160,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -206,7 +206,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
       if (success) {
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking deleted successfully',
           );
@@ -222,7 +222,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -237,7 +237,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -674,7 +674,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking rescheduled successfully',
           );
@@ -687,7 +687,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -702,7 +702,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -778,7 +778,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
       if (success) {
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking duplicated successfully',
           );
@@ -794,7 +794,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -809,7 +809,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

@@ -86,7 +86,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
         await DBService.updateMember(member);
 
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Member updated successfully',
           );
@@ -97,7 +97,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
         await DBService.insertMember(member);
 
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Member added successfully',
           );
@@ -116,7 +116,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

@@ -145,7 +145,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
 
       // Show success snackbar
       if (mounted) {
-        SnackbarService.showSuccessSnackBar(
+        SnackbarService.showSuccess(
           context,
           '${widget.member.name} deleted',
         );
@@ -158,7 +158,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
 
       if (mounted) {
         // Show error snackbar
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           ErrorService.getUserFriendlyMessage(
             ErrorType.database,

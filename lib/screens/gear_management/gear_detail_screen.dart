@@ -118,7 +118,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
       // Show success snackbar
       if (mounted) {
-        SnackbarService.showSuccessSnackBar(
+        SnackbarService.showSuccess(
           context,
           '${widget.gear.name} deleted',
         );
@@ -131,7 +131,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
       if (mounted) {
         // Show error snackbar
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           ErrorService.getUserFriendlyMessage(
             ErrorType.database,
@@ -147,7 +147,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
     if (widget.gear.isOut) {
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'This gear is already checked out',
         );
@@ -160,7 +160,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
     if (members.isEmpty) {
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'No members available for checkout',
         );
@@ -232,7 +232,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       if (success) {
         // Show success snackbar
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             '${widget.gear.name} checked out to ${selectedMember.name}',
           );
@@ -244,7 +244,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       } else {
         // Show error snackbar
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             'Failed to check out gear',
           );
@@ -255,7 +255,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
       if (mounted) {
         // Show error snackbar
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           ErrorService.getUserFriendlyMessage(
             ErrorType.database,
@@ -271,7 +271,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
     if (!widget.gear.isOut) {
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'This gear is already checked in',
         );
@@ -299,7 +299,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       if (success) {
         // Show success snackbar
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             '${widget.gear.name} checked in successfully',
           );
@@ -311,7 +311,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       } else {
         // Show error snackbar
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             'Failed to check in gear',
           );
@@ -322,7 +322,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
       if (mounted) {
         // Show error snackbar
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           ErrorService.getUserFriendlyMessage(
             ErrorType.database,
@@ -355,7 +355,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       if (success) {
         // Show success snackbar
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Status note added successfully',
           );
@@ -366,7 +366,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
       } else {
         // Show error snackbar
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             'Failed to add status note',
           );
@@ -377,7 +377,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
       if (mounted) {
         // Show error snackbar
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           ErrorService.getUserFriendlyMessage(
             ErrorType.database,

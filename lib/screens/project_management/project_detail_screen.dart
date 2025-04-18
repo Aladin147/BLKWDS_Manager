@@ -146,7 +146,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
       // Show success snackbar
       if (mounted) {
-        SnackbarService.showSuccessSnackBar(
+        SnackbarService.showSuccess(
           context,
           '${widget.project.title} deleted',
         );
@@ -159,7 +159,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
       if (mounted) {
         // Show error snackbar
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           ErrorService.getUserFriendlyMessage(
             ErrorType.database,

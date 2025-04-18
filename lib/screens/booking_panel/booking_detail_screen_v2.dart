@@ -137,7 +137,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking updated successfully',
           );
@@ -150,7 +150,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -165,7 +165,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -211,7 +211,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
       if (success) {
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking deleted successfully',
           );
@@ -227,7 +227,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -242,7 +242,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -749,7 +749,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking rescheduled successfully',
           );
@@ -762,7 +762,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -777,7 +777,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -853,7 +853,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
       if (success) {
         // Show success message
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             'Booking duplicated successfully',
           );
@@ -869,7 +869,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
         // Show error message
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             _errorMessage!,
           );
@@ -884,7 +884,7 @@ class _BookingDetailScreenV2State extends State<BookingDetailScreenV2> with Sing
 
       // Show error message
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

@@ -21,7 +21,7 @@ export 'blkwds_icon_container.dart';
 export 'blkwds_bottom_sheet.dart';
 export 'blkwds_status_badge.dart';
 export 'blkwds_error_banner.dart';
-export 'blkwds_snackbar.dart';
+
 export 'error_boundary.dart';
 export 'fallback_widget.dart';
 export 'category_icon_widget.dart';

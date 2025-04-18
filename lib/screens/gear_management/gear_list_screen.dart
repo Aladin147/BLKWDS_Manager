@@ -70,7 +70,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -155,7 +155,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
       // Show success snackbar with undo option
       if (mounted) {
-        SnackbarService.showSuccessSnackBar(
+        SnackbarService.showSuccess(
           context,
           '${gear.name} deleted',
           action: SnackBarAction(
@@ -167,7 +167,7 @@ class _GearListScreenState extends State<GearListScreen> {
               } catch (e, stackTrace) {
                 LogService.error('Failed to restore gear', e, stackTrace);
                 if (mounted) {
-                  SnackbarService.showErrorSnackBar(
+                  SnackbarService.showError(
                     context,
                     'Failed to restore gear',
                   );
@@ -191,7 +191,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -204,7 +204,7 @@ class _GearListScreenState extends State<GearListScreen> {
     if (gear.isOut) {
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'This gear is already checked out',
         );
@@ -217,7 +217,7 @@ class _GearListScreenState extends State<GearListScreen> {
     if (members.isEmpty) {
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'No members available for checkout',
         );
@@ -286,7 +286,7 @@ class _GearListScreenState extends State<GearListScreen> {
       if (success) {
         // Show success snackbar
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             '${gear.name} checked out to ${selectedMember.name}',
           );
@@ -294,7 +294,7 @@ class _GearListScreenState extends State<GearListScreen> {
       } else {
         // Show error snackbar
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             'Failed to check out gear',
           );
@@ -314,7 +314,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -327,7 +327,7 @@ class _GearListScreenState extends State<GearListScreen> {
     if (!gear.isOut) {
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           'This gear is already checked in',
         );
@@ -349,7 +349,7 @@ class _GearListScreenState extends State<GearListScreen> {
       if (success) {
         // Show success snackbar
         if (mounted) {
-          SnackbarService.showSuccessSnackBar(
+          SnackbarService.showSuccess(
             context,
             '${gear.name} checked in successfully',
           );
@@ -357,7 +357,7 @@ class _GearListScreenState extends State<GearListScreen> {
       } else {
         // Show error snackbar
         if (mounted) {
-          SnackbarService.showErrorSnackBar(
+          SnackbarService.showError(
             context,
             'Failed to check in gear',
           );
@@ -377,7 +377,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );

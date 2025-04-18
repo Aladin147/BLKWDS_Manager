@@ -66,7 +66,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
@@ -149,7 +149,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
       // Show success snackbar with undo option
       if (mounted) {
-        SnackbarService.showSuccessSnackBar(
+        SnackbarService.showSuccess(
           context,
           '${member.name} deleted',
           action: SnackBarAction(
@@ -161,7 +161,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
               } catch (e, stackTrace) {
                 LogService.error('Failed to restore member', e, stackTrace);
                 if (mounted) {
-                  SnackbarService.showErrorSnackBar(
+                  SnackbarService.showError(
                     context,
                     'Failed to restore member',
                   );
@@ -185,7 +185,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
       // Show error snackbar
       if (mounted) {
-        SnackbarService.showErrorSnackBar(
+        SnackbarService.showError(
           context,
           _errorMessage!,
         );
