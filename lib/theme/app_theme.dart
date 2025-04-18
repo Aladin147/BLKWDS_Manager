@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'blkwds_colors.dart';
 
 /// AppTheme
 /// Defines the application theme
@@ -269,10 +270,12 @@ class AppTheme {
         }),
         trackColor: WidgetStateProperty.resolveWith<Color>((states) {
           if (states.contains(WidgetState.disabled)) {
-            return disabledTextColor.withOpacity(0.5); // TODO: Import ColorExtension from blkwds_colors.dart to use withValues
+            // 0.5 opacity
+            return disabledTextColor.withValues(opacity: 0.5);
           }
           if (states.contains(WidgetState.selected)) {
-            return primaryColor.withOpacity(0.5); // TODO: Import ColorExtension from blkwds_colors.dart to use withValues
+            // 0.5 opacity
+            return primaryColor.withValues(opacity: 0.5);
           }
           return dividerColor;
         }),

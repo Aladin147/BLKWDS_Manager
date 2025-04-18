@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../services/navigation_service.dart';
 import '../../services/snackbar_service.dart';
-
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -82,22 +81,20 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Booking Panel'),
-        actions: [
-          // Toggle view mode
-          IconButton(
-            icon: Icon(_isCalendarView ? Icons.list : Icons.calendar_month),
-            tooltip: _isCalendarView ? 'List View' : 'Calendar View',
-            onPressed: () {
-              setState(() {
-                _isCalendarView = !_isCalendarView;
-              });
-            },
-          ),
-        ],
-      ),
+    return BLKWDSScaffold(
+      title: 'Booking Panel',
+      actions: [
+        // Toggle view mode
+        IconButton(
+          icon: Icon(_isCalendarView ? Icons.list : Icons.calendar_month),
+          tooltip: _isCalendarView ? 'List View' : 'Calendar View',
+          onPressed: () {
+            setState(() {
+              _isCalendarView = !_isCalendarView;
+            });
+          },
+        ),
+      ],
       body: ValueListenableBuilder<bool>(
         valueListenable: _controller.isLoading,
         builder: (context, isLoading, child) {

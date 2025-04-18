@@ -2,6 +2,62 @@
 
 **Note: This is a continuation of the original Journal.md file. The original journal contains the complete project history and should be preserved.**
 
+## 2025-07-05: Error Handling Standardization
+
+Today we implemented the error handling standardization plan, which was identified as a high-priority UI/UX improvement in our audit. This work involved several key improvements:
+
+1. **Enhanced SnackbarService**:
+   - Added global ScaffoldMessengerKey for context-free snackbar display
+   - Added global methods for showing snackbars without context
+   - Ensured consistent styling across all snackbar types
+
+2. **Replaced Direct ScaffoldMessenger Usage**:
+   - Updated booking_list_screen.dart to use SnackbarService
+   - Ensured proper mounted checks to prevent setState after dispose errors
+
+3. **Replaced Deprecated BLKWDSSnackbar Usage**:
+   - Updated studio_management_screen.dart to use SnackbarService
+   - Updated studio_availability_calendar.dart to use SnackbarService
+   - Maintained consistent error feedback throughout the application
+
+4. **Updated MaterialApp Configuration**:
+   - Added scaffoldMessengerKey to MaterialApp in app.dart
+   - Ensured global snackbar functionality works throughout the app
+
+This implementation provides a consistent way to display error messages and other feedback to users throughout the application. By centralizing error handling in the SnackbarService, we've improved code maintainability and ensured a consistent user experience.
+
+Next steps include replacing placeholder content and standardizing typography.
+
+## 2025-07-05: Persistent Home Button Implementation
+
+Today we implemented the persistent home button feature, which was identified as a high-priority UI/UX improvement in our audit. This work involved several key improvements:
+
+1. **Created Reusable Home Button Component**:
+   - Implemented BLKWDSHomeButton widget for consistent home button appearance
+   - Used NavigationService for proper navigation to dashboard
+   - Added tooltip for better accessibility
+
+2. **Created Standardized Scaffold**:
+   - Implemented BLKWDSScaffold as a wrapper around Flutter's Scaffold
+   - Added showHomeButton parameter to control home button visibility
+   - Ensured consistent styling across all screens
+   - Maintained support for all standard Scaffold features
+
+3. **Updated Key Screens**:
+   - Updated Dashboard screen (with home button disabled)
+   - Updated Calendar screen
+   - Updated Booking Panel screen
+   - Updated Settings screens
+   - Ensured proper navigation behavior
+
+4. **Updated Widget Barrel File**:
+   - Added new components to blkwds_widgets.dart for easy importing
+   - Ensured consistent usage across the application
+
+This implementation provides a consistent way for users to navigate back to the dashboard from anywhere in the application, which significantly improves the user experience. The standardized scaffold also provides a foundation for future UI improvements by ensuring consistent styling and behavior across all screens.
+
+Next steps include implementing the error handling standardization plan and replacing placeholder content.
+
 ## 2025-07-04: Comprehensive UI/UX Audit and Implementation Plans
 
 Today we conducted a comprehensive audit of the UI/UX improvements needed for the BLKWDS Manager application. This work involved several key improvements:

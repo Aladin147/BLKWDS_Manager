@@ -12,10 +12,8 @@ class AppInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('App Information'),
-      ),
+    return BLKWDSScaffold(
+      title: 'App Information',
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
         child: Column(
@@ -32,7 +30,7 @@ class AppInfoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // App name
             Center(
               child: Text(
@@ -40,9 +38,9 @@ class AppInfoScreen extends StatelessWidget {
                 style: BLKWDSTypography.headlineLarge,
               ),
             ),
-            
+
             const SizedBox(height: BLKWDSConstants.spacingLarge),
-            
+
             // Version information
             BLKWDSCard(
               child: Padding(
@@ -63,9 +61,9 @@ class AppInfoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // App configuration
             BLKWDSCard(
               child: Padding(
@@ -85,9 +83,9 @@ class AppInfoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            
+
             // Copyright information
             BLKWDSCard(
               child: Padding(
@@ -106,9 +104,9 @@ class AppInfoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: BLKWDSConstants.spacingLarge),
-            
+
             // Update button
             Center(
               child: BLKWDSButton(
@@ -127,7 +125,7 @@ class AppInfoScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   // Build an info row with label and value
   Widget _buildInfoRow(String label, String value) {
     return Padding(

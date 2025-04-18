@@ -121,70 +121,68 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BLKWDSColors.backgroundDark,
-      appBar: AppBar(
-        title: const Text(Constants.appName),
-        actions: [
-          // Refresh button with loading indicator
-          _isRefreshing
-              ? Container(
-                  width: 48,
-                  height: 48,
-                  padding: const EdgeInsets.all(12),
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(BLKWDSColors.accentTeal),
-                  ),
-                )
-              : IconButton(
-                  icon: const Icon(Icons.refresh),
-                  tooltip: 'Refresh Dashboard',
-                  onPressed: () async {
-                    // Show loading indicator
-                    setState(() {
-                      _isRefreshing = true;
-                    });
-
-                    try {
-                      // Refresh essential data
-                      await _controller.refreshEssentialData();
-
-                      // Show success message
-                      if (mounted) {
-                        _showSnackBar('Dashboard refreshed');
-                      }
-                    } catch (e) {
-                      // Show error message
-                      if (mounted) {
-                        _showSnackBar('Failed to refresh: ${e.toString()}');
-                      }
-                    } finally {
-                      // Hide loading indicator
-                      if (mounted) {
-                        setState(() {
-                          _isRefreshing = false;
-                        });
-                      }
-                    }
-                  },
+    return BLKWDSScaffold(
+      title: Constants.appName,
+      showHomeButton: false, // No home button on dashboard
+      actions: [
+        // Refresh button with loading indicator
+        _isRefreshing
+            ? Container(
+                width: 48,
+                height: 48,
+                padding: const EdgeInsets.all(12),
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(BLKWDSColors.accentTeal),
                 ),
-          IconButton(
-            icon: const Icon(Icons.calendar_month),
-            tooltip: 'Calendar',
-            onPressed: () {
-              NavigationService().navigateToCalendar();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
-            onPressed: () {
-              NavigationService().navigateToSettings();
-            },
-          ),
-        ],
-      ),
+              )
+            : IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: 'Refresh Dashboard',
+                onPressed: () async {
+                  // Show loading indicator
+                  setState(() {
+                    _isRefreshing = true;
+                  });
+
+                  try {
+                    // Refresh essential data
+                    await _controller.refreshEssentialData();
+
+                    // Show success message
+                    if (mounted) {
+                      _showSnackBar('Dashboard refreshed');
+                    }
+                  } catch (e) {
+                    // Show error message
+                    if (mounted) {
+                      _showSnackBar('Failed to refresh: ${e.toString()}');
+                    }
+                  } finally {
+                    // Hide loading indicator
+                    if (mounted) {
+                      setState(() {
+                        _isRefreshing = false;
+                      });
+                    }
+                  }
+                },
+              ),
+        IconButton(
+          icon: const Icon(Icons.calendar_month),
+          tooltip: 'Calendar',
+          onPressed: () {
+            NavigationService().navigateToCalendar();
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.settings),
+          tooltip: 'Settings',
+          onPressed: () {
+            NavigationService().navigateToSettings();
+          },
+        ),
+      ],
       body: ValueListenableBuilder<bool>(
         valueListenable: _controller.isLoading,
         builder: (context, isLoading, _) {

@@ -45,12 +45,11 @@ class _BookingListScreenState extends State<BookingListScreen> {
   void _showSnackBar(String message, bool isSuccess) {
     if (!mounted) return;
 
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: isSuccess ? Colors.green : Colors.red,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (isSuccess) {
+      SnackbarService.showSuccess(context, message);
+    } else {
+      SnackbarService.showError(context, message);
+    }
   }
 
   @override

@@ -146,34 +146,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BLKWDSColors.backgroundDark,
-      appBar: AppBar(
-        title: const Text('Calendar'),
-        actions: [
-          // Filter toggle
-          IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
-            tooltip: _showFilters ? 'Hide Filters' : 'Show Filters',
-            onPressed: () {
-              setState(() {
-                _showFilters = !_showFilters;
-              });
-            },
-          ),
-          // Create booking button
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Create Booking',
-            onPressed: () {
-              NavigationService.instance.navigateToBookingPanel().then((_) {
-                // Refresh data when returning from booking panel
-                _initializeData();
-              });
-            },
-          ),
-        ],
-      ),
+    return BLKWDSScaffold(
+      title: 'Calendar',
+      actions: [
+        // Filter toggle
+        IconButton(
+          icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+          tooltip: _showFilters ? 'Hide Filters' : 'Show Filters',
+          onPressed: () {
+            setState(() {
+              _showFilters = !_showFilters;
+            });
+          },
+        ),
+        // Create booking button
+        IconButton(
+          icon: const Icon(Icons.add),
+          tooltip: 'Create Booking',
+          onPressed: () {
+            NavigationService.instance.navigateToBookingPanel().then((_) {
+              // Refresh data when returning from booking panel
+              _initializeData();
+            });
+          },
+        ),
+      ],
       body: ValueListenableBuilder<bool>(
         valueListenable: _controller.isLoading,
         builder: (context, isLoading, child) {

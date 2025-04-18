@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
+import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -56,11 +57,7 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
         // If studio table doesn't exist, just use an empty list
         studios = [];
         if (mounted) {
-          BLKWDSSnackbar.show(
-            context: context,
-            message: 'Studio system not available: $e',
-            type: BLKWDSSnackbarType.warning,
-          );
+          SnackbarService.showWarning(context, 'Studio system not available: $e');
         }
       }
 
@@ -84,11 +81,7 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
       });
 
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Error loading studios: $e',
-          type: BLKWDSSnackbarType.error,
-        );
+        SnackbarService.showError(context, 'Error loading studios: $e');
       }
     }
   }
@@ -125,19 +118,11 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
       await _loadData();
 
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Studio saved successfully',
-          type: BLKWDSSnackbarType.success,
-        );
+        SnackbarService.showSuccess(context, 'Studio saved successfully');
       }
     } catch (e) {
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Error saving studio: $e',
-          type: BLKWDSSnackbarType.error,
-        );
+        SnackbarService.showError(context, 'Error saving studio: $e');
       }
     }
   }
@@ -153,19 +138,11 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
       });
 
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Studio settings saved successfully',
-          type: BLKWDSSnackbarType.success,
-        );
+        SnackbarService.showSuccess(context, 'Studio settings saved successfully');
       }
     } catch (e) {
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Error saving studio settings: $e',
-          type: BLKWDSSnackbarType.error,
-        );
+        SnackbarService.showError(context, 'Error saving studio settings: $e');
       }
     }
   }
@@ -198,19 +175,11 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
       await _loadData();
 
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Studio deleted successfully',
-          type: BLKWDSSnackbarType.success,
-        );
+        SnackbarService.showSuccess(context, 'Studio deleted successfully');
       }
     } catch (e) {
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Error deleting studio: $e',
-          type: BLKWDSSnackbarType.error,
-        );
+        SnackbarService.showError(context, 'Error deleting studio: $e');
       }
     }
   }
@@ -289,10 +258,9 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
         primaryActionLabel: 'Add Studio',
         secondaryActionLabel: 'Learn More',
         onSecondaryAction: () {
-          BLKWDSSnackbar.show(
-            context: context,
-            message: 'Studios are physical spaces that can be booked for projects. Add your recording or production spaces here.',
-            type: BLKWDSSnackbarType.info,
+          SnackbarService.showInfo(
+            context,
+            'Studios are physical spaces that can be booked for projects. Add your recording or production spaces here.',
             duration: const Duration(seconds: 6),
           );
         },

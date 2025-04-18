@@ -40,6 +40,8 @@ enum _SnackbarType {
 /// );
 /// ```
 class SnackbarService {
+  /// Global key for the ScaffoldMessenger
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   /// Show an error snackbar
   static void showError(BuildContext context, String message, {SnackBarAction? action, Duration? duration}) {
@@ -109,6 +111,46 @@ class SnackbarService {
     showInfo(context, message, action: action);
   }
 
+  /// Show an error snackbar without context
+  static void showErrorGlobal(String message, {SnackBarAction? action, Duration? duration}) {
+    _showGlobal(
+      message: message,
+      type: _SnackbarType.error,
+      action: action,
+      duration: duration,
+    );
+  }
+
+  /// Show a success snackbar without context
+  static void showSuccessGlobal(String message, {SnackBarAction? action, Duration? duration}) {
+    _showGlobal(
+      message: message,
+      type: _SnackbarType.success,
+      action: action,
+      duration: duration,
+    );
+  }
+
+  /// Show a warning snackbar without context
+  static void showWarningGlobal(String message, {SnackBarAction? action, Duration? duration}) {
+    _showGlobal(
+      message: message,
+      type: _SnackbarType.warning,
+      action: action,
+      duration: duration,
+    );
+  }
+
+  /// Show an info snackbar without context
+  static void showInfoGlobal(String message, {SnackBarAction? action, Duration? duration}) {
+    _showGlobal(
+      message: message,
+      type: _SnackbarType.info,
+      action: action,
+      duration: duration,
+    );
+  }
+
   /// Show a snackbar with the given type and message
   /// This method consolidates functionality from both SnackbarService and BLKWDSSnackbar
   static void _show({
@@ -173,6 +215,79 @@ class SnackbarService {
           textColor: Colors.white,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Show a snackbar with the given type and message using the global key
+  static void _showGlobal({
+    required String message,
+    required _SnackbarType type,
+    SnackBarAction? action,
+    Duration? duration,
+  }) {
+    // Check if the scaffold messenger key has a current state
+    if (scaffoldMessengerKey.currentState == null) {
+      return;
+    }
+
+    // Get the color and icon based on the type
+    final Color backgroundColor;
+    final IconData icon;
+
+    switch (type) {
+      case _SnackbarType.info:
+        backgroundColor = BLKWDSColors.accentTeal;
+        icon = Icons.info_outline;
+        break;
+      case _SnackbarType.success:
+        backgroundColor = BLKWDSColors.successGreen;
+        icon = Icons.check_circle_outline;
+        break;
+      case _SnackbarType.warning:
+        backgroundColor = BLKWDSColors.warningAmber;
+        icon = Icons.warning_amber_outlined;
+        break;
+      case _SnackbarType.error:
+        backgroundColor = BLKWDSColors.errorRed;
+        icon = Icons.error_outline;
+        break;
+    }
+
+    // Dismiss any existing snackbars
+    scaffoldMessengerKey.currentState!.hideCurrentSnackBar();
+
+    // Show the new snackbar
+    scaffoldMessengerKey.currentState!.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(icon, color: Colors.white),
+            const SizedBox(width: BLKWDSConstants.spacingSmall),
+            Expanded(
+              child: Text(
+                message,
+                style: BLKWDSTypography.bodyMedium.copyWith(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: backgroundColor,
+        duration: duration ?? BLKWDSConstants.snackbarDuration,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
+        ),
+        action: action ?? SnackBarAction(
+          label: 'Dismiss',
+          textColor: Colors.white,
+          onPressed: () {
+            scaffoldMessengerKey.currentState!.hideCurrentSnackBar();
           },
         ),
       ),

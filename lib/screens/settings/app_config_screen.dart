@@ -32,22 +32,20 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Application Configuration'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            tooltip: 'Save Configuration',
-            onPressed: _saveConfig,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Reset to Defaults',
-            onPressed: _resetConfig,
-          ),
-        ],
-      ),
+    return BLKWDSScaffold(
+      title: 'Application Configuration',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.save),
+          tooltip: 'Save Configuration',
+          onPressed: _saveConfig,
+        ),
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          tooltip: 'Reset to Defaults',
+          onPressed: _resetConfig,
+        ),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _buildConfigForm(),

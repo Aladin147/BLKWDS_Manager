@@ -90,9 +90,8 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
     });
 
     try {
-      // TODO: Implement getActivityLogsForMember in DBService
-      // For now, use an empty list
-      final logs = <ActivityLog>[];
+      // Get activity logs for this member
+      final logs = await DBService.getActivityLogsForMember(widget.member.id!);
       setState(() {
         _activityLogs = logs;
         _isLoadingActivity = false;

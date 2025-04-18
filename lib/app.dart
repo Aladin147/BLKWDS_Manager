@@ -48,6 +48,7 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
       theme: BLKWDSTheme.theme,
       initialRoute: AppRoutes.dashboard,
       navigatorKey: _navigationService.navigatorKey,
+      scaffoldMessengerKey: SnackbarService.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       // Define named routes
       routes: AppRoutes.routes,

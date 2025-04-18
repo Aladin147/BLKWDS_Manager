@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../models/models.dart';
 import '../../../services/db_service.dart';
+import '../../../services/snackbar_service.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
@@ -56,7 +57,6 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
 
     try {
       // Get bookings for the selected studio
-      // This is a placeholder - we'll need to implement this method in DBService
       final bookings = await _getBookingsForStudio(_selectedStudioId);
 
       setState(() {
@@ -69,11 +69,7 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
       });
 
       if (mounted) {
-        BLKWDSSnackbar.show(
-          context: context,
-          message: 'Error loading bookings: $e',
-          type: BLKWDSSnackbarType.error,
-        );
+        SnackbarService.showError(context, 'Error loading bookings: $e');
       }
     }
   }

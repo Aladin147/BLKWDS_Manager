@@ -24,6 +24,8 @@ export 'fallback_widget.dart';
 export 'category_icon_widget.dart';
 export 'member_avatar_widget.dart';
 export 'project_thumbnail_widget.dart';
+export 'blkwds_home_button.dart';
+export 'blkwds_scaffold.dart';
 
 // Animation Components
 export 'blkwds_animated_list.dart';
