@@ -100,7 +100,7 @@ class BLKWDSEnhancedStatusBadge extends StatelessWidget {
             vertical: 4,
           ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 38),
         borderRadius: BorderRadius.circular(borderRadius ?? 12),
         border: hasBorder ? Border.all(color: color, width: 1) : null,
         boxShadow: hasShadow ? BLKWDSShadows.getShadow(BLKWDSShadows.level1) : null,

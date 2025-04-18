@@ -6,11 +6,10 @@ import '../../services/error_type.dart';
 import '../../services/error_feedback_level.dart';
 import '../../services/navigation_service.dart';
 import '../../theme/blkwds_colors.dart';
-import '../../theme/blkwds_typography.dart';
+
 import '../../theme/blkwds_constants.dart';
 import '../../utils/constants.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../../widgets/blkwds_enhanced_widgets.dart';
 import 'add_gear_controller.dart';
 
 /// AddGearScreen

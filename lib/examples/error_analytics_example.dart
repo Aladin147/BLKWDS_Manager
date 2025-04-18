@@ -247,7 +247,7 @@ class _ErrorAnalyticsExampleState extends State<ErrorAnalyticsExample> {
               vertical: BLKWDSConstants.spacingExtraSmall,
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 25),
               borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadiusSmall),
             ),
             child: Text(

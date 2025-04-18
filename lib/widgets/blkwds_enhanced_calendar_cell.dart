@@ -80,7 +80,6 @@ class _BLKWDSEnhancedCalendarCellState extends State<BLKWDSEnhancedCalendarCell>
         textColor = BLKWDSColors.textSecondary.withValues(alpha: 150);
         break;
       case BLKWDSEnhancedCalendarCellType.normal:
-      default:
         backgroundColor = _isHovered && widget.isEnabled && widget.animateOnHover
             ? BLKWDSColors.backgroundMedium.withValues(alpha: 150)
             : BLKWDSColors.backgroundMedium.withValues(alpha: 80);
