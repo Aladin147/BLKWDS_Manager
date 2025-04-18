@@ -41,7 +41,7 @@ enum _SnackbarType {
 /// ```
 class SnackbarService {
   /// Global key for the ScaffoldMessenger
-  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>(debugLabel: 'SnackbarServiceKey');
 
   /// Show an error snackbar
   static void showError(BuildContext context, String message, {SnackBarAction? action, Duration? duration}) {

@@ -27,7 +27,7 @@ class NavigationService {
   NavigationService._internal();
 
   // Global navigator key
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>(debugLabel: 'NavigationServiceKey');
 
   // Get navigator state
   NavigatorState? get navigator => navigatorKey.currentState;

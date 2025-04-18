@@ -78,37 +78,48 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
             ),
             boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level2),
           ),
-          child: DropdownButtonFormField<T>(
-            value: value,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
-                color: BLKWDSColors.textHint,
+          child: Builder(builder: (context) {
+            // Check if the value exists in the items list
+            bool valueExists = false;
+            if (value != null) {
+              valueExists = items.any((item) => item.value == value);
+            }
+
+            // Only set the value if it exists in the items list
+            final effectiveValue = valueExists ? value : null;
+
+            return DropdownButtonFormField<T>(
+              value: effectiveValue,
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
+                  color: BLKWDSColors.textHint,
+                ),
+                prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: BLKWDSColors.accentTeal) : null,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: BLKWDSConstants.inputHorizontalPadding,
+                  vertical: BLKWDSConstants.inputVerticalPadding,
+                ),
+                errorStyle: BLKWDSEnhancedText.getBodySmallStyle().copyWith(
+                  color: BLKWDSColors.errorRed,
+                ),
               ),
-              prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: BLKWDSColors.accentTeal) : null,
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: BLKWDSConstants.inputHorizontalPadding,
-                vertical: BLKWDSConstants.inputVerticalPadding,
+              isExpanded: true,
+              icon: const Icon(Icons.arrow_drop_down, color: BLKWDSColors.accentTeal),
+              iconSize: 24,
+              elevation: 8,
+              style: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
+                color: BLKWDSColors.textPrimary,
               ),
-              errorStyle: BLKWDSEnhancedText.getBodySmallStyle().copyWith(
-                color: BLKWDSColors.errorRed,
-              ),
-            ),
-            isExpanded: true,
-            icon: const Icon(Icons.arrow_drop_down, color: BLKWDSColors.accentTeal),
-            iconSize: 24,
-            elevation: 8,
-            style: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
-              color: BLKWDSColors.textPrimary,
-            ),
-            dropdownColor: BLKWDSColors.backgroundMedium,
-            borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-            items: items,
-            onChanged: enabled ? onChanged : null,
-            validator: validator,
-            autovalidateMode: autovalidateMode,
-          ),
+              dropdownColor: BLKWDSColors.backgroundMedium,
+              borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
+              items: items,
+              onChanged: enabled ? onChanged : null,
+              validator: validator,
+              autovalidateMode: autovalidateMode,
+            );
+          }),
         ),
 
         // Error text if provided

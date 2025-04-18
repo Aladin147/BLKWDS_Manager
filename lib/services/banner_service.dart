@@ -6,7 +6,7 @@ import '../widgets/blkwds_error_banner.dart';
 /// A service for displaying persistent banners in the application
 class BannerService {
   /// The global key for the banner overlay
-  static final GlobalKey<_BannerOverlayState> _bannerKey = GlobalKey<_BannerOverlayState>();
+  static final GlobalKey<_BannerOverlayState> _bannerKey = GlobalKey<_BannerOverlayState>(debugLabel: 'BannerOverlayKey');
 
   /// Show an error banner
   ///
