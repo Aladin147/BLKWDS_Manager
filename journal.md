@@ -1,5 +1,237 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-06: Filter Dropdowns and Gear Check Out/In Fixes
+
+Today we focused on fixing two significant issues in the application: problematic filter dropdowns and gear check out/in functionality in the dashboard screen.
+
+1. **Filter Dropdown Issues**:
+   - Identified that filter dropdowns throughout the app were causing regression errors
+   - Removed problematic filter dropdowns from:
+     - Member List Screen (role filter)
+     - Project List Screen (client filter)
+     - Gear List Screen (category and status filters)
+   - Simplified the UI while eliminating a source of errors
+   - Improved application stability by removing complex components that were causing issues
+
+2. **Gear Check Out/In Functionality**:
+   - Fixed the gear check out/in functionality in the dashboard screen
+   - Identified that while database operations were working correctly, the UI wasn't updating properly
+   - Implemented several improvements:
+     - Added cache clearing before and after gear operations
+     - Implemented immediate UI updates by modifying the local gear list
+     - Ensured proper ValueNotifier updates to trigger UI rebuilds
+     - Added detailed logging for debugging and verification
+   - Enhanced user experience with immediate feedback on gear status changes
+
+3. **Benefits Achieved**:
+   - Improved application stability by removing problematic components
+   - Enhanced user experience with more responsive UI updates
+   - Fixed a critical functionality issue in the dashboard screen
+   - Simplified the UI while maintaining core functionality
+   - Added better debugging capabilities with detailed logging
+
+This work addresses two significant issues that were affecting the usability and stability of the application. By removing problematic filter dropdowns and fixing the gear check out/in functionality, we've made the application more reliable and user-friendly.
+
+Next steps include continuing with code cleanup and optimization, focusing on other areas that might benefit from similar improvements.
+
+## 2025-07-06: Routing and Navigation Improvements
+
+Today we focused on improving the routing and navigation system in the app. This work involved several key improvements:
+
+1. **Created NavigationHelper Class**:
+   - Implemented a new `NavigationHelper` class to standardize navigation service access
+   - Centralized all navigation methods in one place
+   - Eliminated inconsistencies between using `NavigationService()` and `NavigationService.instance`
+   - Made navigation code more maintainable and less error-prone
+
+2. **Updated Key Screens**:
+   - Updated the `BLKWDSHomeButton` to use the new NavigationHelper
+   - Updated the Dashboard screen to use the NavigationHelper for all navigation actions
+   - Updated the Calendar screen to use the NavigationHelper for all navigation actions
+   - Updated the Booking Panel screens to use the NavigationHelper
+   - Updated the Settings screen to use the NavigationHelper
+   - Updated the Gear Management screens to use the NavigationHelper
+   - Updated the Add Gear screen to use the NavigationHelper
+   - Updated the Member Management screens to use the NavigationHelper
+   - Updated the Project Management screens to use the NavigationHelper
+   - Updated the Studio Management screens to use the NavigationHelper
+   - Updated the Activity Log screens to use the NavigationHelper
+   - Updated the Today Booking widget to use the NavigationHelper
+   - Updated the Booking Detail screens to use the NavigationHelper
+   - Updated the Member Detail screen to use the NavigationHelper
+   - Ensured consistent navigation behavior across the app
+
+3. **Updated Services**:
+   - Updated the ErrorPageService to use NavigationHelper
+   - Updated the main App class to use NavigationHelper
+   - Eliminated all direct references to NavigationService in the codebase
+
+4. **Enhanced NavigationHelper Functionality**:
+   - Added support for gear-related navigation methods
+   - Added support for member-related navigation methods
+   - Added support for project-related navigation methods
+   - Added support for studio-related navigation methods
+   - Added support for activity log navigation methods
+   - Added support for booking detail navigation
+   - Added support for direct widget navigation
+   - Ensured all navigation methods are available through the helper
+
+5. **Benefits Achieved**:
+   - Improved code maintainability with standardized navigation access
+   - Eliminated potential bugs from inconsistent navigation service access
+   - Made the codebase more maintainable and easier to understand
+   - Prepared the groundwork for future routing improvements
+   - Completed the migration to NavigationHelper across the entire codebase
+
+This work addresses several issues by standardizing the way navigation is handled throughout the app. The application now has a more consistent and maintainable navigation system, which is a significant step forward in our code quality strategy.
+
+Next steps include addressing database initialization and error handling, as well as continuing with other code cleanup and optimization tasks.
+
+## 2025-07-07: Fixed Gear Check In/Out Functionality
+
+Today we focused on fixing the issue with gear check in and check out functionality not working properly. The main problem was that the UI wasn't refreshing correctly after check in/out operations, causing the gear status to appear unchanged until the user manually refreshed the screen.
+
+1. **Identified the Issue**:
+   - The gear's `isOut` status was being correctly updated in the database
+   - The UI wasn't refreshing to reflect the updated status
+   - The gear detail screen wasn't fetching the latest gear data after check in/out operations
+
+2. **Implemented the Fix**:
+   - Added a `_refreshGearData` method to the gear detail screen to fetch the latest gear data from the database
+   - Updated the check in and check out methods to call `_refreshGearData` after successful operations
+   - Implemented a smart refresh mechanism that detects changes in the gear's `isOut` status and refreshes the UI accordingly
+   - Added navigation refresh for cases where the gear status has changed to ensure the UI is completely updated
+
+3. **Benefits Achieved**:
+   - Gear check in and check out operations now properly update the UI
+   - Users can see the immediate effect of their actions without having to manually refresh
+   - Improved user experience by eliminating confusion about the current status of gear items
+   - Enhanced reliability of the gear management system
+
+This fix addresses a critical usability issue that was affecting the core functionality of the app. The gear management system is now more reliable and provides better feedback to users about the status of their gear items.
+
+## 2025-07-10: UI Standardization
+
+Today we focused on standardizing the UI components across the application to ensure a consistent look and feel. This work involved several key improvements:
+
+1. **Standardized UI Components**:
+   - Implemented BLKWDSScaffold for consistent app bar and navigation
+   - Replaced standard Text widgets with BLKWDSEnhancedText for consistent typography
+   - Replaced standard Card widgets with BLKWDSEnhancedCard for consistent styling
+   - Replaced standard buttons with BLKWDSEnhancedButton for consistent interaction
+
+2. **Updated Key Screens**:
+   - Updated the Activity Log screen to use enhanced components
+   - Updated the Add Gear screen to use enhanced components
+   - Updated the Member Detail screen to use enhanced components
+
+3. **Removed Legacy Code**:
+   - Removed unused app_theme.dart file and standardized on BLKWDSColors
+   - Eliminated duplicate color definitions
+   - Removed deprecated styling approaches
+
+4. **Benefits Achieved**:
+   - Enhanced visual consistency across the application
+   - Improved code maintainability with standardized components
+   - Reduced code duplication with reusable enhanced components
+   - Prepared the codebase for future UI improvements
+
+This work addresses several UI standardization issues that were identified earlier in the project. The application now has a more consistent and polished look and feel, which is a significant step forward in our UI/UX strategy.
+
+Next steps include continuing to update other screens to use the enhanced components and addressing the remaining UI/UX issues.
+
+## 2025-07-11: Database Model Consolidation
+
+Today we focused on consolidating the booking models to improve data integrity and reduce confusion in the codebase. This work involved several key improvements:
+
+1. **Model Consolidation**:
+   - Renamed `booking.dart` to `booking_legacy.dart` and marked it as deprecated
+   - Updated `booking_v2.dart` to be the primary booking model
+   - Added clear documentation to both files
+   - Created a migration to ensure all bookings use `studioId` instead of boolean flags
+
+2. **Foreign Key Enforcement**:
+   - Enabled foreign key constraints at the database level
+   - Added foreign key enforcement in transactions
+   - Updated the database integrity checker to focus on `studioId` instead of boolean flags
+
+3. **Testing and Documentation**:
+   - Added tests to verify the booking model consolidation works correctly
+   - Created comprehensive documentation for the booking model consolidation
+   - Updated project status to reflect the changes
+
+4. **Benefits Achieved**:
+   - Enhanced data integrity with consistent approach to studio references
+   - Improved code clarity with a single source of truth for booking model
+   - Reduced risk of bugs from inconsistent models
+   - Added clear deprecation warnings for legacy code
+
+This work addresses a critical database issue that was identified in our earlier database audit. By consolidating the booking models, we've eliminated a source of potential bugs and improved the maintainability of the codebase.
+
+Next steps include continuing our database audit to identify and fix any remaining issues.
+
+## 2025-07-11: Enhanced Transaction Usage
+
+Today we focused on enhancing transaction usage throughout the database operations to improve data integrity and reduce the risk of data corruption. This work involved several key improvements:
+
+1. **Enhanced Member Operations**:
+   - Added transaction usage to member operations (insert, update, delete)
+   - Ensured deleteMember properly cleans up related records in other tables
+   - Added proper error handling for member operations
+
+2. **Enhanced Studio Operations**:
+   - Added transaction usage to studio operations (insert, update, delete)
+   - Added constraint checking in deleteStudio to prevent orphaned records
+   - Improved error handling for studio operations
+
+3. **Foreign Key Enforcement**:
+   - Enabled foreign key constraints at the database level
+   - Added foreign key constraint enforcement in transactions
+   - Added proper error handling for constraint violations
+
+4. **Testing and Documentation**:
+   - Added comprehensive tests to verify transaction usage
+   - Created detailed documentation for transaction usage
+   - Updated project status to reflect the changes
+
+This work addresses a critical database issue that was identified in our earlier database audit. By ensuring consistent transaction usage, we've significantly improved data integrity and reduced the risk of data corruption from partial operations.
+
+Next steps include continuing our database audit to identify and fix any remaining issues, particularly focusing on cache invalidation and query performance.
+
+## 2025-07-05: Code Cleanup and Optimization
+
+Today we focused on code cleanup and optimization, addressing several critical issues in the codebase. This work involved several key improvements:
+
+1. **Implemented Caching for Frequently Accessed Data**:
+   - Created a new `CacheService` class with in-memory caching and expiration
+   - Added caching to `DBService.getAllGear()`, `DBService.getAllMembers()`, and `DBService.getAllProjects()`
+   - Implemented cache invalidation when data is modified
+   - Added cache statistics and periodic cache cleaning
+
+2. **Improved Controller Efficiency**:
+   - Implemented lazy loading in `DashboardController` to load essential data first
+   - Created a generic `_loadDataWithRetry` method to reduce code duplication
+   - Added proper resource disposal with a `dispose()` method
+   - Optimized error handling to allow the app to continue functioning even if some data fails to load
+
+3. **Fixed Test Issues**:
+   - Fixed the `dashboard_screen_test.dart` file by implementing a proper test controller
+   - Fixed the `gear_preview_list_widget_test.dart` file by creating a custom mock controller
+   - Fixed the `quick_actions_panel_test.dart` file by updating the test assertions
+   - Fixed the `top_bar_summary_widget_test.dart` file by creating a custom mock controller
+   - Created a `TestDatabaseHelper` class to initialize the database for tests
+
+4. **Benefits Achieved**:
+   - Improved application performance with caching
+   - Reduced database queries for frequently accessed data
+   - Enhanced controller efficiency with lazy loading
+   - Fixed critical test issues to improve test reliability
+   - Reduced code duplication with reusable helper methods
+
+This work addresses several critical issues by improving performance, reducing code duplication, and fixing test issues. The application now has better performance and more reliable tests, which is a significant step forward in our code quality strategy.
+
+Next steps include fixing the remaining test issues, addressing routing and path issues, and continuing with database optimizations.
+
 ## 2025-07-04: UI/UX Enhancements and Deprecated API Cleanup
 
 Today we completed significant UI/UX enhancements and cleaned up deprecated API usage throughout the codebase. This work involved several key improvements:
@@ -34,7 +266,6 @@ Today we completed significant UI/UX enhancements and cleaned up deprecated API 
 This work addresses several critical issues by cleaning up deprecated API usage and enhancing UI components. The application now has a more consistent and reliable user interface, which is a significant step forward in our UI/UX strategy.
 
 Next steps include entering a cleaning, fixing, and optimizing phase to further improve code quality and performance.
-
 
 ## 2025-07-03: Integration Test Runtime Fixes
 

@@ -32,8 +32,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   // Search query
   String _searchQuery = '';
 
-  // Selected client filter
-  String? _selectedClient;
+  // Client filter removed to simplify UI
 
   @override
   void initState() {
@@ -75,7 +74,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     }
   }
 
-  // Apply search and client filters
+  // Apply search filter only
   void _applyFilters() {
     setState(() {
       _filteredProjects = _projects.where((project) {
@@ -85,25 +84,12 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
             (project.client?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
             (project.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
 
-        // Apply client filter
-        final matchesClient = _selectedClient == null ||
-            project.client == _selectedClient;
-
-        return matchesSearch && matchesClient;
+        return matchesSearch;
       }).toList();
     });
   }
 
-  // Get unique clients from projects
-  List<String?> get _uniqueClients {
-    final clients = _projects.map((project) => project.client).toSet().toList();
-    clients.sort((a, b) {
-      if (a == null) return 1;
-      if (b == null) return -1;
-      return a.compareTo(b);
-    });
-    return clients;
-  }
+  // Client filter removed to simplify UI
 
   // Navigate to project detail screen
   void _navigateToProjectDetail(Project project) async {
@@ -231,34 +217,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingMedium),
-                // Client filter dropdown
-                Expanded(
-                  flex: 2,
-                  child: BLKWDSEnhancedDropdown<String?>(
-                    label: 'Filter by Client',
-                    value: _selectedClient,
-                    prefixIcon: Icons.business,
-                    items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text('All Clients'),
-                      ),
-                      ..._uniqueClients.map((client) {
-                        return DropdownMenuItem<String?>(
-                          value: client,
-                          child: Text(client ?? 'No Client'),
-                        );
-                      }),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedClient = value;
-                        _applyFilters();
-                      });
-                    },
-                  ),
-                ),
+                // Client filter dropdown removed to simplify UI
               ],
             ),
           ),

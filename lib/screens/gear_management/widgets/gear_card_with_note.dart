@@ -46,6 +46,8 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
 
   @override
   Widget build(BuildContext context) {
+    // Log gear status for debugging
+    print('DEBUG: Building GearCardWithNote for ${widget.gear.id} - ${widget.gear.name}, isOut: ${widget.gear.isOut}');
     return Padding(
       padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
       child: BLKWDSEnhancedCard(
@@ -207,41 +209,48 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                   const SizedBox(width: BLKWDSConstants.spacingSmall),
 
                   // Check in/out button
-                  widget.gear.isOut
-                      ? BLKWDSEnhancedButton(
-                          label: 'Check In',
-                          icon: Icons.check_circle,
-                          type: BLKWDSEnhancedButtonType.secondary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
-                            vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
-                          ),
-                          onPressed: () {
-                            final note = _noteController.text.isNotEmpty ? _noteController.text : null;
-                            widget.onCheckin(widget.gear, note);
-                            setState(() {
-                              _isExpanded = false;
-                              _noteController.clear();
-                            });
-                          },
-                        )
-                      : BLKWDSEnhancedButton(
-                          label: 'Check Out',
-                          icon: Icons.logout,
-                          type: BLKWDSEnhancedButtonType.primary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
-                            vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
-                          ),
-                          onPressed: () {
-                            final note = _noteController.text.isNotEmpty ? _noteController.text : null;
-                            widget.onCheckout(widget.gear, note);
-                            setState(() {
-                              _isExpanded = false;
-                              _noteController.clear();
-                            });
-                          },
-                        ),
+                  Builder(builder: (context) {
+                    // Log which button is being rendered
+                    print('DEBUG: Rendering ${widget.gear.isOut ? "Check In" : "Check Out"} button for gear ${widget.gear.id}');
+
+                    return widget.gear.isOut
+                        ? BLKWDSEnhancedButton(
+                            label: 'Check In',
+                            icon: Icons.check_circle,
+                            type: BLKWDSEnhancedButtonType.secondary,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                            ),
+                            onPressed: () {
+                              print('DEBUG: Check In button pressed for gear ${widget.gear.id}');
+                              final note = _noteController.text.isNotEmpty ? _noteController.text : null;
+                              widget.onCheckin(widget.gear, note);
+                              setState(() {
+                                _isExpanded = false;
+                                _noteController.clear();
+                              });
+                            },
+                          )
+                        : BLKWDSEnhancedButton(
+                            label: 'Check Out',
+                            icon: Icons.logout,
+                            type: BLKWDSEnhancedButtonType.primary,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                            ),
+                            onPressed: () {
+                              print('DEBUG: Check Out button pressed for gear ${widget.gear.id}');
+                              final note = _noteController.text.isNotEmpty ? _noteController.text : null;
+                              widget.onCheckout(widget.gear, note);
+                              setState(() {
+                                _isExpanded = false;
+                                _noteController.clear();
+                              });
+                            },
+                          );
+                  }),
                 ],
               ),
             ],

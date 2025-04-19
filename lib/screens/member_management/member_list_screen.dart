@@ -32,8 +32,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
   // Search query
   String _searchQuery = '';
 
-  // Selected role filter
-  String? _selectedRole;
+  // No role filter - removed to simplify UI
 
   @override
   void initState() {
@@ -75,7 +74,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
     }
   }
 
-  // Apply search and role filters
+  // Apply search filter only
   void _applyFilters() {
     setState(() {
       _filteredMembers = _members.where((member) {
@@ -84,25 +83,12 @@ class _MemberListScreenState extends State<MemberListScreen> {
             member.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             (member.role?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
 
-        // Apply role filter
-        final matchesRole = _selectedRole == null ||
-            member.role == _selectedRole;
-
-        return matchesSearch && matchesRole;
+        return matchesSearch;
       }).toList();
     });
   }
 
-  // Get unique roles from members
-  List<String?> get _uniqueRoles {
-    final roles = _members.map((member) => member.role).toSet().toList();
-    roles.sort((a, b) {
-      if (a == null) return 1;
-      if (b == null) return -1;
-      return a.compareTo(b);
-    });
-    return roles;
-  }
+  // Role filtering removed to simplify UI
 
   // Navigate to member detail screen
   void _navigateToMemberDetail(Member member) async {
@@ -230,34 +216,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingMedium),
-                // Role filter dropdown
-                Expanded(
-                  flex: 2,
-                  child: BLKWDSEnhancedDropdown<String?>(
-                    label: 'Filter by Role',
-                    value: _selectedRole,
-                    prefixIcon: Icons.work,
-                    items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text('All Roles'),
-                      ),
-                      ..._uniqueRoles.map((role) {
-                        return DropdownMenuItem<String?>(
-                          value: role,
-                          child: Text(role ?? 'No Role'),
-                        );
-                      }),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedRole = value;
-                        _applyFilters();
-                      });
-                    },
-                  ),
-                ),
+                // Role filter dropdown removed to simplify UI
               ],
             ),
           ),

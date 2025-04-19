@@ -6,7 +6,7 @@ import 'blkwds_enhanced_text.dart';
 
 /// BLKWDSEnhancedDropdown
 /// An enhanced dropdown component with consistent styling for BLKWDS Manager
-class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
+class BLKWDSEnhancedDropdown<T> extends StatefulWidget {
   final String label;
   final T? value;
   final List<DropdownMenuItem<T>> items;
@@ -35,7 +35,82 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
   });
 
   @override
+  State<BLKWDSEnhancedDropdown<T>> createState() => _BLKWDSEnhancedDropdownState<T>();
+}
+
+class _BLKWDSEnhancedDropdownState<T> extends State<BLKWDSEnhancedDropdown<T>> {
+  T? _effectiveValue;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateEffectiveValue();
+  }
+
+  @override
+  void didUpdateWidget(BLKWDSEnhancedDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value || oldWidget.items != widget.items) {
+      _updateEffectiveValue();
+    }
+  }
+
+  void _updateEffectiveValue() {
+    // If value is null, no need to check
+    if (widget.value == null) {
+      _effectiveValue = null;
+      _initialized = true;
+      return;
+    }
+
+    // Check if the value exists in the items list
+    bool valueExists = false;
+    for (var item in widget.items) {
+      if (_areValuesEqual(item.value, widget.value)) {
+        valueExists = true;
+        break;
+      }
+    }
+
+    // Set the effective value based on existence
+    _effectiveValue = valueExists ? widget.value : null;
+    _initialized = true;
+
+    // If the value doesn't exist and it's not null, notify the parent
+    if (!valueExists && widget.value != null && mounted) {
+      // Use Future.microtask to avoid calling setState during build
+      Future.microtask(() {
+        if (mounted) {
+          widget.onChanged(null);
+        }
+      });
+    }
+  }
+
+  /// Helper method to compare values for equality
+  /// This handles both primitive types and complex objects
+  bool _areValuesEqual(T? a, T? b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+
+    // For primitive types, use == operator
+    if (a is String || a is num || a is bool) {
+      return a == b;
+    }
+
+    // For complex objects, compare toString() representations
+    // This is a simple approach that works for most cases
+    return a.toString() == b.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // If not initialized yet, show a placeholder
+    if (!_initialized) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,11 +122,11 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
           ),
           child: RichText(
             text: TextSpan(
-              text: label,
+              text: widget.label,
               style: BLKWDSEnhancedText.getLabelMediumStyle().copyWith(
                 color: BLKWDSColors.slateGrey,
               ),
-              children: isRequired
+              children: widget.isRequired
                   ? [
                       TextSpan(
                         text: ' *',
@@ -71,47 +146,32 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
             color: BLKWDSColors.backgroundMedium,
             borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
             border: Border.all(
-              color: errorText != null
+              color: widget.errorText != null
                   ? BLKWDSColors.errorRed
                   : BLKWDSColors.inputBorder,
               width: 1.0,
             ),
             boxShadow: BLKWDSShadows.getShadow(BLKWDSShadows.level2),
           ),
-          child: Builder(builder: (context) {
-            // Check if the value exists in the items list
-            bool valueExists = false;
-            if (value != null) {
-              // Use deep equality check for complex objects
-              valueExists = items.any((item) => _areValuesEqual(item.value, value));
-            }
-
-            // Only set the value if it exists in the items list
-            final effectiveValue = valueExists ? value : null;
-
-            // If the value doesn't exist in the items list, call onChanged with null
-            // to update the parent widget's state
-            if (!valueExists && value != null) {
-              // Use Future.microtask to avoid calling setState during build
-              Future.microtask(() => onChanged(null));
-            }
-
-            return DropdownButtonFormField<T>(
-              value: effectiveValue,
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: BLKWDSEnhancedText.getBodyMediumStyle().copyWith(
-                  color: BLKWDSColors.textHint,
-                ),
-                prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: BLKWDSColors.accentTeal) : null,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: BLKWDSConstants.inputHorizontalPadding,
-                  vertical: BLKWDSConstants.inputVerticalPadding,
-                ),
-                errorStyle: BLKWDSEnhancedText.getBodySmallStyle().copyWith(
-                  color: BLKWDSColors.errorRed,
-                ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: BLKWDSConstants.inputHorizontalPadding,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<T>(
+              value: _effectiveValue,
+              hint: Row(
+                children: [
+                  if (widget.prefixIcon != null) ...[
+                    Icon(widget.prefixIcon, color: BLKWDSColors.accentTeal),
+                    const SizedBox(width: BLKWDSConstants.spacingSmall),
+                  ],
+                  Expanded(
+                    child: BLKWDSEnhancedText.bodyMedium(
+                      widget.hintText,
+                      color: BLKWDSColors.textHint,
+                    ),
+                  ),
+                ],
               ),
               isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down, color: BLKWDSColors.accentTeal),
@@ -122,43 +182,28 @@ class BLKWDSEnhancedDropdown<T> extends StatelessWidget {
               ),
               dropdownColor: BLKWDSColors.backgroundMedium,
               borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-              items: items,
-              onChanged: enabled ? onChanged : null,
-              validator: validator,
-              autovalidateMode: autovalidateMode,
-            );
-          }),
+              items: widget.items,
+              onChanged: widget.enabled ? widget.onChanged : null,
+              padding: const EdgeInsets.symmetric(
+                vertical: BLKWDSConstants.inputVerticalPadding / 2,
+              ),
+            ),
+          ),
         ),
 
         // Error text if provided
-        if (errorText != null)
+        if (widget.errorText != null)
           Padding(
             padding: const EdgeInsets.only(
               top: BLKWDSConstants.spacingSmall / 2,
               left: BLKWDSConstants.spacingSmall,
             ),
             child: BLKWDSEnhancedText.bodySmall(
-              errorText!,
+              widget.errorText!,
               color: BLKWDSColors.errorRed,
             ),
           ),
       ],
     );
-  }
-
-  /// Helper method to compare values for equality
-  /// This handles both primitive types and complex objects
-  bool _areValuesEqual(T? a, T? b) {
-    if (a == null && b == null) return true;
-    if (a == null || b == null) return false;
-
-    // For primitive types, use == operator
-    if (a is String || a is num || a is bool) {
-      return a == b;
-    }
-
-    // For complex objects, compare toString() representations
-    // This is a simple approach that works for most cases
-    return a.toString() == b.toString();
   }
 }

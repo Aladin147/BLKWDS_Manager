@@ -33,11 +33,7 @@ class _GearListScreenState extends State<GearListScreen> {
   // Search query
   String _searchQuery = '';
 
-  // Selected category filter
-  String? _selectedCategory;
-
-  // Selected status filter
-  bool? _selectedStatus;
+  // Category and status filters removed to simplify UI
 
   @override
   void initState() {
@@ -47,6 +43,11 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Load gear from the database
   Future<void> _loadGear() async {
+    LogService.debug('Loading gear from database...');
+
+    // Clear the cache to ensure we get fresh data
+    CacheService().remove('all_gear');
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -54,23 +55,32 @@ class _GearListScreenState extends State<GearListScreen> {
 
     try {
       final gear = await DBService.getAllGear();
-      setState(() {
-        _gear = gear;
-        _applyFilters();
-        _isLoading = false;
-      });
+      LogService.debug('Loaded ${gear.length} gear items from database');
+
+      // Log the status of each gear item for debugging
+      for (var g in gear) {
+        LogService.debug('Gear ${g.id}: ${g.name} - isOut: ${g.isOut}');
+      }
+
+      if (mounted) {
+        setState(() {
+          _gear = gear;
+          _applyFilters();
+          _isLoading = false;
+        });
+      }
     } catch (e, stackTrace) {
       LogService.error('Failed to load gear', e, stackTrace);
-      setState(() {
-        _errorMessage = ErrorService.getUserFriendlyMessage(
-          ErrorType.database,
-          e.toString(),
-        );
-        _isLoading = false;
-      });
-
-      // Show error snackbar
       if (mounted) {
+        setState(() {
+          _errorMessage = ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          );
+          _isLoading = false;
+        });
+
+        // Show error snackbar
         SnackbarService.showError(
           context,
           _errorMessage!,
@@ -79,7 +89,7 @@ class _GearListScreenState extends State<GearListScreen> {
     }
   }
 
-  // Apply search and filters
+  // Apply search filter only
   void _applyFilters() {
     setState(() {
       _filteredGear = _gear.where((gear) {
@@ -90,25 +100,12 @@ class _GearListScreenState extends State<GearListScreen> {
             (gear.serialNumber?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
             (gear.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
 
-        // Apply category filter
-        final matchesCategory = _selectedCategory == null ||
-            gear.category == _selectedCategory;
-
-        // Apply status filter
-        final matchesStatus = _selectedStatus == null ||
-            gear.isOut == _selectedStatus;
-
-        return matchesSearch && matchesCategory && matchesStatus;
+        return matchesSearch;
       }).toList();
     });
   }
 
-  // Get unique categories from gear
-  List<String> get _uniqueCategories {
-    final categories = _gear.map((gear) => gear.category).toSet().toList();
-    categories.sort();
-    return categories;
-  }
+  // Category filter removed to simplify UI
 
   // Navigate to gear detail screen
   void _navigateToGearDetail(Gear gear) async {
@@ -202,7 +199,10 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Check out gear to a member
   Future<void> _checkoutGear(Gear gear, String? note) async {
+    LogService.debug('Checking out gear: ${gear.id} - ${gear.name}');
+
     if (gear.isOut) {
+      LogService.debug('Gear is already checked out');
       // Show error snackbar
       if (mounted) {
         SnackbarService.showError(
@@ -216,6 +216,7 @@ class _GearListScreenState extends State<GearListScreen> {
     // Get all members
     final members = await DBService.getAllMembers();
     if (members.isEmpty) {
+      LogService.debug('No members available for checkout');
       // Show error snackbar
       if (mounted) {
         SnackbarService.showError(
@@ -270,7 +271,12 @@ class _GearListScreenState extends State<GearListScreen> {
       ),
     );
 
-    if (selectedMember == null || !mounted) return;
+    if (selectedMember == null || !mounted) {
+      LogService.debug('No member selected or widget unmounted');
+      return;
+    }
+
+    LogService.debug('Selected member: ${selectedMember.id} - ${selectedMember.name}');
 
     // Check out gear
     setState(() {
@@ -278,11 +284,16 @@ class _GearListScreenState extends State<GearListScreen> {
     });
 
     try {
+      // Clear the cache before the operation to ensure fresh data
+      CacheService().remove('all_gear');
+
       final success = await DBService.checkOutGear(
         gear.id!,
         selectedMember.id!,
         note: note?.isNotEmpty == true ? note : null,
       );
+
+      LogService.debug('Check out result: $success');
 
       if (success) {
         // Show success snackbar
@@ -292,6 +303,22 @@ class _GearListScreenState extends State<GearListScreen> {
             '${gear.name} checked out to ${selectedMember.name}',
           );
         }
+
+        // Update the local gear item to reflect the change immediately
+        final updatedGear = gear.copyWith(isOut: true, lastNote: note);
+
+        // Update the gear in the local list
+        setState(() {
+          final index = _gear.indexWhere((g) => g.id == gear.id);
+          if (index >= 0) {
+            _gear[index] = updatedGear;
+          }
+
+          final filteredIndex = _filteredGear.indexWhere((g) => g.id == gear.id);
+          if (filteredIndex >= 0) {
+            _filteredGear[filteredIndex] = updatedGear;
+          }
+        });
       } else {
         // Show error snackbar
         if (mounted) {
@@ -302,19 +329,20 @@ class _GearListScreenState extends State<GearListScreen> {
         }
       }
 
+      // Reload gear from database to ensure UI is up to date
       _loadGear();
     } catch (e, stackTrace) {
       LogService.error('Failed to check out gear', e, stackTrace);
-      setState(() {
-        _errorMessage = ErrorService.getUserFriendlyMessage(
-          ErrorType.database,
-          e.toString(),
-        );
-        _isLoading = false;
-      });
-
-      // Show error snackbar
       if (mounted) {
+        setState(() {
+          _errorMessage = ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          );
+          _isLoading = false;
+        });
+
+        // Show error snackbar
         SnackbarService.showError(
           context,
           _errorMessage!,
@@ -325,7 +353,10 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Check in gear
   Future<void> _checkinGear(Gear gear, String? note) async {
+    LogService.debug('Checking in gear: ${gear.id} - ${gear.name}');
+
     if (!gear.isOut) {
+      LogService.debug('Gear is already checked in');
       // Show error snackbar
       if (mounted) {
         SnackbarService.showError(
@@ -342,10 +373,15 @@ class _GearListScreenState extends State<GearListScreen> {
     });
 
     try {
+      // Clear the cache before the operation to ensure fresh data
+      CacheService().remove('all_gear');
+
       final success = await DBService.checkInGear(
         gear.id!,
         note: note?.isNotEmpty == true ? note : null,
       );
+
+      LogService.debug('Check in result: $success');
 
       if (success) {
         // Show success snackbar
@@ -355,6 +391,22 @@ class _GearListScreenState extends State<GearListScreen> {
             '${gear.name} checked in successfully',
           );
         }
+
+        // Update the local gear item to reflect the change immediately
+        final updatedGear = gear.copyWith(isOut: false, lastNote: note);
+
+        // Update the gear in the local list
+        setState(() {
+          final index = _gear.indexWhere((g) => g.id == gear.id);
+          if (index >= 0) {
+            _gear[index] = updatedGear;
+          }
+
+          final filteredIndex = _filteredGear.indexWhere((g) => g.id == gear.id);
+          if (filteredIndex >= 0) {
+            _filteredGear[filteredIndex] = updatedGear;
+          }
+        });
       } else {
         // Show error snackbar
         if (mounted) {
@@ -365,19 +417,20 @@ class _GearListScreenState extends State<GearListScreen> {
         }
       }
 
+      // Reload gear from database to ensure UI is up to date
       _loadGear();
     } catch (e, stackTrace) {
       LogService.error('Failed to check in gear', e, stackTrace);
-      setState(() {
-        _errorMessage = ErrorService.getUserFriendlyMessage(
-          ErrorType.database,
-          e.toString(),
-        );
-        _isLoading = false;
-      });
-
-      // Show error snackbar
       if (mounted) {
+        setState(() {
+          _errorMessage = ErrorService.getUserFriendlyMessage(
+            ErrorType.database,
+            e.toString(),
+          );
+          _isLoading = false;
+        });
+
+        // Show error snackbar
         SnackbarService.showError(
           context,
           _errorMessage!,
@@ -417,69 +470,7 @@ class _GearListScreenState extends State<GearListScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: BLKWDSConstants.spacingMedium),
-                // Category and status filters
-                Row(
-                  children: [
-                    // Category filter dropdown
-                    Expanded(
-                      flex: 2,
-                      child: BLKWDSEnhancedDropdown<String?>(
-                        label: 'Filter by Category',
-                        value: _selectedCategory,
-                        items: [
-                          const DropdownMenuItem<String?>(
-                            value: null,
-                            child: Text('All Categories'),
-                          ),
-                          ..._uniqueCategories.map((category) {
-                            return DropdownMenuItem<String?>(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedCategory = value;
-                            _applyFilters();
-                          });
-                        },
-                        prefixIcon: Icons.category,
-                      ),
-                    ),
-                    const SizedBox(width: BLKWDSConstants.spacingMedium),
-                    // Status filter dropdown
-                    Expanded(
-                      flex: 2,
-                      child: BLKWDSEnhancedDropdown<bool?>(
-                        label: 'Filter by Status',
-                        value: _selectedStatus,
-                        items: const [
-                          DropdownMenuItem<bool?>(
-                            value: null,
-                            child: Text('All Status'),
-                          ),
-                          DropdownMenuItem<bool?>(
-                            value: true,
-                            child: Text('Checked Out'),
-                          ),
-                          DropdownMenuItem<bool?>(
-                            value: false,
-                            child: Text('Available'),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedStatus = value;
-                            _applyFilters();
-                          });
-                        },
-                        prefixIcon: Icons.check_circle_outline,
-                      ),
-                    ),
-                  ],
-                ),
+                // Category and status filters removed to simplify UI
               ],
             ),
           ),
@@ -539,8 +530,6 @@ class _GearListScreenState extends State<GearListScreen> {
                                 onRetry: () {
                                   setState(() {
                                     _searchQuery = '';
-                                    _selectedCategory = null;
-                                    _selectedStatus = null;
                                     _applyFilters();
                                   });
                                 },

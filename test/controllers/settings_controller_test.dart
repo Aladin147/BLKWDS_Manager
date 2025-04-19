@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:path_provider/path_provider.dart';
+import '../mocks/mock_file_system.dart';
+import '../mocks/mock_build_context.dart';
 import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/screens/settings/settings_controller.dart';
 import 'package:blkwds_manager/services/data_seeder.dart';
@@ -17,8 +19,6 @@ import 'package:blkwds_manager/services/retry_strategy.dart';
 import 'package:blkwds_manager/services/app_config_service.dart';
 import 'package:blkwds_manager/services/error_type.dart';
 import 'package:blkwds_manager/services/error_feedback_level.dart';
-import '../mocks/mock_file_system.dart';
-import '../mocks/mock_build_context.dart';
 
 // Generate mocks
 @GenerateMocks([
@@ -44,14 +44,14 @@ void main() {
     controller = SettingsController();
     mockContext = MockBuildContext();
     controller.setContext(mockContext);
-    
+
     // Initialize mock file and directory
     mockFile = MockFile(
       path: '/mock/path/blkwds_export_123456789.json',
       exists: true,
       content: '{"test": "data"}',
     );
-    
+
     mockDirectory = MockDirectory(
       path: '/mock/path',
       exists: true,
@@ -97,7 +97,7 @@ void main() {
 
       // Mock the ErrorService.handleError method
       when(ErrorService.handleError(
-        any,
+        mockError,
         stackTrace: captureAny,
       )).thenReturn('Error initializing settings');
 
@@ -157,35 +157,35 @@ void main() {
 
       // Mock the RetryService to return our mock data
       when(RetryService.retry<List<Member>>(
-        operation: captureAny,
+        operation: argThat(isA<Future<List<Member>> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async => mockMembers);
 
       when(RetryService.retry<List<Project>>(
-        operation: captureAny,
+        operation: argThat(isA<Future<List<Project>> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async => mockProjects);
 
       when(RetryService.retry<List<Gear>>(
-        operation: captureAny,
+        operation: argThat(isA<Future<List<Gear>> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async => mockGear);
 
       when(RetryService.retry<List<Booking>>(
-        operation: captureAny,
+        operation: argThat(isA<Future<List<Booking>> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async => mockBookings);
 
       // Act
@@ -204,7 +204,7 @@ void main() {
       )).called(1);
 
       // Verify file was written
-      verify(mockFile.writeAsString(captureAny)).called(1);
+      verify(mockFile.writeAsString(argThat(isA<String>()))).called(1);
     });
 
     test('exportData should handle errors properly', () async {
@@ -221,11 +221,11 @@ void main() {
 
       // Mock the RetryService to throw an error
       when(RetryService.retry<List<Member>>(
-        operation: captureAny,
+        operation: argThat(isA<Future<List<Member>> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenThrow(mockError);
 
       // Act
@@ -279,19 +279,19 @@ void main() {
 
       // Mock the RetryService for database operations
       when(RetryService.retry<void>(
-        operation: captureAny,
+        operation: argThat(isA<Future<void> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async {});
 
       when(RetryService.retry<int>(
-        operation: captureAny,
+        operation: argThat(isA<Future<int> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async => 1);
 
       // Act
@@ -368,11 +368,11 @@ void main() {
       // Arrange
       // Mock the RetryService for database operations
       when(RetryService.retry<void>(
-        operation: captureAny,
+        operation: argThat(isA<Future<void> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenAnswer((_) async {});
 
       // Act
@@ -397,11 +397,11 @@ void main() {
 
       // Mock the RetryService to throw an error
       when(RetryService.retry<void>(
-        operation: captureAny,
+        operation: argThat(isA<Future<void> Function()>()),
         maxAttempts: 3,
-        strategy: RetryStrategy.exponentialBackoff,
+        strategy: RetryStrategy.exponential,
         initialDelay: const Duration(milliseconds: 100),
-        retryCondition: captureAny,
+        retryCondition: argThat(isA<bool Function(Object)>()),
       )).thenThrow(mockError);
 
       // Act

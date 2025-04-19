@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc55 (Release Candidate 55)
-**Last Updated:** 2025-07-11
+**Version:** 1.0.0-rc56 (Release Candidate 56)
+**Last Updated:** 2025-07-12
 
 ## Project Phase
 
@@ -127,6 +127,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ~~"View All" buttons only show snackbars instead of navigating~~ (FIXED in v0.40.0)
    - Placeholder icons and demo content in production code (IDENTIFIED in v0.40.0)
    - ~~Mixed navigation patterns (NavigationService vs direct Navigator.push)~~ (FIXED in v0.62.0)
+   - ✅ Problematic filter dropdowns causing regression errors (FIXED in v0.89.0)
 
 4. **Architecture Issues**
    - ~~Dual controller system for dashboard~~ (FIXED in v0.42.0)
@@ -185,7 +186,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 23. ~~Remnant references to light mode/theme switching~~ (FIXED in v0.32.0)
 24. ~~Inconsistent card styling across the application~~ (FIXED in v0.86.0)
 25. Add a persistent home button for quick navigation back to dashboard (IDENTIFIED in v0.74.0)
-26. ~~Gear check-in/check-out not updating UI properly~~ (FIXED in v0.85.0)
+26. ~~Gear check-in/check-out not updating UI properly~~ (FIXED in v0.85.0, ENHANCED in v0.89.0)
 
 ## Next Steps
 
@@ -328,6 +329,22 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.89.0 - Filter Dropdowns and Gear Check Out/In Fixes (2025-07-12)
+
+**Fixed:**
+
+- Removed problematic filter dropdowns from Member, Project, and Gear list screens
+- Fixed gear check out/in functionality in the dashboard screen
+- Implemented proper cache clearing and immediate UI updates for gear operations
+- Fixed ValueNotifier updates to ensure proper UI rebuilds
+
+**Improved:**
+
+- Simplified UI by removing complex filter dropdowns that were causing regression errors
+- Enhanced reliability of gear check out/in operations
+- Added detailed logging for better debugging and verification
+- Improved user experience with more responsive UI updates
 
 ### v0.88.0 - Enhanced Transaction Usage (2025-07-11)
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
-import '../../theme/app_theme.dart';
+import '../../theme/blkwds_colors.dart';
 import '../../config/environment_config.dart';
 
 /// Dialog for configuring data seeding options
@@ -330,7 +330,7 @@ class _DataSeedingDialogState extends State<DataSeedingDialog> {
         const SizedBox(width: 8),
         ElevatedButton(
           onPressed: _isSaving ? null : _reseedDatabase,
-          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+          style: ElevatedButton.styleFrom(backgroundColor: BLKWDSColors.errorRed),
           child: _isSaving
               ? const Row(
                   mainAxisSize: MainAxisSize.min,

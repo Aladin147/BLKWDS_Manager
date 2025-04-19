@@ -5,6 +5,22 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc50] - 2025-07-06
+
+**Fixed:**
+
+- Gear check out/in functionality in the dashboard screen
+- Implemented proper cache clearing and immediate UI updates for gear operations
+- Removed problematic filter dropdowns from Member, Project, and Gear list screens
+- Fixed ValueNotifier updates to ensure proper UI rebuilds
+
+**Improved:**
+
+- Simplified UI by removing complex filter dropdowns that were causing regression errors
+- Enhanced reliability of gear check out/in operations
+- Added detailed logging for better debugging and verification
+- Improved user experience with more responsive UI updates
+
 ## [1.0.0-rc49] - 2025-07-05
 
 **Added:**
