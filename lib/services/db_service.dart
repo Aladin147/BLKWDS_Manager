@@ -72,12 +72,19 @@ class DBService {
     final latestVersion = MigrationManager.getLatestVersion();
     LogService.info('Latest database version from migrations: $latestVersion');
 
-    return await openDatabase(
+    final db = await openDatabase(
       path,
       version: latestVersion, // Use the latest migration version
       onCreate: _createTables,
       onUpgrade: _upgradeDatabase,
+      onOpen: (db) async {
+        // Enable foreign key constraints
+        await db.execute('PRAGMA foreign_keys = ON');
+        LogService.info('Foreign key constraints enabled');
+      },
     );
+
+    return db;
   }
 
   /// Validate and repair the database schema

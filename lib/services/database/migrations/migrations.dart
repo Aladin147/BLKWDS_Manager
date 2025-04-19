@@ -6,6 +6,7 @@ import 'migration_v4_to_v5.dart';
 import 'migration_v5_to_v6.dart';
 import 'migration_v6_to_v7.dart';
 import 'migration_v7_to_v8.dart';
+import 'migration_v8_to_v9.dart';
 
 /// List of all migrations
 final List<Migration> allMigrations = [
@@ -16,4 +17,5 @@ final List<Migration> allMigrations = [
   MigrationV5ToV6(),
   MigrationV6ToV7(),
   MigrationV7ToV8(),
+  MigrationV8ToV9(),
 ];

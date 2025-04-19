@@ -64,7 +64,11 @@ class DBServiceWrapper {
   }) async {
     try {
       return await DatabaseRetry.retry(
-        () => db.transaction(operation),
+        () => db.transaction((txn) async {
+          // Ensure foreign keys are enabled within the transaction
+          await txn.execute('PRAGMA foreign_keys = ON');
+          return await operation(txn);
+        }),
         operationName,
         config: config,
       );

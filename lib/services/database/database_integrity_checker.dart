@@ -300,13 +300,13 @@ class DatabaseIntegrityChecker {
           ''',
         },
 
-        // Check for bookings with invalid studio type
+        // Check for bookings with missing studio information
         {
           'table': 'booking',
-          'description': 'Bookings with invalid studio type',
+          'description': 'Bookings with missing studio information',
           'query': '''
             SELECT b.* FROM booking b
-            WHERE (b.isRecordingStudio = 0 AND b.isProductionStudio = 0)
+            WHERE b.studioId IS NULL AND (b.isRecordingStudio = 0 AND b.isProductionStudio = 0)
           ''',
         },
 
@@ -580,21 +580,21 @@ class DatabaseIntegrityChecker {
               }
             }
 
-            // Fix bookings with invalid studio type
-            if (record['isRecordingStudio'] == 0 && record['isProductionStudio'] == 0) {
+            // Fix bookings with missing studio information
+            if (record['studioId'] == null && record['isRecordingStudio'] == 0 && record['isProductionStudio'] == 0) {
               await txn.update(
                 table,
-                {'isRecordingStudio': 1},
+                {'studioId': 1}, // Default to recording studio (ID 1)
                 where: '$primaryKeyColumn = ?',
                 whereArgs: [primaryKeyValue],
               );
 
-              LogService.info('Fixed booking with invalid studio type: $primaryKeyValue');
+              LogService.info('Fixed booking with missing studio information: $primaryKeyValue');
 
-              if (!results.containsKey('booking_type_fixed')) {
-                results['booking_type_fixed'] = [];
+              if (!results.containsKey('booking_studio_fixed')) {
+                results['booking_studio_fixed'] = [];
               }
-              (results['booking_type_fixed'] as List).add(record);
+              (results['booking_studio_fixed'] as List).add(record);
             }
             break;
 

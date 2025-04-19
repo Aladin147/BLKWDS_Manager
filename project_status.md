@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc52 (Release Candidate 52)
-**Last Updated:** 2025-07-09
+**Version:** 1.0.0-rc54 (Release Candidate 54)
+**Last Updated:** 2025-07-11
 
 ## Project Phase
 
@@ -104,12 +104,14 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 1. **Database Issues**
    - ✅ Unconditional data seeding on every app start (FIXED in v0.51.0, ENHANCED in v0.63.0-v0.64.0)
-   - ✅ Booking model inconsistency with database schema (missing studioId field) (FIXED in v0.51.0)
+   - ✅ Booking model inconsistency with database schema (missing studioId field) (FIXED in v0.51.0, ENHANCED in v0.87.0)
    - ✅ Flawed DatabaseValidator with duplicated schema definitions (FIXED in v0.51.0)
    - ✅ Database schema validation incomplete (FIXED in v0.51.0)
    - ✅ Inconsistent error handling for database operations (FIXED in v0.52.0)
    - ✅ Lack of database integrity checks (FIXED in v0.53.0)
    - ✅ Environment-unaware data seeding (FIXED in v0.63.0-v0.64.0)
+   - ✅ Multiple booking models causing confusion (FIXED in v0.87.0)
+   - ✅ Foreign key constraints not enforced (FIXED in v0.87.0)
 
 2. **Testing Coverage**
    - ✅ Test suite compilation errors (FIXED in v0.76.0)
@@ -177,10 +179,10 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 18. ~~Hardcoded heights in dashboard layout affecting responsiveness~~ (FIXED in v0.34.0)
 19. ~~Inconsistent background colors across screens~~ (FIXED in v0.33.0)
 20. ~~Inconsistent shadow styles for cards and elevated surfaces~~ (FIXED in v0.33.0)
-21. Inconsistent typography usage across screens (IDENTIFIED in v0.31.0)
-22. Inconsistent component usage (buttons, text fields, etc.) (IDENTIFIED in v0.31.0)
+21. ~~Inconsistent typography usage across screens~~ (FIXED in v0.86.0)
+22. ~~Inconsistent component usage (buttons, text fields, etc.)~~ (FIXED in v0.86.0)
 23. ~~Remnant references to light mode/theme switching~~ (FIXED in v0.32.0)
-24. Inconsistent card styling across the application (IDENTIFIED in v0.31.0)
+24. ~~Inconsistent card styling across the application~~ (FIXED in v0.86.0)
 25. Add a persistent home button for quick navigation back to dashboard (IDENTIFIED in v0.74.0)
 26. ~~Gear check-in/check-out not updating UI properly~~ (FIXED in v0.85.0)
 
@@ -325,6 +327,58 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.87.0 - Database Model Consolidation (2025-07-11)
+
+**Added:**
+
+- Created migration v8 to v9 to ensure all bookings use studioId instead of boolean flags
+- Added foreign key constraint enforcement at the database level
+- Added foreign key enforcement in transactions
+- Added comprehensive documentation for the booking model consolidation
+- Added tests to verify the booking model consolidation works correctly
+
+**Fixed:**
+
+- Consolidated booking models to use a single approach
+- Renamed booking.dart to booking_legacy.dart and marked it as deprecated
+- Updated booking_v2.dart to be the primary booking model
+- Updated database integrity checker to focus on studioId instead of boolean flags
+- Fixed potential data integrity issues with bookings
+
+**Improved:**
+
+- Enhanced data integrity with consistent approach to studio references
+- Improved code clarity with a single source of truth for booking model
+- Reduced risk of bugs from inconsistent models
+- Added clear deprecation warnings for legacy code
+
+### v0.86.0 - UI Standardization (2025-07-10)
+
+**Added:**
+
+- Standardized UI components across multiple screens
+- Implemented BLKWDSScaffold for consistent app bar and navigation
+- Replaced standard Text widgets with BLKWDSEnhancedText for consistent typography
+- Replaced standard Card widgets with BLKWDSEnhancedCard for consistent styling
+- Replaced standard buttons with BLKWDSEnhancedButton for consistent interaction
+
+**Fixed:**
+
+- Removed unused app_theme.dart file and standardized on BLKWDSColors
+- Fixed inconsistent typography usage across screens
+- Fixed inconsistent component usage (buttons, text fields, etc.)
+- Fixed inconsistent card styling across the application
+- Updated activity_log_screen.dart to use enhanced components
+- Updated add_gear_screen.dart to use enhanced components
+- Updated member_detail_screen.dart to use enhanced components
+
+**Improved:**
+
+- Enhanced visual consistency across the application
+- Improved code maintainability with standardized components
+- Reduced code duplication with reusable enhanced components
+- Prepared the codebase for future UI improvements
 
 ### v0.85.0 - Gear Check In/Out Fix (2025-07-09)
 
