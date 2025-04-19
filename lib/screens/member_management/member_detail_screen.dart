@@ -221,44 +221,43 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
           BLKWDSEnhancedCard(
             padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Member avatar and name
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 32,
-                        backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                        child: BLKWDSEnhancedText.headingLarge(
-                          widget.member.name.isNotEmpty ? widget.member.name[0].toUpperCase() : '?',
-                          color: BLKWDSColors.accentTeal,
-                        ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Member avatar and name
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                      child: BLKWDSEnhancedText.headingLarge(
+                        widget.member.name.isNotEmpty ? widget.member.name[0].toUpperCase() : '?',
+                        color: BLKWDSColors.accentTeal,
                       ),
-                      const SizedBox(width: BLKWDSConstants.spacingMedium),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BLKWDSEnhancedText.headingMedium(
-                              widget.member.name,
+                    ),
+                    const SizedBox(width: BLKWDSConstants.spacingMedium),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BLKWDSEnhancedText.headingMedium(
+                            widget.member.name,
+                          ),
+                          if (widget.member.role != null && widget.member.role!.isNotEmpty)
+                            BLKWDSEnhancedText.bodyMedium(
+                              widget.member.role!,
+                              color: BLKWDSColors.textSecondary,
                             ),
-                            if (widget.member.role != null && widget.member.role!.isNotEmpty)
-                              BLKWDSEnhancedText.bodyMedium(
-                                widget.member.role!,
-                                color: BLKWDSColors.textSecondary,
-                              ),
-                          ],
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  const Divider(height: BLKWDSConstants.spacingLarge),
+                const Divider(height: BLKWDSConstants.spacingLarge),
 
-                  // Member ID
-                  _buildInfoRow('Member ID', '#${widget.member.id}'),
-                ],
-              ),
+                // Member ID
+                _buildInfoRow('Member ID', '#${widget.member.id}'),
+              ],
             ),
           ),
 
@@ -335,9 +334,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                             );
                           },
                         ),
-                      ],
-                    ),
-                  );
+        ],
+      ),
+    );
   }
 
   // Build the activity tab
