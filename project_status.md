@@ -136,6 +136,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Updated gear-related screens to use NavigationHelper (FIXED in v0.84.0)
    - ✅ Updated member-related screens to use NavigationHelper (FIXED in v0.84.0)
    - ✅ Updated project-related screens to use NavigationHelper (FIXED in v0.84.0)
+   - ✅ Updated studio-related screens to use NavigationHelper (FIXED in v0.84.0)
    - Some screens still need to be updated to use NavigationHelper (IDENTIFIED in v0.84.0)
 
 5. **Error Handling Inconsistencies**
@@ -330,6 +331,7 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Added support for gear-related navigation methods
 - Added support for member-related navigation methods
 - Added support for project-related navigation methods
+- Added support for studio-related navigation methods
 - Added support for booking detail navigation
 - Added support for direct widget navigation
 
@@ -345,6 +347,7 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Updated the Add Gear screen to use the NavigationHelper
 - Updated the Member Management screens to use the NavigationHelper
 - Updated the Project Management screens to use the NavigationHelper
+- Updated the Studio Management screens to use the NavigationHelper
 
 **Improved:**
 
