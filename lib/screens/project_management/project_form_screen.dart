@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -136,7 +137,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             context,
             'Project updated successfully',
           );
-          NavigationService.instance.goBack();
+          NavigationHelper.goBack();
         }
       } else {
         // Insert new project
@@ -147,7 +148,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             context,
             'Project added successfully',
           );
-          NavigationService.instance.goBack();
+          NavigationHelper.goBack();
         }
       }
     } catch (e, stackTrace) {
@@ -317,7 +318,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             // Cancel button
             BLKWDSButton(
               label: 'Cancel',
-              onPressed: () => NavigationService.instance.goBack(),
+              onPressed: () => NavigationHelper.goBack(),
               type: BLKWDSButtonType.secondary,
             ),
           ],

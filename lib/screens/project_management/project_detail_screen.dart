@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -111,7 +112,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Navigate to edit project screen
   void _navigateToEditProject() {
-    NavigationService.instance.navigateToProjectForm(project: widget.project).then((_) {
+    NavigationHelper.navigateToProjectForm(project: widget.project).then((_) {
       // Refresh data when returning from edit screen
       _loadMembers();
       _loadBookings();
@@ -419,7 +420,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                       icon: Icons.calendar_today,
                       onPrimaryAction: () {
                         // Navigate to booking panel
-                        NavigationService.instance.navigateToBookingPanel();
+                        NavigationHelper.navigateToBookingPanel();
                       },
                       primaryActionLabel: 'Go to Booking Panel',
                       secondaryActionLabel: 'Learn More',
@@ -456,7 +457,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
             : null,
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          NavigationService.instance.navigateToMemberDetail(member);
+          NavigationHelper.navigateToMemberDetail(member);
         },
       ),
     );
@@ -491,7 +492,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
           // Initialize the controller
           controller.initialize().then((_) {
             // Navigate to booking detail
-            NavigationService.instance.navigateToBookingDetail(booking, controller);
+            NavigationHelper.service.navigateToBookingDetail(booking, controller);
           });
         },
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -106,19 +107,19 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   // Navigate to project detail screen
   void _navigateToProjectDetail(Project project) async {
-    await NavigationService().navigateToProjectDetail(project);
+    await NavigationHelper.navigateToProjectDetail(project);
     _loadProjects();
   }
 
   // Navigate to project form screen for adding a new project
   void _navigateToAddProject() async {
-    await NavigationService().navigateToProjectForm();
+    await NavigationHelper.navigateToProjectForm();
     _loadProjects();
   }
 
   // Navigate to project form screen for editing a project
   void _navigateToEditProject(Project project) async {
-    await NavigationService().navigateToProjectForm(project: project);
+    await NavigationHelper.navigateToProjectForm(project: project);
     _loadProjects();
   }
 

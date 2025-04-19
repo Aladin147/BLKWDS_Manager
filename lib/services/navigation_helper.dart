@@ -5,6 +5,7 @@ import '../theme/blkwds_animations.dart';
 import '../models/booking_v2.dart';
 import '../models/gear.dart';
 import '../models/member.dart';
+import '../models/project.dart';
 import '../screens/booking_panel/booking_panel_controller.dart';
 
 /// NavigationHelper
@@ -56,6 +57,16 @@ class NavigationHelper {
   /// Navigate to project management
   static Future<T?> navigateToProjectManagement<T>() {
     return service.navigateToProjectManagement();
+  }
+
+  /// Navigate to project detail
+  static Future<T?> navigateToProjectDetail<T>(Project project) {
+    return service.navigateToProjectDetail(project);
+  }
+
+  /// Navigate to add/edit project form
+  static Future<T?> navigateToProjectForm<T>({Project? project}) {
+    return service.navigateToProjectForm(project: project);
   }
 
   /// Navigate to gear management
