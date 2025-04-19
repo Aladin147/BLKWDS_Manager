@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/log_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 
 
 import '../../widgets/blkwds_widgets.dart';
-import 'booking_detail_screen.dart';
 import 'booking_list_controller.dart';
 import 'booking_panel_controller.dart';
 import 'models/booking_list_view_options.dart';
@@ -190,21 +190,16 @@ class _BookingListScreenState extends State<BookingListScreen> {
   }
 
   // Navigate to booking detail
-  void _navigateToBookingDetail(Booking booking) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookingDetailScreen(
-          booking: booking,
-          controller: widget.controller,
-        ),
-      ),
-    ).then((result) {
-      // Refresh data if booking was updated or deleted
-      if (result == true) {
-        widget.controller.initialize();
-      }
-    });
+  void _navigateToBookingDetail(Booking booking) async {
+    final result = await NavigationHelper.service.navigateToBookingDetailFromList(
+      booking,
+      widget.controller,
+    );
+
+    // Refresh data if booking was updated or deleted
+    if (result == true) {
+      widget.controller.initialize();
+    }
   }
 
   // Show view options dialog

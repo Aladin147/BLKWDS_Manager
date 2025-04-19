@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/navigation_service.dart';
 import '../routes/app_routes.dart';
 import '../theme/blkwds_animations.dart';
+import '../models/booking_v2.dart';
+import '../screens/booking_panel/booking_panel_controller.dart';
 
 /// NavigationHelper
 /// A helper class to standardize navigation service access
@@ -57,6 +59,16 @@ class NavigationHelper {
   /// Navigate to activity log
   static Future<T?> navigateToActivityLog<T>({dynamic controller}) {
     return service.navigateToActivityLog(controller: controller);
+  }
+
+  /// Navigate to booking detail
+  static Future<T?> navigateToBookingDetail<T>(Booking booking, BookingPanelController controller) {
+    return service.navigateToBookingDetail(booking, controller);
+  }
+
+  /// Navigate to booking detail from list
+  static Future<T?> navigateToBookingDetailFromList<T>(Booking booking, BookingPanelController controller) {
+    return service.navigateToBookingDetailFromList(booking, controller);
   }
 
   /// Navigate to app config

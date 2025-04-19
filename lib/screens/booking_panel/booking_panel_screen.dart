@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
-import '../../services/navigation_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
 
 import '../../theme/blkwds_constants.dart';
@@ -288,7 +288,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
-    final result = await NavigationService().navigateToBookingDetail(
+    final result = await NavigationHelper.service.navigateToBookingDetail(
       booking,
       _controller,
     );
