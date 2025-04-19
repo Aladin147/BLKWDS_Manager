@@ -71,8 +71,8 @@ void main() {
       final updatedProjectTitleFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Updated Integration Test Project');
       expect(updatedProjectTitleFinder, findsOneWidget);
 
-      // Delete the project with retry logic
-      await tester.longPress(updatedProjectTitleFinder);
+      // Delete the project with enhanced retry logic
+      await IntegrationTestHelpers.longPressWithRetry(tester, updatedProjectTitleFinder);
       await IntegrationTestHelpers.waitForAppStability(tester);
 
       final deleteFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Delete');
@@ -81,12 +81,15 @@ void main() {
       // Confirm deletion with retry logic
       final confirmDeleteFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
       await IntegrationTestHelpers.tapWithRetry(tester, confirmDeleteFinder);
-      await IntegrationTestHelpers.waitForAppStability(tester);
+
+      // Wait for the project to be deleted and the UI to update
+      await IntegrationTestHelpers.waitForWidgetToDisappear(
+        tester,
+        find.text('Updated Integration Test Project'),
+        timeout: const Duration(seconds: 5),
+      );
 
       // Verify that the project was deleted successfully
-      // We need to wait a bit to ensure the UI has updated after deletion
-      await Future.delayed(const Duration(seconds: 1));
-      await tester.pumpAndSettle();
       expect(find.text('Updated Integration Test Project'), findsNothing);
 
       // Clean up any remaining test data

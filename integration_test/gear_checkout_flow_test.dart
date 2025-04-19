@@ -52,8 +52,14 @@ void main() {
       final confirmFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
       await IntegrationTestHelpers.tapWithRetry(tester, confirmFinder);
 
-      // Verify the gear status is updated with retry logic
-      final checkInFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Check In');
+      // Wait for the gear status to be updated and verify
+      await IntegrationTestHelpers.waitForWidget(
+        tester,
+        find.text('Check In'),
+        timeout: const Duration(seconds: 5),
+      );
+
+      final checkInFinder = find.text('Check In');
       expect(checkInFinder, findsOneWidget);
 
       // Check in the gear with retry logic
@@ -67,8 +73,14 @@ void main() {
       final confirmFinder2 = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Confirm');
       await IntegrationTestHelpers.tapWithRetry(tester, confirmFinder2);
 
-      // Verify the gear status is updated with retry logic
-      final checkOutFinder2 = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Check Out');
+      // Wait for the gear status to be updated again and verify
+      await IntegrationTestHelpers.waitForWidget(
+        tester,
+        find.text('Check Out'),
+        timeout: const Duration(seconds: 5),
+      );
+
+      final checkOutFinder2 = find.text('Check Out');
       expect(checkOutFinder2, findsOneWidget);
 
       // Clean up test data

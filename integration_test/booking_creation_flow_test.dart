@@ -4,7 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:blkwds_manager/main.dart' as app;
 import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/services/db_service.dart';
-import 'package:blkwds_manager/services/navigation_service.dart';
+import 'package:blkwds_manager/services/navigation_helper.dart';
 
 import 'test_helpers.dart';
 
@@ -86,9 +86,24 @@ void main() {
       final testBookingFinder = await IntegrationTestHelpers.findByTextWithRetry(tester, 'Test Booking');
       expect(testBookingFinder, findsOneWidget);
 
-      // Navigate back to dashboard and wait for stability
-      NavigationService().navigateToDashboard();
+      // Navigate back to dashboard using the home button for better reliability
+      final homeButtonFinder = find.byTooltip('Home');
+      if (homeButtonFinder.evaluate().isNotEmpty) {
+        await IntegrationTestHelpers.tapWithRetry(tester, homeButtonFinder);
+      } else {
+        // Fallback to direct navigation if home button is not found
+        NavigationHelper.navigateToDashboard();
+      }
+
+      // Wait for the dashboard to load with improved stability
       await IntegrationTestHelpers.waitForAppStability(tester);
+
+      // Verify we're back on the dashboard
+      await IntegrationTestHelpers.waitForWidget(
+        tester,
+        find.text('Quick Actions'),
+        timeout: const Duration(seconds: 5),
+      );
 
       // Clean up test data
       await _cleanupTestData();
