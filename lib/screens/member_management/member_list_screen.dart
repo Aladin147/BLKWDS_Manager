@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -105,19 +106,19 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
   // Navigate to member detail screen
   void _navigateToMemberDetail(Member member) async {
-    await NavigationService().navigateToMemberDetail(member);
+    await NavigationHelper.navigateToMemberDetail(member);
     _loadMembers();
   }
 
   // Navigate to member form screen for adding a new member
   void _navigateToAddMember() async {
-    await NavigationService().navigateToMemberForm();
+    await NavigationHelper.navigateToMemberForm();
     _loadMembers();
   }
 
   // Navigate to member form screen for editing a member
   void _navigateToEditMember(Member member) async {
-    await NavigationService().navigateToMemberForm(member: member);
+    await NavigationHelper.navigateToMemberForm(member: member);
     _loadMembers();
   }
 

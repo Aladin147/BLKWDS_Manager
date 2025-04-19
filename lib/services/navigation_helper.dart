@@ -4,6 +4,7 @@ import '../routes/app_routes.dart';
 import '../theme/blkwds_animations.dart';
 import '../models/booking_v2.dart';
 import '../models/gear.dart';
+import '../models/member.dart';
 import '../screens/booking_panel/booking_panel_controller.dart';
 
 /// NavigationHelper
@@ -40,6 +41,16 @@ class NavigationHelper {
   /// Navigate to member management
   static Future<T?> navigateToMemberManagement<T>() {
     return service.navigateToMemberManagement();
+  }
+
+  /// Navigate to member detail
+  static Future<T?> navigateToMemberDetail<T>(Member member) {
+    return service.navigateToMemberDetail(member);
+  }
+
+  /// Navigate to add/edit member form
+  static Future<T?> navigateToMemberForm<T>({Member? member}) {
+    return service.navigateToMemberForm(member: member);
   }
 
   /// Navigate to project management
