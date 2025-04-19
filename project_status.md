@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc92 (Release Candidate 92)
-**Last Updated:** 2025-07-13
+**Version:** 1.0.0-rc93 (Release Candidate 93)
+**Last Updated:** 2025-07-14
 
 ## Project Phase
 
@@ -369,6 +369,30 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.93.0 - Dashboard Layout Responsiveness and Image Loading Fixes (2025-07-14)
+
+**Added:**
+
+- Created BLKWDSEnhancedImage widget for robust image loading from various sources
+- Implemented graceful fallbacks for missing images
+- Added proper error handling for image loading
+- Used MediaQuery to determine layout based on screen width
+- Improved responsive layout with more breakpoints
+
+**Fixed:**
+
+- Fixed issues with loading images from local file paths
+- Fixed layout issues in the dashboard screen
+- Fixed Expanded widget usage in scrollable views
+- Fixed setState() after dispose() errors in the dashboard screen
+
+**Improved:**
+
+- Replaced fixed heights with ConstrainedBox widgets to improve responsiveness
+- Standardized padding using BLKWDSConstants
+- Completely rewrote the dashboard_screen.dart file for better structure
+- Updated GearCardWithNote and AddGearScreen to use the new image widget
 
 ### v0.92.0 - Performance Tests and Export Functionality (2025-07-13)
 

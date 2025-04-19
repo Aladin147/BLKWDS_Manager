@@ -1,5 +1,29 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-14: Dashboard Layout Responsiveness and Image Loading Fixes
+
+Today we focused on improving the dashboard layout responsiveness and fixing image loading issues:
+
+1. **Dashboard Layout Responsiveness**:
+   - Replaced fixed heights with ConstrainedBox widgets to improve responsiveness
+   - Used MediaQuery to determine layout based on screen width
+   - Standardized padding using BLKWDSConstants
+   - Improved responsive layout with more breakpoints
+   - Completely rewrote the dashboard_screen.dart file for better structure
+
+2. **Image Loading Fixes**:
+   - Created a new BLKWDSEnhancedImage widget that handles various image sources
+   - Implemented graceful fallbacks for missing images
+   - Fixed issues with loading images from local file paths
+   - Added proper error handling for image loading
+   - Updated GearCardWithNote and AddGearScreen to use the new image widget
+
+3. **Documentation Updates**:
+   - Updated journal.md to document our work
+   - Updated beta_readiness_summary.md to reflect our progress
+
+These improvements bring us closer to beta readiness. The dashboard layout is now more responsive and the image loading issues have been fixed. This completes two important items from our Beta Readiness Plan.
+
 ## 2025-07-13: Export to CSV Functionality and Performance Test Fixes
 
 Today we focused on verifying and completing the Export to CSV functionality and fixing issues with the performance tests:
