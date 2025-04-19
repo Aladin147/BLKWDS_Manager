@@ -130,6 +130,14 @@ class NavigationHelper {
     );
   }
 
+  /// Navigate to performance test
+  static Future<T?> navigateToPerformanceTest<T>() {
+    return service.navigateToNamed<T>(
+      AppRoutes.performanceTest,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
   /// Navigate back
   static void goBack<T>({T? result}) {
     service.goBack(result: result);

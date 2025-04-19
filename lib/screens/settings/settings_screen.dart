@@ -367,6 +367,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               );
                             },
                           ),
+                          const Divider(),
+                          BLKWDSEnhancedListTile(
+                            title: 'Performance Tests',
+                            subtitle: 'Run performance and stress tests',
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            leadingIcon: Icons.speed,
+                            onTap: () {
+                              NavigationHelper.navigateToPerformanceTest();
+                            },
+                          ),
                         ],
                       ),
                   ],

@@ -47,6 +47,48 @@ class CompressedCacheEntry<T> extends CacheEntry<T> {
       '${((1 - compressionRatio) * 100).toStringAsFixed(1)}%';
 }
 
+/// Cache statistics class
+class CacheStatistics {
+  final int size;
+  final int hits;
+  final int misses;
+  final int expirations;
+  final int trackedKeys;
+  final Map<String, int> mostAccessed;
+  final double hitRatio;
+  final Map<String, dynamic> compression;
+  
+  CacheStatistics({
+    required this.size,
+    required this.hits,
+    required this.misses,
+    required this.expirations,
+    required this.trackedKeys,
+    required this.mostAccessed,
+    required this.hitRatio,
+    required this.compression,
+  });
+  
+  /// Convert to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'size': size,
+      'hits': hits,
+      'misses': misses,
+      'expirations': expirations,
+      'tracked_keys': trackedKeys,
+      'most_accessed': mostAccessed,
+      'hit_ratio': '${(hitRatio * 100).toStringAsFixed(2)}%',
+      'compression': compression,
+    };
+  }
+  
+  @override
+  String toString() {
+    return 'CacheStatistics(size: $size, hits: $hits, misses: $misses, hitRatio: ${(hitRatio * 100).toStringAsFixed(2)}%)';
+  }
+}
+
 /// Cache service for storing frequently accessed data
 ///
 /// This service provides a simple in-memory cache with expiration.
@@ -59,6 +101,9 @@ class CacheService {
 
   // Factory constructor to return the singleton instance
   factory CacheService() => _instance;
+
+  // For testing
+  static CacheService instance = _instance;
 
   // Cache storage
   final _cache = HashMap<String, CacheEntry<dynamic>>();
@@ -284,7 +329,7 @@ class CacheService {
   int get size => _cache.length;
 
   /// Get cache statistics
-  Map<String, dynamic> get statistics {
+  CacheStatistics getStatistics() {
     // Calculate compression statistics
     int compressedEntries = 0;
     int totalOriginalSize = 0;
@@ -310,16 +355,18 @@ class CacheService {
           }
         : {'compressed_entries': 0};
 
-    return {
-      'size': size,
-      'hits': _hits,
-      'misses': _misses,
-      'expirations': _expirations,
-      'tracked_keys': _keyAccessCount.length,
-      'most_accessed': _getMostAccessedKeys(5),
-      'hit_ratio': _hits + _misses > 0 ? '${(_hits / (_hits + _misses) * 100).toStringAsFixed(2)}%' : '0%',
-      'compression': compressionStats,
-    };
+    final hitRatio = _hits + _misses > 0 ? _hits / (_hits + _misses) : 0.0;
+
+    return CacheStatistics(
+      size: size,
+      hits: _hits,
+      misses: _misses,
+      expirations: _expirations,
+      trackedKeys: _keyAccessCount.length,
+      mostAccessed: _getMostAccessedKeys(5),
+      hitRatio: hitRatio,
+      compression: compressionStats,
+    );
   }
 
   /// Format a size in bytes to a human-readable string
