@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../models/models.dart';
 import '../../../services/db_service.dart';
 import '../../../services/snackbar_service.dart';
+import '../../../services/navigation_helper.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../theme/blkwds_typography.dart';
@@ -596,44 +597,17 @@ class _StudioAvailabilityCalendarState extends State<StudioAvailabilityCalendar>
       orElse: () => widget.studios.first,
     );
 
-    // Create a new booking with the selected studio and date
-    final newBooking = Booking(
-      projectId: -1, // This will be selected in the booking form
-      startDate: DateTime(
-        _selectedDay.year,
-        _selectedDay.month,
-        _selectedDay.day,
-        widget.settings.openingTime.hour,
-        widget.settings.openingTime.minute,
-      ),
-      endDate: DateTime(
-        _selectedDay.year,
-        _selectedDay.month,
-        _selectedDay.day,
-        widget.settings.openingTime.hour + 1,
-        widget.settings.openingTime.minute,
-      ),
-      studioId: selectedStudio.id,
-    );
+    // We'll navigate to the booking panel with a filter for the selected studio
 
     // Navigate to the booking panel with the new booking
-    Navigator.of(context).pushNamed(
-      '/booking_panel',
-      arguments: {
-        'booking': newBooking,
-        'isNew': true,
-      },
-    );
+    NavigationHelper.navigateToBookingPanel(filter: 'studio:${selectedStudio.id}');
   }
 
   /// Navigate to booking details screen
   void _navigateToBookingDetails(Booking booking) {
-    // Navigate to the booking details screen
-    Navigator.of(context).pushNamed(
-      '/booking_detail',
-      arguments: {
-        'bookingId': booking.id,
-      },
-    );
+    // We need to create a controller to view the booking details
+    // This would typically be handled by the booking panel controller
+    // For now, we'll just navigate to the booking panel
+    NavigationHelper.navigateToBookingPanel();
   }
 }

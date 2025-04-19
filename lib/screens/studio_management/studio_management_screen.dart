@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/db_service.dart';
 import '../../services/snackbar_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -157,9 +158,9 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
         title: 'Delete Studio',
         content: 'Are you sure you want to delete ${studio.name}?',
         secondaryActionText: 'Cancel',
-        onSecondaryAction: () => Navigator.pop(context, false),
+        onSecondaryAction: () => NavigationHelper.goBack(result: false),
         primaryActionText: 'Delete',
-        onPrimaryAction: () => Navigator.pop(context, true),
+        onPrimaryAction: () => NavigationHelper.goBack(result: true),
         isPrimaryDestructive: true,
       ),
     ) ?? false;
