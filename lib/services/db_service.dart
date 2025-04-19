@@ -244,8 +244,21 @@ class DBService {
       operationName: 'insertGear',
     );
 
-    // Invalidate the gear cache
-    CacheService().remove('all_gear');
+    // Update the gear cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to update the entity in the cache first
+    final gearWithId = gear.copyWith(id: result);
+    final updated = cache.updateEntityInListCache<Gear>(
+      'all_gear',
+      gearWithId,
+      (g) => g.id ?? 0,
+    );
+
+    // If update failed, invalidate the entire cache
+    if (!updated) {
+      cache.remove('all_gear');
+    }
 
     return result;
   }
@@ -307,8 +320,20 @@ class DBService {
       operationName: 'updateGear',
     );
 
-    // Invalidate the gear cache
-    CacheService().remove('all_gear');
+    // Update the gear cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to update the entity in the cache first
+    final updated = cache.updateEntityInListCache<Gear>(
+      'all_gear',
+      gear,
+      (g) => g.id ?? 0,
+    );
+
+    // If update failed, invalidate the entire cache
+    if (!updated) {
+      cache.remove('all_gear');
+    }
 
     return result;
   }
@@ -324,8 +349,20 @@ class DBService {
       operationName: 'deleteGear',
     );
 
-    // Invalidate the gear cache
-    CacheService().remove('all_gear');
+    // Update the gear cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to remove the entity from the cache first
+    final removed = cache.removeEntityFromListCache<Gear>(
+      'all_gear',
+      id,
+      (g) => g.id ?? 0,
+    );
+
+    // If removal failed, invalidate the entire cache
+    if (!removed) {
+      cache.remove('all_gear');
+    }
 
     return result;
   }
@@ -343,6 +380,7 @@ class DBService {
     );
 
     // Invalidate the gear cache
+    // For deleteGearByName, we don't have the ID, so we need to invalidate the entire cache
     CacheService().remove('all_gear');
 
     return result;
