@@ -1,5 +1,37 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-12: Code Cleanup and Optimization
+
+Today we continued our code cleanup and optimization efforts, focusing on removing debug logging and fixing code quality issues:
+
+1. **Removed Debug Logging**:
+   - Removed all debug print statements from the gear check out/in functionality
+   - Removed detailed logging from the dashboard controller
+   - Removed debug logging from the gear list screen
+   - Ensured all debug code was properly removed while maintaining core functionality
+
+2. **Fixed Unnecessary Getter/Setter**:
+   - Identified and fixed an unnecessary getter/setter in NavigationService
+   - Replaced the setter with a proper testing method (setInstanceForTesting)
+   - Added @visibleForTesting annotation to clarify the method's purpose
+   - Updated test files to use the new method
+
+3. **Fixed Unused Imports**:
+   - Removed unused NavigationHelper import from ActivityLogScreen
+   - Removed unused NavigationHelper import from StudioForm
+   - Removed unused NavigationHelper import from StudioSettingsForm
+   - Improved code cleanliness by eliminating unnecessary imports
+
+4. **Benefits Achieved**:
+   - Improved code quality and maintainability
+   - Reduced unnecessary logging that could impact performance
+   - Fixed code quality issues identified by static analysis
+   - Made the codebase more maintainable and easier to understand
+
+This work continues our efforts to clean up and optimize the codebase. By removing debug logging and fixing code quality issues, we've made the codebase more maintainable and improved its overall quality.
+
+Next steps include continuing with code cleanup and optimization, focusing on other areas that might benefit from similar improvements.
+
 ## 2025-07-06: Filter Dropdowns and Gear Check Out/In Fixes
 
 Today we focused on fixing two significant issues in the application: problematic filter dropdowns and gear check out/in functionality in the dashboard screen.

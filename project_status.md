@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc56 (Release Candidate 56)
+**Version:** 1.0.0-rc57 (Release Candidate 57)
 **Last Updated:** 2025-07-12
 
 ## Project Phase
@@ -329,6 +329,22 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.90.0 - Code Cleanup and Optimization (2025-07-12)
+
+**Fixed:**
+
+- Removed debug logging from gear check out/in functionality
+- Fixed unnecessary getter/setter in NavigationService
+- Removed unused imports from multiple files
+- Fixed code quality issues identified by static analysis
+
+**Improved:**
+
+- Code quality and maintainability
+- Replaced setter with proper testing method (setInstanceForTesting)
+- Added @visibleForTesting annotation to clarify method purpose
+- Updated test files to use the new method
 
 ### v0.89.0 - Filter Dropdowns and Gear Check Out/In Fixes (2025-07-12)
 
