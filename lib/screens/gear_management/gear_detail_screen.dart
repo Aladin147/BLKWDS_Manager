@@ -78,6 +78,32 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
     // This method is no longer used but kept for future reference
   }
 
+  // Refresh gear data
+  Future<void> _refreshGearData() async {
+    try {
+      final updatedGear = await DBService.getGearById(widget.gear.id!);
+      if (updatedGear != null && mounted) {
+        // Force a rebuild of the screen with the latest data
+        // This is a workaround since we can't directly update widget.gear
+        if (updatedGear.isOut != widget.gear.isOut) {
+          // If the isOut status has changed, force a rebuild
+          setState(() {});
+
+          // Navigate back and forth to refresh the screen with the updated gear
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+            NavigationHelper.navigateToGearDetail(updatedGear);
+          }
+        } else {
+          // If only other properties changed, just refresh the UI
+          setState(() {});
+        }
+      }
+    } catch (e, stackTrace) {
+      LogService.error('Failed to refresh gear data', e, stackTrace);
+    }
+  }
+
   // Navigate to edit gear screen
   void _navigateToEditGear() {
     NavigationHelper.navigateToGearForm(gear: widget.gear).then((_) {
@@ -242,6 +268,9 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         // Refresh data
         _loadActivityLogs();
         _loadStatusNotes();
+
+        // Refresh gear data
+        _refreshGearData();
       } else {
         // Show error snackbar
         if (mounted) {
@@ -309,6 +338,9 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         // Refresh data
         _loadActivityLogs();
         _loadStatusNotes();
+
+        // Refresh gear data
+        _refreshGearData();
       } else {
         // Show error snackbar
         if (mounted) {
