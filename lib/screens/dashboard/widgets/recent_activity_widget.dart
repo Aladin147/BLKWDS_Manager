@@ -115,8 +115,8 @@ class RecentActivityWidget extends StatelessWidget {
         padding: const EdgeInsets.all(BLKWDSConstants.spacingSmall),
         backgroundColor: BLKWDSColors.backgroundLight,
         borderColor: activity.checkedOut
-            ? BLKWDSColors.warningAmber.withValues(alpha: 30)
-            : BLKWDSColors.successGreen.withValues(alpha: 30),
+            ? BLKWDSColors.warningAmber.withAlpha(BLKWDSColors.alphaVeryLow)
+            : BLKWDSColors.successGreen.withAlpha(BLKWDSColors.alphaVeryLow),
         animateOnHover: true,
         isElevated: true,
         child: Row(

@@ -57,7 +57,7 @@ class MemberAvatarWidget extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: backgroundColor ?? roleColor.withValues(alpha: 50),
+        color: backgroundColor ?? roleColor.withAlpha(BLKWDSColors.alphaVeryLow),
         border: Border.all(
           color: borderColor ?? roleColor,
           width: borderWidth,

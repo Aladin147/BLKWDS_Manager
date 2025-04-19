@@ -70,16 +70,16 @@ class _BLKWDSEnhancedListTileState extends State<BLKWDSEnhancedListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBackgroundColor = widget.backgroundColor ?? 
+    final effectiveBackgroundColor = widget.backgroundColor ??
         (widget.isEnabled ? BLKWDSColors.backgroundMedium : BLKWDSColors.backgroundMedium.withValues(alpha: 150));
-    
-    final effectiveBorderColor = widget.borderColor ?? 
+
+    final effectiveBorderColor = widget.borderColor ??
         (widget.isEnabled ? BLKWDSColors.slateGrey.withValues(alpha: 50) : BLKWDSColors.slateGrey.withValues(alpha: 30));
-    
-    final effectiveBorderRadius = widget.borderRadius ?? 
+
+    final effectiveBorderRadius = widget.borderRadius ??
         BorderRadius.circular(BLKWDSConstants.borderRadius);
-    
-    final effectivePadding = widget.padding ?? 
+
+    final effectivePadding = widget.padding ??
         const EdgeInsets.symmetric(
           horizontal: BLKWDSConstants.spacingMedium,
           vertical: BLKWDSConstants.spacingSmall,
@@ -102,8 +102,8 @@ class _BLKWDSEnhancedListTileState extends State<BLKWDSEnhancedListTile> {
         child: InkWell(
           onTap: widget.isEnabled ? widget.onTap : null,
           borderRadius: effectiveBorderRadius,
-          splashColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
-          highlightColor: BLKWDSColors.accentTeal.withValues(alpha: 30),
+          splashColor: BLKWDSColors.accentTeal.withAlpha(BLKWDSColors.alphaVeryLow),
+          highlightColor: BLKWDSColors.accentTeal.withAlpha(BLKWDSColors.alphaVeryLow),
           child: Padding(
             padding: effectivePadding,
             child: Row(
@@ -113,16 +113,16 @@ class _BLKWDSEnhancedListTileState extends State<BLKWDSEnhancedListTile> {
                   BLKWDSEnhancedIconContainer(
                     icon: widget.leadingIcon!,
                     size: BLKWDSEnhancedIconContainerSize.medium,
-                    backgroundColor: widget.isEnabled 
-                        ? BLKWDSColors.backgroundLight 
-                        : BLKWDSColors.backgroundLight.withValues(alpha: 150),
-                    iconColor: widget.isEnabled 
-                        ? BLKWDSColors.accentTeal 
+                    backgroundColor: widget.isEnabled
+                        ? BLKWDSColors.backgroundLight
+                        : BLKWDSColors.backgroundLight.withAlpha(150),
+                    iconColor: widget.isEnabled
+                        ? BLKWDSColors.accentTeal
                         : BLKWDSColors.textSecondary,
                   ),
                   const SizedBox(width: BLKWDSConstants.spacingMedium),
                 ],
-                
+
                 // Title and subtitle
                 Expanded(
                   child: Column(
@@ -131,23 +131,23 @@ class _BLKWDSEnhancedListTileState extends State<BLKWDSEnhancedListTile> {
                     children: [
                       BLKWDSEnhancedText.titleLarge(
                         widget.title,
-                        color: widget.isEnabled 
-                            ? BLKWDSColors.textPrimary 
+                        color: widget.isEnabled
+                            ? BLKWDSColors.textPrimary
                             : BLKWDSColors.textSecondary,
                       ),
                       if (widget.subtitle != null) ...[
                         const SizedBox(height: BLKWDSConstants.spacingXSmall),
                         BLKWDSEnhancedText.bodyMedium(
                           widget.subtitle!,
-                          color: widget.isEnabled 
-                              ? BLKWDSColors.textSecondary 
+                          color: widget.isEnabled
+                              ? BLKWDSColors.textSecondary
                               : BLKWDSColors.textSecondary.withValues(alpha: 150),
                         ),
                       ],
                     ],
                   ),
                 ),
-                
+
                 // Trailing widget
                 if (widget.trailing != null) ...[
                   const SizedBox(width: BLKWDSConstants.spacingSmall),

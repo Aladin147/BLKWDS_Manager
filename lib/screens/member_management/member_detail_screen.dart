@@ -228,7 +228,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                   children: [
                     CircleAvatar(
                       radius: 32,
-                      backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
+                      backgroundColor: BLKWDSColors.accentTeal.withAlpha(BLKWDSColors.alphaVeryLow),
                       child: BLKWDSEnhancedText.headingLarge(
                         widget.member.name.isNotEmpty ? widget.member.name[0].toUpperCase() : '?',
                         color: BLKWDSColors.accentTeal,

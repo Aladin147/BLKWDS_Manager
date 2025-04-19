@@ -274,7 +274,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
                             BLKWDSEnhancedIconContainer(
                               icon: Icons.error_outline,
                               size: BLKWDSEnhancedIconContainerSize.large,
-                              backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
+                              backgroundColor: BLKWDSColors.errorRed.withAlpha(51),
                               iconColor: BLKWDSColors.errorRed,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
@@ -306,7 +306,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
                                 BLKWDSEnhancedIconContainer(
                                   icon: Icons.people_outline,
                                   size: BLKWDSEnhancedIconContainerSize.large,
-                                  backgroundColor: BLKWDSColors.slateGrey.withValues(alpha: 20),
+                                  backgroundColor: BLKWDSColors.slateGrey.withAlpha(51),
                                   iconColor: BLKWDSColors.slateGrey,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),

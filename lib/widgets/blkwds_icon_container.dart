@@ -68,7 +68,7 @@ class BLKWDSIconContainer extends StatelessWidget {
       width: containerSize,
       height: containerSize,
       decoration: BoxDecoration(
-        color: backgroundColor.withValues(alpha: backgroundAlpha.toDouble()),
+        color: backgroundColor.withAlpha(backgroundAlpha),
         borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
       ),
       child: Center(
