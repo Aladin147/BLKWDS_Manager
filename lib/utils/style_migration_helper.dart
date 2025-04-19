@@ -89,7 +89,14 @@ class StyleMigrationHelper {
     bool isLoading = false,
   }) {
     return BLKWDSEnhancedCard(
-      child: isLoading 
+      padding: padding,
+      borderColor: borderColor,
+      onTap: onTap,
+      type: convertCardType(type),
+      useGradient: useGradient,
+      animateOnHover: animateOnHover,
+      isElevated: hasShadow,
+      child: isLoading
           ? Stack(
               children: [
                 Opacity(
@@ -104,13 +111,6 @@ class StyleMigrationHelper {
               ],
             )
           : child,
-      padding: padding,
-      borderColor: borderColor,
-      onTap: onTap,
-      type: convertCardType(type),
-      useGradient: useGradient,
-      animateOnHover: animateOnHover,
-      isElevated: hasShadow,
     );
   }
 

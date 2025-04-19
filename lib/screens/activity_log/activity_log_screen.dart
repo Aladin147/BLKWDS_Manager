@@ -226,7 +226,6 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 }
