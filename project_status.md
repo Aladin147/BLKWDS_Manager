@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc95 (Release Candidate 95)
+**Version:** 1.0.0-rc96 (Release Candidate 96)
 **Last Updated:** 2025-07-14
 
 ## Project Phase
@@ -369,6 +369,27 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.96.0 - User Documentation (2025-07-14)
+
+**Added:**
+
+- Created comprehensive user documentation structure in docs/user_guide
+- Developed main user guide covering all features
+- Created quick start guide for new users
+- Added detailed guides for key features:
+  - Dashboard Guide
+  - Gear Management Guide
+  - Booking System Guide
+- Created troubleshooting guide for common issues
+- Added documentation index and navigation
+- Developed documentation plan for completing remaining guides
+
+**Improved:**
+
+- Enhanced user onboarding experience with clear documentation
+- Established consistent documentation standards
+- Provided clear, step-by-step instructions for all major features
 
 ### v0.95.0 - Icon Standardization (2025-07-14)
 

@@ -1,5 +1,31 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-14: User Documentation Creation
+
+Today we focused on creating comprehensive user documentation for internal testers:
+
+1. **Documentation Structure**:
+   - Created a well-organized documentation structure in docs/user_guide
+   - Developed an index page to navigate all documentation
+   - Created a documentation plan for completing remaining guides
+
+2. **Core Feature Guides**:
+   - Created a comprehensive main user guide covering all features
+   - Developed a quick start guide for new users
+   - Created detailed guides for key features:
+     - Dashboard Guide
+     - Gear Management Guide
+     - Booking System Guide
+   - Added a troubleshooting guide for common issues
+
+3. **Documentation Standards**:
+   - Established consistent formatting across all guides
+   - Used clear, step-by-step instructions
+   - Included best practices and tips
+   - Created a plan for screenshots and visual aids
+
+This documentation will help internal testers understand how to use the application effectively and provide valuable feedback during the beta testing phase.
+
 ## 2025-07-14: Icon Standardization
 
 Today we focused on standardizing icons throughout the app:
