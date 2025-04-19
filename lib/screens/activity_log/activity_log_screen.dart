@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
-import '../../services/navigation_helper.dart';
+
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
 import '../../utils/date_formatter.dart';
 import '../../widgets/blkwds_widgets.dart';
 import '../dashboard/dashboard_controller.dart';
@@ -81,17 +80,17 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Activity Log'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
-            onPressed: _initializeData,
-          ),
-        ],
-      ),
+    return BLKWDSScaffold(
+      title: 'Activity Log',
+      actions: [
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.refresh,
+          onPressed: _initializeData,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
+        ),
+      ],
       body: Column(
         children: [
           // Search bar
@@ -117,17 +116,16 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
               builder: (context, isLoading, _) {
                 if (isLoading) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: BLKWDSEnhancedLoadingIndicator(),
                   );
                 }
 
                 if (_filteredActivities.isEmpty) {
                   return Center(
-                    child: Text(
+                    child: BLKWDSEnhancedText.bodyLarge(
                       _searchQuery.isEmpty
                           ? 'No activity logs found'
                           : 'No results matching "$_searchQuery"',
-                      style: BLKWDSTypography.bodyLarge,
                     ),
                   );
                 }
@@ -161,14 +159,9 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           )
         : null;
 
-    return BLKWDSCard(
-      margin: const EdgeInsets.symmetric(
-        horizontal: BLKWDSConstants.spacingMedium,
-        vertical: BLKWDSConstants.spacingSmall,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Row(
+    return BLKWDSEnhancedCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Activity icon
@@ -197,43 +190,36 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Gear name
-                  Text(
+                  BLKWDSEnhancedText.bodyLarge(
                     gear.name,
-                    style: BLKWDSTypography.titleMedium,
                   ),
 
                   const SizedBox(height: BLKWDSConstants.spacingXSmall),
 
                   // Action text
-                  Text(
+                  BLKWDSEnhancedText.bodyMedium(
                     activity.checkedOut
                         ? 'Checked out to ${member?.name ?? 'Unknown'}'
                         : 'Returned to inventory',
-                    style: BLKWDSTypography.bodyMedium.copyWith(
-                      color: BLKWDSColors.textSecondary,
-                    ),
+                    color: BLKWDSColors.textSecondary,
                   ),
 
                   // Note if available
                   if (activity.note != null && activity.note!.isNotEmpty) ...[
                     const SizedBox(height: BLKWDSConstants.spacingXSmall),
-                    Text(
+                    BLKWDSEnhancedText.bodyMedium(
                       'Note: ${activity.note}',
-                      style: BLKWDSTypography.bodyMedium.copyWith(
-                        color: BLKWDSColors.textSecondary,
-                        fontStyle: FontStyle.italic,
-                      ),
+                      color: BLKWDSColors.textSecondary,
+                      isItalic: true,
                     ),
                   ],
 
                   const SizedBox(height: BLKWDSConstants.spacingXSmall),
 
                   // Timestamp
-                  Text(
+                  BLKWDSEnhancedText.bodySmall(
                     DateFormatter.formatDateTime(activity.timestamp),
-                    style: BLKWDSTypography.labelSmall.copyWith(
-                      color: BLKWDSColors.textSecondary,
-                    ),
+                    color: BLKWDSColors.textSecondary,
                   ),
                 ],
               ),

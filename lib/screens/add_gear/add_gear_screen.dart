@@ -106,18 +106,14 @@ class _AddGearScreenState extends State<AddGearScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add New Gear'),
-        backgroundColor: BLKWDSColors.blkwdsGreen,
-        foregroundColor: BLKWDSColors.white,
-      ),
+    return BLKWDSScaffold(
+      title: 'Add New Gear',
       body: ValueListenableBuilder<bool>(
         valueListenable: _controller.isLoading,
         builder: (context, isLoading, _) {
           if (isLoading) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: BLKWDSEnhancedLoadingIndicator(),
             );
           }
 

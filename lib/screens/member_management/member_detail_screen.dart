@@ -4,7 +4,7 @@ import '../../services/services.dart';
 import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
+
 import '../../widgets/blkwds_widgets.dart';
 
 /// MemberDetailScreen
@@ -172,28 +172,30 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.member.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            tooltip: 'Edit',
-            onPressed: _navigateToEditMember,
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: 'Delete',
-            onPressed: _deleteMember,
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Details'),
-            Tab(text: 'Activity'),
-          ],
+    return BLKWDSScaffold(
+      title: widget.member.name,
+      actions: [
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.edit,
+          onPressed: _navigateToEditMember,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
         ),
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.delete,
+          onPressed: _deleteMember,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
+        ),
+      ],
+      bottomNavigationBar: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Details'),
+          Tab(text: 'Activity'),
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
@@ -216,10 +218,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Member info card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-              child: Column(
+          BLKWDSEnhancedCard(
+            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Member avatar and name
@@ -228,11 +229,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                       CircleAvatar(
                         radius: 32,
                         backgroundColor: BLKWDSColors.accentTeal.withValues(alpha: 50),
-                        child: Text(
+                        child: BLKWDSEnhancedText.headingLarge(
                           widget.member.name.isNotEmpty ? widget.member.name[0].toUpperCase() : '?',
-                          style: BLKWDSTypography.headlineMedium.copyWith(
-                            color: BLKWDSColors.accentTeal,
-                          ),
+                          color: BLKWDSColors.accentTeal,
                         ),
                       ),
                       const SizedBox(width: BLKWDSConstants.spacingMedium),
@@ -240,16 +239,13 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            BLKWDSEnhancedText.headingMedium(
                               widget.member.name,
-                              style: BLKWDSTypography.headlineSmall,
                             ),
                             if (widget.member.role != null && widget.member.role!.isNotEmpty)
-                              Text(
+                              BLKWDSEnhancedText.bodyMedium(
                                 widget.member.role!,
-                                style: BLKWDSTypography.titleMedium.copyWith(
-                                  color: BLKWDSColors.textSecondary,
-                                ),
+                                color: BLKWDSColors.textSecondary,
                               ),
                           ],
                         ),
@@ -269,9 +265,8 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
           // Projects section
-          Text(
+          BLKWDSEnhancedText.titleLarge(
             'Projects',
-            style: BLKWDSTypography.titleLarge,
           ),
           const SizedBox(height: BLKWDSConstants.spacingSmall),
 
@@ -280,7 +275,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
               ? const Center(
                   child: Padding(
                     padding: EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                    child: CircularProgressIndicator(),
+                    child: BLKWDSEnhancedLoadingIndicator(),
                   ),
                 )
               : _projectsErrorMessage != null
@@ -295,17 +290,15 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                               size: 32,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingSmall),
-                            Text(
+                            BLKWDSEnhancedText.bodyMedium(
                               _projectsErrorMessage!,
                               textAlign: TextAlign.center,
-                              style: BLKWDSTypography.bodyMedium,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingSmall),
-                            BLKWDSButton(
+                            BLKWDSEnhancedButton(
                               label: 'Retry',
                               onPressed: _loadProjects,
-                              type: BLKWDSButtonType.secondary,
-                              isSmall: true,
+                              type: BLKWDSEnhancedButtonType.secondary,
                             ),
                           ],
                         ),
@@ -315,11 +308,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                            child: Text(
+                            child: BLKWDSEnhancedText.bodyMedium(
                               'No projects assigned to this member',
-                              style: BLKWDSTypography.bodyMedium.copyWith(
-                                color: BLKWDSColors.textSecondary,
-                              ),
+                              color: BLKWDSColors.textSecondary,
                             ),
                           ),
                         )
@@ -329,14 +320,12 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                           itemCount: _projects.length,
                           itemBuilder: (context, index) {
                             final project = _projects[index];
-                            return Card(
-                              margin: const EdgeInsets.only(
-                                bottom: BLKWDSConstants.spacingSmall,
-                              ),
+                            return BLKWDSEnhancedCard(
+                              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
                               child: ListTile(
-                                title: Text(project.title),
+                                title: BLKWDSEnhancedText.bodyLarge(project.title),
                                 subtitle: project.client != null && project.client!.isNotEmpty
-                                    ? Text('Client: ${project.client}')
+                                    ? BLKWDSEnhancedText.bodyMedium('Client: ${project.client}', color: BLKWDSColors.textSecondary)
                                     : null,
                                 trailing: const Icon(Icons.chevron_right),
                                 onTap: () {
@@ -346,15 +335,15 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                             );
                           },
                         ),
-        ],
-      ),
-    );
+                      ],
+                    ),
+                  );
   }
 
   // Build the activity tab
   Widget _buildActivityTab() {
     return _isLoadingActivity
-        ? const Center(child: CircularProgressIndicator())
+        ? const Center(child: BLKWDSEnhancedLoadingIndicator())
         : _activityErrorMessage != null
             ? Center(
                 child: Column(
@@ -366,21 +355,19 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                       size: 48,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    Text(
+                    BLKWDSEnhancedText.titleLarge(
                       'Error Loading Activity',
-                      style: BLKWDSTypography.titleLarge,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingSmall),
-                    Text(
+                    BLKWDSEnhancedText.bodyMedium(
                       _activityErrorMessage!,
                       textAlign: TextAlign.center,
-                      style: BLKWDSTypography.bodyMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    BLKWDSButton(
+                    BLKWDSEnhancedButton(
                       label: 'Retry',
                       onPressed: _loadActivityLogs,
-                      type: BLKWDSButtonType.primary,
+                      type: BLKWDSEnhancedButtonType.primary,
                     ),
                   ],
                 ),
@@ -396,14 +383,12 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                           size: 48,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingMedium),
-                        Text(
+                        BLKWDSEnhancedText.titleLarge(
                           'No Activity Found',
-                          style: BLKWDSTypography.titleLarge,
                         ),
                         const SizedBox(height: BLKWDSConstants.spacingSmall),
-                        Text(
+                        BLKWDSEnhancedText.bodyMedium(
                           'This member has no recorded activity',
-                          style: BLKWDSTypography.bodyMedium,
                         ),
                       ],
                     ),
@@ -419,14 +404,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
 
   // Build a card for an activity log
   Widget _buildActivityCard(ActivityLog activity) {
-    return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: BLKWDSConstants.spacingMedium,
-        vertical: BLKWDSConstants.spacingSmall,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Column(
+    return BLKWDSEnhancedCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Activity header with timestamp
@@ -439,20 +419,17 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                       : BLKWDSColors.statusIn,
                 ),
                 const SizedBox(width: BLKWDSConstants.spacingSmall),
-                Text(
+                BLKWDSEnhancedText.bodyLarge(
                   activity.checkedOut ? 'Checked Out' : 'Checked In',
-                  style: BLKWDSTypography.titleMedium.copyWith(
-                    color: activity.checkedOut
-                        ? BLKWDSColors.statusOut
-                        : BLKWDSColors.statusIn,
-                  ),
+                  color: activity.checkedOut
+                      ? BLKWDSColors.statusOut
+                      : BLKWDSColors.statusIn,
+                  isBold: true,
                 ),
                 const Spacer(),
-                Text(
+                BLKWDSEnhancedText.bodySmall(
                   _formatDate(activity.timestamp),
-                  style: BLKWDSTypography.bodySmall.copyWith(
-                    color: BLKWDSColors.textSecondary,
-                  ),
+                  color: BLKWDSColors.textSecondary,
                 ),
               ],
             ),
@@ -463,21 +440,19 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
               future: DBService.getGearById(activity.gearId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text('Loading gear info...');
+                  return BLKWDSEnhancedText.bodyMedium('Loading gear info...');
                 }
 
                 if (snapshot.hasError) {
-                  return Text(
+                  return BLKWDSEnhancedText.bodyMedium(
                     'Error loading gear info: ${snapshot.error}',
-                    style: BLKWDSTypography.bodyMedium.copyWith(
-                      color: BLKWDSColors.errorRed,
-                    ),
+                    color: BLKWDSColors.errorRed,
                   );
                 }
 
                 final gear = snapshot.data;
                 if (gear == null) {
-                  return const Text('Gear not found');
+                  return BLKWDSEnhancedText.bodyMedium('Gear not found');
                 }
 
                 return Row(
@@ -487,16 +462,13 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                       color: BLKWDSColors.slateGrey,
                     ),
                     const SizedBox(width: BLKWDSConstants.spacingSmall),
-                    Text(
+                    BLKWDSEnhancedText.bodyMedium(
                       gear.name,
-                      style: BLKWDSTypography.bodyMedium,
                     ),
                     const SizedBox(width: BLKWDSConstants.spacingSmall),
-                    Text(
+                    BLKWDSEnhancedText.bodySmall(
                       '(${gear.category})',
-                      style: BLKWDSTypography.bodySmall.copyWith(
-                        color: BLKWDSColors.textSecondary,
-                      ),
+                      color: BLKWDSColors.textSecondary,
                     ),
                   ],
                 );
@@ -506,16 +478,13 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
             // Note if available
             if (activity.note != null && activity.note!.isNotEmpty) ...[
               const SizedBox(height: BLKWDSConstants.spacingSmall),
-              Text(
+              BLKWDSEnhancedText.bodyMedium(
                 'Note: ${activity.note}',
-                style: BLKWDSTypography.bodyMedium.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
+                isItalic: true,
               ),
             ],
           ],
         ),
-      ),
     );
   }
 
@@ -528,18 +497,15 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
         children: [
           SizedBox(
             width: 120,
-            child: Text(
+            child: BLKWDSEnhancedText.bodyMedium(
               label,
-              style: BLKWDSTypography.bodyMedium.copyWith(
-                color: BLKWDSColors.textSecondary,
-                fontWeight: FontWeight.bold,
-              ),
+              color: BLKWDSColors.textSecondary,
+              isBold: true,
             ),
           ),
           Expanded(
-            child: Text(
+            child: BLKWDSEnhancedText.bodyMedium(
               value,
-              style: BLKWDSTypography.bodyMedium,
             ),
           ),
         ],
