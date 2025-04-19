@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc57 (Release Candidate 57)
+**Version:** 1.0.0-rc58 (Release Candidate 58)
 **Last Updated:** 2025-07-12
 
 ## Project Phase
@@ -329,6 +329,25 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.91.0 - Database Caching Optimization (2025-07-12)
+
+**Added:**
+
+- Enhanced CacheService with targeted cache invalidation
+- Methods to update or remove specific entities from list caches
+- Cache access tracking to identify frequently accessed data
+- Smart cache expiration that extends expiration for frequently accessed data
+- Cache prefetching capabilities for frequently accessed data
+- Enhanced cache statistics with hit ratio and most accessed keys
+
+**Improved:**
+
+- Application performance with more efficient caching
+- Reduced unnecessary cache invalidations in DBService
+- Enhanced cache hit ratio with smart expiration and prefetching
+- Memory usage with more targeted caching
+- Better cache statistics for monitoring and optimization
 
 ### v0.90.0 - Code Cleanup and Optimization (2025-07-12)
 

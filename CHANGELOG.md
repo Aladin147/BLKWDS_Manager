@@ -5,6 +5,25 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc52] - 2025-07-12
+
+**Added:**
+
+- Enhanced CacheService with targeted cache invalidation
+- Methods to update or remove specific entities from list caches
+- Cache access tracking to identify frequently accessed data
+- Smart cache expiration that extends expiration for frequently accessed data
+- Cache prefetching capabilities for frequently accessed data
+- Enhanced cache statistics with hit ratio and most accessed keys
+
+**Improved:**
+
+- Application performance with more efficient caching
+- Reduced unnecessary cache invalidations in DBService
+- Enhanced cache hit ratio with smart expiration and prefetching
+- Memory usage with more targeted caching
+- Better cache statistics for monitoring and optimization
+
 ## [1.0.0-rc51] - 2025-07-12
 
 **Fixed:**

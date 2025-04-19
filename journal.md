@@ -1,5 +1,34 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-12: Database Caching Optimization
+
+Today we focused on optimizing the database caching system to improve performance and reduce unnecessary cache invalidations:
+
+1. **Enhanced CacheService**:
+   - Implemented targeted cache invalidation to avoid clearing entire caches
+   - Added methods to update or remove specific entities from list caches
+   - Implemented cache access tracking to identify frequently accessed data
+   - Added smart cache expiration that extends expiration for frequently accessed data
+   - Added cache prefetching capabilities for frequently accessed data
+   - Enhanced cache statistics with hit ratio and most accessed keys
+
+2. **Optimized DBService**:
+   - Updated gear operations to use targeted cache invalidation
+   - Implemented entity-specific cache updates instead of full cache invalidation
+   - Added proper cache update for insertGear, updateGear, and deleteGear methods
+   - Improved documentation for cache-related operations
+
+3. **Benefits Achieved**:
+   - Improved application performance with more efficient caching
+   - Reduced unnecessary cache invalidations
+   - Enhanced cache hit ratio with smart expiration and prefetching
+   - Improved memory usage with more targeted caching
+   - Better cache statistics for monitoring and optimization
+
+This work significantly improves the performance of the application, especially for frequently accessed data. By implementing targeted cache invalidation and smart cache management, we've reduced the number of database queries and improved the overall responsiveness of the application.
+
+Next steps include applying similar optimizations to other entity types (members, projects, bookings) and implementing cache compression for large datasets.
+
 ## 2025-07-12: Code Cleanup and Optimization
 
 Today we continued our code cleanup and optimization efforts, focusing on removing debug logging and fixing code quality issues:
