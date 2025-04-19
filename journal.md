@@ -1,5 +1,21 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-14: Codebase Cleanup and Adapter Removal
+
+Today we focused on cleaning up the codebase by removing unused adapter classes and other unnecessary code:
+
+1. **Adapter Removal**:
+   - Removed BookingFormAdapter and updated references to use BookingForm directly
+   - Removed BookingListScreenAdapter and updated references to use BookingListScreen directly
+   - Removed BookingDetailScreenAdapter and updated references to use BookingDetailScreen directly
+   - Removed dashboard_screen_new.dart as it was identical to dashboard_screen.dart
+
+2. **Documentation Updates**:
+   - Created a comprehensive cleanup plan (cleanup_plan.md) to guide future cleanup efforts
+   - Updated journal.md to document our work
+
+These improvements simplify the architecture and make the codebase more maintainable. We've removed unnecessary layers of indirection that were adding complexity without providing any benefits.
+
 ## 2025-07-14: Dashboard Layout Responsiveness and Image Loading Fixes
 
 Today we focused on improving the dashboard layout responsiveness and fixing image loading issues:

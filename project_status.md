@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc93 (Release Candidate 93)
+**Version:** 1.0.0-rc94 (Release Candidate 94)
 **Last Updated:** 2025-07-14
 
 ## Project Phase
@@ -369,6 +369,25 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.94.0 - Codebase Cleanup and Adapter Removal (2025-07-14)
+
+**Removed:**
+
+- Removed BookingFormAdapter and updated references to use BookingForm directly
+- Removed BookingListScreenAdapter and updated references to use BookingListScreen directly
+- Removed BookingDetailScreenAdapter and updated references to use BookingDetailScreen directly
+- Removed dashboard_screen_new.dart as it was identical to dashboard_screen.dart
+
+**Added:**
+
+- Created a comprehensive cleanup plan (cleanup_plan.md) to guide future cleanup efforts
+
+**Improved:**
+
+- Simplified architecture by removing unnecessary layers of indirection
+- Improved codebase maintainability by reducing complexity
+- Reduced technical debt by removing unused code
 
 ### v0.93.0 - Dashboard Layout Responsiveness and Image Loading Fixes (2025-07-14)
 
