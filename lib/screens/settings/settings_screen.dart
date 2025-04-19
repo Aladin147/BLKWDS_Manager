@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
 
-import '../../services/navigation_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_animations.dart';
 import '../../theme/blkwds_constants.dart';
@@ -236,7 +236,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.people,
                           onTap: () {
-                            NavigationService.instance.navigateToMemberManagement();
+                            NavigationHelper.navigateToMemberManagement();
                           },
                         ),
                         BLKWDSEnhancedListTile(
@@ -245,7 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.business,
                           onTap: () {
-                            NavigationService.instance.navigateToProjectManagement();
+                            NavigationHelper.navigateToProjectManagement();
                           },
                         ),
                         BLKWDSEnhancedListTile(
@@ -254,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.camera,
                           onTap: () {
-                            NavigationService.instance.navigateToGearManagement();
+                            NavigationHelper.navigateToGearManagement();
                           },
                         ),
                         BLKWDSEnhancedListTile(
@@ -263,7 +263,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.storage,
                           onTap: () {
-                            NavigationService.instance.navigateToDatabaseIntegrity();
+                            NavigationHelper.navigateToDatabaseIntegrity();
                           },
                         ),
                         // Migration UI removed - migration is complete
@@ -298,7 +298,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.settings_applications,
                           onTap: () {
-                            NavigationService.instance.navigateToAppConfig();
+                            NavigationHelper.navigateToAppConfig();
                           },
                         ),
                         const Divider(),
@@ -308,7 +308,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.info,
                           onTap: () {
-                            NavigationService.instance.navigateToAppInfo();
+                            NavigationHelper.navigateToAppInfo();
                           },
                         ),
                         const Divider(),
@@ -318,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.arrow_forward_ios),
                           leadingIcon: Icons.style,
                           onTap: () {
-                            NavigationService.instance.navigateToStyleDemo();
+                            NavigationHelper.navigateToStyleDemo();
                           },
                         ),
                       ],
@@ -335,7 +335,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             trailing: const Icon(Icons.arrow_forward_ios),
                             leadingIcon: Icons.error_outline,
                             onTap: () {
-                              NavigationService.instance.navigateTo(
+                              NavigationHelper.service.navigateTo(
                                 const ErrorHandlingExample(),
                                 transitionType: BLKWDSPageTransitionType.rightToLeft,
                               );
@@ -348,7 +348,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             trailing: const Icon(Icons.arrow_forward_ios),
                             leadingIcon: Icons.refresh,
                             onTap: () {
-                              NavigationService.instance.navigateTo(
+                              NavigationHelper.service.navigateTo(
                                 const RecoveryExample(),
                                 transitionType: BLKWDSPageTransitionType.rightToLeft,
                               );
@@ -361,7 +361,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             trailing: const Icon(Icons.arrow_forward_ios),
                             leadingIcon: Icons.analytics,
                             onTap: () {
-                              NavigationService.instance.navigateTo(
+                              NavigationHelper.service.navigateTo(
                                 const ErrorAnalyticsExample(),
                                 transitionType: BLKWDSPageTransitionType.rightToLeft,
                               );

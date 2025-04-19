@@ -111,4 +111,21 @@ class NavigationHelper {
   static String? getCurrentRouteName() {
     return service.getCurrentRouteName();
   }
+
+  /// Navigate to a new screen with animation
+  static Future<T?> navigateTo<T>(
+    Widget page, {
+    BLKWDSPageTransitionType transitionType = BLKWDSPageTransitionType.rightToLeft,
+    bool replace = false,
+    bool clearStack = false,
+    Object? arguments,
+  }) {
+    return service.navigateTo<T>(
+      page,
+      transitionType: transitionType,
+      replace: replace,
+      clearStack: clearStack,
+      arguments: arguments,
+    );
+  }
 }
