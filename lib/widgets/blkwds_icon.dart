@@ -3,11 +3,8 @@ import '../theme/blkwds_colors.dart';
 
 /// Icon sizes for the application
 enum BLKWDSIconSize {
-  /// Extra small icon (16px)
-  extraSmall(16),
-
-  /// Small icon (20px)
-  small(20),
+  /// Small icon (18px)
+  small(18),
 
   /// Medium icon (24px)
   medium(24),
@@ -16,7 +13,10 @@ enum BLKWDSIconSize {
   large(32),
 
   /// Extra large icon (48px)
-  extraLarge(48);
+  extraLarge(48),
+
+  /// Huge icon (64px)
+  huge(64);
 
   final double size;
   const BLKWDSIconSize(this.size);

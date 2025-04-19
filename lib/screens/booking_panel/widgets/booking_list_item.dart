@@ -67,11 +67,11 @@ class BookingListItem extends StatelessWidget {
       statusColor = BLKWDSColors.electricMint;
       statusText = 'Upcoming';
     }
-    
+
     // Calculate duration
     final duration = booking.endDate.difference(booking.startDate);
     final durationText = _formatDuration(duration);
-    
+
     // Determine padding based on view density
     EdgeInsets contentPadding;
     switch (viewDensity) {
@@ -206,7 +206,7 @@ class BookingListItem extends StatelessWidget {
                     children: [
                       BLKWDSIcon(
                         icon: Icons.calendar_today,
-                        size: BLKWDSIconSize.extraSmall,
+                        size: BLKWDSIconSize.small,
                         color: BLKWDSColors.slateGrey,
                       ),
                       const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
@@ -260,7 +260,7 @@ class BookingListItem extends StatelessWidget {
                         children: [
                           BLKWDSIcon(
                             icon: Icons.business,
-                            size: BLKWDSIconSize.extraSmall,
+                            size: BLKWDSIconSize.small,
                             color: BLKWDSColors.slateGrey,
                           ),
                           const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
@@ -285,7 +285,7 @@ class BookingListItem extends StatelessWidget {
                         // Gear count
                         BLKWDSIcon(
                           icon: Icons.camera_alt,
-                          size: BLKWDSIconSize.extraSmall,
+                          size: BLKWDSIconSize.small,
                           color: BLKWDSColors.slateGrey,
                         ),
                         const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
@@ -299,7 +299,7 @@ class BookingListItem extends StatelessWidget {
                         // Member count
                         BLKWDSIcon(
                           icon: Icons.people,
-                          size: BLKWDSIconSize.extraSmall,
+                          size: BLKWDSIconSize.small,
                           color: BLKWDSColors.slateGrey,
                         ),
                         const SizedBox(width: BLKWDSConstants.spacingExtraSmall),

@@ -10,15 +10,15 @@ class GearIconService {
     // Map categories to specific icons
     switch (normalizedCategory) {
       case 'camera':
-        return Icons.camera_alt;
+        return Icons.videocam;
       case 'lens':
         return Icons.camera;
       case 'audio':
         return Icons.mic;
       case 'lighting':
-        return Icons.lightbulb;
+        return Icons.light_mode;
       case 'stabilizer':
-        return Icons.videocam;
+        return Icons.video_stable;
       case 'support':
         return Icons.architecture;
       case 'power':
@@ -26,13 +26,13 @@ class GearIconService {
       case 'storage':
         return Icons.sd_storage;
       case 'monitor':
-        return Icons.monitor;
+        return Icons.desktop_windows;
       case 'grip':
         return Icons.pan_tool;
       case 'drone':
         return Icons.flight;
       case 'accessory':
-        return Icons.category;
+        return Icons.devices;
       default:
         return Icons.devices_other;
     }

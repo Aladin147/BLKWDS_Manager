@@ -245,7 +245,7 @@ class CalendarBookingItem extends StatelessWidget {
                 // Drag indicator
                 BLKWDSIcon(
                   icon: Icons.drag_indicator,
-                  size: BLKWDSIconSize.extraSmall,
+                  size: BLKWDSIconSize.small,
                   color: BLKWDSColors.electricMint,
                 ),
               ],
