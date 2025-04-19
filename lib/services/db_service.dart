@@ -285,8 +285,13 @@ class DBService {
 
     final gearList = List.generate(maps.length, (i) => Gear.fromMap(maps[i]));
 
-    // Cache the result for 5 minutes
-    cache.put(cacheKey, gearList);
+    // Cache the result for 5 minutes with compression for large datasets
+    cache.put(
+      cacheKey,
+      gearList,
+      compress: gearList.length > 50, // Compress if more than 50 items
+      compressionThreshold: 5 * 1024, // 5KB
+    );
     LogService.debug('Cached gear list (${gearList.length} items)');
 
     return gearList;
@@ -412,8 +417,21 @@ class DBService {
       table: 'member',
     );
 
-    // Invalidate the member cache
-    CacheService().remove('all_members');
+    // Update the member cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to update the entity in the cache first
+    final memberWithId = member.copyWith(id: result);
+    final updated = cache.updateEntityInListCache<Member>(
+      'all_members',
+      memberWithId,
+      (m) => m.id ?? 0,
+    );
+
+    // If update failed, invalidate the entire cache
+    if (!updated) {
+      cache.remove('all_members');
+    }
 
     return result;
   }
@@ -440,8 +458,13 @@ class DBService {
 
     final memberList = List.generate(maps.length, (i) => Member.fromMap(maps[i]));
 
-    // Cache the result for 5 minutes
-    cache.put(cacheKey, memberList);
+    // Cache the result for 5 minutes with compression for large datasets
+    cache.put(
+      cacheKey,
+      memberList,
+      compress: memberList.length > 50, // Compress if more than 50 items
+      compressionThreshold: 5 * 1024, // 5KB
+    );
     LogService.debug('Cached member list (${memberList.length} items)');
 
     return memberList;
@@ -491,8 +514,20 @@ class DBService {
       table: 'member',
     );
 
-    // Invalidate the member cache
-    CacheService().remove('all_members');
+    // Update the member cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to update the entity in the cache first
+    final updated = cache.updateEntityInListCache<Member>(
+      'all_members',
+      member,
+      (m) => m.id ?? 0,
+    );
+
+    // If update failed, invalidate the entire cache
+    if (!updated) {
+      cache.remove('all_members');
+    }
 
     return result;
   }
@@ -537,8 +572,20 @@ class DBService {
       table: 'member',
     );
 
-    // Invalidate the member cache
-    CacheService().remove('all_members');
+    // Update the member cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to remove the entity from the cache first
+    final removed = cache.removeEntityFromListCache<Member>(
+      'all_members',
+      id,
+      (m) => m.id ?? 0,
+    );
+
+    // If removal failed, invalidate the entire cache
+    if (!removed) {
+      cache.remove('all_members');
+    }
 
     return result;
   }
@@ -556,6 +603,7 @@ class DBService {
     );
 
     // Invalidate the member cache
+    // For deleteMemberByName, we don't have the ID, so we need to invalidate the entire cache
     CacheService().remove('all_members');
 
     return result;
@@ -598,8 +646,21 @@ class DBService {
       table: 'project',
     );
 
-    // Invalidate the project cache
-    CacheService().remove('all_projects');
+    // Update the project cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to update the entity in the cache first
+    final projectWithId = project.copyWith(id: result);
+    final updated = cache.updateEntityInListCache<Project>(
+      'all_projects',
+      projectWithId,
+      (p) => p.id ?? 0,
+    );
+
+    // If update failed, invalidate the entire cache
+    if (!updated) {
+      cache.remove('all_projects');
+    }
 
     return result;
   }
@@ -649,8 +710,13 @@ class DBService {
       );
     }
 
-    // Cache the result for 5 minutes
-    cache.put(cacheKey, projects);
+    // Cache the result for 5 minutes with compression for large datasets
+    cache.put(
+      cacheKey,
+      projects,
+      compress: projects.length > 30, // Compress if more than 30 items
+      compressionThreshold: 5 * 1024, // 5KB
+    );
     LogService.debug('Cached project list (${projects.length} items)');
 
     return projects;
@@ -694,7 +760,7 @@ class DBService {
     final db = await database;
 
     // Use transaction with error handling and retry
-    return await DBServiceWrapper.executeTransaction(
+    final result = await DBServiceWrapper.executeTransaction(
       db,
       (txn) async {
         // Create a map with only the columns that exist in the table
@@ -734,31 +800,71 @@ class DBService {
       'updateProject',
       table: 'project',
     );
+
+    // Update the project cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to update the entity in the cache first
+    final updated = cache.updateEntityInListCache<Project>(
+      'all_projects',
+      project,
+      (p) => p.id ?? 0,
+    );
+
+    // If update failed, invalidate the entire cache
+    if (!updated) {
+      cache.remove('all_projects');
+    }
+
+    return result;
   }
 
   /// Delete a project
   static Future<int> deleteProject(int id) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+    final result = await DBServiceWrapper.delete(
       db,
       'project',
       where: 'id = ?',
       whereArgs: [id],
       operationName: 'deleteProject',
     );
+
+    // Update the project cache with targeted invalidation
+    final cache = CacheService();
+
+    // Try to remove the entity from the cache first
+    final removed = cache.removeEntityFromListCache<Project>(
+      'all_projects',
+      id,
+      (p) => p.id ?? 0,
+    );
+
+    // If removal failed, invalidate the entire cache
+    if (!removed) {
+      cache.remove('all_projects');
+    }
+
+    return result;
   }
 
   /// Delete a project by title
   /// This method is primarily used for testing purposes
   static Future<int> deleteProjectByTitle(String title) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+    final result = await DBServiceWrapper.delete(
       db,
       'project',
       where: 'title = ?',
       whereArgs: [title],
       operationName: 'deleteProjectByTitle',
     );
+
+    // Invalidate the project cache
+    // For deleteProjectByTitle, we don't have the ID, so we need to invalidate the entire cache
+    CacheService().remove('all_projects');
+
+    return result;
   }
 
   // BOOKING CRUD OPERATIONS
@@ -768,7 +874,7 @@ class DBService {
     final db = await database;
 
     // Use transaction with error handling and retry
-    return await DBServiceWrapper.executeTransaction(
+    final result = await DBServiceWrapper.executeTransaction(
       db,
       (txn) async {
         // Insert booking
@@ -790,6 +896,11 @@ class DBService {
       'insertBooking',
       table: 'booking',
     );
+
+    // We don't have a cache for bookings yet, but we could add one in the future
+    // For now, we'll just return the result
+
+    return result;
   }
 
   /// Get all bookings with their gear and member assignments
@@ -892,7 +1003,7 @@ class DBService {
     final db = await database;
 
     // Use transaction with error handling and retry
-    return await DBServiceWrapper.executeTransaction(
+    final result = await DBServiceWrapper.executeTransaction(
       db,
       (txn) async {
         // Update booking
@@ -926,6 +1037,11 @@ class DBService {
       'updateBooking',
       table: 'booking',
     );
+
+    // We don't have a cache for bookings yet, but we could add one in the future
+    // For now, we'll just return the result
+
+    return result;
   }
 
   /// Delete a booking and its associated gear assignments
@@ -933,7 +1049,7 @@ class DBService {
     final db = await database;
 
     // Use transaction with error handling and retry
-    return await DBServiceWrapper.executeTransaction(
+    final result = await DBServiceWrapper.executeTransaction(
       db,
       (txn) async {
         // First delete associated gear assignments
@@ -953,6 +1069,11 @@ class DBService {
       'deleteBooking',
       table: 'booking',
     );
+
+    // We don't have a cache for bookings yet, but we could add one in the future
+    // For now, we'll just return the result
+
+    return result;
   }
 
   /// Delete a booking by title

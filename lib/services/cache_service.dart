@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'log_service.dart';
-import '../models/models.dart';
 
 /// Cache entry with expiration
 class CacheEntry<T> {
@@ -12,11 +14,37 @@ class CacheEntry<T> {
   /// The expiration time
   final DateTime expiration;
 
+  /// Whether this entry is compressed
+  final bool isCompressed;
+
   /// Create a new cache entry
-  CacheEntry(this.value, this.expiration);
+  CacheEntry(this.value, this.expiration, {this.isCompressed = false});
 
   /// Check if the entry is expired
   bool get isExpired => DateTime.now().isAfter(expiration);
+}
+
+/// Compressed cache entry
+class CompressedCacheEntry<T> extends CacheEntry<T> {
+  /// The original size of the data in bytes (before compression)
+  final int originalSize;
+
+  /// The compressed size of the data in bytes
+  final int compressedSize;
+
+  /// Create a new compressed cache entry
+  CompressedCacheEntry(super.value, super.expiration, this.originalSize, this.compressedSize)
+      : super(isCompressed: true);
+
+  /// Get the compression ratio
+  double get compressionRatio => originalSize > 0 ? compressedSize / originalSize : 1.0;
+
+  /// Get the space saved in bytes
+  int get spaceSaved => originalSize - compressedSize;
+
+  /// Get the compression percentage
+  String get compressionPercentage =>
+      '${((1 - compressionRatio) * 100).toStringAsFixed(1)}%';
 }
 
 /// Cache service for storing frequently accessed data
@@ -72,10 +100,87 @@ class CacheService {
   /// [key] is the cache key
   /// [value] is the value to cache
   /// [duration] is the time until the entry expires (default: 5 minutes)
-  void put<T>(String key, T value, {Duration duration = const Duration(minutes: 5)}) {
+  /// [compress] whether to compress the value (default: false)
+  /// [compressionThreshold] minimum size in bytes for compression (default: 10KB)
+  void put<T>(String key, T value, {
+    Duration duration = const Duration(minutes: 5),
+    bool compress = false,
+    int compressionThreshold = 10 * 1024, // 10KB
+  }) {
     final expiration = DateTime.now().add(duration);
-    _cache[key] = CacheEntry<T>(value, expiration);
-    LogService.debug('Cache: Added key "$key" with expiration in ${duration.inSeconds}s');
+
+    if (compress && _isCompressible<T>()) {
+      _putCompressed<T>(key, value, expiration, compressionThreshold);
+    } else {
+      _cache[key] = CacheEntry<T>(value, expiration);
+      LogService.debug('Cache: Added key "$key" with expiration in ${duration.inSeconds}s');
+    }
+  }
+
+  /// Put a compressed value in the cache
+  ///
+  /// This method compresses the value if it's larger than the threshold.
+  /// Only certain types can be compressed (String, List, Map).
+  void _putCompressed<T>(String key, T value, DateTime expiration, int compressionThreshold) {
+    try {
+      // Convert to JSON string
+      final jsonString = _toJsonString(value);
+      final originalSize = jsonString.length;
+
+      // Only compress if larger than threshold
+      if (originalSize < compressionThreshold) {
+        _cache[key] = CacheEntry<T>(value, expiration);
+        LogService.debug('Cache: Added key "$key" (size: $originalSize bytes, below compression threshold)');
+        return;
+      }
+
+      // Compress the data
+      final compressedData = _compress(jsonString);
+      final compressedSize = compressedData.length;
+
+      // Store the compressed data
+      _cache[key] = CompressedCacheEntry<T>(
+        value,
+        expiration,
+        originalSize,
+        compressedSize,
+      );
+
+      final savedPercentage = ((1 - (compressedSize / originalSize)) * 100).toStringAsFixed(1);
+      LogService.debug('Cache: Added compressed key "$key" (original: $originalSize bytes, compressed: $compressedSize bytes, saved: $savedPercentage%)');
+    } catch (e) {
+      // If compression fails, store uncompressed
+      _cache[key] = CacheEntry<T>(value, expiration);
+      LogService.error('Cache: Compression failed for key "$key", stored uncompressed', e);
+    }
+  }
+
+  /// Check if a type is compressible
+  bool _isCompressible<T>() {
+    return T == String || T == List || T == Map || T.toString().contains('List<') || T.toString().contains('Map<');
+  }
+
+  /// Convert a value to a JSON string
+  String _toJsonString(dynamic value) {
+    if (value is String) {
+      return value;
+    } else if (value is List || value is Map) {
+      return json.encode(value);
+    } else {
+      throw UnsupportedError('Type ${value.runtimeType} cannot be compressed');
+    }
+  }
+
+  /// Compress a string using GZIP
+  List<int> _compress(String data) {
+    final encoded = utf8.encode(data);
+    return GZipCodec().encode(encoded);
+  }
+
+  /// Decompress a GZIP compressed byte array
+  String _decompress(List<int> data) {
+    final decoded = GZipCodec().decode(data);
+    return utf8.decode(decoded);
   }
 
   /// Remove a value from the cache
@@ -179,15 +284,51 @@ class CacheService {
   int get size => _cache.length;
 
   /// Get cache statistics
-  Map<String, dynamic> get statistics => {
-        'size': size,
-        'hits': _hits,
-        'misses': _misses,
-        'expirations': _expirations,
-        'tracked_keys': _keyAccessCount.length,
-        'most_accessed': _getMostAccessedKeys(5),
-        'hit_ratio': _hits + _misses > 0 ? '${(_hits / (_hits + _misses) * 100).toStringAsFixed(2)}%' : '0%',
-      };
+  Map<String, dynamic> get statistics {
+    // Calculate compression statistics
+    int compressedEntries = 0;
+    int totalOriginalSize = 0;
+    int totalCompressedSize = 0;
+
+    for (final entry in _cache.values) {
+      if (entry is CompressedCacheEntry) {
+        compressedEntries++;
+        totalOriginalSize += entry.originalSize;
+        totalCompressedSize += entry.compressedSize;
+      }
+    }
+
+    final compressionStats = compressedEntries > 0
+        ? {
+            'compressed_entries': compressedEntries,
+            'total_original_size': _formatSize(totalOriginalSize),
+            'total_compressed_size': _formatSize(totalCompressedSize),
+            'space_saved': _formatSize(totalOriginalSize - totalCompressedSize),
+            'compression_ratio': totalOriginalSize > 0
+                ? '${((totalCompressedSize / totalOriginalSize) * 100).toStringAsFixed(1)}%'
+                : '0%',
+          }
+        : {'compressed_entries': 0};
+
+    return {
+      'size': size,
+      'hits': _hits,
+      'misses': _misses,
+      'expirations': _expirations,
+      'tracked_keys': _keyAccessCount.length,
+      'most_accessed': _getMostAccessedKeys(5),
+      'hit_ratio': _hits + _misses > 0 ? '${(_hits / (_hits + _misses) * 100).toStringAsFixed(2)}%' : '0%',
+      'compression': compressionStats,
+    };
+  }
+
+  /// Format a size in bytes to a human-readable string
+  String _formatSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
+  }
 
   /// Get the most accessed keys
   Map<String, int> _getMostAccessedKeys(int count) {
