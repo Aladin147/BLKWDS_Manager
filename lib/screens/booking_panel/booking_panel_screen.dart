@@ -9,9 +9,9 @@ import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 import 'booking_panel_controller.dart';
-import 'booking_list_screen_adapter.dart';
+import 'booking_list_screen.dart';
 
-import 'widgets/booking_form_adapter.dart';
+import 'widgets/booking_form.dart';
 
 import 'widgets/calendar_view_fixed.dart';
 
@@ -131,7 +131,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
             _selectedBooking == null ? 'Create Booking' : 'Edit Booking',
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
-          BookingFormAdapter(
+          BookingForm(
               controller: _controller,
               booking: _tempBookingV2,
               onSave: (booking) async {
@@ -170,7 +170,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Build list view
   Widget _buildListView() {
-    return BookingListScreenAdapter(
+    return BookingListScreen(
       controller: _controller,
     );
   }
