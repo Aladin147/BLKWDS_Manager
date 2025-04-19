@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
@@ -108,7 +109,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             context,
             'Gear updated successfully',
           );
-          NavigationService.instance.goBack();
+          NavigationHelper.goBack();
         }
       } else {
         // Insert new gear
@@ -119,7 +120,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             context,
             'Gear added successfully',
           );
-          NavigationService.instance.goBack();
+          NavigationHelper.goBack();
         }
       }
     } catch (e, stackTrace) {
@@ -297,7 +298,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             // Cancel button
             BLKWDSButton(
               label: 'Cancel',
-              onPressed: () => NavigationService.instance.goBack(),
+              onPressed: () => NavigationHelper.goBack(),
               type: BLKWDSButtonType.secondary,
             ),
           ],

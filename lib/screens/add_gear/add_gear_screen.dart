@@ -4,7 +4,7 @@ import '../../services/image_service.dart';
 import '../../services/contextual_error_handler.dart';
 import '../../services/error_type.dart';
 import '../../services/error_feedback_level.dart';
-import '../../services/navigation_service.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 
 import '../../theme/blkwds_constants.dart';
@@ -97,7 +97,7 @@ class _AddGearScreenState extends State<AddGearScreen> {
         // Return to previous screen after a short delay
         Future.delayed(const Duration(seconds: 1), () {
           if (mounted) {
-            NavigationService.instance.goBack(result: true);
+            NavigationHelper.goBack(result: true);
           }
         });
       }
@@ -314,7 +314,7 @@ class _AddGearScreenState extends State<AddGearScreen> {
                           width: double.infinity,
                           child: BLKWDSEnhancedButton(
                             label: 'Cancel',
-                            onPressed: () => NavigationService.instance.goBack(),
+                            onPressed: () => NavigationHelper.goBack(),
                             type: BLKWDSEnhancedButtonType.secondary,
                             icon: Icons.cancel,
                           ),

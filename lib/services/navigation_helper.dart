@@ -3,6 +3,7 @@ import '../services/navigation_service.dart';
 import '../routes/app_routes.dart';
 import '../theme/blkwds_animations.dart';
 import '../models/booking_v2.dart';
+import '../models/gear.dart';
 import '../screens/booking_panel/booking_panel_controller.dart';
 
 /// NavigationHelper
@@ -49,6 +50,16 @@ class NavigationHelper {
   /// Navigate to gear management
   static Future<T?> navigateToGearManagement<T>() {
     return service.navigateToGearManagement();
+  }
+
+  /// Navigate to gear detail
+  static Future<T?> navigateToGearDetail<T>(Gear gear) {
+    return service.navigateToGearDetail(gear);
+  }
+
+  /// Navigate to add/edit gear form
+  static Future<T?> navigateToGearForm<T>({Gear? gear}) {
+    return service.navigateToGearForm(gear: gear);
   }
 
   /// Navigate to studio management

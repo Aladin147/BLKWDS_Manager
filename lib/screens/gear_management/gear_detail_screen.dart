@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -79,7 +80,7 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
   // Navigate to edit gear screen
   void _navigateToEditGear() {
-    NavigationService.instance.navigateToGearForm(gear: widget.gear).then((_) {
+    NavigationHelper.navigateToGearForm(gear: widget.gear).then((_) {
       // Refresh data when returning from edit screen
       _loadActivityLogs();
       _loadStatusNotes();

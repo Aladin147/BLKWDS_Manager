@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -111,19 +112,19 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Navigate to gear detail screen
   void _navigateToGearDetail(Gear gear) async {
-    await NavigationService().navigateToGearDetail(gear);
+    await NavigationHelper.navigateToGearDetail(gear);
     _loadGear();
   }
 
   // Navigate to gear form screen for adding a new gear
   void _navigateToAddGear() async {
-    await NavigationService().navigateToGearForm();
+    await NavigationHelper.navigateToGearForm();
     _loadGear();
   }
 
   // Navigate to gear form screen for editing a gear
   void _navigateToEditGear(Gear gear) async {
-    await NavigationService().navigateToGearForm(gear: gear);
+    await NavigationHelper.navigateToGearForm(gear: gear);
     _loadGear();
   }
 
