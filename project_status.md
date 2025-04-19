@@ -132,6 +132,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ~~Unclear state management strategy with Riverpod~~ (RESOLVED in v0.64.0 - Standardized on ValueNotifier pattern)
    - ✅ Inconsistent navigation service access (FIXED in v0.84.0)
    - ✅ Standardized navigation patterns (FIXED in v0.84.0)
+   - ✅ Updated key screens to use NavigationHelper (FIXED in v0.84.0)
    - Some screens still need to be updated to use NavigationHelper (IDENTIFIED in v0.84.0)
 
 5. **Error Handling Inconsistencies**
@@ -330,6 +331,8 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Updated the `BLKWDSHomeButton` to use the new NavigationHelper
 - Updated the Dashboard screen to use the NavigationHelper for all navigation actions
 - Updated the Calendar screen to use the NavigationHelper for all navigation actions
+- Updated the Booking Panel screens to use the NavigationHelper
+- Updated the Settings screen to use the NavigationHelper
 
 **Improved:**
 
