@@ -53,7 +53,7 @@ void main() {
     when(mockNavigationService.navigateToMemberManagement()).thenAnswer((_) async => true);
 
     // Use the mock for all NavigationService calls
-    NavigationService.instance = mockNavigationService as NavigationService;
+    NavigationService.setInstanceForTesting(mockNavigationService as NavigationService);
   });
 
   testWidgets('DashboardScreen renders correctly when loading', (WidgetTester tester) async {

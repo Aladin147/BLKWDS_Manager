@@ -46,8 +46,6 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
 
   @override
   Widget build(BuildContext context) {
-    // Log gear status for debugging
-    print('DEBUG: Building GearCardWithNote for ${widget.gear.id} - ${widget.gear.name}, isOut: ${widget.gear.isOut}');
     return Padding(
       padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingMedium),
       child: BLKWDSEnhancedCard(
@@ -210,9 +208,6 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
 
                   // Check in/out button
                   Builder(builder: (context) {
-                    // Log which button is being rendered
-                    print('DEBUG: Rendering ${widget.gear.isOut ? "Check In" : "Check Out"} button for gear ${widget.gear.id}');
-
                     return widget.gear.isOut
                         ? BLKWDSEnhancedButton(
                             label: 'Check In',
@@ -223,7 +218,6 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                               vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
                             ),
                             onPressed: () {
-                              print('DEBUG: Check In button pressed for gear ${widget.gear.id}');
                               final note = _noteController.text.isNotEmpty ? _noteController.text : null;
                               widget.onCheckin(widget.gear, note);
                               setState(() {
@@ -241,7 +235,6 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                               vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
                             ),
                             onPressed: () {
-                              print('DEBUG: Check Out button pressed for gear ${widget.gear.id}');
                               final note = _noteController.text.isNotEmpty ? _noteController.text : null;
                               widget.onCheckout(widget.gear, note);
                               setState(() {

@@ -181,20 +181,13 @@ class DashboardController {
     // Clear the cache to ensure we get fresh data
     CacheService().remove('all_gear');
 
-    LogService.debug('DashboardController: Loading gear from database...');
     final gear = await _loadDataWithRetry<List<Gear>>(
       () => DBService.getAllGear(),
       'loading gear',
     );
 
-    // Log the status of each gear item for debugging
-    for (var g in gear) {
-      LogService.debug('DashboardController: Gear ${g.id}: ${g.name} - isOut: ${g.isOut}');
-    }
-
     // Update the gear list
     gearList.value = List<Gear>.from(gear);
-    LogService.debug('DashboardController: Updated gear list with ${gear.length} items');
   }
 
   // Load members from database
@@ -296,7 +289,6 @@ class DashboardController {
 
   // Check out gear to a member
   Future<bool> checkOutGear(Gear gear, Member member, {String? note}) async {
-    LogService.debug('DashboardController: Checking out gear ${gear.id} - ${gear.name} to member ${member.id} - ${member.name}');
 
     if (gear.id == null) {
       errorMessage.value = Constants.gearNotFound;
@@ -346,8 +338,6 @@ class DashboardController {
         retryCondition: RetryService.isRetryableError,
       );
 
-      LogService.debug('DashboardController: Check out result: $success');
-
       if (success) {
         // Update the local gear item to reflect the change immediately
         final updatedGear = gear.copyWith(isOut: true, lastNote: note);
@@ -358,7 +348,6 @@ class DashboardController {
         if (index >= 0) {
           currentList[index] = updatedGear;
           gearList.value = currentList;
-          LogService.debug('DashboardController: Updated gear in local list');
         }
 
         // Reload data
@@ -413,7 +402,6 @@ class DashboardController {
 
   // Check in gear
   Future<bool> checkInGear(Gear gear, {String? note}) async {
-    LogService.debug('DashboardController: Checking in gear ${gear.id} - ${gear.name}');
 
     if (gear.id == null) {
       errorMessage.value = Constants.gearNotFound;
@@ -447,8 +435,6 @@ class DashboardController {
         retryCondition: RetryService.isRetryableError,
       );
 
-      LogService.debug('DashboardController: Check in result: $success');
-
       if (success) {
         // Update the local gear item to reflect the change immediately
         final updatedGear = gear.copyWith(isOut: false, lastNote: note);
@@ -459,7 +445,6 @@ class DashboardController {
         if (index >= 0) {
           currentList[index] = updatedGear;
           gearList.value = currentList;
-          LogService.debug('DashboardController: Updated gear in local list');
         }
 
         // Reload data

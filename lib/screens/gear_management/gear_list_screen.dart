@@ -43,8 +43,6 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Load gear from the database
   Future<void> _loadGear() async {
-    LogService.debug('Loading gear from database...');
-
     // Clear the cache to ensure we get fresh data
     CacheService().remove('all_gear');
 
@@ -55,12 +53,6 @@ class _GearListScreenState extends State<GearListScreen> {
 
     try {
       final gear = await DBService.getAllGear();
-      LogService.debug('Loaded ${gear.length} gear items from database');
-
-      // Log the status of each gear item for debugging
-      for (var g in gear) {
-        LogService.debug('Gear ${g.id}: ${g.name} - isOut: ${g.isOut}');
-      }
 
       if (mounted) {
         setState(() {
@@ -199,10 +191,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Check out gear to a member
   Future<void> _checkoutGear(Gear gear, String? note) async {
-    LogService.debug('Checking out gear: ${gear.id} - ${gear.name}');
-
     if (gear.isOut) {
-      LogService.debug('Gear is already checked out');
       // Show error snackbar
       if (mounted) {
         SnackbarService.showError(
@@ -216,7 +205,6 @@ class _GearListScreenState extends State<GearListScreen> {
     // Get all members
     final members = await DBService.getAllMembers();
     if (members.isEmpty) {
-      LogService.debug('No members available for checkout');
       // Show error snackbar
       if (mounted) {
         SnackbarService.showError(
@@ -272,11 +260,8 @@ class _GearListScreenState extends State<GearListScreen> {
     );
 
     if (selectedMember == null || !mounted) {
-      LogService.debug('No member selected or widget unmounted');
       return;
     }
-
-    LogService.debug('Selected member: ${selectedMember.id} - ${selectedMember.name}');
 
     // Check out gear
     setState(() {
@@ -292,8 +277,6 @@ class _GearListScreenState extends State<GearListScreen> {
         selectedMember.id!,
         note: note?.isNotEmpty == true ? note : null,
       );
-
-      LogService.debug('Check out result: $success');
 
       if (success) {
         // Show success snackbar
@@ -353,10 +336,7 @@ class _GearListScreenState extends State<GearListScreen> {
 
   // Check in gear
   Future<void> _checkinGear(Gear gear, String? note) async {
-    LogService.debug('Checking in gear: ${gear.id} - ${gear.name}');
-
     if (!gear.isOut) {
-      LogService.debug('Gear is already checked in');
       // Show error snackbar
       if (mounted) {
         SnackbarService.showError(
@@ -380,8 +360,6 @@ class _GearListScreenState extends State<GearListScreen> {
         gear.id!,
         note: note?.isNotEmpty == true ? note : null,
       );
-
-      LogService.debug('Check in result: $success');
 
       if (success) {
         // Show success snackbar

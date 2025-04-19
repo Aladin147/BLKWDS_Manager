@@ -17,11 +17,12 @@ class NavigationService {
   // Singleton instance
   static NavigationService _instance = NavigationService._internal();
 
-  // Public accessor for the singleton instance
+  // Public accessor for the singleton instance and setter for testing purposes
   static NavigationService get instance => _instance;
 
-  // Setter for testing purposes
-  static set instance(NavigationService service) {
+  // This setter is used for testing purposes only
+  @visibleForTesting
+  static void setInstanceForTesting(NavigationService service) {
     _instance = service;
   }
 
