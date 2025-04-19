@@ -67,7 +67,8 @@ class TodayBookingWidget extends StatelessWidget {
           ),
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
-          Expanded(
+          SizedBox(
+            height: 200,
             child: FutureBuilder<List<dynamic>>(
               future: _getTodayBookings(),
               builder: (context, snapshot) {

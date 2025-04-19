@@ -3,6 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../widgets/blkwds_widgets.dart';
+import '../../../services/gear_icon_service.dart';
 
 /// GearCardWithNote
 /// A card widget for displaying gear with an integrated note field for check-in/check-out
@@ -61,20 +62,13 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
               children: [
                 // Gear thumbnail or category icon
                 widget.gear.thumbnailPath != null
-                    ? Container(
+                    ? BLKWDSEnhancedImage(
+                        imagePath: widget.gear.thumbnailPath,
                         width: 50,
                         height: 50,
-                        decoration: BoxDecoration(
-                          color: BLKWDSColors.backgroundLight,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            widget.gear.thumbnailPath!,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        borderRadius: 8,
+                        fallbackIcon: GearIconService.getIconForCategory(widget.gear.category),
+                        fallbackIconColor: GearIconService.getColorForCategory(widget.gear.category),
                       )
                     : CategoryIconWidget(
                         category: widget.gear.category,

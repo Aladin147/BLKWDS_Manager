@@ -67,7 +67,8 @@ class RecentActivityWidget extends StatelessWidget {
           const SizedBox(height: BLKWDSConstants.spacingSmall),
 
           // Activity list
-          Expanded(
+          SizedBox(
+            height: 250,
             child: ValueListenableBuilder<List<ActivityLog>>(
               valueListenable: controller.recentActivity,
               builder: (context, activities, _) {

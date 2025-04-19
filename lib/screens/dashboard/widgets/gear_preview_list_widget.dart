@@ -127,7 +127,8 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
             ),
 
           // Gear list
-          Expanded(
+          SizedBox(
+            height: 300,
             child: ValueListenableBuilder<List<Gear>>(
               valueListenable: widget.controller.gearList,
               builder: (context, gearList, _) {

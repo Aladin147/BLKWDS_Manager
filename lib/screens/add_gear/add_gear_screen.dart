@@ -257,12 +257,10 @@ class _AddGearScreenState extends State<AddGearScreen> {
                                   backgroundColor: BLKWDSColors.backgroundMedium,
                                   borderColor: BLKWDSColors.slateGrey.withValues(alpha: 100.0),
                                   child: thumbnailPath != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                                        child: Image.file(
-                                          File(thumbnailPath),
-                                          fit: BoxFit.cover,
-                                        ),
+                                    ? BLKWDSEnhancedImage(
+                                        imagePath: thumbnailPath,
+                                        width: double.infinity,
+                                        height: 200,
                                       )
                                     : Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
