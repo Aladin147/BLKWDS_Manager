@@ -139,7 +139,9 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Updated studio-related screens to use NavigationHelper (FIXED in v0.84.0)
    - ✅ Updated activity log screens to use NavigationHelper (FIXED in v0.84.0)
    - ✅ Updated booking-related screens to use NavigationHelper (FIXED in v0.84.0)
-   - Some screens still need to be updated to use NavigationHelper (IDENTIFIED in v0.84.0)
+   - ✅ Updated member detail screen to use NavigationHelper (FIXED in v0.84.0)
+   - ✅ Updated services to use NavigationHelper (FIXED in v0.84.0)
+   - ✅ Eliminated all direct references to NavigationService (FIXED in v0.84.0)
 
 5. **Error Handling Inconsistencies**
    - ✅ Multiple approaches to error handling (SnackbarService, BLKWDSSnackbar, direct ScaffoldMessenger) (FIXED in v0.72.0)
@@ -354,6 +356,10 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Updated the Activity Log screens to use the NavigationHelper
 - Updated the Today Booking widget to use the NavigationHelper
 - Updated the Booking Detail screens to use the NavigationHelper
+- Updated the Member Detail screen to use the NavigationHelper
+- Updated the ErrorPageService to use NavigationHelper
+- Updated the main App class to use NavigationHelper
+- Eliminated all direct references to NavigationService in the codebase
 
 **Improved:**
 
@@ -361,6 +367,7 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Eliminated potential bugs from inconsistent navigation service access
 - Made the codebase more maintainable and easier to understand
 - Prepared the groundwork for future routing improvements
+- Completed the migration to NavigationHelper across the entire codebase
 
 ### v0.83.0 - Code Cleanup and Optimization (2025-07-07)
 
