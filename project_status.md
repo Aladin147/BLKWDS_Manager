@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc51 (Release Candidate 51)
-**Last Updated:** 2025-07-08
+**Version:** 1.0.0-rc52 (Release Candidate 52)
+**Last Updated:** 2025-07-09
 
 ## Project Phase
 
@@ -182,6 +182,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 23. ~~Remnant references to light mode/theme switching~~ (FIXED in v0.32.0)
 24. Inconsistent card styling across the application (IDENTIFIED in v0.31.0)
 25. Add a persistent home button for quick navigation back to dashboard (IDENTIFIED in v0.74.0)
+26. ~~Gear check-in/check-out not updating UI properly~~ (FIXED in v0.85.0)
 
 ## Next Steps
 
@@ -324,6 +325,22 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.85.0 - Gear Check In/Out Fix (2025-07-09)
+
+**Fixed:**
+
+- Fixed issue with gear check in and check out functionality not updating the UI properly
+- Added a `_refreshGearData` method to the gear detail screen to fetch the latest gear data
+- Updated the check in and check out methods to call `_refreshGearData` after successful operations
+- Implemented a smart refresh mechanism that detects changes in the gear's `isOut` status
+- Added navigation refresh for cases where the gear status has changed
+
+**Improved:**
+
+- Enhanced user experience by providing immediate visual feedback after check in/out operations
+- Improved reliability of the gear management system
+- Eliminated confusion about the current status of gear items
 
 ### v0.84.0 - Routing and Navigation Improvements (2025-07-08)
 
