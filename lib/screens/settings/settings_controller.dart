@@ -14,6 +14,8 @@ import '../../services/error_feedback_level.dart';
 import '../../services/retry_service.dart';
 import '../../services/retry_strategy.dart';
 import '../../services/app_config_service.dart';
+import '../../services/export_service.dart';
+import '../../services/db_service_extension.dart';
 
 /// SettingsController
 /// Handles state management and business logic for the Settings screen
@@ -319,6 +321,72 @@ class SettingsController {
         data.containsKey('bookings');
   }
 
+  // Get all members
+  Future<List<Member>> getMembers() async {
+    return await RetryService.retry<List<Member>>(
+      operation: () => DBService.getAllMembers(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
+  // Get all projects
+  Future<List<Project>> getProjects() async {
+    return await RetryService.retry<List<Project>>(
+      operation: () => DBService.getAllProjects(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
+  // Get all gear
+  Future<List<Gear>> getGear() async {
+    return await RetryService.retry<List<Gear>>(
+      operation: () => DBService.getAllGear(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
+  // Get all bookings
+  Future<List<Booking>> getBookings() async {
+    return await RetryService.retry<List<Booking>>(
+      operation: () => DBService.getAllBookings(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
+  // Get all studios
+  Future<List<Studio>> getStudios() async {
+    return await RetryService.retry<List<Studio>>(
+      operation: () => DBService.getAllStudios(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
+  // Get all activity logs
+  Future<List<ActivityLog>> getActivityLogs() async {
+    return await RetryService.retry<List<ActivityLog>>(
+      operation: () => DBServiceExtension.getAllActivityLogs(),
+      maxAttempts: 3,
+      strategy: RetryStrategy.exponential,
+      initialDelay: const Duration(milliseconds: 500),
+      retryCondition: RetryService.isRetryableError,
+    );
+  }
+
   // Export data to CSV
   Future<List<String>?> exportToCsv() async {
     isLoading.value = true;
@@ -326,63 +394,32 @@ class SettingsController {
     successMessage.value = null;
 
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final List<String> filePaths = [];
+      // Fetch all data
+      final members = await getMembers();
+      final projects = await getProjects();
+      final gear = await getGear();
+      final bookings = await getBookings();
+      final studios = await getStudios();
+      final activityLogs = await getActivityLogs();
 
-      // Export members with retry logic
-      final members = await RetryService.retry<List<Member>>(
-        operation: () => DBService.getAllMembers(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
+      // Use the enhanced ExportService to export all data
+      final filePaths = await ExportService.exportAllData(
+        members: members,
+        projects: projects,
+        gear: gear,
+        bookings: bookings,
+        studios: studios,
+        activityLogs: activityLogs,
       );
-      final membersFile = File('${directory.path}/blkwds_members_$timestamp.csv');
-      final membersData = _convertMembersToCsv(members);
-      await membersFile.writeAsString(membersData);
-      filePaths.add(membersFile.path);
 
-      // Export projects with retry logic
-      final projects = await RetryService.retry<List<Project>>(
-        operation: () => DBService.getAllProjects(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
-      final projectsFile = File('${directory.path}/blkwds_projects_$timestamp.csv');
-      final projectsData = _convertProjectsToCsv(projects);
-      await projectsFile.writeAsString(projectsData);
-      filePaths.add(projectsFile.path);
+      if (filePaths.isEmpty) {
+        errorMessage.value = 'No files were exported';
+        return null;
+      }
 
-      // Export gear with retry logic
-      final gear = await RetryService.retry<List<Gear>>(
-        operation: () => DBService.getAllGear(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
-      final gearFile = File('${directory.path}/blkwds_gear_$timestamp.csv');
-      final gearData = _convertGearToCsv(gear);
-      await gearFile.writeAsString(gearData);
-      filePaths.add(gearFile.path);
-
-      // Export bookings with retry logic
-      final bookings = await RetryService.retry<List<Booking>>(
-        operation: () => DBService.getAllBookings(),
-        maxAttempts: 3,
-        strategy: RetryStrategy.exponential,
-        initialDelay: const Duration(milliseconds: 500),
-        retryCondition: RetryService.isRetryableError,
-      );
-      final bookingsFile = File('${directory.path}/blkwds_bookings_$timestamp.csv');
-      final bookingsData = _convertBookingsToCsv(bookings);
-      await bookingsFile.writeAsString(bookingsData);
-      filePaths.add(bookingsFile.path);
-
-      successMessage.value = 'Data exported to CSV successfully';
+      // Create a summary message
+      final summary = 'Exported ${filePaths.length} files:\n${filePaths.join('\n')}';
+      successMessage.value = summary;
 
       // Show success message if context is available
       if (context != null) {
@@ -413,79 +450,7 @@ class SettingsController {
     }
   }
 
-  // Convert members to CSV
-  String _convertMembersToCsv(List<Member> members) {
-    final buffer = StringBuffer();
 
-    // Header
-    buffer.writeln('ID,Name,Role');
-
-    // Data
-    for (final member in members) {
-      buffer.writeln('${member.id},${_escapeCsv(member.name)},${_escapeCsv(member.role ?? '')}');
-    }
-
-    return buffer.toString();
-  }
-
-  // Convert projects to CSV
-  String _convertProjectsToCsv(List<Project> projects) {
-    final buffer = StringBuffer();
-
-    // Header
-    buffer.writeln('ID,Title,Client,Notes');
-
-    // Data
-    for (final project in projects) {
-      buffer.writeln('${project.id},${_escapeCsv(project.title)},${_escapeCsv(project.client ?? '')},${_escapeCsv(project.notes ?? '')}');
-    }
-
-    return buffer.toString();
-  }
-
-  // Convert gear to CSV
-  String _convertGearToCsv(List<Gear> gear) {
-    final buffer = StringBuffer();
-
-    // Header
-    buffer.writeln('ID,Name,Category,Description,Serial Number,Purchase Date,Is Out');
-
-    // Data
-    for (final item in gear) {
-      final purchaseDate = item.purchaseDate != null
-          ? item.purchaseDate!.toIso8601String()
-          : '';
-
-      buffer.writeln('${item.id},${_escapeCsv(item.name)},${_escapeCsv(item.category)},${_escapeCsv(item.description ?? '')},${_escapeCsv(item.serialNumber ?? '')},$purchaseDate,${item.isOut}');
-    }
-
-    return buffer.toString();
-  }
-
-  // Convert bookings to CSV
-  String _convertBookingsToCsv(List<Booking> bookings) {
-    final buffer = StringBuffer();
-
-    // Header
-    buffer.writeln('ID,Project ID,Start Date,End Date,Recording Studio,Production Studio,Gear IDs');
-
-    // Data
-    for (final booking in bookings) {
-      final gearIds = booking.gearIds.join(';');
-
-      buffer.writeln('${booking.id},${booking.projectId},${booking.startDate.toIso8601String()},${booking.endDate.toIso8601String()},${booking.isRecordingStudio},${booking.isProductionStudio},$gearIds');
-    }
-
-    return buffer.toString();
-  }
-
-  // Escape CSV values
-  String _escapeCsv(String value) {
-    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
-      return '"${value.replaceAll('"', '""')}"';
-    }
-    return value;
-  }
 
   // Reset app data
   Future<bool> resetAppData() async {

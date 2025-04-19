@@ -15,8 +15,16 @@ class PreferencesService {
 
   // Theme mode methods removed - app uses dark mode only
 
+  /// Function type for getBookingFilterPresets implementation
+  static Future<List<SavedFilterPreset>> Function() getBookingFilterPresetsImpl = _getBookingFilterPresets;
+
   /// Get booking filter presets
   static Future<List<SavedFilterPreset>> getBookingFilterPresets() async {
+    return getBookingFilterPresetsImpl();
+  }
+
+  /// Default implementation of getBookingFilterPresets
+  static Future<List<SavedFilterPreset>> _getBookingFilterPresets() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final presetsJson = prefs.getString(_bookingFilterPresetsKey);
@@ -33,8 +41,16 @@ class PreferencesService {
     }
   }
 
+  /// Function type for saveBookingFilterPresets implementation
+  static Future<bool> Function(List<SavedFilterPreset>) saveBookingFilterPresetsImpl = _saveBookingFilterPresets;
+
   /// Save booking filter presets
   static Future<bool> saveBookingFilterPresets(List<SavedFilterPreset> presets) async {
+    return saveBookingFilterPresetsImpl(presets);
+  }
+
+  /// Default implementation of saveBookingFilterPresets
+  static Future<bool> _saveBookingFilterPresets(List<SavedFilterPreset> presets) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final presetsJson = jsonEncode(presets.map((p) => p.toJson()).toList());

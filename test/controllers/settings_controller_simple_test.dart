@@ -37,10 +37,8 @@ void main() {
     mockDirectory = MockDirectory();
 
     // Set up the controller
-    controller = SettingsController(
-      dbService: mockDBService,
-      context: mockContext,
-    );
+    controller = SettingsController();
+    controller.setContext(mockContext);
 
     // Mock the File constructor
     when(File(any)).thenReturn(mockFile);

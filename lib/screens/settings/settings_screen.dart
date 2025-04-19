@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:file_selector/file_selector.dart';
 
+import '../../models/models.dart';
+import '../../services/export_service.dart';
+import '../../services/db_service_extension.dart';
+
 import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
 import '../../theme/blkwds_animations.dart';
@@ -12,6 +16,7 @@ import '../../widgets/blkwds_widgets.dart';
 import '../../examples/error_handling_example.dart';
 import '../../examples/recovery_example.dart';
 import '../../examples/error_analytics_example.dart';
+import 'data_export_dialog.dart';
 // Migration imports removed - migration is complete
 import 'settings_controller.dart';
 import '../../widgets/dialogs/data_seeding_dialog.dart';
@@ -86,9 +91,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // Handle export to CSV
   Future<void> _handleExportToCsv() async {
-    final filePaths = await _controller.exportToCsv();
-    if (filePaths != null && filePaths.isNotEmpty) {
-      _showSnackBar('CSV files exported to: ${filePaths.first.split('/').last.split('_').first}');
+    // Show export options dialog
+    final exportOptions = await showDialog<Map<String, bool>>(
+      context: context,
+      builder: (context) => const DataExportDialog(),
+    );
+
+    // If dialog was cancelled or no options selected
+    if (exportOptions == null || !exportOptions.values.contains(true)) {
+      return;
+    }
+
+    setState(() {
+      _controller.isLoading.value = true;
+    });
+
+    try {
+      // Get data based on selected options
+      final members = exportOptions['members'] == true
+          ? await _controller.getMembers()
+          : <Member>[];
+
+      final projects = exportOptions['projects'] == true
+          ? await _controller.getProjects()
+          : <Project>[];
+
+      final gear = exportOptions['gear'] == true
+          ? await _controller.getGear()
+          : <Gear>[];
+
+      final bookings = exportOptions['bookings'] == true
+          ? await _controller.getBookings()
+          : <Booking>[];
+
+      final studios = exportOptions['studios'] == true
+          ? await _controller.getStudios()
+          : <Studio>[];
+
+      final activityLogs = exportOptions['activityLogs'] == true
+          ? await _controller.getActivityLogs()
+          : <ActivityLog>[];
+
+      // Export selected data
+      final filePaths = await ExportService.exportAllData(
+        members: members,
+        projects: projects,
+        gear: gear,
+        bookings: bookings,
+        studios: studios,
+        activityLogs: activityLogs,
+      );
+
+      if (filePaths.isNotEmpty) {
+        _showSnackBar('Exported ${filePaths.length} CSV files');
+      } else {
+        _showSnackBar('No files were exported');
+      }
+    } catch (e) {
+      _showSnackBar('Error exporting data: ${e.toString()}');
+    } finally {
+      setState(() {
+        _controller.isLoading.value = false;
+      });
     }
   }
 

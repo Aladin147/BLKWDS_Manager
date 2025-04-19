@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../utils/performance_monitor.dart';
 import '../../utils/database_performance_tester.dart';
 import '../../utils/ui_performance_tester.dart';
 import '../../utils/memory_leak_detector.dart';
@@ -8,27 +7,27 @@ import '../../widgets/blkwds_scaffold.dart';
 import '../../widgets/blkwds_button.dart';
 import '../../widgets/blkwds_card.dart';
 import '../../theme/blkwds_colors.dart';
-import '../../theme/blkwds_text_styles.dart';
 import '../../theme/blkwds_constants.dart';
+import '../../theme/blkwds_typography.dart';
 
 /// PerformanceTestScreen
 /// A screen for running performance tests
 class PerformanceTestScreen extends StatefulWidget {
-  const PerformanceTestScreen({Key? key}) : super(key: key);
+  const PerformanceTestScreen({super.key});
 
   @override
-  _PerformanceTestScreenState createState() => _PerformanceTestScreenState();
+  PerformanceTestScreenState createState() => PerformanceTestScreenState();
 }
 
-class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
+class PerformanceTestScreenState extends State<PerformanceTestScreen> {
   final DatabasePerformanceTester _databaseTester = DatabasePerformanceTester();
   final UIPerformanceTester _uiTester = UIPerformanceTester();
   final MemoryLeakDetector _memoryLeakDetector = MemoryLeakDetector();
-  
+
   bool _isRunningTests = false;
   String _testResults = '';
   String _currentTest = '';
-  
+
   @override
   Widget build(BuildContext context) {
     return BLKWDSScaffold(
@@ -48,7 +47,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       ),
     );
   }
-  
+
   Widget _buildTestControls() {
     return BLKWDSCard(
       child: Padding(
@@ -58,21 +57,21 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
           children: [
             Text(
               'Performance Tests',
-              style: BLKWDSTextStyles.heading2,
+              style: BLKWDSTypography.titleLarge,
             ),
             SizedBox(height: BLKWDSConstants.defaultPadding),
             Text(
               'Run performance tests to measure the performance of the application. '
               'These tests will measure startup time, UI responsiveness, database performance, '
               'and memory usage.',
-              style: BLKWDSTextStyles.body,
+              style: BLKWDSTypography.bodyMedium,
             ),
             SizedBox(height: BLKWDSConstants.defaultPadding),
             Row(
               children: [
                 Expanded(
                   child: BLKWDSButton(
-                    text: 'Run Database Tests',
+                    label: 'Run Database Tests',
                     onPressed: _isRunningTests ? null : _runDatabaseTests,
                     isLoading: _isRunningTests && _currentTest == 'database',
                   ),
@@ -80,7 +79,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                 SizedBox(width: BLKWDSConstants.defaultPadding),
                 Expanded(
                   child: BLKWDSButton(
-                    text: 'Run UI Tests',
+                    label: 'Run UI Tests',
                     onPressed: _isRunningTests ? null : _runUITests,
                     isLoading: _isRunningTests && _currentTest == 'ui',
                   ),
@@ -92,7 +91,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
               children: [
                 Expanded(
                   child: BLKWDSButton(
-                    text: 'Run Memory Tests',
+                    label: 'Run Memory Tests',
                     onPressed: _isRunningTests ? null : _runMemoryTests,
                     isLoading: _isRunningTests && _currentTest == 'memory',
                   ),
@@ -100,10 +99,10 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                 SizedBox(width: BLKWDSConstants.defaultPadding),
                 Expanded(
                   child: BLKWDSButton(
-                    text: 'Run All Tests',
+                    label: 'Run All Tests',
                     onPressed: _isRunningTests ? null : _runAllTests,
                     isLoading: _isRunningTests && _currentTest == 'all',
-                    buttonType: BLKWDSButtonType.primary,
+                    type: BLKWDSButtonType.primary,
                   ),
                 ),
               ],
@@ -113,12 +112,12 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       ),
     );
   }
-  
+
   Widget _buildTestStatus() {
     if (!_isRunningTests && _testResults.isEmpty) {
       return SizedBox.shrink();
     }
-    
+
     return BLKWDSCard(
       child: Padding(
         padding: EdgeInsets.all(BLKWDSConstants.defaultPadding),
@@ -127,7 +126,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
           children: [
             Text(
               'Test Status',
-              style: BLKWDSTextStyles.heading2,
+              style: BLKWDSTypography.titleLarge,
             ),
             SizedBox(height: BLKWDSConstants.defaultPadding),
             if (_isRunningTests)
@@ -136,7 +135,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                 children: [
                   Text(
                     'Running ${_getTestName(_currentTest)} tests...',
-                    style: BLKWDSTextStyles.body,
+                    style: BLKWDSTypography.bodyMedium,
                   ),
                   SizedBox(height: BLKWDSConstants.defaultPadding),
                   LinearProgressIndicator(
@@ -148,7 +147,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
             else
               Text(
                 'Tests completed',
-                style: BLKWDSTextStyles.body.copyWith(
+                style: BLKWDSTypography.bodyMedium.copyWith(
                   color: BLKWDSColors.success,
                 ),
               ),
@@ -157,12 +156,12 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       ),
     );
   }
-  
+
   Widget _buildTestResults() {
     if (_testResults.isEmpty) {
       return SizedBox.shrink();
     }
-    
+
     return BLKWDSCard(
       child: Padding(
         padding: EdgeInsets.all(BLKWDSConstants.defaultPadding),
@@ -171,7 +170,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
           children: [
             Text(
               'Test Results',
-              style: BLKWDSTextStyles.heading2,
+              style: BLKWDSTypography.titleLarge,
             ),
             SizedBox(height: BLKWDSConstants.defaultPadding),
             Container(
@@ -192,32 +191,32 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
             ),
             SizedBox(height: BLKWDSConstants.defaultPadding),
             BLKWDSButton(
-              text: 'Export Results',
+              label: 'Export Results',
               onPressed: _exportResults,
-              buttonType: BLKWDSButtonType.secondary,
+              type: BLKWDSButtonType.secondary,
             ),
           ],
         ),
       ),
     );
   }
-  
+
   Future<void> _runDatabaseTests() async {
     setState(() {
       _isRunningTests = true;
       _currentTest = 'database';
       _testResults = '';
     });
-    
+
     try {
       final results = await _databaseTester.runAllTests();
-      
+
       setState(() {
         _testResults = results;
       });
     } catch (e, stackTrace) {
       LogService.error('Error running database tests', e, stackTrace);
-      
+
       setState(() {
         _testResults = 'Error running database tests: $e';
       });
@@ -227,23 +226,28 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       });
     }
   }
-  
+
   Future<void> _runUITests() async {
+    if (!mounted) return;
+
     setState(() {
       _isRunningTests = true;
       _currentTest = 'ui';
       _testResults = '';
     });
-    
+
     try {
-      final results = await _uiTester.runAllTests(context);
-      
+      final results = await _uiTester.runAllTests();
+
+      // Check if widget is still mounted
+      if (!mounted) return;
+
       setState(() {
         _testResults = results;
       });
     } catch (e, stackTrace) {
       LogService.error('Error running UI tests', e, stackTrace);
-      
+
       setState(() {
         _testResults = 'Error running UI tests: $e';
       });
@@ -253,23 +257,28 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       });
     }
   }
-  
+
   Future<void> _runMemoryTests() async {
+    if (!mounted) return;
+
     setState(() {
       _isRunningTests = true;
       _currentTest = 'memory';
       _testResults = '';
     });
-    
+
     try {
-      final results = await _memoryLeakDetector.runAllTests(context);
-      
+      final results = await _memoryLeakDetector.runAllTests();
+
+      // Check if widget is still mounted
+      if (!mounted) return;
+
       setState(() {
         _testResults = results;
       });
     } catch (e, stackTrace) {
       LogService.error('Error running memory tests', e, stackTrace);
-      
+
       setState(() {
         _testResults = 'Error running memory tests: $e';
       });
@@ -279,33 +288,47 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       });
     }
   }
-  
+
   Future<void> _runAllTests() async {
+    if (!mounted) return;
+
     setState(() {
       _isRunningTests = true;
       _currentTest = 'all';
       _testResults = '';
     });
-    
+
     try {
       // Run database tests
+      if (!mounted) return;
       setState(() {
         _currentTest = 'database';
       });
       final databaseResults = await _databaseTester.runAllTests();
-      
+
+      // Check if widget is still mounted
+      if (!mounted) return;
+
       // Run UI tests
       setState(() {
         _currentTest = 'ui';
       });
-      final uiResults = await _uiTester.runAllTests(context);
-      
+
+      final uiResults = await _uiTester.runAllTests();
+
+      // Check if widget is still mounted
+      if (!mounted) return;
+
       // Run memory tests
       setState(() {
         _currentTest = 'memory';
       });
-      final memoryResults = await _memoryLeakDetector.runAllTests(context);
-      
+
+      final memoryResults = await _memoryLeakDetector.runAllTests();
+
+      // Check if widget is still mounted
+      if (!mounted) return;
+
       // Combine results
       final combinedResults = '''
 === ALL PERFORMANCE TESTS ===
@@ -321,13 +344,13 @@ $memoryResults
 
 =========================
 ''';
-      
+
       setState(() {
         _testResults = combinedResults;
       });
     } catch (e, stackTrace) {
       LogService.error('Error running all tests', e, stackTrace);
-      
+
       setState(() {
         _testResults = 'Error running all tests: $e';
       });
@@ -338,11 +361,11 @@ $memoryResults
       });
     }
   }
-  
+
   void _exportResults() {
     // In a real app, this would export the results to a file
     LogService.debug('Exporting test results');
-    
+
     // Show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -351,7 +374,7 @@ $memoryResults
       ),
     );
   }
-  
+
   String _getTestName(String testType) {
     switch (testType) {
       case 'database':
@@ -365,5 +388,12 @@ $memoryResults
       default:
         return '';
     }
+  }
+
+  @override
+  void dispose() {
+    // Cancel any ongoing operations
+    _isRunningTests = false;
+    super.dispose();
   }
 }

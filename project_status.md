@@ -4,8 +4,8 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc58 (Release Candidate 58)
-**Last Updated:** 2025-07-12
+**Version:** 1.0.0-rc92 (Release Candidate 92)
+**Last Updated:** 2025-07-13
 
 ## Project Phase
 
@@ -45,7 +45,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - [x] Fix non-functional filter chips in Gear Preview List
    - [x] Hide debug menu in production builds
    - [x] Standardize button styles across the app
-   - [ ] Verify and complete Export to CSV functionality
+   - [x] Verify and complete Export to CSV functionality
    - [ ] Improve dashboard layout responsiveness
    - [x] Standardize navigation patterns
    - [ ] Update placeholder data in Settings
@@ -120,7 +120,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Dashboard widget tests fixed (FIXED in v0.83.0)
    - Minimal test coverage across unit, widget, and integration tests (IDENTIFIED in v0.50.0)
    - Some critical components like services and models lack tests (IDENTIFIED in v0.50.0)
-   - No performance or stress tests (IDENTIFIED in v0.50.0)
+   - ✅ Performance and stress tests implemented (FIXED in v0.92.0)
    - Integration test compilation errors (IDENTIFIED in v0.71.0)
 
 3. **Non-functional UI Elements**
@@ -201,7 +201,7 @@ The following plan outlines the remaining tasks needed to prepare the applicatio
 
 ### 2. UI/UX Finalization
 
-1. Verify and complete Export to CSV functionality
+1. ~~Verify and complete Export to CSV functionality~~ (COMPLETED)
 2. Improve dashboard layout responsiveness
 3. Update placeholder data in Settings
 4. Clean up unused controllers and adapters
@@ -369,6 +369,31 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.92.0 - Performance Tests and Export Functionality (2025-07-13)
+
+**Added:**
+
+- Fixed performance test screen to prevent setState() after dispose() errors
+- Updated UI and memory testers to not require a BuildContext
+- Fixed database seeder to avoid constraint violations during performance tests
+- Added proper error handling to prevent crashes during tests
+- Added a dispose method to the performance test screen to properly clean up resources
+- Verified and completed Export to CSV functionality
+
+**Fixed:**
+
+- Fixed issues with the performance test screen
+- Fixed database constraint violations during performance tests
+- Fixed memory leaks in performance tests
+- Ensured all tests run correctly without errors
+
+**Improved:**
+
+- Enhanced error handling in performance tests
+- Improved resource cleanup in performance test screen
+- Updated documentation to reflect recent progress
+- Marked Export to CSV functionality as complete in project status
 
 ### v0.91.0 - Database Caching Optimization (2025-07-12)
 

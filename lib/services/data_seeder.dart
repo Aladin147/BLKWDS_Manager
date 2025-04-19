@@ -501,6 +501,51 @@ class DataSeeder {
     if (config.randomizationType == DataSeederRandomizationType.fixed) {
       // Use fixed data
       final now = DateTime.now();
+
+      // Make sure we use unique gear IDs for each booking to avoid constraint violations
+      final availableGearIds = List<int>.from(gearIds);
+
+      // First booking gear
+      final booking1GearIds = <int>[];
+      if (availableGearIds.isNotEmpty) {
+        booking1GearIds.add(availableGearIds.removeAt(0));
+      }
+      if (availableGearIds.isNotEmpty && availableGearIds.length > 2) {
+        booking1GearIds.add(availableGearIds.removeAt(2));
+      }
+      if (availableGearIds.isNotEmpty && availableGearIds.length > 4) {
+        booking1GearIds.add(availableGearIds.removeAt(4));
+      }
+
+      // Second booking gear
+      final booking2GearIds = <int>[];
+      if (availableGearIds.isNotEmpty) {
+        booking2GearIds.add(availableGearIds.removeAt(0));
+      }
+      if (availableGearIds.isNotEmpty && availableGearIds.length > 2) {
+        booking2GearIds.add(availableGearIds.removeAt(2));
+      }
+
+      // Third booking gear
+      final booking3GearIds = <int>[];
+      if (availableGearIds.isNotEmpty) {
+        booking3GearIds.add(availableGearIds.removeAt(0));
+      }
+      if (availableGearIds.isNotEmpty) {
+        booking3GearIds.add(availableGearIds.removeAt(0));
+      }
+
+      // Create member assignments that won't cause conflicts
+      final booking1Assignments = <int, int>{};
+      if (memberIds.isNotEmpty && booking1GearIds.isNotEmpty) {
+        booking1Assignments[booking1GearIds[0]] = memberIds[0];
+      }
+
+      final booking2Assignments = <int, int>{};
+      if (memberIds.length > 1 && booking2GearIds.isNotEmpty) {
+        booking2Assignments[booking2GearIds[0]] = memberIds[1];
+      }
+
       final fixedBookings = [
         Booking(
           projectId: projectIds.isNotEmpty ? projectIds[0] : -1,
@@ -508,16 +553,8 @@ class DataSeeder {
           startDate: DateTime(now.year, now.month, now.day + 3, 9),
           endDate: DateTime(now.year, now.month, now.day + 3, 18),
           studioId: studioIds.isNotEmpty ? studioIds[0] : null,
-          gearIds: gearIds.isNotEmpty ? [
-            gearIds[0],
-            gearIds.length > 2 ? gearIds[2] : gearIds[0],
-            gearIds.length > 4 ? gearIds[4] : gearIds[0],
-            gearIds.length > 5 ? gearIds[5] : gearIds[0]
-          ] : [],
-          assignedGearToMember: memberIds.isNotEmpty ? {
-            gearIds[0]: memberIds.length > 1 ? memberIds[1] : memberIds[0],
-            gearIds.length > 2 ? gearIds[2] : gearIds[0]: memberIds.length > 1 ? memberIds[1] : memberIds[0],
-          } : null,
+          gearIds: booking1GearIds,
+          assignedGearToMember: booking1Assignments.isNotEmpty ? booking1Assignments : null,
         ),
         Booking(
           projectId: projectIds.length > 1 ? projectIds[1] : (projectIds.isNotEmpty ? projectIds[0] : -1),
@@ -525,15 +562,8 @@ class DataSeeder {
           startDate: DateTime(now.year, now.month, now.day + 5, 10),
           endDate: DateTime(now.year, now.month, now.day + 6, 16),
           studioId: studioIds.length > 1 ? studioIds[1] : (studioIds.isNotEmpty ? studioIds[0] : null),
-          gearIds: gearIds.isNotEmpty ? [
-            gearIds.length > 1 ? gearIds[1] : gearIds[0],
-            gearIds.length > 3 ? gearIds[3] : gearIds[0],
-            gearIds.length > 6 ? gearIds[6] : gearIds[0]
-          ] : [],
-          assignedGearToMember: memberIds.isNotEmpty ? {
-            gearIds.length > 3 ? gearIds[3] : gearIds[0]: memberIds.length > 2 ? memberIds[2] : memberIds[0],
-            gearIds.length > 6 ? gearIds[6] : gearIds[0]: memberIds.length > 2 ? memberIds[2] : memberIds[0],
-          } : null,
+          gearIds: booking2GearIds,
+          assignedGearToMember: booking2Assignments.isNotEmpty ? booking2Assignments : null,
         ),
         Booking(
           projectId: projectIds.length > 2 ? projectIds[2] : (projectIds.isNotEmpty ? projectIds[0] : -1),
@@ -541,11 +571,7 @@ class DataSeeder {
           startDate: DateTime(now.year, now.month, now.day + 10, 13),
           endDate: DateTime(now.year, now.month, now.day + 10, 17),
           studioId: studioIds.length > 1 ? studioIds[1] : (studioIds.isNotEmpty ? studioIds[0] : null),
-          gearIds: gearIds.isNotEmpty ? [
-            gearIds.length > 3 ? gearIds[3] : gearIds[0],
-            gearIds.length > 6 ? gearIds[6] : gearIds[0],
-            gearIds.length > 7 ? gearIds[7] : gearIds[0]
-          ] : [],
+          gearIds: booking3GearIds,
         ),
       ];
 
@@ -554,22 +580,48 @@ class DataSeeder {
 
       // Insert bookings
       for (final booking in bookings) {
-        final id = await DBService.insertBooking(booking);
-        bookingIds.add(id);
+        // Skip bookings with no gear
+        if (booking.gearIds.isEmpty) continue;
+
+        try {
+          final id = await DBService.insertBooking(booking);
+          bookingIds.add(id);
+        } catch (e) {
+          LogService.error('Error inserting booking: $e');
+          // Continue with the next booking
+        }
       }
     } else {
-      // Use randomized data
+      // Use randomized data - ensure each booking has unique gear
+      final usedGearIds = <int>{};
+
       for (int i = 0; i < bookingCount; i++) {
-        final booking = DataGenerator.randomBooking(
-          projectIds: projectIds,
-          gearIds: gearIds,
-          memberIds: memberIds,
-          studioIds: studioIds,
-          includePastData: config.includePastData,
-          includeFutureData: config.includeFutureData,
-        );
-        final id = await DBService.insertBooking(booking);
-        bookingIds.add(id);
+        // Filter out already used gear IDs
+        final availableGearIds = gearIds.where((id) => !usedGearIds.contains(id)).toList();
+
+        // If no more gear is available, break the loop
+        if (availableGearIds.isEmpty) break;
+
+        try {
+          // Generate a booking with unique gear
+          final booking = DataGenerator.randomBooking(
+            projectIds: projectIds,
+            gearIds: availableGearIds,
+            memberIds: memberIds,
+            studioIds: studioIds,
+            includePastData: config.includePastData,
+            includeFutureData: config.includeFutureData,
+          );
+
+          // Mark these gear IDs as used
+          usedGearIds.addAll(booking.gearIds);
+
+          final id = await DBService.insertBooking(booking);
+          bookingIds.add(id);
+        } catch (e) {
+          LogService.error('Error inserting randomized booking: $e');
+          // Continue with the next booking
+        }
       }
     }
 

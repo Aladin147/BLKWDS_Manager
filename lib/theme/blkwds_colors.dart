@@ -125,4 +125,9 @@ class BLKWDSColors {
   // Focus and Selection Colors
   static const Color focusRing = accentTeal;
   static const Color selection = Color(0xFF2C5282);
+
+  // Additional Colors for Backward Compatibility
+  static const Color primary = blkwdsGreen;
+  static const Color success = successGreen;
+  static const Color textLight = textPrimary;
 }

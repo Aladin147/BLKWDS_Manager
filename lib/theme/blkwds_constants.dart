@@ -17,6 +17,7 @@ class BLKWDSConstants {
   // Legacy spacing names (for backward compatibility)
   static const double spacingExtraSmall = spacingXSmall;
   static const double spacingExtraLarge = spacingXLarge;
+  static const double defaultPadding = spacingMedium;
 
   // Content Padding
   static const double contentPaddingXSmall = spacingXSmall;
