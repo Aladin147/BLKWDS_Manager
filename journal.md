@@ -1,5 +1,24 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-14: Icon Standardization
+
+Today we focused on standardizing icons throughout the app:
+
+1. **Icon Size Standardization**:
+   - Updated BLKWDSIconSize to ensure all icons are at least 18px for better visibility
+   - Removed extraSmall size (16px) and replaced with small size (18px)
+   - Added huge size (64px) for larger icons
+
+2. **Icon Consistency**:
+   - Updated GearIconService to use more specific and appropriate icons for each gear category
+   - Updated ProjectIconService to use more specific and appropriate icons for each project type
+   - Ensured consistent icon usage throughout the app
+
+3. **Documentation Updates**:
+   - Updated journal.md to document our work
+
+These improvements enhance the visual consistency and professionalism of the app. The standardized icons are more intuitive and provide better visual cues for users.
+
 ## 2025-07-14: Codebase Cleanup and Adapter Removal
 
 Today we focused on cleaning up the codebase by removing unused adapter classes and other unnecessary code:

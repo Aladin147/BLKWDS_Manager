@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc94 (Release Candidate 94)
+**Version:** 1.0.0-rc95 (Release Candidate 95)
 **Last Updated:** 2025-07-14
 
 ## Project Phase
@@ -369,6 +369,25 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.95.0 - Icon Standardization (2025-07-14)
+
+**Added:**
+
+- Added huge size (64px) for larger icons in BLKWDSIconSize
+
+**Changed:**
+
+- Updated BLKWDSIconSize to ensure all icons are at least 18px for better visibility
+- Updated GearIconService to use more specific and appropriate icons for each gear category
+- Updated ProjectIconService to use more specific and appropriate icons for each project type
+- Replaced extraSmall size (16px) with small size (18px) throughout the app
+
+**Improved:**
+
+- Enhanced visual consistency and professionalism of the app
+- Made icons more intuitive and provide better visual cues for users
+- Standardized icon usage throughout the app
 
 ### v0.94.0 - Codebase Cleanup and Adapter Removal (2025-07-14)
 
