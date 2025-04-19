@@ -133,6 +133,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Inconsistent navigation service access (FIXED in v0.84.0)
    - ✅ Standardized navigation patterns (FIXED in v0.84.0)
    - ✅ Updated key screens to use NavigationHelper (FIXED in v0.84.0)
+   - ✅ Updated gear-related screens to use NavigationHelper (FIXED in v0.84.0)
    - Some screens still need to be updated to use NavigationHelper (IDENTIFIED in v0.84.0)
 
 5. **Error Handling Inconsistencies**
@@ -324,6 +325,9 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Implemented a new `NavigationHelper` class to standardize navigation service access
 - Centralized all navigation methods in one place
 - Created consistent navigation patterns across the app
+- Added support for gear-related navigation methods
+- Added support for booking detail navigation
+- Added support for direct widget navigation
 
 **Fixed:**
 
@@ -333,6 +337,8 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 - Updated the Calendar screen to use the NavigationHelper for all navigation actions
 - Updated the Booking Panel screens to use the NavigationHelper
 - Updated the Settings screen to use the NavigationHelper
+- Updated the Gear Management screens to use the NavigationHelper
+- Updated the Add Gear screen to use the NavigationHelper
 
 **Improved:**
 
