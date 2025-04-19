@@ -492,7 +492,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
           // Initialize the controller
           controller.initialize().then((_) {
             // Navigate to booking detail
-            NavigationHelper.service.navigateToBookingDetail(booking, controller);
+            NavigationHelper.navigateToBookingDetail(booking, controller);
           });
         },
       ),

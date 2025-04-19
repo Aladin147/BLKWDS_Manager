@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
@@ -179,13 +180,13 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
         actions: [
           BLKWDSButton(
             label: 'Cancel',
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => NavigationHelper.goBack(result: false),
             type: BLKWDSButtonType.secondary,
             isSmall: true,
           ),
           BLKWDSButton(
             label: 'Delete',
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => NavigationHelper.goBack(result: true),
             type: BLKWDSButtonType.danger,
             isSmall: true,
           ),
@@ -212,7 +213,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> with SingleTi
           );
 
           // Navigate back
-          Navigator.pop(context, true);
+          NavigationHelper.goBack(result: true);
         }
       } else {
         setState(() {

@@ -5,7 +5,7 @@ import '../../../theme/blkwds_constants.dart';
 
 import '../../../widgets/blkwds_widgets.dart';
 
-import '../../../services/navigation_service.dart';
+import '../../../services/navigation_helper.dart';
 
 import '../dashboard_controller.dart';
 
@@ -52,7 +52,7 @@ class TodayBookingWidget extends StatelessWidget {
                 label: 'View All',
                 onPressed: () {
                   // Navigate to booking panel with today's filter
-                  NavigationService().navigateToBookingPanel(
+                  NavigationHelper.navigateToBookingPanel(
                     filter: 'today',
                   );
                 },

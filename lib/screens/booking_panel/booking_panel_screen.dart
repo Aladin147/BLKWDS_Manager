@@ -288,7 +288,7 @@ class _BookingPanelScreenState extends State<BookingPanelScreen> {
 
   // Navigate to booking detail screen
   void _navigateToBookingDetail(dynamic booking) async {
-    final result = await NavigationHelper.service.navigateToBookingDetail(
+    final result = await NavigationHelper.navigateToBookingDetail(
       booking,
       _controller,
     );

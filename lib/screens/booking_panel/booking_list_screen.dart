@@ -191,7 +191,7 @@ class _BookingListScreenState extends State<BookingListScreen> {
 
   // Navigate to booking detail
   void _navigateToBookingDetail(Booking booking) async {
-    final result = await NavigationHelper.service.navigateToBookingDetailFromList(
+    final result = await NavigationHelper.navigateToBookingDetailFromList(
       booking,
       widget.controller,
     );
