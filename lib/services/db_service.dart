@@ -8,6 +8,7 @@ import 'app_config_service.dart';
 import 'schema_definitions.dart';
 import 'database/migration_manager.dart';
 import 'database/db_service_wrapper.dart';
+import 'database/errors/errors.dart';
 import 'cache_service.dart';
 
 /// DBService
@@ -157,30 +158,33 @@ class DBService {
   /// Store the current database version in the settings table
   static Future<void> _storeDbVersion(Database db, int version) async {
     try {
-      // Check if the settings table exists
-      final tableResult = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='settings'");
-      if (tableResult.isEmpty) {
-        LogService.info('Settings table does not exist, creating it');
-        await db.execute('''
-          CREATE TABLE IF NOT EXISTS settings (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key TEXT NOT NULL UNIQUE,
-            value TEXT NOT NULL
-          )
-        ''');
-      }
+      // Use transaction for atomicity
+      await db.transaction((txn) async {
+        // Check if the settings table exists
+        final tableResult = await txn.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='settings'");
+        if (tableResult.isEmpty) {
+          LogService.info('Settings table does not exist, creating it');
+          await txn.execute('''
+            CREATE TABLE IF NOT EXISTS settings (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              key TEXT NOT NULL UNIQUE,
+              value TEXT NOT NULL
+            )
+          ''');
+        }
 
-      // Delete any existing version entry
-      await db.delete(
-        'settings',
-        where: 'key = ?',
-        whereArgs: ['database_version'],
-      );
+        // Delete any existing version entry
+        await txn.delete(
+          'settings',
+          where: 'key = ?',
+          whereArgs: ['database_version'],
+        );
 
-      // Insert the new version
-      await db.insert('settings', {
-        'key': 'database_version',
-        'value': version.toString(),
+        // Insert the new version
+        await txn.insert('settings', {
+          'key': 'database_version',
+          'value': version.toString(),
+        });
       });
 
       LogService.info('Stored database version $version in settings table');
@@ -358,11 +362,16 @@ class DBService {
     if (member.role != null) memberMap['role'] = member.role;
     if (member.id != null) memberMap['id'] = member.id;
 
-    final result = await DBServiceWrapper.insert(
+    // Use transaction with error handling and retry
+    final result = await DBServiceWrapper.executeTransaction(
       db,
-      'member',
-      memberMap,
-      operationName: 'insertMember',
+      (txn) async {
+        // Insert member
+        final memberId = await txn.insert('member', memberMap);
+        return memberId;
+      },
+      'insertMember',
+      table: 'member',
     );
 
     // Invalidate the member cache
@@ -427,13 +436,21 @@ class DBService {
     // Add optional fields if they exist
     if (member.role != null) memberMap['role'] = member.role;
 
-    final result = await DBServiceWrapper.update(
+    // Use transaction with error handling and retry
+    final result = await DBServiceWrapper.executeTransaction(
       db,
-      'member',
-      memberMap,
-      where: 'id = ?',
-      whereArgs: [member.id],
-      operationName: 'updateMember',
+      (txn) async {
+        // Update member
+        await txn.update(
+          'member',
+          memberMap,
+          where: 'id = ?',
+          whereArgs: [member.id],
+        );
+        return member.id!;
+      },
+      'updateMember',
+      table: 'member',
     );
 
     // Invalidate the member cache
@@ -445,12 +462,41 @@ class DBService {
   /// Delete a member
   static Future<int> deleteMember(int id) async {
     final db = await database;
-    final result = await DBServiceWrapper.delete(
+
+    // Use transaction with error handling and retry
+    final result = await DBServiceWrapper.executeTransaction(
       db,
-      'member',
-      where: 'id = ?',
-      whereArgs: [id],
-      operationName: 'deleteMember',
+      (txn) async {
+        // Delete member from project_member table first
+        await txn.delete(
+          'project_member',
+          where: 'memberId = ?',
+          whereArgs: [id],
+        );
+
+        // Delete member from booking_gear table
+        await txn.delete(
+          'booking_gear',
+          where: 'assignedMemberId = ?',
+          whereArgs: [id],
+        );
+
+        // Delete member from activity_log table
+        await txn.delete(
+          'activity_log',
+          where: 'memberId = ?',
+          whereArgs: [id],
+        );
+
+        // Delete the member itself
+        return await txn.delete(
+          'member',
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      },
+      'deleteMember',
+      table: 'member',
     );
 
     // Invalidate the member cache
@@ -1434,11 +1480,17 @@ class DBService {
   /// Insert a new studio
   static Future<int> insertStudio(Studio studio) async {
     final db = await database;
-    return await DBServiceWrapper.insert(
+
+    // Use transaction with error handling and retry
+    return await DBServiceWrapper.executeTransaction(
       db,
-      'studio',
-      studio.toMap(),
-      operationName: 'insertStudio',
+      (txn) async {
+        // Insert studio
+        final studioId = await txn.insert('studio', studio.toMap());
+        return studioId;
+      },
+      'insertStudio',
+      table: 'studio',
     );
   }
 
@@ -1497,25 +1549,60 @@ class DBService {
   /// Update a studio
   static Future<int> updateStudio(Studio studio) async {
     final db = await database;
-    return await DBServiceWrapper.update(
+
+    // Use transaction with error handling and retry
+    return await DBServiceWrapper.executeTransaction(
       db,
-      'studio',
-      studio.toMap(),
-      where: 'id = ?',
-      whereArgs: [studio.id],
-      operationName: 'updateStudio',
+      (txn) async {
+        // Update studio
+        await txn.update(
+          'studio',
+          studio.toMap(),
+          where: 'id = ?',
+          whereArgs: [studio.id],
+        );
+        return studio.id!;
+      },
+      'updateStudio',
+      table: 'studio',
     );
   }
 
   /// Delete a studio
   static Future<int> deleteStudio(int id) async {
     final db = await database;
-    return await DBServiceWrapper.delete(
+
+    // Use transaction with error handling and retry
+    return await DBServiceWrapper.executeTransaction(
       db,
-      'studio',
-      where: 'id = ?',
-      whereArgs: [id],
-      operationName: 'deleteStudio',
+      (txn) async {
+        // First check if studio is used in any bookings
+        final bookings = await txn.query(
+          'booking',
+          where: 'studioId = ?',
+          whereArgs: [id],
+          limit: 1,
+        );
+
+        if (bookings.isNotEmpty) {
+          // Studio is in use, can't delete
+          throw ConstraintError(
+            'Cannot delete studio that is in use by bookings',
+            'deleteStudio',
+            table: 'studio',
+            constraint: 'booking.studioId',
+          );
+        }
+
+        // Delete the studio
+        return await txn.delete(
+          'studio',
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      },
+      'deleteStudio',
+      table: 'studio',
     );
   }
 
@@ -1538,24 +1625,28 @@ class DBService {
   /// Update studio settings
   static Future<int> updateStudioSettings(StudioSettings settings) async {
     final db = await database;
-    if (settings.id != null) {
-      return await DBServiceWrapper.update(
-        db,
-        'studio_settings',
-        settings.toMap(),
-        where: 'id = ?',
-        whereArgs: [settings.id],
-        operationName: 'updateStudioSettings',
-      );
-    } else {
-      // If no settings exist, insert new ones
-      return await DBServiceWrapper.insert(
-        db,
-        'studio_settings',
-        settings.toMap(),
-        operationName: 'insertStudioSettings',
-      );
-    }
+
+    // Use transaction with error handling and retry
+    return await DBServiceWrapper.executeTransaction(
+      db,
+      (txn) async {
+        if (settings.id != null) {
+          // Update existing settings
+          await txn.update(
+            'studio_settings',
+            settings.toMap(),
+            where: 'id = ?',
+            whereArgs: [settings.id],
+          );
+          return settings.id!;
+        } else {
+          // If no settings exist, insert new ones
+          return await txn.insert('studio_settings', settings.toMap());
+        }
+      },
+      'updateStudioSettings',
+      table: 'studio_settings',
+    );
   }
 
   /// Clear all data from the database

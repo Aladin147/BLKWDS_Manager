@@ -4,7 +4,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
 
 ## Current Version
 
-**Version:** 1.0.0-rc54 (Release Candidate 54)
+**Version:** 1.0.0-rc55 (Release Candidate 55)
 **Last Updated:** 2025-07-11
 
 ## Project Phase
@@ -112,6 +112,7 @@ This document serves as the single source of truth for the BLKWDS Manager projec
    - ✅ Environment-unaware data seeding (FIXED in v0.63.0-v0.64.0)
    - ✅ Multiple booking models causing confusion (FIXED in v0.87.0)
    - ✅ Foreign key constraints not enforced (FIXED in v0.87.0)
+   - ✅ Inconsistent transaction usage (FIXED in v0.88.0)
 
 2. **Testing Coverage**
    - ✅ Test suite compilation errors (FIXED in v0.76.0)
@@ -327,6 +328,31 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.88.0 - Enhanced Transaction Usage (2025-07-11)
+
+**Added:**
+
+- Added transaction usage to member operations (insert, update, delete)
+- Added transaction usage to studio operations (insert, update, delete)
+- Added transaction usage to settings operations
+- Added foreign key constraint enforcement in transactions
+- Added comprehensive documentation for transaction usage
+- Added tests to verify transaction usage
+
+**Fixed:**
+
+- Fixed potential data integrity issues with member operations
+- Fixed potential data integrity issues with studio operations
+- Fixed constraint checking in deleteStudio operation
+- Fixed transaction usage in _storeDbVersion method
+
+**Improved:**
+
+- Enhanced data integrity with consistent transaction usage
+- Improved error handling in transactions
+- Reduced risk of data corruption from partial operations
+- Added clear constraint checking before deletion
 
 ### v0.87.0 - Database Model Consolidation (2025-07-11)
 
