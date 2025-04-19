@@ -3,6 +3,7 @@ import 'theme/blkwds_theme.dart';
 import 'utils/constants.dart';
 import 'screens/screens.dart';
 import 'services/services.dart';
+import 'services/navigation_helper.dart';
 import 'theme/blkwds_animations.dart';
 import 'theme/blkwds_constants.dart';
 import 'theme/blkwds_colors.dart';
@@ -38,8 +39,7 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
     FlutterError.dumpErrorToConsole(details);
   }
 
-  // Get navigation service instance
-  final NavigationService _navigationService = NavigationService();
+  // Use NavigationHelper for navigation
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
       title: Constants.appName,
       theme: BLKWDSTheme.theme,
       initialRoute: AppRoutes.dashboard,
-      navigatorKey: _navigationService.navigatorKey,
+      navigatorKey: NavigationService.instance.navigatorKey,
       scaffoldMessengerKey: SnackbarService.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       // Define named routes
@@ -119,7 +119,7 @@ class _BLKWDSAppState extends State<BLKWDSApp> {
               BLKWDSEnhancedButton(
                 label: 'Return to Dashboard',
                 onPressed: () {
-                  _navigationService.navigateToDashboard(clearStack: true);
+                  NavigationHelper.navigateToDashboard(clearStack: true);
                 },
                 type: BLKWDSEnhancedButtonType.primary,
                 icon: Icons.home,

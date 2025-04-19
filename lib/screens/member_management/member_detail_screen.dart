@@ -128,11 +128,11 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
         content: Text('Are you sure you want to delete ${widget.member.name}?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => NavigationHelper.goBack(result: false),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => NavigationHelper.goBack(result: true),
             child: const Text('Delete'),
           ),
         ],
@@ -152,7 +152,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
         );
 
         // Navigate back to member list
-        Navigator.pop(context);
+        NavigationHelper.goBack();
       }
     } catch (e, stackTrace) {
       LogService.error('Failed to delete member', e, stackTrace);
@@ -340,7 +340,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
                                     : null,
                                 trailing: const Icon(Icons.chevron_right),
                                 onTap: () {
-                                  NavigationService.instance.navigateToProjectDetail(project);
+                                  NavigationHelper.navigateToProjectDetail(project);
                                 },
                               ),
                             );

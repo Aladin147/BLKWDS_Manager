@@ -4,14 +4,14 @@ import '../theme/blkwds_constants.dart';
 import '../widgets/blkwds_enhanced_button.dart';
 import '../widgets/blkwds_enhanced_icon_container.dart';
 import '../widgets/blkwds_enhanced_text.dart';
-import 'navigation_service.dart';
+import 'navigation_helper.dart';
 import 'error_type.dart';
 
 /// ErrorPageService
 ///
 /// A service for displaying full-page error screens
 class ErrorPageService {
-  static final NavigationService _navigationService = NavigationService();
+  // Use NavigationHelper for navigation
 
   /// Show a full-page error screen
   ///
@@ -66,7 +66,7 @@ class ErrorPageService {
                 BLKWDSEnhancedButton(
                   label: 'Return to Dashboard',
                   onPressed: () {
-                    _navigationService.navigateToDashboard(clearStack: true);
+                    NavigationHelper.navigateToDashboard(clearStack: true);
                   },
                   type: showRetryButton && onRetry != null
                       ? BLKWDSEnhancedButtonType.secondary
