@@ -3,7 +3,7 @@ import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 import '../../../utils/date_formatter.dart';
-import '../../../services/navigation_service.dart';
+import '../../../services/navigation_helper.dart';
 import '../../../widgets/blkwds_widgets.dart';
 import '../dashboard_controller.dart';
 
@@ -49,8 +49,8 @@ class RecentActivityWidget extends StatelessWidget {
               ),
               BLKWDSEnhancedButton(
                 onPressed: () {
-                  // Navigate to a full activity log screen using NavigationService
-                  NavigationService().navigateToActivityLog(
+                  // Navigate to a full activity log screen using NavigationHelper
+                  NavigationHelper.navigateToActivityLog(
                     controller: controller,
                   );
                 },
