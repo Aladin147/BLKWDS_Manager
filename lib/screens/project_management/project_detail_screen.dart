@@ -449,18 +449,19 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
       child: BLKWDSEnhancedCard(
         padding: EdgeInsets.zero,
         child: ListTile(
-        leading: MemberAvatarWidget(
-          member: member,
-          size: 40,
+          leading: MemberAvatarWidget(
+            member: member,
+            size: 40,
+          ),
+          title: Text(member.name),
+          subtitle: member.role != null && member.role!.isNotEmpty
+              ? Text(member.role!)
+              : null,
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            NavigationHelper.navigateToMemberDetail(member);
+          },
         ),
-        title: Text(member.name),
-        subtitle: member.role != null && member.role!.isNotEmpty
-            ? Text(member.role!)
-            : null,
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          NavigationHelper.navigateToMemberDetail(member);
-        },
       ),
     );
   }
@@ -472,33 +473,34 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
       child: BLKWDSEnhancedCard(
         padding: EdgeInsets.zero,
         child: ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: BLKWDSColors.accentPurple.withValues(alpha: 50),
-            borderRadius: BorderRadius.circular(8),
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: BLKWDSColors.accentPurple.withValues(alpha: 50),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.calendar_today,
+              color: BLKWDSColors.accentPurple,
+              size: 24,
+            ),
           ),
-          child: const Icon(
-            Icons.calendar_today,
-            color: BLKWDSColors.accentPurple,
-            size: 24,
+          title: Text(booking.title ?? 'Booking'),
+          subtitle: Text(
+            '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)}',
           ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            // Get the booking panel controller
+            final controller = BookingPanelController();
+            // Initialize the controller
+            controller.initialize().then((_) {
+              // Navigate to booking detail
+              NavigationHelper.navigateToBookingDetail(booking, controller);
+            });
+          },
         ),
-        title: Text(booking.title ?? 'Booking'),
-        subtitle: Text(
-          '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)}',
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          // Get the booking panel controller
-          final controller = BookingPanelController();
-          // Initialize the controller
-          controller.initialize().then((_) {
-            // Navigate to booking detail
-            NavigationHelper.navigateToBookingDetail(booking, controller);
-          });
-        },
       ),
     );
   }
