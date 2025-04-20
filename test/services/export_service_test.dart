@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/services/export_service.dart';
-import 'package:csv/csv.dart';
 
 // Mock classes
 class MockFile extends Mock implements File {}
@@ -29,7 +27,7 @@ void main() {
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportMembers(members);
@@ -47,7 +45,7 @@ void main() {
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportProjects(projects);
@@ -65,7 +63,7 @@ void main() {
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportGearInventory(gear);
@@ -88,7 +86,7 @@ void main() {
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportBookings(bookings);
@@ -111,7 +109,7 @@ void main() {
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportStudios(studios);
@@ -125,16 +123,17 @@ void main() {
       final logs = [
         ActivityLog(
           id: 1,
-          userId: 1,
-          action: 'Login',
+          gearId: 1,
+          memberId: 1,
+          checkedOut: true,
           timestamp: DateTime.now(),
-          details: 'User logged in',
+          note: 'Gear checked out',
         ),
       ];
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportActivityLogs(logs);
@@ -169,16 +168,17 @@ void main() {
       final logs = [
         ActivityLog(
           id: 1,
-          userId: 1,
-          action: 'Login',
+          gearId: 1,
+          memberId: 1,
+          checkedOut: true,
           timestamp: DateTime.now(),
-          details: 'User logged in',
+          note: 'Gear checked out',
         ),
       ];
 
       // Mock the file selector to return a path
       when(mockDirectory.path).thenReturn('/mock/path');
-      when(mockFile.writeAsString(any)).thenAnswer((_) async => mockFile);
+      when(mockFile.writeAsString('any string')).thenAnswer((_) async => mockFile);
 
       // Act
       final result = await ExportService.exportAllData(

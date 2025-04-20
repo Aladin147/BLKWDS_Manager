@@ -118,6 +118,6 @@ class MockFile extends Mock implements io.File {
   @override
   io.Directory get parent => MockDirectory(path: _path.substring(0, _path.lastIndexOf('/')));
 
-  @override
+  // This is not actually an override, but a convenience method
   String get basename => _path.substring(_path.lastIndexOf('/') + 1);
 }
