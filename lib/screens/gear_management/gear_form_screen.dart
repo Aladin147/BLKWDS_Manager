@@ -5,6 +5,7 @@ import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
+import '../../widgets/blkwds_enhanced_widgets.dart';
 
 /// GearFormScreen
 /// Screen for adding or editing gear
@@ -163,17 +164,16 @@ class _GearFormScreenState extends State<GearFormScreen> {
   Widget build(BuildContext context) {
     final isEditing = widget.gear != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Gear' : 'Add Gear'),
-      ),
+    return BLKWDSScaffold(
+      title: isEditing ? 'Edit Gear' : 'Add Gear',
+      showHomeButton: true,
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           children: [
             // Name field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _nameController,
               label: 'Name',
               prefixIcon: Icons.videocam,
@@ -187,7 +187,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Category field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _categoryController,
               label: 'Category',
               prefixIcon: Icons.category,
@@ -201,7 +201,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Serial number field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _serialNumberController,
               label: 'Serial Number (Optional)',
               prefixIcon: Icons.qr_code,
@@ -209,38 +209,16 @@ class _GearFormScreenState extends State<GearFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Purchase date field
-            InkWell(
+            GestureDetector(
               onTap: _selectPurchaseDate,
-              child: InputDecorator(
-                decoration: InputDecoration(
-                  labelText: 'Purchase Date (Optional)',
-                  prefixIcon: const Icon(Icons.calendar_today),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                    borderSide: BorderSide(color: BLKWDSColors.inputBorder),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(BLKWDSConstants.inputBorderRadius),
-                    borderSide: BorderSide(color: BLKWDSColors.accentTeal, width: 2),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: BLKWDSConstants.inputHorizontalPadding,
-                    vertical: BLKWDSConstants.inputVerticalPadding,
-                  ),
-                  filled: true,
-                  fillColor: BLKWDSColors.inputBackground,
-                ),
-                child: Text(
-                  _purchaseDate != null
-                      ? '${_purchaseDate!.year}-${_purchaseDate!.month.toString().padLeft(2, '0')}-${_purchaseDate!.day.toString().padLeft(2, '0')}'
-                      : 'Select a date',
-                  style: TextStyle(
-                    color: _purchaseDate != null
-                        ? BLKWDSColors.textPrimary
-                        : BLKWDSColors.textSecondary,
+              child: AbsorbPointer(
+                child: BLKWDSEnhancedFormField(
+                  label: 'Purchase Date (Optional)',
+                  prefixIcon: Icons.calendar_today,
+                  controller: TextEditingController(
+                    text: _purchaseDate != null
+                        ? '${_purchaseDate!.year}-${_purchaseDate!.month.toString().padLeft(2, '0')}-${_purchaseDate!.day.toString().padLeft(2, '0')}'
+                        : 'Select a date',
                   ),
                 ),
               ),
@@ -248,7 +226,7 @@ class _GearFormScreenState extends State<GearFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Description field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _descriptionController,
               label: 'Description (Optional)',
               prefixIcon: Icons.note,
@@ -258,12 +236,9 @@ class _GearFormScreenState extends State<GearFormScreen> {
 
             // Error message
             if (_errorMessage != null) ...[
-              Container(
+              BLKWDSEnhancedCard(
                 padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                decoration: BoxDecoration(
-                  color: BLKWDSColors.errorRed.withValues(alpha: 20),
-                  borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                ),
+                backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
                 child: Row(
                   children: [
                     const Icon(
@@ -272,11 +247,9 @@ class _GearFormScreenState extends State<GearFormScreen> {
                     ),
                     const SizedBox(width: BLKWDSConstants.spacingSmall),
                     Expanded(
-                      child: Text(
+                      child: BLKWDSEnhancedText.bodyMedium(
                         _errorMessage!,
-                        style: TextStyle(
-                          color: BLKWDSColors.errorRed,
-                        ),
+                        color: BLKWDSColors.errorRed,
                       ),
                     ),
                   ],
@@ -286,20 +259,26 @@ class _GearFormScreenState extends State<GearFormScreen> {
             ],
 
             // Save button
-            BLKWDSButton(
+            BLKWDSEnhancedButton(
               label: isEditing ? 'Update Gear' : 'Add Gear',
               onPressed: _isLoading ? null : _saveGear,
-              type: BLKWDSButtonType.primary,
+              type: BLKWDSEnhancedButtonType.primary,
               isLoading: _isLoading,
               icon: isEditing ? Icons.save : Icons.add,
+              backgroundColor: BLKWDSColors.mustardOrange,
+              foregroundColor: BLKWDSColors.deepBlack,
+              width: double.infinity,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Cancel button
-            BLKWDSButton(
+            BLKWDSEnhancedButton(
               label: 'Cancel',
               onPressed: () => NavigationHelper.goBack(),
-              type: BLKWDSButtonType.secondary,
+              type: BLKWDSEnhancedButtonType.secondary,
+              foregroundColor: BLKWDSColors.mustardOrange,
+              backgroundColor: BLKWDSColors.backgroundMedium,
+              width: double.infinity,
             ),
           ],
         ),
