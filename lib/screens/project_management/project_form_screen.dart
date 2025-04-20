@@ -5,6 +5,7 @@ import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
+import '../../widgets/blkwds_enhanced_widgets.dart';
 
 /// ProjectFormScreen
 /// Screen for adding or editing a project
@@ -186,17 +187,16 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
   Widget build(BuildContext context) {
     final isEditing = widget.project != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Project' : 'Add Project'),
-      ),
+    return BLKWDSScaffold(
+      title: isEditing ? 'Edit Project' : 'Add Project',
+      showHomeButton: true,
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           children: [
             // Title field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _titleController,
               label: 'Title',
               prefixIcon: Icons.title,
@@ -210,7 +210,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Client field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _clientController,
               label: 'Client (Optional)',
               prefixIcon: Icons.business,
@@ -218,7 +218,7 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Description field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _descriptionController,
               label: 'Description (Optional)',
               prefixIcon: Icons.description,
@@ -227,9 +227,8 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingLarge),
 
             // Members section
-            Text(
+            BLKWDSEnhancedText.titleLarge(
               'Project Members',
-              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: BLKWDSConstants.spacingSmall),
 
@@ -238,17 +237,17 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                 ? const Center(
                     child: Padding(
                       padding: EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                      child: CircularProgressIndicator(),
+                      child: BLKWDSEnhancedLoadingIndicator(),
                     ),
                   )
                 : _allMembers.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Padding(
-                          padding: EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                          child: Text('No members available'),
+                          padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+                          child: BLKWDSEnhancedText.bodyLarge('No members available'),
                         ),
                       )
-                    : Card(
+                    : BLKWDSEnhancedCard(
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -258,9 +257,9 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                             final isSelected = _selectedMemberIds.contains(member.id);
 
                             return CheckboxListTile(
-                              title: Text(member.name),
+                              title: BLKWDSEnhancedText.titleLarge(member.name),
                               subtitle: member.role != null && member.role!.isNotEmpty
-                                  ? Text(member.role!)
+                                  ? BLKWDSEnhancedText.bodyMedium(member.role!)
                                   : null,
                               value: isSelected,
                               onChanged: (value) {
@@ -278,12 +277,9 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
 
             // Error message
             if (_errorMessage != null) ...[
-              Container(
+              BLKWDSEnhancedCard(
                 padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                decoration: BoxDecoration(
-                  color: BLKWDSColors.errorRed.withValues(alpha: 20),
-                  borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                ),
+                backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
                 child: Row(
                   children: [
                     const Icon(
@@ -292,11 +288,9 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
                     ),
                     const SizedBox(width: BLKWDSConstants.spacingSmall),
                     Expanded(
-                      child: Text(
+                      child: BLKWDSEnhancedText.bodyMedium(
                         _errorMessage!,
-                        style: TextStyle(
-                          color: BLKWDSColors.errorRed,
-                        ),
+                        color: BLKWDSColors.errorRed,
                       ),
                     ),
                   ],
@@ -306,20 +300,26 @@ class _ProjectFormScreenState extends State<ProjectFormScreen> {
             ],
 
             // Save button
-            BLKWDSButton(
+            BLKWDSEnhancedButton(
               label: isEditing ? 'Update Project' : 'Add Project',
               onPressed: _isLoading ? null : _saveProject,
-              type: BLKWDSButtonType.primary,
+              type: BLKWDSEnhancedButtonType.primary,
               isLoading: _isLoading,
               icon: isEditing ? Icons.save : Icons.add,
+              backgroundColor: BLKWDSColors.mustardOrange,
+              foregroundColor: BLKWDSColors.deepBlack,
+              width: double.infinity,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Cancel button
-            BLKWDSButton(
+            BLKWDSEnhancedButton(
               label: 'Cancel',
               onPressed: () => NavigationHelper.goBack(),
-              type: BLKWDSButtonType.secondary,
+              type: BLKWDSEnhancedButtonType.secondary,
+              foregroundColor: BLKWDSColors.mustardOrange,
+              backgroundColor: BLKWDSColors.backgroundMedium,
+              width: double.infinity,
             ),
           ],
         ),
