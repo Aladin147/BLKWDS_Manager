@@ -96,7 +96,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           // Search bar
           Padding(
             padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-            child: BLKWDSTextField(
+            child: BLKWDSEnhancedFormField(
               label: 'Search',
               hintText: 'Search by gear, member, or note',
               prefixIcon: Icons.search,
@@ -165,22 +165,15 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Activity icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: activity.checkedOut
-                    ? BLKWDSColors.warningAmber.withValues(alpha: 30)
-                    : BLKWDSColors.successGreen.withValues(alpha: 30),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Icon(
-                activity.checkedOut ? Icons.logout : Icons.login,
-                color: activity.checkedOut
-                    ? BLKWDSColors.warningAmber
-                    : BLKWDSColors.successGreen,
-                size: 24,
-              ),
+            BLKWDSEnhancedIconContainer(
+              icon: activity.checkedOut ? Icons.logout : Icons.login,
+              size: BLKWDSEnhancedIconContainerSize.large,
+              backgroundColor: activity.checkedOut
+                  ? BLKWDSColors.warningAmber.withValues(alpha: 30)
+                  : BLKWDSColors.successGreen.withValues(alpha: 30),
+              iconColor: activity.checkedOut
+                  ? BLKWDSColors.warningAmber
+                  : BLKWDSColors.successGreen,
             ),
             const SizedBox(width: BLKWDSConstants.spacingMedium),
 

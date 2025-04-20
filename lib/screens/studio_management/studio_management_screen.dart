@@ -183,28 +183,27 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Studio Management'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Studios'),
-            Tab(text: 'Availability'),
-          ],
+    return BLKWDSScaffold(
+      title: 'Studio Management',
+      showHomeButton: true,
+      actions: [
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.settings,
+          onPressed: _showStudioSettingsForm,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
         ),
-        actions: [
-          BLKWDSEnhancedButton.icon(
-            icon: Icons.settings,
-            onPressed: _showStudioSettingsForm,
-            type: BLKWDSEnhancedButtonType.tertiary,
-            backgroundColor: Colors.transparent,
-            foregroundColor: BLKWDSColors.white,
-          ),
+      ],
+      bottomNavigationBar: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Studios'),
+          Tab(text: 'Availability'),
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen))
+          ? const Center(child: BLKWDSEnhancedLoadingIndicator())
           : TabBarView(
               controller: _tabController,
               children: [
@@ -214,8 +213,10 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
                         studios: _studios,
                         settings: _studioSettings!,
                       )
-                    : const Center(
-                        child: Text('Studio settings not available'),
+                    : Center(
+                        child: BLKWDSEnhancedText.bodyLarge(
+                          'Studio settings not available',
+                        ),
                       ),
               ],
             ),
@@ -262,9 +263,8 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
               iconColor: BLKWDSColors.slateGrey,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
-            Text(
+            BLKWDSEnhancedText.titleLarge(
               'No studios have been set up yet',
-              style: BLKWDSTypography.titleLarge,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
             Row(
@@ -324,16 +324,13 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      BLKWDSEnhancedText.titleMedium(
                         studio.name,
-                        style: BLKWDSTypography.titleMedium,
                       ),
                       const SizedBox(height: 4),
-                      Text(
+                      BLKWDSEnhancedText.bodyMedium(
                         studio.description ?? studio.type.label,
-                        style: BLKWDSTypography.bodyMedium.copyWith(
-                          color: BLKWDSColors.textSecondary,
-                        ),
+                        color: BLKWDSColors.textSecondary,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
