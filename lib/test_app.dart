@@ -13,11 +13,11 @@ class TestApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: BLKWDSColors.primaryBlue,
+        primaryColor: BLKWDSColors.primary,
         scaffoldBackgroundColor: BLKWDSColors.backgroundDark,
         colorScheme: ColorScheme.dark(
-          primary: BLKWDSColors.primaryBlue,
-          secondary: BLKWDSColors.accentGreen,
+          primary: BLKWDSColors.primary,
+          secondary: BLKWDSColors.accentTeal,
           background: BLKWDSColors.backgroundDark,
         ),
       ),
@@ -101,7 +101,7 @@ class _TestHomePageState extends State<TestHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('BLKWDS Test App'),
-        backgroundColor: BLKWDSColors.primaryBlue,
+        backgroundColor: BLKWDSColors.primary,
       ),
       body: _isLoading
           ? const Center(
@@ -163,7 +163,7 @@ class _TestHomePageState extends State<TestHomePage> {
                   ElevatedButton(
                     onPressed: _loadInfo,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: BLKWDSColors.primaryBlue,
+                      backgroundColor: BLKWDSColors.primary,
                     ),
                     child: const Text('Refresh Information'),
                   ),

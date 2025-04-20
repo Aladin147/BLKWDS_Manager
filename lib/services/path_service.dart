@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:sqflite/sqflite.dart';
 import '../utils/platform_util.dart';
 import 'log_service.dart';
 
@@ -28,13 +29,13 @@ class PathService {
       return path.join(tempDir.path, 'BLKWDS_Manager');
     }
   }
-  
+
   /// Get the path for storing images
   static Future<String> getImagesPath() async {
     final basePath = await getAppDocumentsPath();
     return path.join(basePath, 'images');
   }
-  
+
   /// Get the path for the database file
   static Future<String> getDatabasePath() async {
     try {
@@ -52,19 +53,19 @@ class PathService {
       return path.join(basePath, 'blkwds_manager.db');
     }
   }
-  
+
   /// Get the path for storing logs
   static Future<String> getLogsPath() async {
     final basePath = await getAppDocumentsPath();
     return path.join(basePath, 'logs');
   }
-  
+
   /// Get the path for storing exports
   static Future<String> getExportsPath() async {
     final basePath = await getAppDocumentsPath();
     return path.join(basePath, 'exports');
   }
-  
+
   /// Ensure all required directories exist
   static Future<void> ensureDirectoriesExist() async {
     try {
@@ -72,12 +73,12 @@ class PathService {
       final imagesPath = await getImagesPath();
       final logsPath = await getLogsPath();
       final exportsPath = await getExportsPath();
-      
+
       await Directory(basePath).create(recursive: true);
       await Directory(imagesPath).create(recursive: true);
       await Directory(logsPath).create(recursive: true);
       await Directory(exportsPath).create(recursive: true);
-      
+
       LogService.info('All required directories created');
     } catch (e, stackTrace) {
       LogService.error('Error creating directories', e, stackTrace);

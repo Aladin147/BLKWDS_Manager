@@ -33,12 +33,12 @@ class SplashScreen extends StatelessWidget {
                   return const Icon(
                     Icons.business,
                     size: 100,
-                    color: BLKWDSColors.primaryBlue,
+                    color: BLKWDSColors.primary,
                   );
                 },
               ),
               const SizedBox(height: BLKWDSConstants.spacingMedium),
-              
+
               // App name
               Text(
                 'BLKWDS Manager',
@@ -46,15 +46,15 @@ class SplashScreen extends StatelessWidget {
                   color: BLKWDSColors.textLight,
                 ),
               ),
-              
+
               const SizedBox(height: BLKWDSConstants.spacingLarge),
-              
+
               // Loading indicator
               if (showProgress)
                 const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(BLKWDSColors.primaryBlue),
+                  valueColor: AlwaysStoppedAnimation<Color>(BLKWDSColors.primary),
                 ),
-                
+
               // Status message
               if (message != null) ...[
                 const SizedBox(height: BLKWDSConstants.spacingMedium),
