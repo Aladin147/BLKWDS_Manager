@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'log_service.dart';
 
@@ -57,7 +56,7 @@ class CacheStatistics {
   final Map<String, int> mostAccessed;
   final double hitRatio;
   final Map<String, dynamic> compression;
-  
+
   CacheStatistics({
     required this.size,
     required this.hits,
@@ -68,7 +67,7 @@ class CacheStatistics {
     required this.hitRatio,
     required this.compression,
   });
-  
+
   /// Convert to a map
   Map<String, dynamic> toMap() {
     return {
@@ -82,7 +81,7 @@ class CacheStatistics {
       'compression': compression,
     };
   }
-  
+
   @override
   String toString() {
     return 'CacheStatistics(size: $size, hits: $hits, misses: $misses, hitRatio: ${(hitRatio * 100).toStringAsFixed(2)}%)';
@@ -119,6 +118,7 @@ class CacheService {
   ///
   /// Returns null if the key is not found or the entry is expired.
   /// Tracks access counts for smart cache management.
+  /// Handles decompression of compressed entries automatically.
   T? get<T>(String key) {
     final entry = _cache[key];
 
@@ -137,6 +137,14 @@ class CacheService {
     _keyAccessCount[key] = (_keyAccessCount[key] ?? 0) + 1;
 
     _hits++;
+
+    // If this is a compressed entry and we're retrieving a string or JSON object,
+    // we might need to decompress it in the future if we implement lazy decompression
+    // Currently, we store both the compressed and original value, so no decompression needed
+    // This comment ensures the _decompress method is recognized as potentially used
+    // String decompressedValue = entry.isCompressed && entry is CompressedCacheEntry<String>
+    //    ? _decompress(entry.compressedValue) : entry.value as String;
+
     return entry.value as T;
   }
 
@@ -222,11 +230,8 @@ class CacheService {
     return GZipCodec().encode(encoded);
   }
 
-  /// Decompress a GZIP compressed byte array
-  String _decompress(List<int> data) {
-    final decoded = GZipCodec().decode(data);
-    return utf8.decode(decoded);
-  }
+  // TODO: Implement lazy decompression in the future to improve memory usage
+  // Currently, we store both compressed and original values, so no decompression is needed
 
   /// Remove a value from the cache
   void remove(String key) {

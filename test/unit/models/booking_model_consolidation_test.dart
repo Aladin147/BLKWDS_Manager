@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:blkwds_manager/models/booking_v2.dart';
-import 'package:blkwds_manager/models/booking_legacy.dart';
 
 void main() {
   group('Booking Model Consolidation Tests', () {
@@ -80,32 +79,6 @@ void main() {
       expect(booking.isProductionStudio, isFalse);
     });
 
-    test('Legacy booking model is marked as deprecated', () {
-      // This test verifies that the legacy booking model is marked as deprecated
-      // The @Deprecated annotation is checked at compile time, so we just need to
-      // verify that we can still create a legacy booking for backward compatibility
-      
-      final now = DateTime.now();
-      final later = now.add(const Duration(hours: 2));
-
-      // Create a legacy booking
-      final legacyBooking = BookingLegacy(
-        id: 1,
-        projectId: 2,
-        isRecordingStudio: true,
-        isProductionStudio: false,
-        startDate: now,
-        endDate: later,
-        notes: 'Test Notes',
-        gearIds: [4, 5, 6],
-        assignedGearToMember: {4: 7, 5: 8},
-      );
-
-      // Verify legacy booking properties
-      expect(legacyBooking.id, equals(1));
-      expect(legacyBooking.projectId, equals(2));
-      expect(legacyBooking.isRecordingStudio, isTrue);
-      expect(legacyBooking.isProductionStudio, isFalse);
-    });
+    // Legacy booking model test removed as the model has been fully deprecated
   });
 }
