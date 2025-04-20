@@ -1,5 +1,34 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-14: Android Adaptation
+
+Today we focused on adapting the BLKWDS Manager application for Android tablets:
+
+1. **Android Branch Creation**:
+   - Created a new `android-marshmallow` branch from the `beta` branch
+   - Created detailed planning documents for Android adaptation
+
+2. **Platform Detection Implementation**:
+   - Created `PlatformUtil` class for platform-specific checks
+   - Implemented file path handling for Android
+   - Added permission handling for Android runtime permissions
+
+3. **Android Configuration**:
+   - Updated Android manifest with necessary permissions
+   - Configured build settings for 32-bit ARM
+   - Added Play Core dependency for Android compatibility
+
+4. **UI Adaptation**:
+   - Added device info screen to display Android device information
+   - Updated settings screen to include device info access
+   - Added platform-specific UI constants for touch interaction
+
+5. **APK Building**:
+   - Successfully built debug and release APKs for 32-bit ARM
+   - Created installation instructions for Android tablets
+
+This Android adaptation will allow the BLKWDS Manager to be used on tablets, expanding its usability beyond desktop environments. The next steps will be to test the APK on actual Android tablets and optimize the UI for touch interaction.
+
 ## 2025-07-14: User Documentation Creation
 
 Today we focused on creating comprehensive user documentation for internal testers:

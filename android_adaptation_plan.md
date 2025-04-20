@@ -97,9 +97,10 @@ This document outlines the plan for adapting the BLKWDS Manager desktop applicat
 
 ## 7. Build and Distribution
 
-- [ ] Configure build settings for 32-bit ARM
-- [ ] Create release signing configuration
-- [ ] Build release APK
+- [x] Configure build settings for 32-bit ARM
+- [x] Create release signing configuration
+- [x] Build debug APK
+- [x] Build release APK
 - [ ] Test installation process
 - [ ] Prepare distribution method for testers
 
