@@ -4,7 +4,6 @@ import '../../services/services.dart';
 import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 /// MemberListScreen
@@ -182,19 +181,18 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Member Management'),
-        actions: [
-          BLKWDSEnhancedButton.icon(
-            icon: Icons.refresh,
-            onPressed: _loadMembers,
-            type: BLKWDSEnhancedButtonType.tertiary,
-            backgroundColor: Colors.transparent,
-            foregroundColor: BLKWDSColors.white,
-          ),
-        ],
-      ),
+    return BLKWDSScaffold(
+      title: 'Member Management',
+      showHomeButton: true,
+      actions: [
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.refresh,
+          onPressed: _loadMembers,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
+        ),
+      ],
       body: Column(
         children: [
           // Search and filter bar
@@ -224,7 +222,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
           // Member list
           Expanded(
             child: _isLoading
-                ? Center(child: CircularProgressIndicator(color: BLKWDSColors.blkwdsGreen))
+                ? const Center(child: BLKWDSEnhancedLoadingIndicator())
                 : _errorMessage != null
                     ? Center(
                         child: Column(
@@ -237,15 +235,13 @@ class _MemberListScreenState extends State<MemberListScreen> {
                               iconColor: BLKWDSColors.errorRed,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
-                            Text(
+                            BLKWDSEnhancedText.titleLarge(
                               'Error Loading Members',
-                              style: BLKWDSTypography.titleLarge,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingSmall),
-                            Text(
+                            BLKWDSEnhancedText.bodyMedium(
                               _errorMessage!,
                               textAlign: TextAlign.center,
-                              style: BLKWDSTypography.bodyMedium,
                             ),
                             const SizedBox(height: BLKWDSConstants.spacingMedium),
                             BLKWDSEnhancedButton(
@@ -269,11 +265,10 @@ class _MemberListScreenState extends State<MemberListScreen> {
                                   iconColor: BLKWDSColors.slateGrey,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),
-                                Text(
+                                BLKWDSEnhancedText.titleLarge(
                                   _members.isEmpty
                                       ? 'No Members Found'
                                       : 'No Members Match Filters',
-                                  style: BLKWDSTypography.titleLarge,
                                 ),
                                 const SizedBox(height: BLKWDSConstants.spacingMedium),
                                 BLKWDSEnhancedButton(
@@ -327,16 +322,13 @@ class _MemberListScreenState extends State<MemberListScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  BLKWDSEnhancedText.bodyLarge(
                     member.name,
-                    style: BLKWDSTypography.titleMedium,
                   ),
                   if (member.role != null && member.role!.isNotEmpty)
-                    Text(
+                    BLKWDSEnhancedText.bodyMedium(
                       member.role!,
-                      style: BLKWDSTypography.bodyMedium.copyWith(
-                        color: BLKWDSColors.textSecondary,
-                      ),
+                      color: BLKWDSColors.textSecondary,
                     ),
                 ],
               ),

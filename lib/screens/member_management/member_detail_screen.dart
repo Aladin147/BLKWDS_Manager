@@ -123,19 +123,14 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> with SingleTick
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Member'),
-        content: Text('Are you sure you want to delete ${widget.member.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => NavigationHelper.goBack(result: false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => NavigationHelper.goBack(result: true),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Delete Member',
+        content: 'Are you sure you want to delete ${widget.member.name}?',
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => NavigationHelper.goBack(result: false),
+        primaryActionText: 'Delete',
+        onPrimaryAction: () => NavigationHelper.goBack(result: true),
+        isPrimaryDestructive: true,
       ),
     );
 
