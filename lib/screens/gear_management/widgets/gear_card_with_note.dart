@@ -54,10 +54,18 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
         onTap: widget.onTap != null ? () => widget.onTap!(widget.gear) : null,
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
         backgroundColor: widget.gear.isOut
-            ? BLKWDSColors.statusOut.withValues(alpha: BLKWDSColors.alphaVeryLow.toInt())
+            ? Color.fromARGB(
+                BLKWDSColors.alphaVeryLow,
+                BLKWDSColors.statusOut.r.toInt(),
+                BLKWDSColors.statusOut.g.toInt(),
+                BLKWDSColors.statusOut.b.toInt())
             : null,
         borderColor: widget.gear.isOut
-            ? BLKWDSColors.statusOut.withValues(alpha: BLKWDSColors.alphaMediumLow.toInt())
+            ? Color.fromARGB(
+                BLKWDSColors.alphaMediumLow,
+                BLKWDSColors.statusOut.r.toInt(),
+                BLKWDSColors.statusOut.g.toInt(),
+                BLKWDSColors.statusOut.b.toInt())
             : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
