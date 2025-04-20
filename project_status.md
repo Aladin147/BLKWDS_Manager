@@ -324,6 +324,30 @@ See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for det
 
 ## Recent Changes
 
+### v0.98.0 - UI Style Consistency Improvements (2025-07-22)
+
+**Added:**
+
+- Updated member form screen to use enhanced form fields and buttons
+- Updated project detail screen to use enhanced components
+- Updated app info screen to use enhanced text and cards
+
+**Changed:**
+
+- Improved dialog styling with enhanced alert dialogs
+- Updated error message display with enhanced cards
+- Applied consistent gold accent color for primary actions
+- Updated project cards with enhanced styling
+- Improved member and booking list items with enhanced cards
+- Updated summary cards with consistent styling
+
+**Improved:**
+
+- Enhanced visual consistency throughout the application
+- Created a more professional and cohesive user experience
+- Applied consistent padding and spacing throughout settings screens
+- Improved button styling with gold accent color for better visibility
+
 ### v0.97.0 - Dashboard Layout Optimization for Tablet Portrait Mode (2025-07-20)
 
 **Added:**
