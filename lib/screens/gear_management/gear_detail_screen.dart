@@ -6,6 +6,7 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
+import '../../widgets/blkwds_enhanced_widgets.dart';
 
 /// GearDetailScreen
 /// Displays detailed information about a gear item
@@ -122,17 +123,24 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         title: const Text('Delete Gear'),
         content: Text('Are you sure you want to delete ${widget.gear.name}?'),
         actions: [
-          BLKWDSButton(
+          BLKWDSEnhancedButton(
             label: 'Cancel',
             onPressed: () => Navigator.pop(context, false),
-            type: BLKWDSButtonType.secondary,
-            isSmall: true,
+            type: BLKWDSEnhancedButtonType.secondary,
+            padding: EdgeInsets.symmetric(
+              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+            ),
+            foregroundColor: BLKWDSColors.mustardOrange,
           ),
-          BLKWDSButton(
+          BLKWDSEnhancedButton(
             label: 'Delete',
             onPressed: () => Navigator.pop(context, true),
-            type: BLKWDSButtonType.danger,
-            isSmall: true,
+            type: BLKWDSEnhancedButtonType.error,
+            padding: EdgeInsets.symmetric(
+              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+            ),
           ),
         ],
       ),
@@ -228,11 +236,15 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
           ),
         ),
         actions: [
-          BLKWDSButton(
+          BLKWDSEnhancedButton(
             label: 'Cancel',
             onPressed: () => Navigator.pop(context),
-            type: BLKWDSButtonType.secondary,
-            isSmall: true,
+            type: BLKWDSEnhancedButtonType.secondary,
+            padding: EdgeInsets.symmetric(
+              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+            ),
+            foregroundColor: BLKWDSColors.mustardOrange,
           ),
         ],
       ),
@@ -429,70 +441,71 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Gear info card
-          BLKWDSCard(
-            child: Padding(
-              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Gear name and category
-                  Row(
+          BLKWDSEnhancedCard(
+            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Gear name and category
+                Row(
+                  children: [
+                    // Status indicator
+                    BLKWDSEnhancedStatusBadge(
+                      text: widget.gear.isOut ? 'OUT' : 'IN',
+                      color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                      icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
+                      hasBorder: true,
+                    ),
+                    const SizedBox(width: BLKWDSConstants.spacingSmall),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.gear.name,
+                            style: BLKWDSTypography.headlineSmall,
+                          ),
+                          Text(
+                            widget.gear.category,
+                            style: BLKWDSTypography.titleMedium.copyWith(
+                              color: BLKWDSColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Divider(height: BLKWDSConstants.spacingLarge),
+
+                // Gear ID
+                _buildInfoRow('Gear ID', '#${widget.gear.id}'),
+
+                // Serial number
+                if (widget.gear.serialNumber != null && widget.gear.serialNumber!.isNotEmpty)
+                  _buildInfoRow('Serial Number', widget.gear.serialNumber!),
+
+                // Purchase date
+                if (widget.gear.purchaseDate != null)
+                  _buildInfoRow('Purchase Date', _formatDate(widget.gear.purchaseDate!)),
+
+                // Status
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: BLKWDSConstants.spacingSmall),
+                  child: Row(
                     children: [
-                      // Status indicator
-                      BLKWDSStatusBadge(
-                        text: widget.gear.isOut ? 'OUT' : 'IN',
+                      Text(
+                        'Status:',
+                        style: BLKWDSTypography.titleSmall,
+                      ),
+                      const SizedBox(width: BLKWDSConstants.spacingMedium),
+                      BLKWDSEnhancedStatusBadge(
+                        text: widget.gear.isOut ? 'CHECKED OUT' : 'AVAILABLE',
                         color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
                         icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
+                        hasBorder: true,
                       ),
-                      const SizedBox(width: BLKWDSConstants.spacingSmall),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.gear.name,
-                              style: BLKWDSTypography.headlineSmall,
-                            ),
-                            Text(
-                              widget.gear.category,
-                              style: BLKWDSTypography.titleMedium.copyWith(
-                                color: BLKWDSColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const Divider(height: BLKWDSConstants.spacingLarge),
-
-                  // Gear ID
-                  _buildInfoRow('Gear ID', '#${widget.gear.id}'),
-
-                  // Serial number
-                  if (widget.gear.serialNumber != null && widget.gear.serialNumber!.isNotEmpty)
-                    _buildInfoRow('Serial Number', widget.gear.serialNumber!),
-
-                  // Purchase date
-                  if (widget.gear.purchaseDate != null)
-                    _buildInfoRow('Purchase Date', _formatDate(widget.gear.purchaseDate!)),
-
-                  // Status
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: BLKWDSConstants.spacingSmall),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Status:',
-                          style: BLKWDSTypography.titleSmall,
-                        ),
-                        const SizedBox(width: BLKWDSConstants.spacingMedium),
-                        BLKWDSStatusBadge(
-                          text: widget.gear.isOut ? 'CHECKED OUT' : 'AVAILABLE',
-                          color: widget.gear.isOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
-                          icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
-                        ),
                       ],
                     ),
                   ),
@@ -527,17 +540,17 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                 ],
               ),
             ),
-          ),
 
           const SizedBox(height: BLKWDSConstants.spacingMedium),
 
           // Add status note button
-          BLKWDSButton(
+          BLKWDSEnhancedButton(
             label: 'Add Status Note',
             onPressed: _addStatusNote,
-            type: BLKWDSButtonType.secondary,
+            type: BLKWDSEnhancedButtonType.secondary,
             icon: Icons.note_add,
-            isFullWidth: true,
+            width: double.infinity,
+            foregroundColor: BLKWDSColors.mustardOrange,
           ),
         ],
       ),
@@ -570,10 +583,12 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
                       style: BLKWDSTypography.bodyMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    BLKWDSButton(
+                    BLKWDSEnhancedButton(
                       label: 'Retry',
                       onPressed: _loadActivityLogs,
-                      type: BLKWDSButtonType.primary,
+                      type: BLKWDSEnhancedButtonType.primary,
+                      backgroundColor: BLKWDSColors.mustardOrange,
+                      foregroundColor: BLKWDSColors.deepBlack,
                     ),
                   ],
                 ),
@@ -613,79 +628,77 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
 
   // Build an activity log card
   Widget _buildActivityLogCard(ActivityLog log) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      child: Padding(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Log header
+    return BLKWDSEnhancedCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Log header
+          Row(
+            children: [
+              BLKWDSEnhancedStatusBadge(
+                text: log.checkedOut ? 'CHECKED OUT' : 'CHECKED IN',
+                color: log.checkedOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
+                icon: log.checkedOut ? Icons.logout : Icons.login,
+                hasBorder: true,
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingMedium),
+              Expanded(
+                child: Text(
+                  log.checkedOut ? 'Gear was checked out' : 'Gear was returned',
+                  style: BLKWDSTypography.bodyMedium,
+                ),
+              ),
+              Text(
+                _formatDate(log.timestamp),
+                style: BLKWDSTypography.bodySmall.copyWith(
+                  color: BLKWDSColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+
+          // Member info if available
+          if (log.member != null) ...[
+            const SizedBox(height: BLKWDSConstants.spacingSmall),
             Row(
               children: [
-                BLKWDSStatusBadge(
-                  text: log.checkedOut ? 'CHECKED OUT' : 'CHECKED IN',
-                  color: log.checkedOut ? BLKWDSColors.statusOut : BLKWDSColors.statusIn,
-                  icon: log.checkedOut ? Icons.logout : Icons.login,
+                const Icon(
+                  Icons.person,
+                  size: 16,
+                  color: BLKWDSColors.textSecondary,
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingMedium),
+                const SizedBox(width: BLKWDSConstants.spacingSmall),
+                Text(
+                  log.member!.name,
+                  style: BLKWDSTypography.bodyMedium,
+                ),
+              ],
+            ),
+          ],
+
+          // Note if available
+          if (log.note != null && log.note!.isNotEmpty) ...[
+            const SizedBox(height: BLKWDSConstants.spacingSmall),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.note,
+                  size: 16,
+                  color: BLKWDSColors.textSecondary,
+                ),
+                const SizedBox(width: BLKWDSConstants.spacingSmall),
                 Expanded(
                   child: Text(
-                    log.checkedOut ? 'Gear was checked out' : 'Gear was returned',
+                    log.note!,
                     style: BLKWDSTypography.bodyMedium,
-                  ),
-                ),
-                Text(
-                  _formatDate(log.timestamp),
-                  style: BLKWDSTypography.bodySmall.copyWith(
-                    color: BLKWDSColors.textSecondary,
                   ),
                 ),
               ],
             ),
-
-            // Member info if available
-            if (log.member != null) ...[
-              const SizedBox(height: BLKWDSConstants.spacingSmall),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.person,
-                    size: 16,
-                    color: BLKWDSColors.textSecondary,
-                  ),
-                  const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Text(
-                    log.member!.name,
-                    style: BLKWDSTypography.bodyMedium,
-                  ),
-                ],
-              ),
-            ],
-
-            // Note if available
-            if (log.note != null && log.note!.isNotEmpty) ...[
-              const SizedBox(height: BLKWDSConstants.spacingSmall),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.note,
-                    size: 16,
-                    color: BLKWDSColors.textSecondary,
-                  ),
-                  const SizedBox(width: BLKWDSConstants.spacingSmall),
-                  Expanded(
-                    child: Text(
-                      log.note!,
-                      style: BLKWDSTypography.bodyMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ],
-        ),
+        ],
       ),
     );
   }
@@ -745,15 +758,18 @@ class _GearDetailScreenState extends State<GearDetailScreen> with SingleTickerPr
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                BLKWDSButton(
+                BLKWDSEnhancedButton(
                   label: 'Cancel',
                   onPressed: () => Navigator.pop(context),
-                  type: BLKWDSButtonType.secondary,
+                  type: BLKWDSEnhancedButtonType.secondary,
+                  foregroundColor: BLKWDSColors.mustardOrange,
                 ),
-                BLKWDSButton(
+                BLKWDSEnhancedButton(
                   label: 'Continue',
                   onPressed: () => Navigator.pop(context, controller.text),
-                  type: BLKWDSButtonType.primary,
+                  type: BLKWDSEnhancedButtonType.primary,
+                  backgroundColor: BLKWDSColors.mustardOrange,
+                  foregroundColor: BLKWDSColors.deepBlack,
                 ),
               ],
             ),

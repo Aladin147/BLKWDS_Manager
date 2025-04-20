@@ -39,7 +39,7 @@ class BLKWDSStatusBadge extends StatelessWidget {
       case 'current':
       case 'in':
       case 'available':
-        color = BLKWDSColors.blkwdsGreen;
+        color = BLKWDSColors.statusIn;
         break;
       case 'upcoming':
       case 'pending':
@@ -54,7 +54,7 @@ class BLKWDSStatusBadge extends StatelessWidget {
       case 'out':
       case 'warning':
       case 'attention':
-        color = BLKWDSColors.mustardOrange;
+        color = BLKWDSColors.statusOut;
         break;
       case 'error':
       case 'critical':

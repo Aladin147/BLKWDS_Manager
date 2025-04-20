@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import '../../../models/models.dart';
 import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
-import '../../../theme/blkwds_typography.dart';
 import '../../../widgets/blkwds_widgets.dart';
 import '../booking_panel_controller.dart';
 import '../models/booking_list_view_options.dart';
@@ -113,16 +112,19 @@ class BookingListItem extends StatelessWidget {
           return await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Delete Booking'),
-              content: const Text('Are you sure you want to delete this booking?'),
+              title: BLKWDSEnhancedText.titleLarge('Delete Booking'),
+              content: BLKWDSEnhancedText.bodyMedium('Are you sure you want to delete this booking?'),
               actions: [
-                TextButton(
+                BLKWDSEnhancedButton(
+                  label: 'Cancel',
                   onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
+                  type: BLKWDSEnhancedButtonType.secondary,
+                  foregroundColor: BLKWDSColors.mustardOrange,
                 ),
-                TextButton(
+                BLKWDSEnhancedButton(
+                  label: 'Delete',
                   onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Delete'),
+                  type: BLKWDSEnhancedButtonType.error,
                 ),
               ],
             ),
@@ -137,9 +139,9 @@ class BookingListItem extends StatelessWidget {
       child: InkWell(
         onTap: onTap != null ? () => onTap!(booking) : null,
         onLongPress: onLongPress != null ? () => onLongPress!(booking) : null,
-        child: BLKWDSCard(
+        child: BLKWDSEnhancedCard(
           padding: EdgeInsets.zero,
-          type: isSelected ? BLKWDSCardType.primary : BLKWDSCardType.standard,
+          type: isSelected ? BLKWDSEnhancedCardType.primary : BLKWDSEnhancedCardType.standard,
           child: Container(
             decoration: BoxDecoration(
               border: Border(
@@ -171,24 +173,21 @@ class BookingListItem extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Booking title
-                            Text(
+                            BLKWDSEnhancedText.headingMedium(
                               booking.title ?? project?.title ?? 'Unknown Project',
-                              style: BLKWDSTypography.titleMedium,
                               overflow: TextOverflow.ellipsis,
                             ),
                             // Project name (if different from title)
                             if (booking.title != null && project != null && booking.title != project.title)
-                              Text(
+                              BLKWDSEnhancedText.bodySmall(
                                 project.title,
-                                style: BLKWDSTypography.bodySmall.copyWith(
-                                  color: BLKWDSColors.textSecondary,
-                                ),
+                                color: BLKWDSColors.textSecondary,
                                 overflow: TextOverflow.ellipsis,
                               ),
                           ],
                         ),
                       ),
-                      BLKWDSStatusBadge(
+                      BLKWDSEnhancedStatusBadge(
                         text: statusText,
                         color: statusColor,
                         fontSize: 12,
@@ -196,6 +195,7 @@ class BookingListItem extends StatelessWidget {
                           horizontal: 12,
                           vertical: 6,
                         ),
+                        hasBorder: true,
                       ),
                     ],
                   ),
@@ -211,11 +211,10 @@ class BookingListItem extends StatelessWidget {
                       ),
                       const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
                       Expanded(
-                        child: Text(
+                        child: BLKWDSEnhancedText.bodyMedium(
                           startDateStr == endDateStr
                               ? '$startDateStr, $startTimeStr - $endTimeStr'
                               : '$startDateStr $startTimeStr - $endDateStr $endTimeStr',
-                          style: BLKWDSTypography.bodyMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -238,11 +237,9 @@ class BookingListItem extends StatelessWidget {
                               color: BLKWDSColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
-                            Text(
+                            BLKWDSEnhancedText.bodySmall(
                               durationText,
-                              style: BLKWDSTypography.labelSmall.copyWith(
-                                color: BLKWDSColors.textSecondary,
-                              ),
+                              color: BLKWDSColors.textSecondary,
                             ),
                           ],
                         ),
@@ -265,12 +262,11 @@ class BookingListItem extends StatelessWidget {
                           ),
                           const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
                           Expanded(
-                            child: Text(
+                            child: BLKWDSEnhancedText.bodyMedium(
                               [
                                 if (booking.isRecordingStudio) 'Recording Studio',
                                 if (booking.isProductionStudio) 'Production Studio',
                               ].join(', '),
-                              style: BLKWDSTypography.bodyMedium,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -289,9 +285,8 @@ class BookingListItem extends StatelessWidget {
                           color: BLKWDSColors.slateGrey,
                         ),
                         const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
-                        Text(
+                        BLKWDSEnhancedText.bodyMedium(
                           '${booking.gearIds.length} gear',
-                          style: BLKWDSTypography.bodyMedium,
                         ),
 
                         const SizedBox(width: BLKWDSConstants.spacingMedium),
@@ -303,9 +298,8 @@ class BookingListItem extends StatelessWidget {
                           color: BLKWDSColors.slateGrey,
                         ),
                         const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
-                        Text(
+                        BLKWDSEnhancedText.bodyMedium(
                           '${booking.assignedGearToMember?.values.toSet().length ?? 0} members',
-                          style: BLKWDSTypography.bodyMedium,
                         ),
                       ],
                     ),
@@ -318,19 +312,26 @@ class BookingListItem extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          BLKWDSButton(
+                          BLKWDSEnhancedButton(
                             label: 'Edit',
                             icon: Icons.edit,
-                            type: BLKWDSButtonType.secondary,
-                            isSmall: true,
+                            type: BLKWDSEnhancedButtonType.secondary,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                            ),
+                            foregroundColor: BLKWDSColors.mustardOrange,
                             onPressed: onEdit,
                           ),
                           const SizedBox(width: BLKWDSConstants.spacingSmall),
-                          BLKWDSButton(
+                          BLKWDSEnhancedButton(
                             label: 'Delete',
                             icon: Icons.delete,
-                            type: BLKWDSButtonType.danger,
-                            isSmall: true,
+                            type: BLKWDSEnhancedButtonType.error,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
+                              vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
+                            ),
                             onPressed: onDelete,
                           ),
                         ],

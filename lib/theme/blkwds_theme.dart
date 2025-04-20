@@ -12,8 +12,8 @@ class BLKWDSTheme {
     return ThemeData.dark(useMaterial3: true).copyWith(
       // Color Scheme
       colorScheme: const ColorScheme.dark().copyWith(
-        primary: BLKWDSColors.blkwdsGreen,
-        onPrimary: BLKWDSColors.deepBlack,
+        primary: BLKWDSColors.mustardOrange,
+        onPrimary: BLKWDSColors.primaryButtonText,
         secondary: BLKWDSColors.accentTeal,
         onSecondary: BLKWDSColors.deepBlack,
         tertiary: BLKWDSColors.purpleAccent,

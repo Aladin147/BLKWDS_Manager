@@ -4,7 +4,7 @@ import '../../../theme/blkwds_colors.dart';
 import '../../../theme/blkwds_constants.dart';
 
 import '../../../widgets/blkwds_icon_container.dart';
-import '../../../widgets/blkwds_status_badge.dart';
+// Enhanced widgets only
 import '../../../widgets/blkwds_enhanced_widgets.dart';
 import '../dashboard_controller.dart';
 
@@ -20,6 +20,11 @@ class TopBarSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen size and orientation
+    final screenSize = MediaQuery.of(context).size;
+    final isPortrait = screenSize.height > screenSize.width;
+    final isTablet = screenSize.shortestSide >= 600;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -29,59 +34,230 @@ class TopBarSummaryWidget extends StatelessWidget {
       decoration: const BoxDecoration(
         color: BLKWDSColors.backgroundDark,
       ),
-      child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,
-        spacing: BLKWDSConstants.spacingMedium,
-        runSpacing: BLKWDSConstants.spacingMedium,
-        children: [
-          // Gear Out Count
-          ValueListenableBuilder<int>(
-            valueListenable: controller.gearOutCount,
-            builder: (context, count, _) {
-              return _buildSummaryCard(
-                title: 'Gear Out',
-                value: count.toString(),
-                subtitle: 'Items',
-                icon: Icons.camera_alt,
-              );
-            },
-          ),
+      child: isPortrait && isTablet
+          ? _buildPortraitGridLayout(context)  // 2x2 grid for portrait tablet
+          : isTablet && !isPortrait
+              ? _buildLandscapeRowLayout(context)  // Row for landscape tablet
+              : _buildWrapLayout(context),  // Wrap for other devices
+    );
+  }
 
-          // Bookings Today Count
-          ValueListenableBuilder<int>(
-            valueListenable: controller.bookingsTodayCount,
-            builder: (context, count, _) {
-              return _buildSummaryCard(
-                title: 'Bookings Today',
-                value: count.toString(),
-                subtitle: 'Today',
-                icon: Icons.event,
-              );
-            },
-          ),
+  // Build a 2x2 grid layout for portrait mode on tablets
+  Widget _buildPortraitGridLayout(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // First row: Gear Out and Bookings Today
+        Row(
+          children: [
+            // Gear Out Count
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: BLKWDSConstants.spacingSmall),
+                child: ValueListenableBuilder<int>(
+                  valueListenable: controller.gearOutCount,
+                  builder: (context, count, _) {
+                    return _buildSummaryCard(
+                      title: 'Gear Out',
+                      value: count.toString(),
+                      subtitle: 'Items',
+                      icon: Icons.camera_alt,
+                    );
+                  },
+                ),
+              ),
+            ),
 
-          // Gear Returning Soon Count
-          ValueListenableBuilder<int>(
-            valueListenable: controller.gearReturningCount,
-            builder: (context, count, _) {
-              return _buildSummaryCard(
-                title: 'Gear Returning',
-                value: count.toString(),
-                subtitle: 'Soon',
-                icon: Icons.assignment_return,
-              );
-            },
-          ),
+            // Bookings Today Count
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: BLKWDSConstants.spacingSmall),
+                child: ValueListenableBuilder<int>(
+                  valueListenable: controller.bookingsTodayCount,
+                  builder: (context, count, _) {
+                    return _buildSummaryCard(
+                      title: 'Bookings Today',
+                      value: count.toString(),
+                      subtitle: 'Today',
+                      icon: Icons.event,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
 
-          // Studio Booking Info
-          ValueListenableBuilder<Booking?>(
-            valueListenable: controller.studioBookingToday,
-            builder: (context, booking, _) {
-              return _buildStudioBookingInfo(booking);
-            },
+        const SizedBox(height: BLKWDSConstants.spacingMedium),
+
+        // Second row: Gear Returning and Studio Booking
+        Row(
+          children: [
+            // Gear Returning Soon Count
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: BLKWDSConstants.spacingSmall),
+                child: ValueListenableBuilder<int>(
+                  valueListenable: controller.gearReturningCount,
+                  builder: (context, count, _) {
+                    return _buildSummaryCard(
+                      title: 'Gear Returning',
+                      value: count.toString(),
+                      subtitle: 'Soon',
+                      icon: Icons.assignment_return,
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // Studio Booking Info
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: BLKWDSConstants.spacingSmall),
+                child: ValueListenableBuilder<Booking?>(
+                  valueListenable: controller.studioBookingToday,
+                  builder: (context, booking, _) {
+                    return _buildStudioBookingInfo(booking);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Build a row layout for landscape mode on tablets
+  Widget _buildLandscapeRowLayout(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Gear Out Count
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: BLKWDSConstants.spacingSmall),
+            child: ValueListenableBuilder<int>(
+              valueListenable: controller.gearOutCount,
+              builder: (context, count, _) {
+                return _buildSummaryCard(
+                  title: 'Gear Out',
+                  value: count.toString(),
+                  subtitle: 'Items',
+                  icon: Icons.camera_alt,
+                );
+              },
+            ),
           ),
-        ],
-      ),
+        ),
+
+        // Bookings Today Count
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: BLKWDSConstants.spacingSmall),
+            child: ValueListenableBuilder<int>(
+              valueListenable: controller.bookingsTodayCount,
+              builder: (context, count, _) {
+                return _buildSummaryCard(
+                  title: 'Bookings Today',
+                  value: count.toString(),
+                  subtitle: 'Today',
+                  icon: Icons.event,
+                );
+              },
+            ),
+          ),
+        ),
+
+        // Gear Returning Soon Count
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: BLKWDSConstants.spacingSmall),
+            child: ValueListenableBuilder<int>(
+              valueListenable: controller.gearReturningCount,
+              builder: (context, count, _) {
+                return _buildSummaryCard(
+                  title: 'Gear Returning',
+                  value: count.toString(),
+                  subtitle: 'Soon',
+                  icon: Icons.assignment_return,
+                );
+              },
+            ),
+          ),
+        ),
+
+        // Studio Booking Info
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: BLKWDSConstants.spacingSmall),
+            child: ValueListenableBuilder<Booking?>(
+              valueListenable: controller.studioBookingToday,
+              builder: (context, booking, _) {
+                return _buildStudioBookingInfo(booking);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Build the original wrap layout for desktop and non-tablet devices
+  Widget _buildWrapLayout(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.spaceEvenly,
+      spacing: BLKWDSConstants.spacingMedium,
+      runSpacing: BLKWDSConstants.spacingMedium,
+      children: [
+        // Gear Out Count
+        ValueListenableBuilder<int>(
+          valueListenable: controller.gearOutCount,
+          builder: (context, count, _) {
+            return _buildSummaryCard(
+              title: 'Gear Out',
+              value: count.toString(),
+              subtitle: 'Items',
+              icon: Icons.camera_alt,
+            );
+          },
+        ),
+
+        // Bookings Today Count
+        ValueListenableBuilder<int>(
+          valueListenable: controller.bookingsTodayCount,
+          builder: (context, count, _) {
+            return _buildSummaryCard(
+              title: 'Bookings Today',
+              value: count.toString(),
+              subtitle: 'Today',
+              icon: Icons.event,
+            );
+          },
+        ),
+
+        // Gear Returning Soon Count
+        ValueListenableBuilder<int>(
+          valueListenable: controller.gearReturningCount,
+          builder: (context, count, _) {
+            return _buildSummaryCard(
+              title: 'Gear Returning',
+              value: count.toString(),
+              subtitle: 'Soon',
+              icon: Icons.assignment_return,
+            );
+          },
+        ),
+
+        // Studio Booking Info
+        ValueListenableBuilder<Booking?>(
+          valueListenable: controller.studioBookingToday,
+          builder: (context, booking, _) {
+            return _buildStudioBookingInfo(booking);
+          },
+        ),
+      ],
     );
   }
 
@@ -92,59 +268,56 @@ class TopBarSummaryWidget extends StatelessWidget {
     required String subtitle,
     required IconData icon,
   }) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 150, maxWidth: 220),
-      child: BLKWDSEnhancedCard(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                BLKWDSIconContainer(
-                  icon: icon,
-                  size: BLKWDSIconContainerSize.small,
-                  backgroundColor: BLKWDSColors.accentTeal,
-                  backgroundAlpha: BLKWDSColors.alphaVeryLow,
-                  iconColor: BLKWDSColors.accentTeal,
-                  // iconSize parameter removed
+    return BLKWDSEnhancedCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              BLKWDSIconContainer(
+                icon: icon,
+                size: BLKWDSIconContainerSize.small,
+                backgroundColor: BLKWDSColors.accentTeal,
+                backgroundAlpha: BLKWDSColors.alphaVeryLow,
+                iconColor: BLKWDSColors.accentTeal,
+                // iconSize parameter removed
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingSmall),
+              Flexible(
+                child: BLKWDSEnhancedText.labelMedium(
+                  title,
+                  color: BLKWDSColors.textPrimary,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingSmall),
-                Flexible(
-                  child: BLKWDSEnhancedText.labelMedium(
-                    title,
-                    color: BLKWDSColors.textPrimary,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              ),
+            ],
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Flexible(
+                child: BLKWDSEnhancedText.headingLarge(
+                  value,
+                  color: BLKWDSColors.accentTeal,
+                  isBold: true,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Flexible(
-                  child: BLKWDSEnhancedText.headingLarge(
-                    value,
-                    color: BLKWDSColors.accentTeal,
-                    isBold: true,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              ),
+              const SizedBox(width: BLKWDSConstants.spacingSmall),
+              Flexible(
+                child: BLKWDSEnhancedText.bodySmall(
+                  subtitle,
+                  color: BLKWDSColors.textSecondary,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: BLKWDSConstants.spacingSmall),
-                Flexible(
-                  child: BLKWDSEnhancedText.bodySmall(
-                    subtitle,
-                    color: BLKWDSColors.textSecondary,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -153,49 +326,47 @@ class TopBarSummaryWidget extends StatelessWidget {
   Widget _buildStudioBookingInfo(Booking? studioBooking) {
     final isBooked = studioBooking != null && studioBooking.projectId != -1;
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 150, maxWidth: 220),
-      child: BLKWDSEnhancedCard(
-        padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const BLKWDSIconContainer(
-                  icon: Icons.business,
-                  size: BLKWDSIconContainerSize.small,
-                  backgroundColor: BLKWDSColors.accentTeal,
-                  backgroundAlpha: BLKWDSColors.alphaVeryLow,
-                  iconColor: BLKWDSColors.accentTeal,
-                  // iconSize parameter removed
-                ),
-                const SizedBox(width: BLKWDSConstants.spacingSmall),
-                Flexible(
-                  child: BLKWDSEnhancedText.labelMedium(
-                    'Studio:',
-                    color: BLKWDSColors.textPrimary,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: BLKWDSConstants.spacingMedium),
-            BLKWDSStatusBadge(
-              text: isBooked ? 'BOOKED' : 'AVAILABLE',
-              color: isBooked
-                  ? BLKWDSColors.statusOut
-                  : BLKWDSColors.statusIn,
-              icon: isBooked ? Icons.event_busy : Icons.event_available,
-            ),
-            if (isBooked)
-              BLKWDSEnhancedText.bodySmall(
-                _formatStudioTime(studioBooking),
-                color: BLKWDSColors.textSecondary,
+    return BLKWDSEnhancedCard(
+      padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const BLKWDSIconContainer(
+                icon: Icons.business,
+                size: BLKWDSIconContainerSize.small,
+                backgroundColor: BLKWDSColors.accentTeal,
+                backgroundAlpha: BLKWDSColors.alphaVeryLow,
+                iconColor: BLKWDSColors.accentTeal,
+                // iconSize parameter removed
               ),
-          ],
-        ),
+              const SizedBox(width: BLKWDSConstants.spacingSmall),
+              Flexible(
+                child: BLKWDSEnhancedText.labelMedium(
+                  'Studio:',
+                  color: BLKWDSColors.textPrimary,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: BLKWDSConstants.spacingMedium),
+          BLKWDSEnhancedStatusBadge(
+            text: isBooked ? 'BOOKED' : 'AVAILABLE',
+            color: isBooked
+                ? BLKWDSColors.statusOut
+                : BLKWDSColors.statusIn,
+            icon: isBooked ? Icons.event_busy : Icons.event_available,
+            hasBorder: true,
+          ),
+          if (isBooked)
+            BLKWDSEnhancedText.bodySmall(
+              _formatStudioTime(studioBooking),
+              color: BLKWDSColors.textSecondary,
+            ),
+        ],
       ),
     );
   }

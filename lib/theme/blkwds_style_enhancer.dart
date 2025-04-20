@@ -19,7 +19,7 @@ class BLKWDSStyleEnhancer {
   }) {
     // Set default values
     backgroundColor ??= isPrimary
-        ? BLKWDSColors.blkwdsGreen
+        ? BLKWDSColors.mustardOrange
         : BLKWDSColors.backgroundMedium;
 
     borderRadius ??= BorderRadius.circular(BLKWDSConstants.borderRadiusMedium);
@@ -31,7 +31,7 @@ class BLKWDSStyleEnhancer {
 
     // Get appropriate shadows
     boxShadow ??= isPrimary
-        ? BLKWDSShadows.getColoredShadow(shadowLevel, BLKWDSColors.blkwdsGreen)
+        ? BLKWDSShadows.getColoredShadow(shadowLevel, BLKWDSColors.mustardOrange)
         : BLKWDSShadows.getShadow(shadowLevel);
 
     // Create gradient if requested
@@ -77,7 +77,7 @@ class BLKWDSStyleEnhancer {
   }) {
     // Set default values
     backgroundColor ??= isPrimary
-        ? BLKWDSColors.blkwdsGreen
+        ? BLKWDSColors.mustardOrange
         : BLKWDSColors.backgroundMedium;
 
     foregroundColor ??= isPrimary
@@ -161,7 +161,7 @@ class BLKWDSStyleEnhancer {
     TextDecoration? decoration,
     bool isPrimary = false,
   }) {
-    color ??= isPrimary ? BLKWDSColors.blkwdsGreen : null;
+    color ??= isPrimary ? BLKWDSColors.mustardOrange : null;
 
     return baseStyle.copyWith(
       color: color,

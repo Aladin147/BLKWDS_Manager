@@ -53,22 +53,22 @@ class BLKWDSColors {
   static const Color transparent = Color(0x00000000); // Fully transparent color
 
   // Background Colors
-  static const Color backgroundDark = Color(0xFF191919); // Slightly lighter than pure black
-  static const Color backgroundMedium = Color(0xFF222222); // Card backgrounds
-  static const Color backgroundLight = Color(0xFF2A2A2A); // Elevated surfaces
+  static const Color backgroundDark = Color(0xFF0F1210); // Desaturated charcoal green background
+  static const Color backgroundMedium = Color(0xFF1D2A23); // Subtle desaturated green surfaces
+  static const Color backgroundLight = Color(0xFF2A3932); // Elevated surfaces
 
   // Accent Colors
-  static const Color mustardOrange = Color(0xFFFFC857); // Vibrant, modern yellow-orange
+  static const Color mustardOrange = Color(0xFFFFCC66); // Soft, modern gold for actions
   static const Color electricMint = Color(0xFF4ECDC4); // Teal-mint that pops against dark bg
-  static const Color alertCoral = Color(0xFFFF6B6B); // Softer, more modern red
-  static const Color accentTeal = Color(0xFF00B8D9); // Bright, modern teal
+  static const Color alertCoral = Color(0xFFDA5E54); // Alert red, muted to stay readable
+  static const Color accentTeal = Color(0xFF7AB4D3); // Faint cool blue for subtle structure
   static const Color accentPurple = Color(0xFF9F7AEA); // Bright, modern purple
-  static const Color errorRed = Color(0xFFFF5252); // Consistent error color
+  static const Color errorRed = Color(0xFFDA5E54); // Consistent error color
 
   // Additional Accent Colors
-  static const Color successGreen = Color(0xFF36B37E); // Modern success green
-  static const Color warningAmber = Color(0xFFFFAB00); // Vibrant warning amber
-  static const Color infoBlue = Color(0xFF2684FF); // Bright info blue
+  static const Color successGreen = Color(0xFF6BD99F); // Positive state - clean & distinct
+  static const Color warningAmber = Color(0xFFFFAA5E); // Orange-tinted OUT state
+  static const Color infoBlue = Color(0xFF7AB4D3); // Faint cool blue for structure
   static const Color purpleAccent = Color(0xFF9F7AEA); // Additional accent color
   static const Color pinkAccent = Color(0xFFED64A6); // Additional accent color
 
@@ -79,19 +79,19 @@ class BLKWDSColors {
   static const Color statusBooked = infoBlue;
 
   // Text Colors
-  static const Color textPrimary = Color(0xFFEDF2F7); // Slightly off-white for better eye comfort
-  static const Color textSecondary = Color(0xFFA0AEC0); // Medium contrast secondary text
+  static const Color textPrimary = Color(0xFFFFFFFF); // Main UI text
+  static const Color textSecondary = Color(0xFFCCCCCC); // Labels, notes, helper text
   static const Color textDisabled = Color(0xFF718096); // Disabled text with sufficient contrast
   static const Color textHint = Color(0xFF8A94A6); // Hint text with better visibility
 
   // UI Element Colors
   static const Color cardBackground = backgroundMedium;
   static const Color appBackground = backgroundDark;
-  static const Color primaryButtonBackground = blkwdsGreen;
-  static const Color primaryButtonText = deepBlack;
+  static const Color primaryButtonBackground = mustardOrange; // Soft gold for CTAs
+  static const Color primaryButtonText = Color(0xFF1E1E1E); // Dark text for contrast on gold
   static const Color secondaryButtonBackground = backgroundLight;
   static const Color secondaryButtonText = white;
-  static const Color secondaryButtonBorder = slateGrey;
+  static const Color secondaryButtonBorder = accentTeal;
 
   // Input Colors
   static const Color inputBackground = Color(0xFF2D3748); // Slightly lighter for better contrast
@@ -101,8 +101,8 @@ class BLKWDSColors {
   static const Color inputSuccessBorder = successGreen;
 
   // Divider and Border Colors
-  static const Color divider = Color(0xFF2D3748); // More subtle divider
-  static const Color border = Color(0xFF4A5568); // More visible border
+  static const Color divider = Color(0xFF2A3932); // More subtle divider
+  static const Color border = Color(0xFF2A3932); // Barely-visible separators
 
   // Overlay Colors
   static const Color overlay = Color(0x80000000); // 50% black for overlays
@@ -127,7 +127,7 @@ class BLKWDSColors {
   static const Color selection = Color(0xFF2C5282);
 
   // Additional Colors for Backward Compatibility
-  static const Color primary = blkwdsGreen;
+  static const Color primary = mustardOrange;
   static const Color success = successGreen;
   static const Color textLight = textPrimary;
 }

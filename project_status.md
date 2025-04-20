@@ -251,9 +251,10 @@ The following plan outlines the steps for the beta release of BLKWDS Manager. Th
      - [x] Fix indentation in top_bar_summary_widget.dart
      - [x] Make summary cards responsive by using Flexible or FractionallySizedBox
      - [x] Add SizedBox wrapper to studio booking info card for consistency
-     - [ ] Replace fixed heights with Expanded or Flexible widgets (Requires more complex refactoring)
+     - [x] Replace fixed heights with Expanded or Flexible widgets (Requires more complex refactoring)
      - [ ] Standardize padding using BLKWDSConstants
-     - [ ] Improve responsive layout with more breakpoints
+     - [x] Improve responsive layout with more breakpoints
+     - [x] Optimize dashboard layout for tablet portrait mode with 2x2 grid
    - Standardize Components
      - [x] Replace DropdownButtonFormField with BLKWDSDropdown
      - [x] Replace TextButton.icon with BLKWDSButton
@@ -322,6 +323,27 @@ A comprehensive style enhancement system has been implemented to improve visual 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
 ## Recent Changes
+
+### v0.97.0 - Dashboard Layout Optimization for Tablet Portrait Mode (2025-07-20)
+
+**Added:**
+
+- Implemented a 2x2 grid layout for the top summary widgets in portrait mode on tablets
+- Created a row layout for landscape mode to display all four widgets side by side
+- Added orientation and screen size detection using MediaQuery
+
+**Changed:**
+
+- Refactored TopBarSummaryWidget to handle multiple layout types
+- Created dedicated methods for each layout type (portrait grid, landscape row, wrap)
+- Removed unnecessary ConstrainedBox wrappers for better flexibility
+
+**Improved:**
+
+- Enhanced user experience on tablet devices with better space utilization
+- Improved visual balance in both portrait and landscape orientations
+- Made the dashboard more responsive to different screen sizes and orientations
+- Optimized layout specifically for Android tablets
 
 ### v0.96.0 - User Documentation (2025-07-14)
 

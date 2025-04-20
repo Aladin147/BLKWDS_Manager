@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'blkwds_colors.dart';
 
 /// BLKWDS Manager Gradient System
-/// 
+///
 /// Provides standardized gradients for consistent styling throughout the app
 class BLKWDSGradients {
   // Primary Gradients
@@ -14,7 +14,7 @@ class BLKWDSGradients {
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
   );
-  
+
   static const LinearGradient secondaryGradient = LinearGradient(
     colors: [
       BLKWDSColors.electricMint,
@@ -23,7 +23,7 @@ class BLKWDSGradients {
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
   );
-  
+
   static const LinearGradient accentGradient = LinearGradient(
     colors: [
       BLKWDSColors.accentTeal,
@@ -32,7 +32,7 @@ class BLKWDSGradients {
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
   );
-  
+
   // Background Gradients
   static const LinearGradient darkBackgroundGradient = LinearGradient(
     colors: [
@@ -42,16 +42,16 @@ class BLKWDSGradients {
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
   );
-  
+
   static const LinearGradient appBackgroundGradient = LinearGradient(
     colors: [
-      BLKWDSColors.blkwdsGreen,
-      Color(0xFF3A7D55), // Slightly lighter green
+      BLKWDSColors.backgroundDark,
+      BLKWDSColors.backgroundMedium, // Slightly lighter desaturated green
     ],
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
   );
-  
+
   // Status Gradients
   static const LinearGradient successGradient = LinearGradient(
     colors: [
@@ -61,7 +61,7 @@ class BLKWDSGradients {
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
   );
-  
+
   static const LinearGradient errorGradient = LinearGradient(
     colors: [
       BLKWDSColors.alertCoral,
@@ -70,7 +70,7 @@ class BLKWDSGradients {
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
   );
-  
+
   static const LinearGradient warningGradient = LinearGradient(
     colors: [
       BLKWDSColors.mustardOrange,
@@ -79,27 +79,27 @@ class BLKWDSGradients {
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
   );
-  
+
   // Card Gradients
   static const LinearGradient cardGradient = LinearGradient(
     colors: [
-      Color(0xFF1E1E1E), // Slightly lighter than deep black
-      BLKWDSColors.deepBlack,
+      Color(0xFF1F2220), // Slightly lighter desaturated green
+      Color(0xFF171A18), // Darker desaturated green
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-  
+
   static const LinearGradient primaryCardGradient = LinearGradient(
     colors: [
-      Color(0xFF1E1E1E), // Slightly lighter than deep black
-      BLKWDSColors.deepBlack,
+      Color(0xFF1F2220), // Slightly lighter desaturated green
+      Color(0xFF171A18), // Darker desaturated green
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     stops: [0.0, 0.85],
   );
-  
+
   // Button Gradients
   static const LinearGradient primaryButtonGradient = LinearGradient(
     colors: [
@@ -109,7 +109,7 @@ class BLKWDSGradients {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-  
+
   static const LinearGradient secondaryButtonGradient = LinearGradient(
     colors: [
       Color(0xFF2A2A2A), // Slightly lighter than deep black
@@ -118,7 +118,7 @@ class BLKWDSGradients {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-  
+
   static const LinearGradient dangerButtonGradient = LinearGradient(
     colors: [
       BLKWDSColors.alertCoral,
@@ -127,7 +127,7 @@ class BLKWDSGradients {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-  
+
   // Overlay Gradients
   static const LinearGradient overlayGradient = LinearGradient(
     colors: [
@@ -137,7 +137,7 @@ class BLKWDSGradients {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-  
+
   // Helper method to create a custom gradient
   static LinearGradient createGradient({
     required Color startColor,
@@ -153,7 +153,7 @@ class BLKWDSGradients {
       stops: stops,
     );
   }
-  
+
   // Helper method to create a custom radial gradient
   static RadialGradient createRadialGradient({
     required Color centerColor,
@@ -169,7 +169,7 @@ class BLKWDSGradients {
       stops: stops,
     );
   }
-  
+
   // Helper method to create a custom sweep gradient
   static SweepGradient createSweepGradient({
     required List<Color> colors,

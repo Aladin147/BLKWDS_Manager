@@ -192,6 +192,9 @@ class _GearPreviewListWidgetState extends State<GearPreviewListWidget> {
       type: isSelected ? BLKWDSEnhancedButtonType.primary : BLKWDSEnhancedButtonType.tertiary,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       borderRadius: BorderRadius.circular(16),
+      backgroundColor: isSelected ? BLKWDSColors.mustardOrange : BLKWDSColors.backgroundMedium,
+      foregroundColor: isSelected ? BLKWDSColors.deepBlack : BLKWDSColors.accentTeal,
+      isElevated: isSelected,
     );
   }
 

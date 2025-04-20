@@ -120,8 +120,8 @@ class _BLKWDSCardState extends State<BLKWDSCard> with SingleTickerProviderStateM
       case BLKWDSCardType.primary:
         backgroundColor = BLKWDSColors.backgroundMedium;
         gradient = widget.useGradient ? BLKWDSGradients.primaryCardGradient : null;
-        borderColor ??= BLKWDSColors.blkwdsGreen.withValues(alpha: 100);
-        shadows = widget.hasShadow ? BLKWDSShadows.getColoredShadow(BLKWDSShadows.level3, BLKWDSColors.blkwdsGreen) : [];
+        borderColor ??= BLKWDSColors.mustardOrange.withValues(alpha: 100);
+        shadows = widget.hasShadow ? BLKWDSShadows.getColoredShadow(BLKWDSShadows.level3, BLKWDSColors.mustardOrange) : [];
         break;
       case BLKWDSCardType.secondary:
         backgroundColor = BLKWDSColors.backgroundLight;

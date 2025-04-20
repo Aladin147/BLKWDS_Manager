@@ -5,6 +5,25 @@ All notable changes to the BLKWDS Manager project will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-beta2] - 2025-07-21
+
+**Changed:**
+
+- Updated color scheme with more desaturated charcoal green background for better visual depth
+- Enhanced Quick Actions buttons with gold text on dark green background
+- Updated filter chips in gear preview with gold background for selected state
+- Improved Check In button styling with gold background for better visibility
+- Updated booking list items to use enhanced cards and status badges
+- Updated gear detail screen to use enhanced cards and status badges
+
+**Improved:**
+
+- Visual consistency throughout the application
+- UI contrast and readability with more balanced color scheme
+- Overall aesthetic with more professional, desaturated background colors
+- Dialog buttons with consistent styling across the application
+- Text elements with enhanced styling for better readability
+
 ## [1.0.0-beta] - 2025-07-14
 
 **Added:**

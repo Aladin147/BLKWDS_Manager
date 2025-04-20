@@ -53,14 +53,14 @@ class BLKWDSButton extends StatelessWidget {
 
     switch (type) {
       case BLKWDSButtonType.primary:
-        backgroundColor = BLKWDSColors.accentTeal;
-        textColor = BLKWDSColors.white;
+        backgroundColor = BLKWDSColors.primaryButtonBackground;
+        textColor = BLKWDSColors.primaryButtonText;
         borderColor = null;
         break;
       case BLKWDSButtonType.secondary:
-        backgroundColor = BLKWDSColors.transparent;
-        textColor = BLKWDSColors.accentTeal;
-        borderColor = BLKWDSColors.accentTeal;
+        backgroundColor = BLKWDSColors.secondaryButtonBackground;
+        textColor = BLKWDSColors.secondaryButtonText;
+        borderColor = BLKWDSColors.secondaryButtonBorder;
         break;
       case BLKWDSButtonType.danger:
         backgroundColor = BLKWDSColors.errorRed;

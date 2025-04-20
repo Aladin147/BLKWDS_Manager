@@ -204,9 +204,11 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                   Builder(builder: (context) {
                     return widget.gear.isOut
                         ? BLKWDSEnhancedButton(
-                            label: 'Check In',
+                            label: 'Check in',
                             icon: Icons.check_circle,
-                            type: BLKWDSEnhancedButtonType.secondary,
+                            type: BLKWDSEnhancedButtonType.primary,
+                            backgroundColor: BLKWDSColors.mustardOrange,
+                            foregroundColor: BLKWDSColors.deepBlack,
                             padding: const EdgeInsets.symmetric(
                               horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
                               vertical: BLKWDSConstants.buttonVerticalPaddingSmall,

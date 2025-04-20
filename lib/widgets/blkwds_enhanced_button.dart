@@ -94,11 +94,11 @@ class _BLKWDSEnhancedButtonState extends State<BLKWDSEnhancedButton> {
   Widget build(BuildContext context) {
     // Determine button styling based on type
     final isPrimary = widget.type == BLKWDSEnhancedButtonType.primary;
-    
+
     // Determine colors based on type
     final backgroundColor = widget.backgroundColor ?? _getBackgroundColor();
     final foregroundColor = widget.foregroundColor ?? _getForegroundColor();
-    
+
     // Create button style
     final buttonStyle = BLKWDSStyleEnhancer.enhanceButton(
       backgroundColor: backgroundColor,
@@ -108,18 +108,18 @@ class _BLKWDSEnhancedButtonState extends State<BLKWDSEnhancedButton> {
       isPrimary: isPrimary,
       isElevated: widget.isElevated,
     );
-    
+
     // Create button content
     Widget buttonContent;
-    
+
     if (widget.isLoading) {
       // Show loading spinner
       buttonContent = SizedBox(
-        width: widget.icon != null && widget.label == null 
-            ? BLKWDSConstants.buttonIconSizeMedium 
+        width: widget.icon != null && widget.label == null
+            ? BLKWDSConstants.buttonIconSizeMedium
             : null,
-        height: widget.icon != null && widget.label == null 
-            ? BLKWDSConstants.buttonIconSizeMedium 
+        height: widget.icon != null && widget.label == null
+            ? BLKWDSConstants.buttonIconSizeMedium
             : null,
         child: CircularProgressIndicator(
           strokeWidth: 2.0,
@@ -149,14 +149,14 @@ class _BLKWDSEnhancedButtonState extends State<BLKWDSEnhancedButton> {
         style: widget.textStyle ?? BLKWDSTypography.labelLarge,
       );
     }
-    
+
     // Create base button
     Widget button = ElevatedButton(
       onPressed: widget.isLoading ? null : widget.onPressed,
       style: buttonStyle,
       child: buttonContent,
     );
-    
+
     // Add fixed size if specified
     if (widget.width != null || widget.height != null) {
       button = SizedBox(
@@ -165,7 +165,7 @@ class _BLKWDSEnhancedButtonState extends State<BLKWDSEnhancedButton> {
         child: button,
       );
     }
-    
+
     // Add hover animation if requested
     if (widget.animateOnHover && !widget.isLoading) {
       button = MouseRegion(
@@ -178,15 +178,15 @@ class _BLKWDSEnhancedButtonState extends State<BLKWDSEnhancedButton> {
         ),
       );
     }
-    
+
     return button;
   }
-  
+
   // Helper method to determine background color based on button type
   Color _getBackgroundColor() {
     switch (widget.type) {
       case BLKWDSEnhancedButtonType.primary:
-        return BLKWDSColors.blkwdsGreen;
+        return BLKWDSColors.primaryButtonBackground; // Use the token from color system
       case BLKWDSEnhancedButtonType.secondary:
         return BLKWDSColors.backgroundMedium;
       case BLKWDSEnhancedButtonType.tertiary:
@@ -199,16 +199,16 @@ class _BLKWDSEnhancedButtonState extends State<BLKWDSEnhancedButton> {
         return BLKWDSColors.errorRed;
     }
   }
-  
+
   // Helper method to determine foreground color based on button type
   Color _getForegroundColor() {
     switch (widget.type) {
       case BLKWDSEnhancedButtonType.primary:
-        return BLKWDSColors.deepBlack;
+        return BLKWDSColors.primaryButtonText; // Use the token from color system
       case BLKWDSEnhancedButtonType.secondary:
-        return BLKWDSColors.white;
+        return BLKWDSColors.secondaryButtonText;
       case BLKWDSEnhancedButtonType.tertiary:
-        return BLKWDSColors.blkwdsGreen;
+        return BLKWDSColors.primaryButtonBackground; // Match primary button background
       case BLKWDSEnhancedButtonType.success:
         return BLKWDSColors.deepBlack;
       case BLKWDSEnhancedButtonType.warning:

@@ -1,5 +1,48 @@
 # BLKWDS Manager - Development Journal
 
+## 2025-07-21: UI Style Consistency Improvements
+
+Today we focused on improving UI style consistency throughout the application by updating components to use the enhanced widget system and the new color scheme:
+
+1. **Dashboard Components Update**:
+   - Updated filter chips in the gear preview list to use mustard orange for selected state
+   - Updated Quick Actions buttons with gold text on dark green background
+   - Updated status badges to use the enhanced version with borders
+   - Improved Check In button styling with gold background for better visibility
+
+2. **Booking Panel Components Update**:
+   - Updated booking list items to use enhanced cards and status badges
+   - Updated dialog buttons to use enhanced buttons with consistent styling
+   - Replaced legacy text elements with enhanced text components
+   - Improved visual consistency across booking-related screens
+
+3. **Gear Management Components Update**:
+   - Updated gear detail screen to use enhanced cards and status badges
+   - Updated dialog buttons to use enhanced buttons with consistent styling
+   - Improved visual hierarchy with better color contrast
+   - Enhanced readability with consistent text styling
+
+These improvements enhance the visual consistency throughout the application, creating a more professional and cohesive user experience. The updated color scheme with mustard orange accents provides better contrast and visual hierarchy, making the interface more intuitive and easier to use.
+
+## 2025-07-20: Dashboard Layout Optimization for Tablet Portrait Mode
+
+Today we focused on optimizing the dashboard layout for tablet devices in portrait mode:
+
+1. **Responsive Layout Improvements**:
+   - Implemented a 2x2 grid layout for the top summary widgets in portrait mode on tablets
+   - Created a row layout for landscape mode to display all four widgets side by side
+   - Maintained the original wrap layout for desktop and non-tablet devices
+   - Used MediaQuery to detect device orientation and screen size
+   - Improved visual balance and space utilization on tablet screens
+
+2. **Code Structure Improvements**:
+   - Refactored TopBarSummaryWidget to handle multiple layout types
+   - Created dedicated methods for each layout type (portrait grid, landscape row, wrap)
+   - Removed unnecessary ConstrainedBox wrappers for better flexibility
+   - Improved code readability and maintainability
+
+These improvements enhance the user experience on tablet devices by making better use of the available screen space in both portrait and landscape orientations. The dashboard now presents information in a more balanced and visually appealing way, particularly on Android tablets.
+
 ## 2025-07-14: Android Adaptation and UI Enhancement Planning
 
 Today we focused on adapting the BLKWDS Manager application for Android tablets and planning UI enhancements:
