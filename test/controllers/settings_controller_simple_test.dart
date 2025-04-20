@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:blkwds_manager/models/models.dart';
 import 'package:blkwds_manager/screens/settings/settings_controller.dart';
@@ -13,15 +14,11 @@ import 'package:blkwds_manager/services/error_type.dart';
 import 'package:blkwds_manager/services/error_feedback_level.dart';
 import 'package:blkwds_manager/services/app_config_service.dart';
 import 'package:blkwds_manager/models/app_config.dart';
+import 'package:blkwds_manager/services/export_service.dart';
 
-// Mock classes
-class MockDBService extends Mock implements DBService {}
-class MockBuildContext extends Mock implements BuildContext {}
-class MockFile extends Mock implements File {}
-class MockDirectory extends Mock implements Directory {}
-class MockErrorService extends Mock implements ErrorService {}
-class MockContextualErrorHandler extends Mock implements ContextualErrorHandler {}
-class MockAppConfigService extends Mock implements AppConfigService {}
+// Generate mocks
+@GenerateMocks([DBService, BuildContext, ErrorService, ContextualErrorHandler, AppConfigService, ExportService, File, Directory])
+import 'settings_controller_simple_test.mocks.dart';
 
 void main() {
   late SettingsController controller;
