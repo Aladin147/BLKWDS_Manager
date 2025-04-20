@@ -62,6 +62,9 @@ dependencies:
   image_picker: ^1.0.7
   device_info_plus: ^9.1.2
 
+  # Performance optimization
+  flutter_cache_manager: ^3.3.1
+
   # State Management
   # Using Flutter's built-in ValueNotifier for reactive state management
 

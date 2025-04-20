@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../services/device_performance_service.dart';
 import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
@@ -24,6 +25,9 @@ class _GearListScreenState extends State<GearListScreen> {
   // Filtered list of gear
   List<Gear> _filteredGear = [];
 
+  // Paginated gear items (for display)
+  List<Gear> _paginatedGear = [];
+
   // Loading state
   bool _isLoading = true;
 
@@ -33,12 +37,47 @@ class _GearListScreenState extends State<GearListScreen> {
   // Search query
   String _searchQuery = '';
 
+  // Pagination
+  final ScrollController _scrollController = ScrollController();
+  bool _shouldUsePagination = false;
+  int _paginationPageSize = 20;
+  int _currentPage = 0;
+  bool _hasMoreItems = true;
+  bool _isLoadingMore = false;
+
   // Category and status filters removed to simplify UI
 
   @override
   void initState() {
     super.initState();
+
+    // Check device performance to determine if pagination should be used
+    final performanceService = DevicePerformanceService();
+    _shouldUsePagination = performanceService.shouldUsePagination;
+    _paginationPageSize = performanceService.paginationPageSize;
+
+    // Add scroll listener for pagination
+    if (_shouldUsePagination) {
+      _scrollController.addListener(_scrollListener);
+    }
+
     _loadGear();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  // Scroll listener for pagination
+  void _scrollListener() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoadingMore &&
+        _hasMoreItems) {
+      _loadMoreItems();
+    }
   }
 
   // Load gear from the database
@@ -94,6 +133,71 @@ class _GearListScreenState extends State<GearListScreen> {
 
         return matchesSearch;
       }).toList();
+
+      // Reset pagination
+      _currentPage = 0;
+      _hasMoreItems = true;
+      _loadPaginatedItems();
+    });
+  }
+
+  // Load paginated items
+  void _loadPaginatedItems() {
+    if (!_shouldUsePagination) {
+      // If pagination is disabled, show all filtered items
+      _paginatedGear = List.from(_filteredGear);
+      return;
+    }
+
+    final startIndex = 0;
+    final endIndex = (_currentPage + 1) * _paginationPageSize;
+
+    if (startIndex >= _filteredGear.length) {
+      _hasMoreItems = false;
+      return;
+    }
+
+    _paginatedGear = _filteredGear.sublist(
+      startIndex,
+      endIndex > _filteredGear.length ? _filteredGear.length : endIndex
+    );
+
+    _hasMoreItems = endIndex < _filteredGear.length;
+  }
+
+  // Load more items for pagination
+  Future<void> _loadMoreItems() async {
+    if (!_hasMoreItems || !_shouldUsePagination) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    // Simulate network delay for smoother UX
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    _currentPage++;
+
+    final startIndex = _currentPage * _paginationPageSize;
+    final endIndex = (_currentPage + 1) * _paginationPageSize;
+
+    if (startIndex >= _filteredGear.length) {
+      setState(() {
+        _hasMoreItems = false;
+        _isLoadingMore = false;
+      });
+      return;
+    }
+
+    final newItems = _filteredGear.sublist(
+      startIndex,
+      endIndex > _filteredGear.length ? _filteredGear.length : endIndex
+    );
+
+    setState(() {
+      _paginatedGear.addAll(newItems);
+      _hasMoreItems = endIndex < _filteredGear.length;
+      _isLoadingMore = false;
     });
   }
 
@@ -513,9 +617,24 @@ class _GearListScreenState extends State<GearListScreen> {
                                 },
                               )
                         : ListView.builder(
-                            itemCount: _filteredGear.length,
+                            controller: _scrollController,
+                            itemCount: _shouldUsePagination
+                                ? _paginatedGear.length + (_hasMoreItems ? 1 : 0)
+                                : _filteredGear.length,
                             itemBuilder: (context, index) {
-                              final gear = _filteredGear[index];
+                              // Show loading indicator at the end when loading more items
+                              if (_shouldUsePagination && index == _paginatedGear.length && _hasMoreItems) {
+                                return const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+
+                              final gear = _shouldUsePagination
+                                  ? _paginatedGear[index]
+                                  : _filteredGear[index];
                               return _buildGearCard(gear);
                             },
                           ),

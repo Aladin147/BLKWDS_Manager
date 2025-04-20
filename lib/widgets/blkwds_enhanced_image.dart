@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../services/log_service.dart';
+import '../services/device_performance_service.dart';
 import '../theme/blkwds_colors.dart';
 import '../theme/blkwds_constants.dart';
 
@@ -81,40 +83,96 @@ class BLKWDSEnhancedImage extends StatelessWidget {
     );
   }
 
-  /// Build a widget for network images
+  /// Build a widget for network images with caching
   Widget _buildNetworkImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Image.network(
-        imagePath!,
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) {
-          LogService.error('Failed to load network image: $imagePath', error, stackTrace);
-          return _buildFallbackWidget();
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          return _buildLoadingWidget(loadingProgress);
-        },
-      ),
+    // Use the device performance service to determine caching strategy
+    final performanceService = DevicePerformanceService();
+    final shouldCache = performanceService.shouldUseImageCaching;
+
+    if (!shouldCache) {
+      // If caching is disabled, use standard Image.network
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Image.network(
+          imagePath!,
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) {
+            LogService.error('Failed to load network image: $imagePath', error, stackTrace);
+            return _buildFallbackWidget();
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return _buildLoadingWidget(loadingProgress);
+          },
+        ),
+      );
+    }
+
+    // Use cached_network_image for better performance
+    return FutureBuilder<File>(
+      future: DefaultCacheManager().getSingleFile(imagePath!),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          // Image is cached, load from file
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: Image.file(
+              snapshot.data!,
+              width: width,
+              height: height,
+              fit: fit,
+              errorBuilder: (context, error, stackTrace) {
+                LogService.error('Failed to load cached image: $imagePath', error, stackTrace);
+                return _buildFallbackWidget();
+              },
+            ),
+          );
+        } else if (snapshot.hasError) {
+          // Error loading from cache, try direct network load
+          LogService.error('Failed to load cached image: $imagePath', snapshot.error);
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: Image.network(
+              imagePath!,
+              width: width,
+              height: height,
+              fit: fit,
+              errorBuilder: (context, error, stackTrace) {
+                LogService.error('Failed to load network image: $imagePath', error, stackTrace);
+                return _buildFallbackWidget();
+              },
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return _buildLoadingWidget(loadingProgress);
+              },
+            ),
+          );
+        } else {
+          // Still loading from cache
+          return _buildLoadingWidget(null);
+        }
+      },
     );
   }
 
   /// Build a widget for file images
   Widget _buildFileImage() {
     final file = File(imagePath!);
-    
+
     // Check if file exists
     try {
       if (!file.existsSync()) {
         LogService.error('Image file does not exist: $imagePath', null);
         return _buildFallbackWidget();
       }
-      
+
       return ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
         child: Image.file(
@@ -135,7 +193,7 @@ class BLKWDSEnhancedImage extends StatelessWidget {
   }
 
   /// Build a loading widget
-  Widget _buildLoadingWidget(ImageChunkEvent loadingProgress) {
+  Widget _buildLoadingWidget(ImageChunkEvent? loadingProgress) {
     return Container(
       width: width,
       height: height,
@@ -144,12 +202,16 @@ class BLKWDSEnhancedImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Center(
-        child: CircularProgressIndicator(
-          value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-              : null,
-          color: fallbackIconColor,
-        ),
+        child: loadingProgress != null
+            ? CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    : null,
+                color: fallbackIconColor,
+              )
+            : CircularProgressIndicator(
+                color: fallbackIconColor,
+              ),
       ),
     );
   }
@@ -167,7 +229,7 @@ class BLKWDSEnhancedImage extends StatelessWidget {
         child: Icon(
           fallbackIcon,
           color: fallbackIconColor,
-          size: (width != null && height != null) 
+          size: (width != null && height != null)
               ? (width! < height! ? width! * 0.5 : height! * 0.5)
               : 24,
         ),
