@@ -26,3 +26,8 @@ linter:
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
+
+# Exclude deprecated files from analysis
+analyzer:
+  exclude:
+    - test/controllers/settings_controller_test.deprecated.dart
