@@ -324,7 +324,7 @@ class _StudioManagementScreenState extends State<StudioManagementScreen> with Si
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BLKWDSEnhancedText.titleMedium(
+                      BLKWDSEnhancedText.titleLarge(
                         studio.name,
                       ),
                       const SizedBox(height: 4),

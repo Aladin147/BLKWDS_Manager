@@ -127,19 +127,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
       builder: (context) => BLKWDSEnhancedAlertDialog(
         title: 'Delete Project',
         content: 'Are you sure you want to delete ${widget.project.title}?',
-        actions: [
-          BLKWDSEnhancedButton(
-            label: 'Cancel',
-            onPressed: () => NavigationHelper.goBack(result: false),
-            type: BLKWDSEnhancedButtonType.secondary,
-            foregroundColor: BLKWDSColors.mustardOrange,
-          ),
-          BLKWDSEnhancedButton(
-            label: 'Delete',
-            onPressed: () => NavigationHelper.goBack(result: true),
-            type: BLKWDSEnhancedButtonType.error,
-          ),
-        ],
+        secondaryActionText: 'Cancel',
+        onSecondaryAction: () => NavigationHelper.goBack(result: false),
+        primaryActionText: 'Delete',
+        onPrimaryAction: () => NavigationHelper.goBack(result: true),
+        isPrimaryDestructive: true,
       ),
     );
 
@@ -452,10 +444,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Build a card for a member
   Widget _buildMemberCard(Member member) {
-    return BLKWDSEnhancedCard(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      padding: EdgeInsets.zero,
-      child: ListTile(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      child: BLKWDSEnhancedCard(
+        padding: EdgeInsets.zero,
+        child: ListTile(
         leading: MemberAvatarWidget(
           member: member,
           size: 40,
@@ -474,10 +467,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Build a card for a booking
   Widget _buildBookingCard(Booking booking) {
-    return BLKWDSEnhancedCard(
-      margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
-      padding: EdgeInsets.zero,
-      child: ListTile(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      child: BLKWDSEnhancedCard(
+        padding: EdgeInsets.zero,
+        child: ListTile(
         leading: Container(
           width: 40,
           height: 40,
