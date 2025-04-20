@@ -5,7 +5,7 @@ import 'app.dart';
 import 'services/services.dart';
 import 'services/database/database_integrity_service.dart';
 import 'config/environment_config.dart';
-import 'utils/platform_util.dart';
+// Platform util is imported but not used directly in this file;
 import 'services/path_service.dart';
 import 'services/permission_service.dart';
 import 'screens/splash_screen.dart';

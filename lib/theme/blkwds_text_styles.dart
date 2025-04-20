@@ -59,7 +59,7 @@ class BLKWDSTextStyles {
   // Button
   static const TextStyle button = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.medium,
+    fontWeight: FontWeight.w500,
     color: BLKWDSColors.white,
     height: 1.0,
   );
@@ -67,7 +67,7 @@ class BLKWDSTextStyles {
   // Label
   static const TextStyle label = TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.medium,
+    fontWeight: FontWeight.w500,
     color: BLKWDSColors.white,
     height: 1.2,
   );
