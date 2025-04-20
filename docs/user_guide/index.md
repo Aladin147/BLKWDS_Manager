@@ -6,6 +6,7 @@ Welcome to the BLKWDS Manager documentation. This comprehensive guide will help 
 
 - [Quick Start Guide](quick_start.md) - Get up and running in minutes
 - [Complete User Guide](README.md) - Comprehensive overview of all features
+- [Android Guide](android_guide.md) - Android-specific features and considerations
 
 ## Feature-Specific Guides
 
