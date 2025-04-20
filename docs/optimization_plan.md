@@ -19,9 +19,11 @@ This document outlines our comprehensive plan for optimizing the BLKWDS Manager 
 
 - [x] Fix FontWeight.medium errors in text styles
 - [x] Remove unused imports in main.dart
-- [ ] Address critical static analysis warnings
-- [ ] Update booking widget to remove legacy studio flags
-- [ ] Fix parameter type mismatches
+- [x] Address critical static analysis warnings
+- [x] Update booking widget to remove legacy studio flags
+- [x] Fix parameter type mismatches with super parameters
+- [x] Mark legacy studio flags as deprecated in Booking model
+- [x] Update booking_list_item to use studioId instead of boolean flags
 
 **Success Criteria:**
 - All production code builds without errors
@@ -99,7 +101,7 @@ This document outlines our comprehensive plan for optimizing the BLKWDS Manager 
 
 | Phase | Status | Start Date | End Date | Notes |
 |-------|--------|------------|----------|-------|
-| Phase 1: Critical Fixes | In Progress | 2025-07-22 | | Fixed FontWeight.medium errors and unused imports |
+| Phase 1: Critical Fixes | In Progress | 2025-07-22 | | Fixed static analysis issues, removed legacy studio flags, marked deprecated code |
 | Phase 2: Performance Optimization | Not Started | | | |
 | Phase 3: Dependency Updates | Not Started | | | |
 | Phase 4: Legacy Code Cleanup | Not Started | | | |
