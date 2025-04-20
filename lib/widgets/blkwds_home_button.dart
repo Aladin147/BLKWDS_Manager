@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/navigation_helper.dart';
 import '../theme/blkwds_colors.dart';
+import '../widgets/blkwds_enhanced_widgets.dart';
 
 /// A reusable home button widget that navigates to the dashboard
 class BLKWDSHomeButton extends StatelessWidget {
@@ -9,13 +10,15 @@ class BLKWDSHomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.home, size: 24),
-      color: BLKWDSColors.accentTeal,
-      tooltip: 'Home',
+    return BLKWDSEnhancedButton.icon(
+      icon: Icons.home,
       onPressed: () {
         NavigationHelper.navigateToDashboard(clearStack: true);
       },
+      type: BLKWDSEnhancedButtonType.tertiary,
+      backgroundColor: Colors.transparent,
+      foregroundColor: BLKWDSColors.accentTeal,
+      // No tooltip parameter in BLKWDSEnhancedButton
     );
   }
 }
