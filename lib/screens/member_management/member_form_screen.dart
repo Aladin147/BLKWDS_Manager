@@ -129,17 +129,16 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
   Widget build(BuildContext context) {
     final isEditing = widget.member != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Member' : 'Add Member'),
-      ),
+    return BLKWDSScaffold(
+      title: isEditing ? 'Edit Member' : 'Add Member',
+      showHomeButton: true,
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
           children: [
             // Name field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _nameController,
               label: 'Name',
               prefixIcon: Icons.person,
@@ -153,7 +152,7 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Role field
-            BLKWDSFormField(
+            BLKWDSEnhancedFormField(
               controller: _roleController,
               label: 'Role (Optional)',
               prefixIcon: Icons.work,
@@ -162,12 +161,9 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
 
             // Error message
             if (_errorMessage != null) ...[
-              Container(
+              BLKWDSEnhancedCard(
                 padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                decoration: BoxDecoration(
-                  color: BLKWDSColors.errorRed.withValues(alpha: 20),
-                  borderRadius: BorderRadius.circular(BLKWDSConstants.borderRadius),
-                ),
+                backgroundColor: BLKWDSColors.errorRed.withValues(alpha: 20),
                 child: Row(
                   children: [
                     const Icon(
@@ -176,11 +172,9 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
                     ),
                     const SizedBox(width: BLKWDSConstants.spacingSmall),
                     Expanded(
-                      child: Text(
+                      child: BLKWDSEnhancedText.bodyMedium(
                         _errorMessage!,
-                        style: TextStyle(
-                          color: BLKWDSColors.errorRed,
-                        ),
+                        color: BLKWDSColors.errorRed,
                       ),
                     ),
                   ],
@@ -190,20 +184,26 @@ class _MemberFormScreenState extends State<MemberFormScreen> {
             ],
 
             // Save button
-            BLKWDSButton(
+            BLKWDSEnhancedButton(
               label: isEditing ? 'Update Member' : 'Add Member',
               onPressed: _isLoading ? null : _saveMember,
-              type: BLKWDSButtonType.primary,
+              type: BLKWDSEnhancedButtonType.primary,
               isLoading: _isLoading,
               icon: isEditing ? Icons.save : Icons.add,
+              backgroundColor: BLKWDSColors.mustardOrange,
+              foregroundColor: BLKWDSColors.deepBlack,
+              width: double.infinity,
             ),
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Cancel button
-            BLKWDSButton(
+            BLKWDSEnhancedButton(
               label: 'Cancel',
               onPressed: () => NavigationHelper.goBack(),
-              type: BLKWDSButtonType.secondary,
+              type: BLKWDSEnhancedButtonType.secondary,
+              foregroundColor: BLKWDSColors.mustardOrange,
+              backgroundColor: BLKWDSColors.backgroundMedium,
+              width: double.infinity,
             ),
           ],
         ),

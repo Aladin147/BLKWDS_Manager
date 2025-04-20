@@ -124,17 +124,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Project'),
-        content: Text('Are you sure you want to delete ${widget.project.title}?'),
+      builder: (context) => BLKWDSEnhancedAlertDialog(
+        title: 'Delete Project',
+        content: 'Are you sure you want to delete ${widget.project.title}?',
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+          BLKWDSEnhancedButton(
+            label: 'Cancel',
+            onPressed: () => NavigationHelper.goBack(result: false),
+            type: BLKWDSEnhancedButtonType.secondary,
+            foregroundColor: BLKWDSColors.mustardOrange,
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+          BLKWDSEnhancedButton(
+            label: 'Delete',
+            onPressed: () => NavigationHelper.goBack(result: true),
+            type: BLKWDSEnhancedButtonType.error,
           ),
         ],
       ),
@@ -173,29 +176,32 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.project.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            tooltip: 'Edit',
-            onPressed: _navigateToEditProject,
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: 'Delete',
-            onPressed: _deleteProject,
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Details'),
-            Tab(text: 'Members'),
-            Tab(text: 'Bookings'),
-          ],
+    return BLKWDSScaffold(
+      title: widget.project.title,
+      showHomeButton: true,
+      actions: [
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.edit,
+          onPressed: _navigateToEditProject,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
         ),
+        BLKWDSEnhancedButton.icon(
+          icon: Icons.delete,
+          onPressed: _deleteProject,
+          type: BLKWDSEnhancedButtonType.tertiary,
+          backgroundColor: Colors.transparent,
+          foregroundColor: BLKWDSColors.white,
+        ),
+      ],
+      bottomNavigationBar: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Details'),
+          Tab(text: 'Members'),
+          Tab(text: 'Bookings'),
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
@@ -221,65 +227,63 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Project info card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Project title and client
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Project thumbnail
-                      ProjectThumbnailWidget(
-                        project: widget.project,
-                        size: 64,
-                        borderRadius: 12,
-                      ),
-                      const SizedBox(width: BLKWDSConstants.spacingMedium),
-                      // Project title and info
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.project.title,
-                              style: BLKWDSTypography.headlineSmall,
-                            ),
-                            if (widget.project.client != null && widget.project.client!.isNotEmpty)
-                              Text(
-                                widget.project.client!,
-                                style: BLKWDSTypography.titleMedium.copyWith(
-                                  color: BLKWDSColors.textSecondary,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const Divider(height: BLKWDSConstants.spacingLarge),
-
-                  // Project ID
-                  _buildInfoRow('Project ID', '#${widget.project.id}'),
-
-                  // Project description
-                  if (widget.project.description != null && widget.project.description!.isNotEmpty) ...[
-                    const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    Text(
-                      'Description',
-                      style: BLKWDSTypography.titleMedium,
+          BLKWDSEnhancedCard(
+            padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Project title and client
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Project thumbnail
+                    ProjectThumbnailWidget(
+                      project: widget.project,
+                      size: 64,
+                      borderRadius: 12,
                     ),
-                    const SizedBox(height: BLKWDSConstants.spacingSmall),
-                    Text(
-                      widget.project.description!,
-                      style: BLKWDSTypography.bodyMedium,
+                    const SizedBox(width: BLKWDSConstants.spacingMedium),
+                    // Project title and info
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.project.title,
+                            style: BLKWDSTypography.headlineSmall,
+                          ),
+                          if (widget.project.client != null && widget.project.client!.isNotEmpty)
+                            Text(
+                              widget.project.client!,
+                              style: BLKWDSTypography.titleMedium.copyWith(
+                                color: BLKWDSColors.textSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ],
+                ),
+
+                const Divider(height: BLKWDSConstants.spacingLarge),
+
+                // Project ID
+                _buildInfoRow('Project ID', '#${widget.project.id}'),
+
+                // Project description
+                if (widget.project.description != null && widget.project.description!.isNotEmpty) ...[
+                  const SizedBox(height: BLKWDSConstants.spacingMedium),
+                  Text(
+                    'Description',
+                    style: BLKWDSTypography.titleMedium,
+                  ),
+                  const SizedBox(height: BLKWDSConstants.spacingSmall),
+                  Text(
+                    widget.project.description!,
+                    style: BLKWDSTypography.bodyMedium,
+                  ),
                 ],
-              ),
+              ],
             ),
           ),
 
@@ -345,10 +349,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                       style: BLKWDSTypography.bodyMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    BLKWDSButton(
+                    BLKWDSEnhancedButton(
                       label: 'Retry',
                       onPressed: _loadMembers,
-                      type: BLKWDSButtonType.primary,
+                      type: BLKWDSEnhancedButtonType.primary,
+                      backgroundColor: BLKWDSColors.mustardOrange,
+                      foregroundColor: BLKWDSColors.deepBlack,
                     ),
                   ],
                 ),
@@ -405,10 +411,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
                       style: BLKWDSTypography.bodyMedium,
                     ),
                     const SizedBox(height: BLKWDSConstants.spacingMedium),
-                    BLKWDSButton(
+                    BLKWDSEnhancedButton(
                       label: 'Retry',
                       onPressed: _loadBookings,
-                      type: BLKWDSButtonType.primary,
+                      type: BLKWDSEnhancedButtonType.primary,
+                      backgroundColor: BLKWDSColors.mustardOrange,
+                      foregroundColor: BLKWDSColors.deepBlack,
                     ),
                   ],
                 ),
@@ -444,8 +452,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Build a card for a member
   Widget _buildMemberCard(Member member) {
-    return Card(
+    return BLKWDSEnhancedCard(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      padding: EdgeInsets.zero,
       child: ListTile(
         leading: MemberAvatarWidget(
           member: member,
@@ -465,8 +474,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Build a card for a booking
   Widget _buildBookingCard(Booking booking) {
-    return Card(
+    return BLKWDSEnhancedCard(
       margin: const EdgeInsets.only(bottom: BLKWDSConstants.spacingSmall),
+      padding: EdgeInsets.zero,
       child: ListTile(
         leading: Container(
           width: 40,
@@ -501,7 +511,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> with SingleTi
 
   // Build a summary card
   Widget _buildSummaryCard(String title, String value, IconData icon, Color color) {
-    return Card(
+    return BLKWDSEnhancedCard(
       child: Padding(
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
         child: Column(

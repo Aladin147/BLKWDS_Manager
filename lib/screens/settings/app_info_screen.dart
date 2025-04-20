@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../services/services.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
 
 /// AppInfoScreen
@@ -33,75 +32,66 @@ class AppInfoScreen extends StatelessWidget {
 
             // App name
             Center(
-              child: Text(
+              child: BLKWDSEnhancedText.headingLarge(
                 VersionService.appName,
-                style: BLKWDSTypography.headlineLarge,
+                isPrimary: true,
               ),
             ),
 
             const SizedBox(height: BLKWDSConstants.spacingLarge),
 
             // Version information
-            BLKWDSCard(
-              child: Padding(
-                padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Version Information',
-                      style: BLKWDSTypography.titleLarge,
-                    ),
-                    const Divider(),
-                    _buildInfoRow('Version', VersionService.version),
-                    _buildInfoRow('Build Number', VersionService.buildNumber),
-                    _buildInfoRow('Full Version', VersionService.fullVersion),
-                    _buildInfoRow('Package Name', VersionService.packageName),
-                  ],
-                ),
+            BLKWDSEnhancedCard(
+              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BLKWDSEnhancedText.titleLarge(
+                    'Version Information',
+                  ),
+                  const Divider(),
+                  _buildInfoRow('Version', VersionService.version),
+                  _buildInfoRow('Build Number', VersionService.buildNumber),
+                  _buildInfoRow('Full Version', VersionService.fullVersion),
+                  _buildInfoRow('Package Name', VersionService.packageName),
+                ],
               ),
             ),
 
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // App configuration
-            BLKWDSCard(
-              child: Padding(
-                padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'App Configuration',
-                      style: BLKWDSTypography.titleLarge,
-                    ),
-                    const Divider(),
-                    _buildInfoRow('Database Name', AppConfigService.config.database.databaseName),
-                    _buildInfoRow('Database Version', AppConfigService.config.database.databaseVersion.toString()),
-                    _buildInfoRow('Theme Mode', AppConfigService.config.ui.themeMode.toString()),
-                  ],
-                ),
+            BLKWDSEnhancedCard(
+              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BLKWDSEnhancedText.titleLarge(
+                    'App Configuration',
+                  ),
+                  const Divider(),
+                  _buildInfoRow('Database Name', AppConfigService.config.database.databaseName),
+                  _buildInfoRow('Database Version', AppConfigService.config.database.databaseVersion.toString()),
+                  _buildInfoRow('Theme Mode', AppConfigService.config.ui.themeMode.toString()),
+                ],
               ),
             ),
 
             const SizedBox(height: BLKWDSConstants.spacingMedium),
 
             // Copyright information
-            BLKWDSCard(
-              child: Padding(
-                padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Legal Information',
-                      style: BLKWDSTypography.titleLarge,
-                    ),
-                    const Divider(),
-                    _buildInfoRow('Copyright', VersionService.copyright),
-                    _buildInfoRow('License', 'Proprietary - All Rights Reserved'),
-                  ],
-                ),
+            BLKWDSEnhancedCard(
+              padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BLKWDSEnhancedText.titleLarge(
+                    'Legal Information',
+                  ),
+                  const Divider(),
+                  _buildInfoRow('Copyright', VersionService.copyright),
+                  _buildInfoRow('License', 'Proprietary - All Rights Reserved'),
+                ],
               ),
             ),
 
@@ -109,9 +99,12 @@ class AppInfoScreen extends StatelessWidget {
 
             // Update button
             Center(
-              child: BLKWDSButton(
+              child: BLKWDSEnhancedButton(
                 label: 'Check for Updates',
                 icon: Icons.update,
+                type: BLKWDSEnhancedButtonType.primary,
+                backgroundColor: BLKWDSColors.mustardOrange,
+                foregroundColor: BLKWDSColors.deepBlack,
                 onPressed: () {
                   SnackbarService.showInfo(
                     context,
@@ -135,18 +128,15 @@ class AppInfoScreen extends StatelessWidget {
         children: [
           SizedBox(
             width: 120,
-            child: Text(
+            child: BLKWDSEnhancedText.bodyMedium(
               label,
-              style: BLKWDSTypography.bodyMedium.copyWith(
-                color: BLKWDSColors.textSecondary,
-                fontWeight: FontWeight.bold,
-              ),
+              color: BLKWDSColors.textSecondary,
+              isBold: true,
             ),
           ),
           Expanded(
-            child: Text(
+            child: BLKWDSEnhancedText.bodyMedium(
               value,
-              style: BLKWDSTypography.bodyMedium,
             ),
           ),
         ],
