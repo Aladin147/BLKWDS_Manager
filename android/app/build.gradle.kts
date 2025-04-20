@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "com.blkwds.manager"
+    ndkVersion = "27.0.12077973"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -39,12 +39,20 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
 
-            // Enable minification and resource shrinking for release builds
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Disable minification and resource shrinking for now to ensure successful build
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+                "src/main/proguard-rules.pro"
+            )
         }
     }
+}
+
+dependencies {
+    implementation("com.google.android.play:core:1.10.3")
 }
 
 flutter {
