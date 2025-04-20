@@ -4,6 +4,55 @@ This document serves as a chronological record of development activities for the
 
 *Note: This journal was reconstructed from a recovered file on 2025-06-28. It contains the most recent development activities and decisions.*
 
+## 2025-07-22: Created Beta-Android Branch and Optimization Plan
+
+Today we created a new branch called "Beta-Android" that will become our new default main branch for the Android tablet version of the application. We also developed a comprehensive optimization plan to improve performance on older tablets, clean up legacy code, and enhance overall code quality.
+
+1. **Created Beta-Android Branch**:
+   - Created a new branch from the current android-ui-enhancements branch
+   - This branch will serve as the foundation for our Android tablet optimization efforts
+   - Will become the new default main branch once optimizations are complete
+
+2. **Developed Comprehensive Optimization Plan**:
+   - Created a detailed plan with 6 implementation phases
+   - Documented the plan in docs/optimization_plan.md
+   - Updated project_status.md to reference the new plan
+   - Set clear success criteria for each phase
+
+3. **Started Phase 1: Critical Fixes**:
+   - Fixed FontWeight.medium errors in text styles
+   - Removed unused imports in main.dart
+   - Identified critical static analysis warnings to address
+
+4. **Next Steps**:
+   - Continue with Phase 1 by addressing critical static analysis warnings
+   - Update booking widget to remove legacy studio flags
+   - Fix parameter type mismatches
+   - Begin performance optimization for older tablets
+
+This optimization plan will help us systematically improve the application for Android tablets, ensuring it runs smoothly even on older devices while maintaining code quality and reducing technical debt.
+
+## 2025-07-22: Enhanced Visual Distinction for Gear Check-in/out States
+
+Today we improved the visual distinction between gear check-in and check-out states to make it easier to identify gear status at a glance:
+
+1. **Enhanced Card Styling for Checked-out Gear**:
+   - Added a subtle amber background color to cards for checked-out gear
+   - Added a border with the status color for better visual indication
+   - This creates an immediate visual cue that the gear is in an altered state (checked out)
+
+2. **Improved Status Badge Visibility**:
+   - Enhanced the status badge with larger font size
+   - Added proper padding for better readability
+   - Added shadow effect to make the badge stand out more
+
+3. **Color-coded Action Buttons**:
+   - Changed the "Check Out" button to use the statusOut color (amber)
+   - Changed the "Check In" button to use the statusIn color (green)
+   - This creates a consistent color system where the button color matches the action's resulting state
+
+These improvements make it much easier to distinguish between checked-in and checked-out gear at a glance, improving the user experience and reducing the chance of errors when managing equipment.
+
 ## 2025-06-28: Database Service Wrapper Refactoring Implementation Plan
 
 Today we created a detailed implementation plan for refactoring the remaining database operations in DBService to consistently use DBServiceWrapper methods:

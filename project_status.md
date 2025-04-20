@@ -322,6 +322,21 @@ A comprehensive style enhancement system has been implemented to improve visual 
 
 See `docs/style_migration_guide.md` and `docs/style_migration_status.md` for detailed information.
 
+## Android Optimization Plan
+
+A comprehensive optimization plan has been created to improve performance on older Android tablets, clean up legacy code, and enhance overall code quality. The plan is divided into phases to ensure systematic implementation and testing.
+
+### Optimization Goals
+
+1. Improve performance on older Android tablets
+2. Clean up legacy code and unused files
+3. Fix static analysis issues and warnings
+4. Update dependencies and packages
+5. Improve test coverage and quality
+6. Update documentation
+
+See `docs/optimization_plan.md` for detailed information on the implementation phases and progress tracking.
+
 ## Recent Changes
 
 ### v0.98.0 - UI Style Consistency Improvements (2025-07-22)
