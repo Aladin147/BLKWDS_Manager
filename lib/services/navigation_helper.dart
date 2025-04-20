@@ -138,6 +138,14 @@ class NavigationHelper {
     );
   }
 
+  /// Navigate to device info screen
+  static Future<T?> navigateToDeviceInfo<T>() {
+    return service.navigateToNamed<T>(
+      AppRoutes.deviceInfo,
+      transitionType: BLKWDSPageTransitionType.rightToLeft,
+    );
+  }
+
   /// Navigate back
   static void goBack<T>({T? result}) {
     service.goBack(result: result);

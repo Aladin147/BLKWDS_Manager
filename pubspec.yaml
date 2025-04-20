@@ -57,6 +57,11 @@ dependencies:
   # App information
   package_info_plus: ^5.0.1
 
+  # Android-specific
+  permission_handler: ^11.3.0
+  image_picker: ^1.0.7
+  device_info_plus: ^9.1.2
+
   # State Management
   # Using Flutter's built-in ValueNotifier for reactive state management
 

@@ -4,7 +4,6 @@ import 'package:file_selector/file_selector.dart';
 
 import '../../models/models.dart';
 import '../../services/export_service.dart';
-import '../../services/db_service_extension.dart';
 
 import '../../services/navigation_helper.dart';
 import '../../services/snackbar_service.dart';
@@ -383,6 +382,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           leadingIcon: Icons.style,
                           onTap: () {
                             NavigationHelper.navigateToStyleDemo();
+                          },
+                        ),
+                        const Divider(),
+                        BLKWDSEnhancedListTile(
+                          title: 'Device Information',
+                          subtitle: 'View detailed device information',
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          leadingIcon: Icons.devices,
+                          onTap: () {
+                            NavigationHelper.navigateToDeviceInfo();
                           },
                         ),
                       ],

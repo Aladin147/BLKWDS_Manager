@@ -21,6 +21,7 @@ import '../screens/studio_management/studio_management_screen.dart';
 import '../screens/activity_log/activity_log_screen.dart';
 import '../screens/style_demo/style_demo_screen.dart';
 import '../screens/settings/performance_test_screen.dart';
+import '../screens/settings/device_info_screen.dart';
 import '../theme/blkwds_animations.dart';
 
 /// AppRoutes
@@ -48,6 +49,7 @@ class AppRoutes {
   static const String appInfo = '/app-info';
   static const String styleDemo = '/style-demo';
   static const String performanceTest = '/performance-test';
+  static const String deviceInfo = '/device-info';
 
   // Route map for MaterialApp
   static Map<String, WidgetBuilder> get routes => {
@@ -65,6 +67,7 @@ class AppRoutes {
     appInfo: (context) => const AppInfoScreen(),
     styleDemo: (context) => const StyleDemoScreen(),
     performanceTest: (context) => const PerformanceTestScreen(),
+    deviceInfo: (context) => const DeviceInfoScreen(),
     // Activity log needs a controller, so we'll handle it in onGenerateRoute
   };
 
