@@ -53,6 +53,12 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
         animateOnHover: true,
         onTap: widget.onTap != null ? () => widget.onTap!(widget.gear) : null,
         padding: const EdgeInsets.all(BLKWDSConstants.spacingMedium),
+        backgroundColor: widget.gear.isOut
+            ? BLKWDSColors.statusOut.withValues(alpha: BLKWDSColors.alphaVeryLow.toInt())
+            : null,
+        borderColor: widget.gear.isOut
+            ? BLKWDSColors.statusOut.withValues(alpha: BLKWDSColors.alphaMediumLow.toInt())
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -109,6 +115,9 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                       : BLKWDSColors.statusIn,
                   icon: widget.gear.isOut ? Icons.logout : Icons.check_circle,
                   hasBorder: true,
+                  hasShadow: true,
+                  fontSize: 14.0,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 ),
               ],
             ),
@@ -207,7 +216,7 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                             label: 'Check in',
                             icon: Icons.check_circle,
                             type: BLKWDSEnhancedButtonType.primary,
-                            backgroundColor: BLKWDSColors.mustardOrange,
+                            backgroundColor: BLKWDSColors.statusIn,
                             foregroundColor: BLKWDSColors.deepBlack,
                             padding: const EdgeInsets.symmetric(
                               horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
@@ -226,6 +235,8 @@ class _GearCardWithNoteState extends State<GearCardWithNote> {
                             label: 'Check Out',
                             icon: Icons.logout,
                             type: BLKWDSEnhancedButtonType.primary,
+                            backgroundColor: BLKWDSColors.statusOut,
+                            foregroundColor: BLKWDSColors.deepBlack,
                             padding: const EdgeInsets.symmetric(
                               horizontal: BLKWDSConstants.buttonHorizontalPaddingSmall,
                               vertical: BLKWDSConstants.buttonVerticalPaddingSmall,
