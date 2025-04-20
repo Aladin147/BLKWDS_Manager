@@ -5,7 +5,7 @@ import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../../widgets/blkwds_enhanced_widgets.dart';
+// Enhanced widgets are imported via blkwds_widgets.dart
 
 /// ProjectFormScreen
 /// Screen for adding or editing a project

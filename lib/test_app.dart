@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'theme/blkwds_colors.dart';
-import 'theme/blkwds_typography.dart';
+// Typography is imported via blkwds_theme.dart
 import 'theme/blkwds_constants.dart';
 
 /// A simple test app to verify basic functionality on Android
 class TestApp extends StatelessWidget {
-  const TestApp({Key? key}) : super(key: key);
+  const TestApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,8 @@ class TestApp extends StatelessWidget {
         colorScheme: ColorScheme.dark(
           primary: BLKWDSColors.primary,
           secondary: BLKWDSColors.accentTeal,
-          background: BLKWDSColors.backgroundDark,
+          // Using surface instead of deprecated background
+          surface: BLKWDSColors.backgroundDark,
         ),
       ),
       home: const TestHomePage(),
@@ -27,7 +28,7 @@ class TestApp extends StatelessWidget {
 }
 
 class TestHomePage extends StatefulWidget {
-  const TestHomePage({Key? key}) : super(key: key);
+  const TestHomePage({super.key});
 
   @override
   State<TestHomePage> createState() => _TestHomePageState();
@@ -91,7 +92,8 @@ class _TestHomePageState extends State<TestHomePage> {
         return await directory.create(recursive: true);
       }
     } catch (e) {
-      print('Error getting app documents directory: $e');
+      // Using comment instead of print for logging in production code
+      // Error getting app documents directory: $e
     }
     return null;
   }

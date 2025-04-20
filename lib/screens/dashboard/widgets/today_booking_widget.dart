@@ -254,12 +254,7 @@ class TodayBookingWidget extends StatelessWidget {
         }
       }
     }
-    // Handle legacy studio flags
-    else if (booking.isRecordingStudio) {
-      return Icons.mic;
-    } else if (booking.isProductionStudio) {
-      return Icons.videocam;
-    }
+    // Legacy studio flags have been removed in favor of studioId
 
     if (firstGear != null) {
       // Use category-specific icon if available

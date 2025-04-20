@@ -5,7 +5,7 @@ import '../../services/snackbar_service.dart';
 import '../../services/navigation_helper.dart';
 import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
-import '../../theme/blkwds_typography.dart';
+// Typography is imported via blkwds_widgets.dart
 import '../../widgets/blkwds_widgets.dart';
 import 'widgets/studio_form.dart';
 import 'widgets/studio_settings_form.dart';

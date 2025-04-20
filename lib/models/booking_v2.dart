@@ -14,12 +14,18 @@ class Booking {
   final String? color; // Hex color code for visual identification
   final String? notes; // Additional notes for the booking
 
-  // Legacy compatibility getters
+  // Legacy compatibility getters - deprecated in favor of studioId
+  @Deprecated('Use studioId instead of boolean flags')
   bool get isRecordingStudio => studioId == 1; // Recording studio has ID 1
+
+  @Deprecated('Use studioId instead of boolean flags')
   bool get isProductionStudio => studioId == 2; // Production studio has ID 2
 
-  // For compatibility with code that checks for null
+  // For compatibility with code that checks for null - deprecated in favor of studioId
+  @Deprecated('Use studioId instead of boolean flags')
   bool? get isRecordingStudioOrNull => studioId == 1 ? true : false;
+
+  @Deprecated('Use studioId instead of boolean flags')
   bool? get isProductionStudioOrNull => studioId == 2 ? true : false;
 
   Booking({

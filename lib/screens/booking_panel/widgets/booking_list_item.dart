@@ -252,7 +252,7 @@ class BookingListItem extends StatelessWidget {
                     const SizedBox(height: BLKWDSConstants.spacingSmall),
 
                     // Studio space
-                    if (booking.isRecordingStudio || booking.isProductionStudio)
+                    if (booking.studioId != null)
                       Row(
                         children: [
                           BLKWDSIcon(
@@ -263,16 +263,13 @@ class BookingListItem extends StatelessWidget {
                           const SizedBox(width: BLKWDSConstants.spacingExtraSmall),
                           Expanded(
                             child: BLKWDSEnhancedText.bodyMedium(
-                              [
-                                if (booking.isRecordingStudio) 'Recording Studio',
-                                if (booking.isProductionStudio) 'Production Studio',
-                              ].join(', '),
+                              _getStudioName(booking.studioId),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                    if (booking.isRecordingStudio || booking.isProductionStudio)
+                    if (booking.studioId != null)
                       const SizedBox(height: BLKWDSConstants.spacingSmall),
 
                     // Gear and members info
@@ -356,6 +353,22 @@ class BookingListItem extends StatelessWidget {
       return '$hours${hours == 1 ? 'hr' : 'hrs'} ${minutes > 0 ? '$minutes${minutes == 1 ? 'min' : 'mins'}' : ''}';
     } else {
       return '$minutes${minutes == 1 ? 'min' : 'mins'}';
+    }
+  }
+
+  // Get studio name from studioId
+  String _getStudioName(int? studioId) {
+    if (studioId == null) return 'No studio';
+
+    switch (studioId) {
+      case 1:
+        return 'Recording Studio';
+      case 2:
+        return 'Production Studio';
+      case 3:
+        return 'Hybrid Studio';
+      default:
+        return 'Studio $studioId';
     }
   }
 }

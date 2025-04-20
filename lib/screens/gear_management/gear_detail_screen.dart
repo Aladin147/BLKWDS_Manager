@@ -6,7 +6,7 @@ import '../../theme/blkwds_colors.dart';
 import '../../theme/blkwds_constants.dart';
 import '../../theme/blkwds_typography.dart';
 import '../../widgets/blkwds_widgets.dart';
-import '../../widgets/blkwds_enhanced_widgets.dart';
+// Enhanced widgets are imported via blkwds_widgets.dart
 
 /// GearDetailScreen
 /// Displays detailed information about a gear item
